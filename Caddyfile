@@ -1,0 +1,12 @@
+:2015
+
+root * src
+
+file_server
+templates
+
+redir   /docs/json   /docs/json/
+rewrite /docs/json/* /docs/json/index.html
+rewrite /docs/*      /docs/index.html
+
+reverse_proxy /api/* localhost:4444

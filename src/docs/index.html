@@ -1,0 +1,29 @@
+{{$pathParts := splitList "/" .OriginalReq.URL.Path}}
+{{$markdownFilename := default "index" (slice $pathParts 2 | join "/")}}
+{{$markdownFilePath := printf "/docs/markdown/%s.md" $markdownFilename}}
+{{$markdownFile := (include $markdownFilePath | splitFrontMatter)}}
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{{default $markdownFilename $markdownFile.Meta.title}} &mdash; Caddy Documentation</title>
+		{{include "/includes/docs-head.html"}}
+		<link rel="stylesheet" href="/resources/css/chroma.css">
+	</head>
+	<body>
+		{{include "/includes/docs-header.html"}}
+		<main>
+			{{include "/includes/docs-nav.html"}}
+			<div class="article-container">
+				<div class="beta-warning">
+					<b>Caddy 2 is beta software.</b> It is ready for production, but some things will change between releases; check the <a href="https://github.com/caddyserver/caddy/releases">release notes</a> before upgrading.
+				</div>
+				<article class="centered">
+					{{markdown $markdownFile.Body}}
+				</article>
+			</div>
+			<div class="sidebar"></div>
+		</main>
+
+		{{include "/includes/footer.html"}}
+	</body>
+</html>
