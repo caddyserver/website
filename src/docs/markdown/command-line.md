@@ -74,7 +74,7 @@ The ellipses `...` indicates a continuation, i.e. one or more parameters.
 
 Adapts a configuration to Caddy's native JSON config structure and writes the output to stdout, along with any warnings to stderr.
 
-`--config` is the path to the config file.
+`--config` is the path to the config file. If blank, will default to `Caddyfile` in current directory if it exists; otherwise, this flag is required.
 
 `--adapter` specifies the config adapter to use; default is `caddyfile`.
 
