@@ -277,17 +277,20 @@ reverse_proxy @post localhost:9000
 
 You can use any [Caddy placeholders](/docs/conventions#placeholders) in the Caddyfile, but for convenience you can also use some equivalent shorthand ones:
 
-| Shorthand    | Replaces                        |
-|--------------|---------------------------------|
-| `{dir}`      | `{http.request.uri.path.dir}`   |
-| `{file}`     | `{http.request.uri.path.file}`  |
-| `{host}`     | `{http.request.host}`           |
-| `{hostport}` | `{http.request.hostport}`       |
-| `{method}`   | `{http.request.method}`         |
-| `{path}`     | `{http.request.uri.path}`       |
-| `{query}`    | `{http.request.uri.query}`      |
-| `{scheme}`   | `{http.request.scheme}`         |
-| `{uri}`      | `{http.request.uri}`            |
+| Shorthand       | Replaces                        |
+|-----------------|---------------------------------|
+| `{dir}`         | `{http.request.uri.path.dir}`   |
+| `{file}`        | `{http.request.uri.path.file}`  |
+| `{host}`        | `{http.request.host}`           |
+| `{hostport}`    | `{http.request.hostport}`       |
+| `{method}`      | `{http.request.method}`         |
+| `{path}`        | `{http.request.uri.path}`       |
+| `{query}`       | `{http.request.uri.query}`      |
+| `{remote}`      | `{http.request.remote}`         |
+| `{remote_host}` | `{http.request.remote.host}`    |
+| `{remote_port}` | `{http.request.remote.port}`    |
+| `{scheme}`      | `{http.request.scheme}`         |
+| `{uri}`         | `{http.request.uri}`            |
 
 
 

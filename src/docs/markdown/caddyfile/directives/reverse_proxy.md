@@ -163,3 +163,14 @@ reverse_proxy /api/* node1:80 node2:80 node3:80 {
 	lb_policy header X-My-Header
 }
 ```
+
+Preserve original request Host and add common proxying headers:
+
+```
+reverse_proxy localhost:9000 {
+    header_up Host {host}
+    header_up X-Real-IP {remote_host}
+    header_up X-Forwarded-For {remote_host}
+    header_up X-Forwarded-Proto {scheme}
+}
+```

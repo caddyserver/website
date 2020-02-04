@@ -6,7 +6,7 @@ title: root (Caddyfile directive)
 
 Sets the root path of the site, used by various matchers and directives that access the file system. If unset, the default site root is the current working directory.
 
-Specifically, this directive sets the `{http.vars.root}` placeholder.
+Specifically, this directive sets the `{http.vars.root}` placeholder. It is mutually exclusive to other `root` directives in the same block, so it is safe to define multiple roots with matchers that intersect: they will not cascade and overwrite each other.
 
 
 ## Syntax
