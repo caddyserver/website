@@ -26,7 +26,7 @@ Key points:
 
 - An optional **global options block** can be the very first thing in the file.
 - Otherwise, the first line of the Caddyfile is **always** the address(es) of the site to serve.
-- All directives **must** go in a site block. There is no global scope or inheritence across site blocks.
+- All directives and matchers **must** go in a site block. There is no global scope or inheritence across site blocks.
 - If there is **only one site block**, its curly braces `{ }` are optional.
 
 A Caddyfile consists of at least one or more site blocks, which always starts with one or more [addresses](#addresses) for the site. Any directives appearing before the address will be confusing to the parser.
@@ -131,13 +131,13 @@ These are examples of valid addresses:
 - `localhost:8080`
 - `127.0.0.1`
 - `[::1]:2015`
-- `example.com/foo`
+- `example.com/foo/*`
 
-From the address, Caddy can potentially infer the scheme, host, port, and path prefix of your site. The default port is 2015 unless [automatic HTTPS](/docs/automatic-https#activation) is activated, which changes it to the HTTPS port.
+From the address, Caddy can potentially infer the scheme, host, port, and path of your site. The default port is 2015 unless [automatic HTTPS](/docs/automatic-https#activation) is activated, which changes it to the HTTPS port.
 
 If you specify a hostname, only requests with a matching Host header will be honored. In other words, if the site address is `localhost`, then Caddy will not match requests to `127.0.0.1`.
 
-If multiple sites share the same definition, you can list all of them:
+If multiple sites share the same definition, you can list all of them together:
 
 ```
 localhost:8080, example.com, www.site.com
@@ -190,7 +190,7 @@ redir /old-article.html /new-article.html
 
 Path matcher tokens must start with a forward slash `/`.
 
-Note that [path matching](/docs/json/apps/http/servers/routes/match/path/) is an exact match by default; you must append a `*` for a fast prefix match.
+Note that [path matching](/docs/json/apps/http/servers/routes/match/path/) is an exact match by default; you must append a `*` for a fast prefix match. Be aware that matching `/foo*` will also match `/foobar`; you might actually want `/foo/*` instead.
 
 
 ### Named matcher
@@ -240,6 +240,8 @@ The following matcher modules are built-in:
 	remote_ip <ranges...>
 }
 ```
+
+Like directives, named matcher definitions must go inside the site blocks that use them.
 
 
 ### Matcher examples

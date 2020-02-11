@@ -4,7 +4,7 @@ title: Caddyfile Tutorial
 
 # Caddyfile Tutorial
 
-This tutorial will teach you the basics of the HTTP Caddyfile so that you can quickly and easily produce good-looking, functional site configs.
+This tutorial will teach you the basics of the [HTTP Caddyfile](/docs/caddyfile) so that you can quickly and easily produce good-looking, functional site configs.
 
 **Objectives:**
 - 🔲 First site

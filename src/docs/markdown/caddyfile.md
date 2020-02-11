@@ -24,8 +24,9 @@ The basic idea is that you first type the address of your site, then the feature
 ## Menu
 
 - #### [Quick start guide](/docs/quick-starts/caddyfile)
-- #### [List of directives](/docs/caddyfile/directives)
+- #### [Full Caddyfile tutorial](/docs/caddyfile-tutorial)
 - #### [Caddyfile concepts](/docs/caddyfile/concepts)
+- #### [Directives](/docs/caddyfile/directives)
 - #### [Global options](/docs/caddyfile/options)
 <!-- - #### [Caddyfile specification](/docs/caddyfile/spec) TODO: Finish this -->
 

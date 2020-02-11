@@ -4,7 +4,7 @@ title: "Extending Caddy"
 
 # Extending Caddy
 
-Caddy is easy to extend because of its modular architecture. Most Caddy extensions (or plugins) are called _modules_. To be clear, Caddy modules are distinct from [Go modules](https://github.com/golang/go/wiki/Modules) (but they are also Go modules). On this page, we refer to Caddy modules.
+Caddy is easy to extend because of its modular architecture. Most kinds of Caddy extensions (or plugins) are known as _modules_ if they extend or plug into Caddy's configuration structure. To be clear, Caddy modules are distinct from [Go modules](https://github.com/golang/go/wiki/Modules) (but they are also Go modules). On this page, we refer to Caddy modules.
 
 
 
