@@ -273,6 +273,15 @@ To match on anything other than a path, define a **named matcher** and refer to 
 reverse_proxy @post localhost:9000
 ```
 
+To match using capture groups use a named matcher:
+
+```
+@ows {
+    path_regexp map_file ^/ows/(.*)
+}
+
+redir @ows /index.html?{query}&map=/io/data/{http.regexp.map_file.1}.qgs
+```
 
 
 ## Placeholders
