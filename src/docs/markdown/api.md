@@ -181,7 +181,7 @@ Replace the listener addresses:
 
 ## DELETE /config/[path]
 
-Changes Caddy's configuration at the named path to the JSON body of the request. DELETE deletes the target value.
+Removes Caddy's configuration at the named path. DELETE deletes the target value.
 
 ### Examples
 
