@@ -160,7 +160,7 @@ An address must be unique; you cannot specify the same address more than once.
 
 By default, a directive that injects an HTTP handler applies to all requests (unless otherwise documented).
 
-**Request matchers** can be used to classify requests by a given criteria. This concept originates in the [underlying JSON](/docs/json/apps/http/servers/routes/match/) structure, and it's important to know how to use them in the Caddyfile. With matchers, you can specify exactly which requests a directive applies to.
+**Request matchers** can be used to classify requests by a given criteria. This concept originates in the underlying JSON structure which also serves as [matcher documentation](/docs/json/apps/http/servers/routes/match/), and it's important to know how to use them in the Caddyfile. With matchers, you can specify exactly which requests a directive applies to.
 
 To limit a directive's scope, use a **matcher token** immediately after the directive. It can be one of these forms:
 
