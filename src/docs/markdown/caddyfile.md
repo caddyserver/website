@@ -27,6 +27,7 @@ The basic idea is that you first type the address of your site, then the feature
 - #### [Full Caddyfile tutorial](/docs/caddyfile-tutorial)
 - #### [Caddyfile concepts](/docs/caddyfile/concepts)
 - #### [Directives](/docs/caddyfile/directives)
+- #### [Request matchers](/docs/caddyfile/matchers)
 - #### [Global options](/docs/caddyfile/options)
 <!-- - #### [Caddyfile specification](/docs/caddyfile/spec) TODO: Finish this -->
 

@@ -156,6 +156,7 @@ Notice how the commas indicate the continuation of addresses.
 An address must be unique; you cannot specify the same address more than once.
 
 
+
 ## Matchers
 
 By default, a directive that injects an HTTP handler applies to all requests (unless otherwise documented).
@@ -170,6 +171,7 @@ To limit a directive's scope, use a **matcher token** immediately after the dire
 
 Matcher tokens are usually optional. If a matcher token is omitted, it is the same as a wildcard matcher (`*`).
 
+
 ### Wildcard matcher
 
 The wildcard matcher `*` matches all requests, and is only needed if a matcher token is required. For example, if the first argument you want to give a directive also happens to be a path, it would look exactly like a path matcher! So you can use a wildcard matcher to disambiguate, for example:
@@ -179,6 +181,7 @@ root * /home/www/mysite
 ```
 
 Otherwise, this matcher is not often used. It is convenient to omit it when possible; just a matter of preference.
+
 
 ### Path matcher
 
@@ -190,12 +193,12 @@ redir /old-article.html /new-article.html
 
 Path matcher tokens must start with a forward slash `/`.
 
-Note that [path matching](/docs/json/apps/http/servers/routes/match/path/) is an exact match by default; you must append a `*` for a fast prefix match. Be aware that matching `/foo*` will also match `/foobar`; you might actually want `/foo/*` instead.
+[Path matching](/docs/caddyfile/matchers#path) is an exact match by default; you must append a `*` for a fast prefix match. Note that `/foo*` will match `/foo` and `/foo/` as well as `/foobar`; if this is unintended, you might actually want `/foo/*` instead.
 
 
 ### Named matcher
 
-Defining a matcher with a unique name gives you more flexibility:
+Defining a matcher with a unique name gives you more flexibility, allowing you to combine [any available matchers](/docs/caddyfile/matchers):
 
 ```
 @name {
@@ -215,33 +218,11 @@ For example:
 reverse_proxy @websockets localhost:6001
 ```
 
-This example only proxies requests that have a header field named "Connection" containing the word "Upgrade", and another header named "Upgrade" with a value of "websocket".
-
-The following matcher modules are built-in:
-
-```
-@name {
-	file {
-		root <paths>
-		try_files <files>
-		try_policy first_exist|smallest_size|largest_size|most_recent_modified
-    }
-	header <field> <value>
-	header_regexp <field> <regexp>
-	host <hosts...>
-	method <methods...>
-	not {
-		<any other matchers>
-	}
-	path <paths...>
-	path_regexp [<name>] <regexp>
-	protocol http|https|grpc
-	query <key>=<val>...
-	remote_ip <ranges...>
-}
-```
+This proxies only the requests that have a header field named "Connection" containing the word "Upgrade", and another header named "Upgrade" with a value of "websocket".
 
 Like directives, named matcher definitions must go inside the site blocks that use them.
+
+**[View full list of standard request matchers.](/docs/caddyfile/matchers)**
 
 
 ### Matcher examples
@@ -252,7 +233,7 @@ This directive applies to all HTTP requests:
 reverse_proxy localhost:9000
 ```
 
-As does this:
+And this is the same:
 
 ```
 reverse_proxy * localhost:9000
@@ -272,6 +253,7 @@ To match on anything other than a path, define a **named matcher** and refer to 
 }
 reverse_proxy @post localhost:9000
 ```
+
 
 
 
