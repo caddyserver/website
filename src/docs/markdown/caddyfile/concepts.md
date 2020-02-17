@@ -163,7 +163,7 @@ By default, a directive that injects an HTTP handler applies to all requests (un
 
 **Request matchers** can be used to classify requests by a given criteria. This concept originates in the [underlying JSON](/docs/json/apps/http/servers/routes/match/) structure, and it's important to know how to use them in the Caddyfile. With matchers, you can specify exactly which requests a directive applies to.
 
-To limit a directive's scope, use a **matcher token** immediately after the directive. It can be one of these forms:
+To limit a directive's scope, use a **matcher token** immediately after the directive, [if the directive supports matchers](/docs/caddyfile/directives#matchers). The matcher token can be one of these forms:
 
 1. **`*`** to match all requests (wildcard; default).
 2. **`/path`** start with a forward slash to match a request path.
@@ -212,8 +212,8 @@ For example:
 
 ```
 @websockets {
-	header_regexp Connection Upgrade
-	header        Upgrade websocket
+	header Connection *Upgrade*
+	header Upgrade    websocket
 }
 reverse_proxy @websockets localhost:6001
 ```
