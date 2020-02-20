@@ -31,15 +31,15 @@ Full matcher documentation can be found [in each respective matcher module's doc
 
 - [file](#file)
 - [header](#header)
-- [header_regexp](#header_regexp)
+- [header_regexp](#header-regexp)
 - [host](#host)
 - [method](#method)
 - [not](#not)
 - [path](#path)
-- [path_regexp](#path_regexp)
+- [path_regexp](#path-regexp)
 - [protocol](#protocol)
 - [query](#query)
-- [remote_ip](#remote_ip)
+- [remote_ip](#remote-ip)
 
 
 ### file
