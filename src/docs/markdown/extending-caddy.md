@@ -35,8 +35,8 @@ type Gizmo struct {
 // CaddyModule returns the Caddy module information.
 func (Gizmo) CaddyModule() caddy.ModuleInfo {
 	return caddy.ModuleInfo{
-		ID:  "foo.gizmo",
-		New: func() caddy.Module { return new(Gizmo) },
+		Name: "foo.gizmo",
+		New:  func() caddy.Module { return new(Gizmo) },
 	}
 }
 ```
@@ -51,17 +51,17 @@ import _ "github.com/example/mymodule"
 
 Caddy modules:
 
-1. Implement the `caddy.Module` interface to provide an ID and constructor
+1. Implement the `caddy.Module` interface to provide a Name and constructor
 2. Have a unique name in the proper namespace
 3. Usually satisfy some interface(s) that are meaningful to the host module for that namespace
 
 The next sections explain how to satisfy these properties!
 
-## Module IDs
+## Module Names
 
-Each Caddy module has a unique ID, consisting of a namespace and name:
+Each Caddy module has a unique Name, consisting of a namespace and name:
 
-- A complete ID looks like `foo.bar.module_name`
+- A complete Name looks like `foo.bar.module_name`
 - The namespace would be `foo.bar`
 - The name would be `module_name` which must be unique in its namespace
 
@@ -69,7 +69,7 @@ Each Caddy module has a unique ID, consisting of a namespace and name:
 
 **Guest modules** (or _child modules_) are modules which get loaded or initialized. All modules are guest modules.
 
-Module IDs must use `snake_case` convention.
+Module Names must use `snake_case` convention.
 
 ### Namespaces
 
@@ -237,7 +237,7 @@ The second field (`Gadget`) is where the final, provisioned value will eventuall
 
 ### Caddy struct tags
 
-The `caddy` struct tag on the raw module field helps Caddy to know the namespace and name (comprising the complete ID) of the module to load. It is also used for generating documentation.
+The `caddy` struct tag on the raw module field helps Caddy to know the namespace and name (comprising the complete Name) of the module to load. It is also used for generating documentation.
 
 The struct tag has a very simple format: `key1=val1 key2=val2 ...`
 
