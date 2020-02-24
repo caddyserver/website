@@ -293,8 +293,8 @@ import (
 	"os"
 
 	"github.com/caddyserver/caddy/v2"
-	"github.com/caddyserver/caddy/v2/config/caddyfile"
-	"github.com/caddyserver/caddy/v2/config/httpcaddyfile"
+	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
+	"github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
 )
 
@@ -316,8 +316,8 @@ type Middleware struct {
 // CaddyModule returns the Caddy module information.
 func (Middleware) CaddyModule() caddy.ModuleInfo {
 	return caddy.ModuleInfo{
-		ID:  "http.handlers.visitor_ip",
-		New: func() caddy.Module { return new(Middleware) },
+		Name: "http.handlers.visitor_ip",
+		New:  func() caddy.Module { return new(Middleware) },
 	}
 }
 
