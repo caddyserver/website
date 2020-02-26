@@ -12,4 +12,7 @@ $(function() {
 		$currentPageLink = $('main nav a[href="/docs/json/"]');
 	}
 	$currentPageLink.addClass('current');
+
+	// Enable anchor links using https://github.com/bryanbraun/anchorjs
+	anchors.add();
 });
