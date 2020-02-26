@@ -35,7 +35,7 @@ To get started with the API, try our [API tutorial](/docs/api-tutorial) or, if y
 - **[DELETE /config/[path]](#delete-configpath)**
   Deletes the value at the named path
 
-- **[Using @id in JSON](#using-id-in-json)**
+- **[Using `@id` in JSON](#using-id-in-json)**
   Easily traverse into the config structure
 
 
@@ -194,11 +194,11 @@ To stop only one of your HTTP servers:
 <pre><code class="cmd bash">curl -X DELETE "http://localhost:2019/config/apps/http/servers/myserver"</code></pre>
 
 
-## Using @id in JSON
+## Using `@id` in JSON
 
 You can embed IDs in your JSON document for easier direct access to those parts of the JSON.
 
-Simply add a field called "@id" to an object and give it a unique name. For example, if you had a reverse proxy handler that you wanted to access frequently:
+Simply add a field called `"@id"` to an object and give it a unique name. For example, if you had a reverse proxy handler that you wanted to access frequently:
 
 ```json
 {

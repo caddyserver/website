@@ -720,6 +720,18 @@ td code {
 		border-color: #08575a;
 	}
 
+	article aside.warning {
+		border-top-color: #462e00;
+		color: #e1973b;
+		background: -webkit-radial-gradient(top left, #462e00, transparent 65%);
+		background: -moz-radial-gradient(top left, #462e00, transparent 65%);
+		background: radial-gradient(top left, #462e00, transparent 65%);
+		border-left-color: #462e00;
+	}
+	article aside.warning::before {
+		color: #e1973b;
+	}
+
 	article aside.tip:before {
 		color: #185f5b;
 	}
