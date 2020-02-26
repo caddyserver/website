@@ -13,6 +13,8 @@ $(function() {
 	}
 	$currentPageLink.addClass('current');
 
-	// Enable anchor links using https://github.com/bryanbraun/anchorjs
-	anchors.add();
+	// add anchor links, inspired by https://github.com/bryanbraun/anchorjs
+	$('article h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]').each(function() {
+		$(this).append($('<a href="#'+this.id+'" class="anchor-link" aria-label="Anchor">&#xe9cb;</a>'));
+	});
 });
