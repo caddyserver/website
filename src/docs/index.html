@@ -2,11 +2,14 @@
 {{$markdownFilename := default "index" (slice $pathParts 2 | join "/")}}
 {{$markdownFilePath := printf "/docs/markdown/%s.md" $markdownFilename}}
 {{$markdownFile := (include $markdownFilePath | splitFrontMatter)}}
+{{$title := default $markdownFilename $markdownFile.Meta.title}}
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>{{default $markdownFilename $markdownFile.Meta.title}} &mdash; Caddy Documentation</title>
+		<title>{{$title}} &mdash; Caddy Documentation</title>
 		{{include "/includes/docs-head.html"}}
+		<meta property="og:title" content="{{$title}} - Caddy Documentation">
+		<meta name="twitter:title" value="{{$title}} - Caddy Documentation">
 		<link rel="stylesheet" href="/resources/css/chroma.css">
 	</head>
 	<body>
