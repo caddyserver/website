@@ -21,6 +21,7 @@ tls <email>|[<cert_file> <key_file>] {
 	alpn      <values...>
 	load      <paths...>
 	ca        <ca_dir_url>
+	ca_root   <pem_file>
 }
 ```
 
@@ -55,6 +56,7 @@ tls <email>|[<cert_file> <key_file>] {
 - **alpn** is the list of values to advertise in the ALPN extension of the TLS handshake.
 - **load** specifies a list of folders from which to load PEM files that are certificate+key bundles.
 - **ca** changes the ACME CA endpoint. This is most often used to use [Let's Encrypt's staging endpoint](https://letsencrypt.org/docs/staging-environment/) or an internal ACME server. (To change this value for the whole Caddyfile, use the `acme_ca` [global option](/docs/caddyfile/options) instead.)
+- **ca_root** specifies a PEM file that contains a trusted root certificate for the ACME CA endpoint, if not in the system trust store.
 
 
 

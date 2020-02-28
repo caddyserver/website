@@ -200,7 +200,8 @@ Gives the running Caddy instance a new configuration. This has the same effect a
 
 <pre><code class="cmd bash">caddy reverse-proxy
 	--from &lt;addr&gt;
-	--to &lt;addr&gt;</code></pre>
+	--to &lt;addr&gt;
+	--change-host-header</code></pre>
 
 Spins up a simple but production-ready reverse proxy.
 
@@ -208,7 +209,9 @@ Spins up a simple but production-ready reverse proxy.
 
 `--to` is the address to proxy to.
 
-Both from and to parameters can be URLs, as scheme, domain name, and URI rewrite information will be inferred from the provided URL. Or they can be a simple network address and not a complete URL.
+`--change-host-header` will cause Caddy to change the Host header from the incoming value to the address of the upstream.
+
+Both `--from` and `--to` parameters can be URLs, as scheme, domain name, and URI rewrite information will be inferred from the provided URL (paths and query strings ignored). Or they can be a simple network address and not a complete URL.
 
 This command disables the admin API, making it easier to run multiple instances on a local development machine.
 

@@ -14,6 +14,7 @@ Directive | Description
 **[file_server](/docs/caddyfile/directives/file_server)** | Serve files from disk
 **[handle](/docs/caddyfile/directives/handle)** | A mutually-exclusive group of directives
 **[header](/docs/caddyfile/directives/header)** | Sets or removes response headers
+**[log](/docs/caddyfile/directives/log)** | Enables access/request logging
 **[php_fastcgi](/docs/caddyfile/directives/php_fastcgi)** | Serve PHP sites over FastCGI
 **[redir](/docs/caddyfile/directives/redir)** | Issues an HTTP redirect to the client
 **[request_header](/docs/caddyfile/directives/request_header)** | Manipulates request headers

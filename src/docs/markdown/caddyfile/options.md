@@ -28,8 +28,10 @@ Possible options are:
 	}
 	experimental_http3
 	acme_ca <directory_url>
+	acme_ca_root <pem_file>
 	email   <yours>
-	admin   <addr>
+	admin   off|<addr>
+	debug
 }
 ```
 
@@ -39,5 +41,7 @@ Possible options are:
 - **storage** configures Caddy's storage mechanism. Default: `file_system`
 - **experimental_http3** enables experimental draft HTTP/3 support. Note that HTTP/3 is not a finished spec and client support is extremely limited. This option will go away in the future. _This option is not subject to compatibility promises._
 - **acme_ca** specifies the URL to the ACME CA's directory. It is strongly recommended to set this to Let's Encrypt's [staging endpoint](https://letsencrypt.org/docs/staging-environment/) for testing or development. Default: Let's Encrypt's production endpoint.
+- **acme_ca_root** specifies a PEM file that contains a trusted root certificate for ACME CA endpoints, if not in the system trust store.
 - **email** is your email address. Mainly used when creating an ACME account with your CA, and is highly recommended in case there are problems with your certificates.
-- **admin** customizes the admin API endpoint.
+- **admin** customizes the [admin API endpoint](/docs/api). If `off`, then the admin endpoint will be disabled.
+- **debug** enables debug mode, which sets all log levels to debug (unless otherwise specified).

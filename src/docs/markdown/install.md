@@ -49,7 +49,7 @@ Create a user named `caddy`, with a writeable home folder:
 
 Next, take [this systemd unit file](https://github.com/caddyserver/dist/blob/master/init/caddy.service) and save it to `/etc/systemd/system/caddy.service`. Double-check the **ExecStart** and **ExecReload** directives---make sure the binary's location and command line arguments are correct for your installation.
 
-Double-check that both your systemd and Caddy configs are correct before continuing.
+Double-check that both your systemd and Caddy configs are correct before continuing. Make sure your config file is in the location specified in the command.
 
 To start the service for the first time, do the usual systemctl dance:
 
@@ -73,7 +73,7 @@ You can stop the service with:
 
 Requirements:
 
-- [Go](https://golang.org/dl) 1.13 or newer
+- [Go](https://golang.org/dl) 1.14 or newer
 - [Go modules](https://github.com/golang/go/wiki/Modules) enabled
 
 Download the `v2` branch source code:

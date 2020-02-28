@@ -52,6 +52,17 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 - **&lt;upstreams...&gt;** is a list of upstreams (backends) to which to proxy.
 - **to** is an alternate way to specify the list of upstreams, one (or more) per line.
 
+Upstream addresses can take the form of a conventional [Caddy network address](/docs/conventions#network-addresses) or a URL that contains only scheme and host/port. Valid examples:
+
+- `localhost:4000`
+- `127.0.0.1:4000`
+- `http://localhost:4000`
+- `https://example.com`
+- `example.com`
+- `unix//var/php.sock`
+
+Note: Schemes cannot be mixed, since they modify the common transport configuration (a TLS-enabled transport cannot carry both HTTPS and plaintext HTTP). Specifying ports 80 and 443 are the same as specifying the HTTP and HTTPS schemes, respectively. Any explicit transport configuration will not be overwritten, and omitting schemes or using other ports will not assume a particular transport. Additionally, schemes cannot contain paths or query strings, as that would imply simultaneous rewriting the request while proxying, which behavior is not defined or supported.
+
 **Load balancing** is used whenever more than one upstream is defined.
 
 - **lb_policy** is the name of the load balancing policy, along with any options. Default: `random`. Can be:
@@ -93,6 +104,8 @@ It can also **manipulate headers** between itself and the backend:
 - **header_up** Sets, adds, removes, or performs a replacement in a request header going upstream to the backend.
 - **header_down** Sets, adds, removes, or performs a replacement in a response header coming downstream from the backend.
 
+By default, Caddy passes thru incoming headers to the backend&mdash;including the `Host` header&mdash;without modifications, with one exception: it adds or augments the [X-Forwarded-For](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For) header field as is standard for well-mannered proxies.
+
 Caddy's proxy **transport** is pluggable:
 
 - **transport** defines how to communicate with the backend. Default is `http`.
@@ -119,7 +132,7 @@ The `http_ntlm` transport is identical to the `http` transport, but the HTTP ver
 - **read_buffer** is the size of the read buffer in bytes.
 - **write_buffer** is the size of the write buffer in bytes.
 - **dial_timeout** is how long to wait when connecting to the upstream socket.
-- **tls** uses HTTPS with the backend.
+- **tls** uses HTTPS with the backend. This will be enabled automatically if you specify backends using the `https://` scheme or port `:443`.
 - **tls_client_auth** specifies a certificate and key file to present for TLS client authentication with the backend.
 - **tls_insecure_skip_verify** turns off security. _Do not use in production._
 - **tls_timeout** is a [duration value](/docs/conventions#durations) that specifies how long to wait for the TLS handshake to complete.
@@ -164,13 +177,17 @@ reverse_proxy /api/* node1:80 node2:80 node3:80 {
 }
 ```
 
-Preserve original request Host and add common proxying headers:
+Set the upstream Host header to the address of the upstream (by default, it will retain its original, incoming value):
 
 ```
 reverse_proxy localhost:9000 {
-    header_up Host {host}
-    header_up X-Real-IP {remote_host}
-    header_up X-Forwarded-For {remote_host}
-    header_up X-Forwarded-Proto {scheme}
+    header_up Host {http.reverse_proxy.upstream.hostport}
 }
 ```
+
+Reverse proxy to an HTTPS endpoint:
+
+```
+reverse_proxy https://example.com
+```
+
