@@ -14,7 +14,7 @@ Compatibility note: Due to its sensitive nature as a security protocol, delibera
 ## Syntax
 
 ```
-tls <email>|[<cert_file> <key_file>] {
+tls [internal|<email>] | [<cert_file> <key_file>] {
 	protocols <min> [<max>]
 	ciphers   <cipher_suites...>
 	curves    <curves...>
@@ -25,6 +25,7 @@ tls <email>|[<cert_file> <key_file>] {
 }
 ```
 
+- **internal** means to use Caddy's internal, locally-trusted CA to produce certificates for this site.
 - **&lt;email&gt;** is the email address to use for the ACME account managing the site's certificates.
 - **&lt;cert_file&gt;** and **&lt;key_file&gt;** are the paths to the certificate and private key PEM files. Specifying just one is invalid; specifying both will disable automatic HTTPS.
 - **protocols** specifies the minimum and maximum protocol versions. Default min: `tls1.2`. Default max: `tls1.3`

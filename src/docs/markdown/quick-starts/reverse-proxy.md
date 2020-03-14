@@ -24,13 +24,11 @@ In your terminal, run this command:
 
 <pre><code class="cmd bash">caddy reverse-proxy --to 127.0.0.1:9000</code></pre>
 
-Caddy's default address is :2015, so make a request to [localhost:2015](http://localhost:2015) to see it working!
-
-It's easy to change the proxy's address:
+If you don't have permission to bind to low ports, you can proxy from a higher port:
 
 <pre><code class="cmd bash">caddy reverse-proxy --from :2016 --to 127.0.0.1:9000</code></pre>
 
-Now you can access the proxy at [localhost:2016](http://localhost:2016).
+Then make a request to [localhost](https://localhost) (or whatever address you specified in `--from`) to see it working!
 
 
 
@@ -48,7 +46,7 @@ Then, from the same directory, run:
 
 <pre><code class="cmd bash">caddy run</code></pre>
 
-You can then make a request to [localhost:2015](http://localhost:2015) to see it working!
+You can then make a request to [https://localhost](https://localhost) to see it working!
 
 It's easy to change the proxy's address:
 

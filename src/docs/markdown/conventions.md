@@ -56,7 +56,7 @@ unix//path/to/socket
 
 Caddy's configuration supports the use of _placeholders_ (variables). Using placeholders is a simple way to inject dynamic values into a static configuration.
 
-Placeholders are bounded on either side by curly braces `{ }` and contain the variable name inside, for example: `{foo.bar}`. Variable names are typically namespaced with dots to avoid collisions across modules.
+Placeholders are bounded on either side by curly braces `{ }` and contain the variable name inside, for example: `{foo.bar}`. Placeholder braces can be escaped, `\{like so\}`. Variable names are typically namespaced with dots to avoid collisions across modules.
 
 Which placeholders are available depends on the context. Not all placeholders are available in all parts of the config. For example, [the HTTP app sets placeholders](/docs/json/apps/http/) that are only available in areas of the config related to handling HTTP requests.
 
@@ -70,6 +70,7 @@ Placeholder | Description
 `{system.os}` | The system's OS
 `{system.arch}` | The system's architecture
 `{time.now.common_log}` | The current timestamp in Common Log Format
+`{time.now.year}` | The current year in YYYY format
 
 Not all config fields support placeholders, but most do where you would expect it.
 

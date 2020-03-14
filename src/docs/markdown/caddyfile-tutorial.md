@@ -43,12 +43,11 @@ Save that and run Caddy:
 
 <pre><code class="cmd bash">caddy run</code></pre>
 
+The first time, you'll be asked for your password. This is so Caddy can serve your localhost site over HTTPS. 
 
 <aside class="complete">✅ First site</aside>
 
-Open [localhost:2015](http://localhost:2015) in your browser and see your web server working!
-
-Why 2015? Caddy's default port is 2015. Since Caddy cannot activate [automatic HTTPS](/docs/automatic-https) with a hostname like "localhost", it leaves the port unchanged.
+Open [localhost](https://localhost) in your browser and see your web server working, complete with HTTPS!
 
 Stop Caddy by pressing Ctrl+C in your terminal.
 
@@ -80,7 +79,7 @@ Let's do something interesting with our file server: serve a templated page. Cre
 </html>
 ```
 
-Save this as `caddy.html` in the current directory and load it in your browser: [http://localhost:2015/caddy.html](http://localhost:2015/caddy.html)
+Save this as `caddy.html` in the current directory and load it in your browser: [https://localhost/caddy.html](https://localhost/caddy.html)
 
 The output is:
 

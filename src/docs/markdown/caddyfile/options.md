@@ -27,6 +27,7 @@ Possible options are:
 		<options...>
 	}
 	experimental_http3
+	default_sni <name>
 	acme_ca <directory_url>
 	acme_ca_root <pem_file>
 	email   <yours>
@@ -39,6 +40,7 @@ Possible options are:
 - **https_port** is the port for the server to use for HTTPS. For internal use only; does not change the HTTPS port for clients. Default: 443
 - **order** sets or changes the standard order of HTTP handler directive(s). Can set directives to be `first` or `last`, or `before` or `after` another directive.
 - **storage** configures Caddy's storage mechanism. Default: `file_system`
+- **default_sni** sets a default TLS ServerName for when clients do not use SNI in their ClientHello.
 - **experimental_http3** enables experimental draft HTTP/3 support. Note that HTTP/3 is not a finished spec and client support is extremely limited. This option will go away in the future. _This option is not subject to compatibility promises._
 - **acme_ca** specifies the URL to the ACME CA's directory. It is strongly recommended to set this to Let's Encrypt's [staging endpoint](https://letsencrypt.org/docs/staging-environment/) for testing or development. Default: Let's Encrypt's production endpoint.
 - **acme_ca_root** specifies a PEM file that contains a trusted root certificate for ACME CA endpoints, if not in the system trust store.

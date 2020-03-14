@@ -21,17 +21,17 @@ In your terminal, change to the root directory of your site and run:
 
 <pre><code class="cmd bash">caddy file-server</code></pre>
 
-The default address is :2015, so load [localhost:2015](http://localhost:2015) in your browser to see your site!
+If you get a permission error, it probably means your OS does not allow you to bind to low ports -- so use a high port instead:
+
+<pre><code class="cmd bash">caddy file-server --listen :2015</code></pre>
+
+Then open [localhost](http://localhost) (or [localhost:2015](http://localhost:2015)) in your browser to see your site!
 
 If you don't have an index file but you want to display a file listing, use the `--browse` option:
 
 <pre><code class="cmd bash">caddy file-server --browse</code></pre>
 
-You can also listen on port 80 easily enough:
-
-<pre><code class="cmd bash">caddy file-server --listen :80</code></pre>
-
-Or set use another folder as the site root:
+You can use another folder as the site root:
 
 <pre><code class="cmd bash">caddy file-server --root ~/mysite</code></pre>
 
@@ -47,11 +47,13 @@ localhost
 file_server
 ```
 
+If you don't have permission to bind to low ports, replace `localhost` with `localhost:2015` (or some other high port).
+
 Then, from the same directory, run:
 
 <pre><code class="cmd bash">caddy run</code></pre>
 
-You can then load [localhost:2015](http://localhost:2015) to see your site!
+You can then load [localhost](https://localhost) (or whatever the address in your config is) to see your site!
 
 The [`file_server` directive](/docs/caddyfile/directives/file_server) has more options for you to customize your site. Make sure to [reload](/docs/command-line#caddy-reload) Caddy (or stop and start it again) when you change the Caddyfile!
 
@@ -63,15 +65,7 @@ localhost
 file_server browse
 ```
 
-You can also listen on port 80 easily enough:
-
-```
-:80
-
-file_server
-```
-
-Or set use another folder as the site root:
+You can also use another folder as the site root:
 
 ```
 localhost

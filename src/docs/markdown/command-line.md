@@ -29,6 +29,9 @@ The ellipses `...` indicates a continuation, i.e. one or more parameters.
 - **[caddy file-server](#caddy-file-server)**
   A simple but production-ready file server
 
+- **[caddy fmt](#caddy-fmt)**
+  Formats a Caddyfile
+
 - **[caddy hash-password](#caddy-hash-password)**
   Hashes a password and outputs base64
 
@@ -53,6 +56,9 @@ The ellipses `...` indicates a continuation, i.e. one or more parameters.
 - **[caddy stop](#caddy-stop)**
   Stops the running Caddy process
 
+- **[caddy untrust](#caddy-untrust)**
+  Untrusts a certificate from local trust store(s)
+
 - **[caddy validate](#caddy-validate)**
   Tests whether a config file is valid
 
@@ -72,7 +78,7 @@ The ellipses `...` indicates a continuation, i.e. one or more parameters.
 	[--pretty]
 	[--validate]</code></pre>
 
-Adapts a configuration to Caddy's native JSON config structure and writes the output to stdout, along with any warnings to stderr.
+Adapts a configuration to Caddy's native JSON config structure and writes the output to stdout, along with any warnings to stderr, then exits.
 
 `--config` is the path to the config file. If blank, will default to `Caddyfile` in current directory if it exists; otherwise, this flag is required.
 
@@ -132,13 +138,28 @@ Spins up a simple but production-ready static file server.
 
 `--root` specifies the root file path. Default is the current working directory.
 
-`--listen` accepts a listener address. Default is `:2015`, unless `--domain` specifies a name that qualifies for HTTPS, then `:443` will be the default.
+`--listen` accepts a listener address. Default is `:80`, unless `--domain` is used, then `:443` will be the default.
 
-`--domain` will only serve files through that domain name, and Caddy will attempt to serve it over HTTPS if it qualifies for a certificate (i.e. is a public domain name), so make sure its DNS is configured properly first. If the name qualifies for a certificate, the default port will be changed to 443.
+`--domain` will only serve files through that hostname, and Caddy will attempt to serve it over HTTPS, so make sure any public DNS is configured properly first if it's a public domain name. The default port will be changed to 443.
 
 `--browse` will enable directory listings if a directory without an index file is requested.
 
 This command disables the admin API, making it easier to run multiple instances on a local development machine.
+
+
+
+
+### `caddy fmt`
+
+<pre><code class="cmd bash">caddy fmt [&lt;path&gt;]
+	[--write]</code></pre>
+
+Formats or prettifies a Caddyfile, then exits. The result is printed to stdout unless `--write` is used.
+
+`<path>` specifies the path to the Caddyfile. If omitted, a file named Caddyfile in the current directory is assumed instead.
+
+`--write` causes the result to be written to the input file instead of being printed to the terminal.
+
 
 
 
@@ -149,7 +170,7 @@ This command disables the admin API, making it easier to run multiple instances 
 	[--algorithm &lt;name&gt;]
 	[--salt &lt;string&gt;]</code></pre>
 
-Hashes a password and writes the output to stdout in base64 encoding.
+Hashes a password and writes the output to stdout in base64 encoding, then exits.
 
 `--plaintext` is the plaintext form of the password.
 
@@ -164,7 +185,7 @@ Hashes a password and writes the output to stdout in base64 encoding.
 
 <pre><code class="cmd bash">caddy help [&lt;command&gt;]</code></pre>
 
-Prints CLI help text, optionally for a specific subcommand.
+Prints CLI help text, optionally for a specific subcommand, then exits.
 
 
 
@@ -173,7 +194,7 @@ Prints CLI help text, optionally for a specific subcommand.
 <pre><code class="cmd bash">caddy list-modules
 	[--versions]</code></pre>
 
-Prints the Caddy modules that are installed, optionally with version information from their associated Go modules.
+Prints the Caddy modules that are installed, optionally with version information from their associated Go modules, then exits.
 
 NOTE: Due to [a bug in Go](https://github.com/golang/go/issues/29228), version information is only available if Caddy is built as a dependency and not as the main module. TODO: Link to docs that explain how to build Caddy with version info
 
@@ -261,21 +282,37 @@ If you want to stop the current configuration but do not want to exit the proces
 
 
 
+### `caddy untrust`
+
+<pre><code class="cmd bash">caddy untrust
+	[--ca &lt;id&gt;]
+	[--cert &lt;path&gt;]</code></pre>
+
+Untrusts a root certificate from the local trust store(s). Intended for development environments only. Specify either the `--ca` or `--cert` flags, but not both. If neither are specified, Caddy's default CA (`local`).
+
+`--ca` specifies the ID of the Caddy CA to untrust. The default CA's ID is `local`.
+
+`--cert` specifies the path to the PEM-encoded certificate file to uninstall.
+
+
+
+
+
 ### `caddy validate`
 
 <pre><code class="cmd bash">caddy validate
 	[--config &lt;path&gt;]
 	[--adapter &lt;name&gt;]</code></pre>
 
-Validates a configuration file. This command deserializes the config, then loads and provisions all of its modules as if to start the config, but the config is not actually started. This exposes errors in a configuration that arise during loading or provisioning phases and is a stronger error check than merely serializing a config as JSON.
+Validates a configuration file, then exits. This command deserializes the config, then loads and provisions all of its modules as if to start the config, but the config is not actually started. This exposes errors in a configuration that arise during loading or provisioning phases and is a stronger error check than merely serializing a config as JSON.
 
-`--config` is the config file to validate.
+`--config` is the config file to validate. Default is the `Caddyfile` in the current directory, if any.
 
-`--adapter` is the name of the config adapter to use, if the config file is not in Caddy's native JSON format.
+`--adapter` is the name of the config adapter to use, if the config file is not in Caddy's native JSON format. If the config file starts with `Caddyfile`, the `caddyfile` adapter is used by default.
 
 
 
 ### `caddy version`
 <pre><code class="cmd bash">caddy version</code></pre>
 
-Prints the version.
+Prints the version and exits.

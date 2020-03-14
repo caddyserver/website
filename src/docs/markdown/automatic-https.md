@@ -18,10 +18,21 @@ Here's a 28-second video showing how it works:
 
 ## tl;dr
 
-Here's what you need to know:
+**Caddy serves all sites over HTTPS by default.**
 
+- Caddy serves IP addresses and local/internal hostnames over HTTPS with locally-trusted ceritficates. Examples: `localhost`, `127.0.0.1`.
+- Caddy serves public DNS names over HTTPS with certificates from [Let's Encrypt](https://letsencrypt.org). Examples: `example.com`, `sub.example.com`, `*.example.com`.
 
-<aside class="tip">These are common requirements for any basic website configuration, not just Caddy. The main thing is to set your DNS records properly <b>before</b> running Caddy and to make sure Caddy can store certificates on disk.</aside>
+Caddy keeps all certificates renewed, and redirects HTTP (default port 80) to HTTPS (default port 443) automatically.
+
+**For local HTTPS:**
+
+- Caddy may prompt for a password to install its root certificate into your trust store. This happens only once per root.
+- Any client accessing the site without trusting the root cert will show security errors.
+
+**For public domain names:**
+
+<aside class="tip">These are common requirements for any basic production website, not just Caddy. The main thing is to set your DNS records properly <b>before</b> running Caddy and to make sure Caddy can store certificates on disk.</aside>
 
 - If your domain's A/AAAA records point to your server,
 - ports 80 and 443 are open externally,
@@ -29,7 +40,7 @@ Here's what you need to know:
 - your `$HOME` folder is writeable and persistent,
 - and your domain name appears somewhere relevant in the config,
 
-then your sites will probably be served over HTTPS automatically and without problems. You won't have to know or do anything else about it. It "just works" most of the time!
+then sites will be served over HTTPS automatically and without problems. You won't have to know or do anything else about it. It should "just work"!
 
 <aside class="warning">Public CAs like Let's Encrypt enforce rate limits. If your DNS, network, or server is not properly configured, you could easily hit rate limits. The rest of this page describes how to avoid that.</aside>
 
@@ -49,7 +60,7 @@ Caddy implicitly activates automatic HTTPS when it knows a domain name (i.e. hos
 Any of the following will prevent automatic HTTPS from being activated, either in whole or in part:
 
 - [Explicitly disabling it](/docs/json/apps/http/servers/automatic_https/)
-- Not providing any qualifying hostnames in the config
+- Not providing any hostnames or IP addresses in the config
 - Listening exclusively on the HTTP port
 - Manually loading certificates (unless [this config property](/docs/json/apps/http/servers/automatic_https/ignore_loaded_certificates/) is true)
 
@@ -58,7 +69,7 @@ Any of the following will prevent automatic HTTPS from being activated, either i
 
 When automatic HTTPS is activated, the following occurs:
 
-- Certificates are obtained and renewed for [qualifying domain names](#hostname-requirements)
+- Certificates are obtained and renewed for [all domain names](#hostname-requirements)
 - The default port (if any) is changed to the [HTTPS port](/docs/json/apps/http/https_port/) 443
 - HTTP is redirected to HTTPS (this uses [HTTP port](/docs/json/apps/http/http_port/) 80)
 
@@ -69,14 +80,49 @@ You can [customize or disable automatic HTTPS](/docs/json/apps/http/servers/auto
 
 ## Hostname requirements
 
-A hostname qualifies for automatic HTTPS if it:
+All hostnames (domain names and IP addresses) qualify for fully-managed certificates if they:
 
-- is not empty
+- are non-empty
+- consist only of alphanumerics, hyphens, dots, and wildcard (`*`)
+- do not start or end with a dot ([RFC 1034](https://tools.ietf.org/html/rfc1034#section-3.5))
+
+In addition, a hostname qualifies for a publicly-trusted certificate if it:
+
 - is not localhost
 - is not an IP address
-- does not start or end with a dot ([RFC 1034](https://tools.ietf.org/html/rfc1034#section-3.5))
-- consists only of alphanumerics, hyphens, and dots
-	- with the exception of a single wildcard `*` as the left-most label (this requires the DNS challenge if using Let's Encrypt)
+- has only a single wildcard `*` as the left-most label
+
+
+
+## Local HTTPS
+
+To serve non-public sites over HTTPS, Caddy generates its own certificate authority (CA) and uses it to sign certificates. The trust chain consists of a root and intermediate certificate. Leaf certificates are signed by the intermediate.
+
+Caddy's local CA is powered by [Smallstep libraries](https://smallstep.com/certificates/).
+
+Local HTTPS does not use ACME nor does it perform any DNS validation. It works only on the local machine and is trusted only where the CA's root certificate is installed.
+
+### CA Root
+
+<aside class="tip">It is safe to trust Caddy's root certificate on your own machine as long as your computer is not compromised and your unique root key is not leaked.</aside>
+
+The root's private key is uniquely generated using a cryptographically-secure pseudorandom source and persisted to storage with limited permissions. It is loaded into memory only to perform signing tasks, after which it leaves scope to be garbage-collected.
+
+Although Caddy can be configured to sign with the root directly (to support non-compliant clients), this is disabled by default, and the root key is only used to sign intermediates.
+
+The first time a root key is used, Caddy will try to install it into the system's local trust store(s). If it does not have permission to do so, it will prompt for a password. This behavior can be disabled in the configuration if it is not desired.
+
+After Caddy's root CA is installed, you will see it in your local trust store as "Caddy Local Authority" (unless you've configured a different name). You can uninstall it any time if you wish (the [`caddy untrust`](/docs/command-line#caddy-untrust) command makes this easy).
+
+
+### CA Intermediates
+
+An intermediate certificate and key will also be generated, which will be used for signing leaf (individual site) certificates.
+
+Unlike the root certificate, intermediate certificates have a much shorter lifetime and will automatically be renewed as needed.
+
+
+
 
 
 ## Testing
@@ -174,4 +220,4 @@ Before attempting any ACME transactions, Caddy will test the configured storage 
 
 Caddy can obtain and manage wildcard certificates when it is configured to serve a site with a qualifying wildcard name. A site name qualifies for a wildcard if only its left-most domain label is a wildcard. For example, `*.example.com` qualifies, but these do not: `sub.*.example.com`, `foo*.example.com`, `*bar.example.com`, and `*.*.example.com`.
 
-To get a wildcard, you simply need to enable the [DNS challenge](#dns-challenge) and use a wildcard domain in your config. We recommend using wildcards only when you have so many subdomains that you would encounter CA rate limits trying to obtain certificates for them all.
+To get a wildcard from Let's Encrypt, you simply need to enable the [DNS challenge](#dns-challenge) and use a wildcard domain in your config. We recommend using wildcards only when you have so many subdomains that you would encounter CA rate limits trying to obtain certificates for them all.

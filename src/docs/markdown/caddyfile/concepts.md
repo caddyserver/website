@@ -121,7 +121,7 @@ An address always appears at the top of the site block, and is usually the first
 These are examples of valid addresses:
 
 <aside class="tip">
-	<a href="/docs/automatic-https">Automatic HTTPS</a> is enabled if your site's address contains a real-looking domain name. This behavior is purely implicit, however, so it never overrides any explicit configuration. For example, if the site's address is <code>http://example.com</code>, auto-HTTPS will not activate because the scheme is http.
+	<a href="/docs/automatic-https">Automatic HTTPS</a> is enabled if your site's address contains a hostname or IP address. This behavior is purely implicit, however, so it never overrides any explicit configuration. For example, if the site's address is <code>http://example.com</code>, auto-HTTPS will not activate because the scheme is explicitly <code>http://</code>.
 </aside>
 
 - `localhost`
@@ -133,7 +133,7 @@ These are examples of valid addresses:
 - `[::1]:2015`
 - `example.com/foo/*`
 
-From the address, Caddy can potentially infer the scheme, host, port, and path of your site. The default port is 2015 unless [automatic HTTPS](/docs/automatic-https#activation) is activated, which changes it to the HTTPS port.
+From the address, Caddy can potentially infer the scheme, host, port, and path of your site.
 
 If you specify a hostname, only requests with a matching Host header will be honored. In other words, if the site address is `localhost`, then Caddy will not match requests to `127.0.0.1`.
 
@@ -275,7 +275,12 @@ You can use any [Caddy placeholders](/docs/conventions#placeholders) in the Cadd
 | `{remote_port}` | `{http.request.remote.port}`    |
 | `{scheme}`      | `{http.request.scheme}`         |
 | `{uri}`         | `{http.request.uri}`            |
-
+| `{tls_cipher}`  | `{http.request.tls.cipher_suite}` |
+| `{tls_version}` | `{http.request.tls.version}`      |
+| `{tls_client_fingerprint}` | `{http.request.tls.client.fingerprint}` |
+| `{tls_client_issuer}`      | `{http.request.tls.client.issuer}`      |
+| `{tls_client_serial}`      | `{http.request.tls.client.serial}`      |
+| `{tls_client_subject}`     | `{http.request.tls.client.subject}`     |
 
 
 ## Snippets

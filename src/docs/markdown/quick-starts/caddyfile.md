@@ -24,9 +24,15 @@ Save this and run Caddy from the same folder that contains your Caddyfile:
 
 <pre><code class="cmd bash">caddy start</code></pre>
 
-Either open your browser to [localhost:2015](http://localhost:2015) or `curl` it:
+<aside class="tip">
+	For local HTTPS, Caddy automatically generates certificates and unique private keys for you. The root certificate is added to your system's trust store, which is why the password prompt is necessary. It allows you to develop locally over HTTPS without certificate errors. Just don't share your root key!
+</aside>
 
-<pre><code class="cmd"><span class="bash">curl localhost:2015</span>
+You will probably be asked for your password, because Caddy will serve all sites -- even local ones -- over HTTPS. (The password prompt should only happen the first time!)
+
+Either open your browser to [localhost](http://localhost) or `curl` it:
+
+<pre><code class="cmd"><span class="bash">curl https://localhost</span>
 Hello, world!</code></pre>
 
 You can define multiple sites in a Caddyfile by wrapping them in curly braces `{ }`. Change your Caddyfile to be:
@@ -44,18 +50,18 @@ localhost:2016 {
 You can give Caddy the updated configuration two ways, either with the API directly:
 
 <pre><code class="cmd bash">curl localhost:2019/load \
-  -X POST \
-  -H "Content-Type: text/caddyfile" \
-  --data-binary @Caddyfile
+	-X POST \
+	-H "Content-Type: text/caddyfile" \
+	--data-binary @Caddyfile
 </code></pre>
 
 or with the reload command, which does the same API request for you:
 
 <pre><code class="cmd bash">caddy reload</code></pre>
 
-Try out your new "goodbye" endpoint [in your browser](http://localhost:2016) or with `curl` to make sure it works:
+Try out your new "goodbye" endpoint [in your browser](https://localhost:2016) or with `curl` to make sure it works:
 
-<pre><code class="cmd"><span class="bash">curl localhost:2016</span>
+<pre><code class="cmd"><span class="bash">curl https://localhost:2016</span>
 Goodbye, world!</code></pre>
 
 When you are done with Caddy, make sure to stop it:
