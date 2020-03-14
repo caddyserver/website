@@ -63,6 +63,12 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 
 ## Examples
 
+Specify an email address for your ACME account:
+
+```
+tls your@email.com
+```
+
 Use a custom certificate and key:
 
 ```
