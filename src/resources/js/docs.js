@@ -11,6 +11,10 @@ $(function() {
 		// as a special case, highlight the JSON structure link anywhere within it
 		$currentPageLink = $('main nav a[href="/docs/json/"]');
 	}
+	if (hasPrefix(window.location.pathname, "/docs/modules/")) {
+		// as another special case, highlight the modules link anywhere within it
+		$currentPageLink = $('main nav a[href="/docs/modules/"]');
+	}
 	$currentPageLink.addClass('current');
 
 	// add anchor links, inspired by https://github.com/bryanbraun/anchorjs

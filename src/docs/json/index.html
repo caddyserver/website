@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>JSON Structure - Caddy Documentation</title>
+		<title>JSON Config Structure - Caddy Documentation</title>
 		{{include "/includes/docs-head.html"}}
 		<link rel="stylesheet" href="/resources/css/docs-json.css">
 		<script src="/resources/js/marked-0.8.0.min.js"></script>
-		<script src="/resources/js/docs-json.js"></script>
+		<script src="/resources/js/docs-api.js"></script>
+		<script src="/resources/js/json-docs.js"></script>
 	</head>
 	<body>
 		{{include "/includes/docs-header.html"}}
@@ -16,36 +17,16 @@
 					<!--Populated by JS-->
 				</div>
 				
-				<pre><code class="json" id="renderbox"><!--Populated by JS--></code></pre>
+				{{include "/includes/docs-renderbox.html"}}
 
 				<article>
-					<p id="top-doc">
-						<!--Populated by JS-->
-					</p>
-					<h2 id="field-list-header">Field List</h2>
-					<dl id="field-list">
-						<!--Populated by JS-->
-					</dl>
+					{{include "/includes/docs-details.html"}}
 				</article>
 			</div>
 			<div class="sidebar"></div>
 		</main>
 
-
-		<div id="hovercard" class="arrow-box">
-			<div id="hovercard-docs" class="hovercard-elem"><!--Populated by JS--></div>
-			<div id="hovercard-module" class="hovercard-elem">
-				<p id="hovercard-namespace-box">
-					Fulfilled by modules in namespace: <span id="hovercard-namespace"><!--Populated by JS--></span>
-				</p>
-				<div id="hovercard-module-list"><!--Populated by JS--></div>
-			</div>
-			<div id="hovercard-inline-key" class="hovercard-elem">
-				<p class="explain">This property is <b>required</b> because it specifies the module name.</p>
-			</div>
-			<div id="hovercard-breadcrumb-siblings" class="hovercard-elem"><!--Populated by JS--></div>
-			<div id="hovercard-inline-link" class="hovercard-elem"><!--Populated by JS--></div>
-		</div>
+		{{include "/includes/docs-hovercard.html"}}
 
 		{{include "/includes/footer.html"}}
 	</body>

@@ -198,7 +198,7 @@ article li {
 h1 {
 	font-size: 80px;
 	color: #196165;
-	margin-bottom: 25px;
+	margin-bottom: 50px;
 }
 
 h2 {
@@ -352,12 +352,13 @@ main > .sidebar:not(:last-child) {
 .json .str { color: #2f8598; }
 .json .num { color: #038a3f; }
 .json .bool { color: #9b5e14; }
-.json .key a:not(:hover) { color: inherit; }
+.json .key a:not([href]) { color: #222; }
 .json a {
 	text-decoration: none;
 	font-weight: bold;
 }
-.json .has-popup { border-bottom: 1px dashed #1c82dc; }
+.json .has-popup { border-bottom: 1px dashed #222; }
+.json a[href].has-popup { border-bottom-color: #1c82dc; }
 .json .has-popup.module { border-bottom: none; }
 
 
@@ -567,6 +568,51 @@ td code {
 	font-size: 14px;
 	word-wrap: break-word;
 }
+
+
+
+
+
+
+#module-docs-container,
+#module-list-container {
+	display: none;
+}
+
+#module-list {
+	margin-top: 50px;
+}
+
+#module-list td:first-child {
+	word-wrap: break-word;
+	max-width: 300px;
+}
+
+#module-list .module-link {
+	font-weight: bold;
+	font-size: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @media (max-width: 1400px) {
 	article aside {
