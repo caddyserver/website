@@ -10,6 +10,32 @@ Caddy 2 is a whole new code base, written from scratch, to improve on Caddy 1. C
 This guide won't delve into the [new features](https://caddyserver.com/docs/getting-started) available -- which are really cool, by the way, you should learn them -- the goal here is to just get you up and running on Caddy 2 quickly.
 
 
+### Menu
+
+- [High-order bits](#high-order-bits)
+- [Steps](#steps)
+- [HTTPS and ports](#https-and-ports)
+- [Command line](#command-line)
+- [Caddyfile](#caddyfile)
+	- [Primary changes](#primary-changes)
+	- [browse](#browse)
+	- [ext](#ext)
+	- [fastcgi](#fastcgi)
+	- [gzip](#gzip)
+	- [header](#header)
+	- [log](#log)
+	- [proxy](#proxy)
+	- [redir](#redir)
+	- [rewrite](#rewrite)
+	- [root](#root)
+	- [status](#status)
+	- [templates](#templates)
+	- [tls](#tls)
+- [Service files](#service-files)
+- [Plugins](#plugins)
+- [Getting help](#getting-help)
+
+
 
 ## High-order bits
 
@@ -237,13 +263,26 @@ A common configuration in Caddy 2 is to use `tls internal` to have it serve a lo
 Most sites will not need this directive at all.
 
 
-## Systemd unit files
+## Service files
 
 We recommend using [our official service file](https://github.com/caddyserver/dist/blob/master/init/caddy.service) for their Caddy deployments.
 
 If you need a custom service file, base it off of ours. It has been carefully set to what it is for good reasons!
 
 See [install instructions](/docs/install#manually-installing-as-a-linux-service) for details.
+
+
+## Plugins
+
+Plugins written for v1 are not automatically compatible with v2. Many v1 plugins are not even needed in v2. On the other hand, v2 is way more easily extensible and flexible than v1!
+
+If you want to write a plugin for Caddy 2, [learn how to write a Caddy module](/docs/extending-caddy).
+
+### Building Caddy 2 with plugins
+
+Caddy 2 does not (yet) have a public build server and interactive download page like v1 did. We're working on it. In the meantime, our [builder tool](https://github.com/caddyserver/builder) may be helpful. It simply automates the instructions in Caddy's [main.go](https://github.com/caddyserver/caddy/blob/v2/cmd/caddy/main.go) file.
+
+We'll also be working on the new website some more so that plugins can be registered and indexed and easily found.
 
 
 ## Getting help
