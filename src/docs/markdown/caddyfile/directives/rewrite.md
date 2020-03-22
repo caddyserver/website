@@ -8,6 +8,8 @@ Rewrites the request internally. A rewrite changes some or all of the request UR
 
 The `rewrite` directive implies the intent to accept the request, but with modifications. It is mutually exclusive to other `rewrite` directives in the same block, so it is safe to define rewrites that would otherwise cascade into each other; only the first matching rewrite will be executed.
 
+Because `rewrite` essentially performs an internal redirect, the Caddyfile adapter will not fold any subsequent, adjacent handlers into the same route if their matchers happen to be exactly the same. This allows the matchers of the next handlers to be deferred until after the rewrite. In other words, a matcher that matches a request before the `rewrite` might not match the same request after the `rewrite`. If you want your `rewrite` to share a route with other handlers, use the [`route`](route) or [`handle`](handle) directives.
+
 
 ## Syntax
 
@@ -49,7 +51,5 @@ rewrite * /index.php?{query}&p={path}
 
 There are other directives that perform rewrites, but imply a different intent or do the rewrite without a complete replacement of the URI:
 
-- [`strip_prefix`](/docs/caddyfile/directives/strip_prefix) strips a prefix from the request path.
-- [`strip_suffix`](/docs/caddyfile/directives/strip_suffix) strips a suffix from the request path.
-- [`uri_replace`](/docs/caddyfile/directives/uri_replace) performs a substring replacement on the request path.
-- [`try_files`](/docs/caddyfile/directives/try_files) rewrites the request based on the existence of files.
+- [`uri`](uri) manipulates a URI (strip prefix, suffix, or substring replacement).
+- [`try_files`](try_files) rewrites the request based on the existence of files.

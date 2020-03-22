@@ -23,12 +23,10 @@ Directive | Description
 **[rewrite](/docs/caddyfile/directives/rewrite)** | Rewrites the request internally
 **[root](/docs/caddyfile/directives/root)** | Set the path to the site root
 **[route](/docs/caddyfile/directives/route)** | A group of directives treated literally as single unit
-**[strip_prefix](/docs/caddyfile/directives/strip_prefix)** | Rewrite that strips path prefix
-**[strip_suffix](/docs/caddyfile/directives/strip_suffix)** | Rewrite that strips path suffix
 **[templates](/docs/caddyfile/directives/templates)** | Execute templates on the response
 **[tls](/docs/caddyfile/directives/tls)** | Customize TLS settings
 **[try_files](/docs/caddyfile/directives/try_files)** | Rewrite that depends on file existence
-**[uri_replace](/docs/caddyfile/directives/uri_replace)** | Rewrite that replaces substrings in URI
+**[uri](/docs/caddyfile/directives/uri)** | Manipulate the URI
 
 
 ## Syntax
@@ -73,9 +71,7 @@ root
 redir
 rewrite
 
-strip_prefix
-strip_suffix
-uri_replace
+uri
 try_files
 
 basicauth
@@ -93,4 +89,4 @@ php_fastcgi
 file_server
 ```
 
-You can override or customize this ordering by using the [`order` global option](/docs/caddyfile/options) or the [`route` directive](/docs/caddyfile/directives/route).
+You can override/customize this ordering by using the [`order` global option](/docs/caddyfile/options) or the [`route` directive](/docs/caddyfile/directives/route).

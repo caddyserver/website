@@ -20,7 +20,7 @@ Here's a 28-second video showing how it works:
 
 **Caddy serves all sites over HTTPS by default.**
 
-- Caddy serves IP addresses and local/internal hostnames over HTTPS with locally-trusted ceritficates. Examples: `localhost`, `127.0.0.1`.
+- Caddy serves IP addresses and local/internal hostnames over HTTPS with locally-trusted certificates. Examples: `localhost`, `127.0.0.1`.
 - Caddy serves public DNS names over HTTPS with certificates from [Let's Encrypt](https://letsencrypt.org). Examples: `example.com`, `sub.example.com`, `*.example.com`.
 
 Caddy keeps all certificates renewed, and redirects HTTP (default port 80) to HTTPS (default port 443) automatically.
@@ -174,15 +174,15 @@ If the DNS challenge is enabled, other challenges are disabled by default.
 
 ## On-Demand TLS
 
-Caddy pioneers a new technology we call On-Demand TLS, which obtains the certificate for a name during the first TLS handshake that requires it, rather than at config load. You can enable it using the [on_demand](/docs/json/apps/tls/automation/on_demand/) property in your TLS automation config.
+Caddy pioneered a new technology we call On-Demand TLS, which obtains the certificate for a name during the first TLS handshake that requires it, rather than at config load. You can enable it using the [on_demand](/docs/json/apps/tls/automation/on_demand/) property in your TLS automation config, or the [on_demand Caddyfile subdirective](/docs/caddyfile/directives/tls#syntax).
 
-This feature can be useful if you do not know all the domain names up front. Certificates managed on-demand will be obtained and renewed in the foreground of TLS handshakes that require it. This process slows down only the initial TLS handshake; all others will not be affected.
+This feature can be useful if you do not know all the domain names up front, or if domain names you know of may not be properly configured right away (e.g. DNS records not yet set correctly). Certificates managed on-demand will be obtained and renewed in the foreground of TLS handshakes that require it. This process slows down only the initial TLS handshake; all others will not be affected.
 
 To prevent abuse, you should specify rate limits and/or an endpoint that Caddy can query to ask if a certificate is allowed to be obtained for a hostname. Essentially, you still need a way to provide a whitelist, but this can be managed dynamically using your own scripts or programs if you'd rather keep Caddy's config more static.
 
 **Future support:** This feature relies on the CA issuing certificates without delay. If instantaneous issuance becomes uncommon among ACME CAs, we may discontinue this feature in Caddy.
 
-Due to its deferred nature and the possibility that some ACME challenges can take more than a few seconds (especially when using the DNS challenge), we typically recommend using On-Demand TLS only when there are specific technical or operational advantages to you.
+Due to its deferred nature and the possibility that some ACME challenges can take more than a few seconds (especially when using the DNS challenge), we typically recommend using On-Demand TLS only when there are specific technical or operational advantages to you; namely, if the DNS records for a domain are not in your control, and you do not know when they will be properly set and ready to get certificates.
 
 
 ## Errors

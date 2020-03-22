@@ -70,7 +70,7 @@ Strip `api/` prefix from request path just before proxying all API requests to a
 
 ```
 route /api/* {
-	strip_prefix  api/
+	uri strip_prefix api/
 	reverse_proxy localhost:9000
 }
 ```

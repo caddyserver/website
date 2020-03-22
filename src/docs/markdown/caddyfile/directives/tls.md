@@ -22,6 +22,7 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 	load      <paths...>
 	ca        <ca_dir_url>
 	ca_root   <pem_file>
+	on_demand
 }
 ```
 
@@ -58,16 +59,11 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 - **load** specifies a list of folders from which to load PEM files that are certificate+key bundles.
 - **ca** changes the ACME CA endpoint. This is most often used to use [Let's Encrypt's staging endpoint](https://letsencrypt.org/docs/staging-environment/) or an internal ACME server. (To change this value for the whole Caddyfile, use the `acme_ca` [global option](/docs/caddyfile/options) instead.)
 - **ca_root** specifies a PEM file that contains a trusted root certificate for the ACME CA endpoint, if not in the system trust store.
+- **on_demand** enables [on-demand TLS](/docs/automatic-https#on-demand-tls) for the hostnames given in the site block's address(es).
 
 
 
 ## Examples
-
-Specify an email address for your ACME account:
-
-```
-tls your@email.com
-```
 
 Use a custom certificate and key:
 
@@ -75,3 +71,22 @@ Use a custom certificate and key:
 tls cert.pem key.pem
 ```
 
+Use locally-trusted certificates for all hosts on the current site block, rather than public certificates via ACME / Let's Encrypt (useful in dev environments):
+
+```
+tls internal
+```
+
+Use locally-trusted certificates, but managed on-demand intead of in the background:
+
+```
+tls internal {
+	on_demand
+}
+```
+
+Specify an email address for your ACME account (but if only one email is used for all sites, we recommend the `email` [global option](/docs/caddyfile/options) instead):
+
+```
+tls your@email.com
+```

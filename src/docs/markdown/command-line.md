@@ -132,7 +132,8 @@ Prints the environment as seen by caddy, then exits. Can be useful when debuggin
 	[--root &lt;path&gt;]
 	[--listen &lt;addr&gt;]
 	[--domain &lt;example.com&gt;]
-	[--browse]</code></pre>
+	[--browse]
+	[--templates]</code></pre>
 
 Spins up a simple but production-ready static file server.
 
@@ -144,6 +145,8 @@ Spins up a simple but production-ready static file server.
 
 `--browse` will enable directory listings if a directory without an index file is requested.
 
+`--templates` will enable template rendering.
+
 This command disables the admin API, making it easier to run multiple instances on a local development machine.
 
 
@@ -152,13 +155,13 @@ This command disables the admin API, making it easier to run multiple instances 
 ### `caddy fmt`
 
 <pre><code class="cmd bash">caddy fmt [&lt;path&gt;]
-	[--write]</code></pre>
+	[--overwrite]</code></pre>
 
-Formats or prettifies a Caddyfile, then exits. The result is printed to stdout unless `--write` is used.
+Formats or prettifies a Caddyfile, then exits. The result is printed to stdout unless `--overwrite` is used.
 
 `<path>` specifies the path to the Caddyfile. If omitted, a file named Caddyfile in the current directory is assumed instead.
 
-`--write` causes the result to be written to the input file instead of being printed to the terminal.
+`--overwrite` causes the result to be written to the input file instead of being printed to the terminal.
 
 
 
@@ -207,7 +210,7 @@ NOTE: Due to [a bug in Go](https://github.com/golang/go/issues/29228), version i
 	[--adapter &lt;name&gt;]
 	[--address &lt;interface&gt;]</code></pre>
 
-Gives the running Caddy instance a new configuration. This has the same effect as POSTing a document to the [/load endpoint](/docs/api#post-load), but this command is convenient for simple workflows revolving around config files.
+Gives the running Caddy instance a new configuration. This has the same effect as POSTing a document to the [/load endpoint](/docs/api#post-load), but this command is convenient for simple workflows revolving around config files. Compared to the `stop`, `start`, and `run` commands, this single command is the correct, semantic way to change/reload the running configuration.
 
 `--config` is the config file to apply. If not specified, it will try a file called `Caddyfile` in the current working directory and, if it exists, it will adapt it using the `caddyfile` config adapter; otherwise, it is an error if there is no config file to load.
 
@@ -245,6 +248,10 @@ This command disables the admin API, making it easier to run multiple instances 
 	[--environ]
 	[--resume]</code></pre>
 
+<aside class="tip">
+	To change the active configuration while running in production, do not stop the server! That will result in downtime. (This should be obvious but you'd be surprised how many complaints we get about it.) Use the <a href="#caddy-reload">caddy reload</a> command instead.
+</aside>
+
 Runs Caddy and blocks indefinitely; i.e. "daemon" mode.
 
 `--config` specifies an initial config file to immediately load and use. If no config is specified, Caddy will run with a blank configuration and use default settings for the [admin API endpoints](/docs/api), which can be used to feed it new configuration. As a special case, if the current working directory has a file called "Caddyfile" and the `caddyfile` config adapter is plugged in (default), then that file will be loaded and used to configure Caddy, even without any command line flags.
@@ -273,6 +280,10 @@ Once started, you can use [`caddy stop`](#caddy-stop) or [the /stop API endpoint
 ### `caddy stop`
 
 <pre><code class="cmd bash">caddy stop [--address &lt;interface&gt;]</code></pre>
+
+<aside class="tip">
+	Stopping (and restarting) the server is orthogonal to config changes. Do not use the stop command to change configuration in production, unless you want downtime. Use the <a href="#caddy-reload">caddy reload</a> command instead.
+</aside>
 
 Gracefully stops the running Caddy process (other than the process of the stop command) and causes it to exit. It uses the [/stop endpoint](/docs/api#post-stop) of the admin API to perform a graceful shutdown.
 
