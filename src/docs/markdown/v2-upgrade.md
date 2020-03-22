@@ -99,9 +99,9 @@ The [v2 Caddyfile](/docs/caddyfile/concepts) is very similar to what you're alre
 
 - If you are serving static files, you will need to add a [`file_server` directive](/docs/caddyfile/directives/file_server), since Caddy 2 does not assume this by default.
 
-- In v1, you could only filter (or "match") directives by request path. In v2, [request matching](/docs/caddyfile/concepts#matchers) is much more powerful. Any v2 directives which add a middleware to the HTTP handler chain or which manipulate the HTTP request/response in any way take advantage of this new matching functionality. [Read more about v2 request matchers.](/docs/caddyfile/concepts#matchers) You'll need to know about them to make sense of the v2 Caddyfile.
+- In v1, you could only filter (or "match") directives by request path. In v2, [request matching](/docs/caddyfile/matchers) is much more powerful. Any v2 directives which add a middleware to the HTTP handler chain or which manipulate the HTTP request/response in any way take advantage of this new matching functionality. [Read more about v2 request matchers.](/docs/caddyfile/matchers) You'll need to know about them to make sense of the v2 Caddyfile.
 
-- Although many [placeholders](/docs/conventions#placeholders) are the same, many have changed, and there are now [many new ones](/docs/modules/http).
+- Although many [placeholders](/docs/conventions#placeholders) are the same, many have changed, and there are now [many new ones](/docs/modules/http), including [shorthands for the Caddyfile](/docs/caddyfile/concepts#placeholders).
 
 - Caddy 2 logs are all structured, and the default format is JSON. All log levels can simply go to the same log to be processed (but you can customize this if needed).
 
@@ -213,16 +213,16 @@ rewrite {
 rewrite @mobile /mobile{uri}
 ```
 
-Notice how we simply use Caddy 2's usual [matcher tokens](/docs/caddyfile/concepts#matchers); it's no longer a special case for this directive.
+Notice how we simply use Caddy 2's usual [matcher tokens](/docs/caddyfile/matchers); it's no longer a special case for this directive.
 
-Start by removing all rewrite hacks; turn them into [named matchers](/docs/caddyfile/concepts#named-matcher) instead. Evaluate each v1 `rewrite` to see if it's really needed in v2. Hint: A v1 Caddyfile that uses `rewrite` to add a path prefix and then `proxy` with `without` to remove that same prefix is a rewrite hack, and can be eliminated.
+Start by removing all rewrite hacks; turn them into [named matchers](/docs/caddyfile/concepts#named-matchers) instead. Evaluate each v1 `rewrite` to see if it's really needed in v2. Hint: A v1 Caddyfile that uses `rewrite` to add a path prefix and then `proxy` with `without` to remove that same prefix is a rewrite hack, and can be eliminated.
 
 You may find the new [`route`](/docs/caddyfile/directives/route) and [`handle`](/docs/caddyfile/directives/handle) directives useful for having greater control over advanced routing logic.
 
 
 ### root
 
-[Unchanged](/docs/caddyfile/directives/root), but if your root path starts with `/`, you'll need to add a `*` matcher token to distinguish it from a [path matcher](/docs/caddyfile/concepts#path-matcher).
+[Unchanged](/docs/caddyfile/directives/root), but if your root path starts with `/`, you'll need to add a `*` matcher token to distinguish it from a [path matcher](/docs/caddyfile/concepts#path-matchers).
 
 - **v1:** `root /var/www`
 - **v2:** `root * /var/www`

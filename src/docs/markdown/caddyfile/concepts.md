@@ -161,98 +161,19 @@ An address must be unique; you cannot specify the same address more than once.
 
 By default, a directive that injects an HTTP handler applies to all requests (unless otherwise documented).
 
-**Request matchers** can be used to classify requests by a given criteria. This concept originates in the [underlying JSON](/docs/json/apps/http/servers/routes/match/) structure, and it's important to know how to use them in the Caddyfile. With matchers, you can specify exactly which requests a directive applies to.
+Request matchers can be used to classify requests by a given criteria. This concept originates in the [underlying JSON](/docs/json/apps/http/servers/routes/match/) structure, and it's important to know how to use them in the Caddyfile. With matchers, you can specify exactly which requests a certain directive applies to.
 
-To limit a directive's scope, use a **matcher token** immediately following the directive, [if the directive supports matchers](/docs/caddyfile/directives#matchers). The matcher token can be one of these forms:
-
-1. **`*`** to match all requests (wildcard; default).
-2. **`/path`** start with a forward slash to match a request path.
-3. **`@name`** to specify a _named matcher_.
-
-Matcher tokens are usually optional. If a matcher token is omitted, it is the same as a wildcard matcher (`*`).
-
-
-### Wildcard matcher
-
-The wildcard matcher `*` matches all requests, and is only needed if a matcher token is required. For example, if the first argument you want to give a directive also happens to be a path, it would look exactly like a path matcher! So you can use a wildcard matcher to disambiguate, for example:
+For directives that support matchers, the first argument after the directive is the **matcher token**. Here are some examples:
 
 ```
-root * /home/www/mysite
+root *           /var/www  # matcher token: *
+root /index.html /var/www  # matcher token: /index.html
+root @post       /var/www  # matcher token: @post
 ```
 
-Otherwise, this matcher is not often used. It is convenient to omit it when possible; just a matter of preference.
+Matcher tokens can be omitted entirely to match all requests; for example, `*` or `/` do not need to be given.
 
-
-### Path matcher
-
-Because matching by path is so common, a single path matcher can be inlined, like so:
-
-```
-redir /old-article.html /new-article.html
-```
-
-Path matcher tokens must start with a forward slash `/`.
-
-[Path matching](/docs/caddyfile/matchers#path) is an exact match by default; you must append a `*` for a fast prefix match. Note that `/foo*` will match `/foo` and `/foo/` as well as `/foobar`; if this is unintended, you might actually want `/foo/*` instead.
-
-
-### Named matcher
-
-Defining a matcher with a unique name gives you more flexibility, allowing you to combine [any available matchers](/docs/caddyfile/matchers):
-
-```
-@name {
-	...
-}
-```
-
-Then you can use the matcher like so: `@name`
-
-For example:
-
-```
-@websockets {
-	header Connection *Upgrade*
-	header Upgrade    websocket
-}
-reverse_proxy @websockets localhost:6001
-```
-
-This proxies only the requests that have a header field named "Connection" containing the word "Upgrade", and another header named "Upgrade" with a value of "websocket".
-
-Like directives, named matcher definitions must go inside the site blocks that use them.
-
-**[View full list of standard request matchers.](/docs/caddyfile/matchers)**
-
-
-### Matcher examples
-
-This directive applies to all HTTP requests:
-
-```
-reverse_proxy localhost:9000
-```
-
-And this is the same:
-
-```
-reverse_proxy * localhost:9000
-```
-
-But this directive applies only to requests having a path starting with `/api/`:
-
-```
-reverse_proxy /api/* localhost:9000
-```
-
-To match on anything other than a path, define a **named matcher** and refer to it using `@name`:
-
-```
-@post {
-	method POST
-}
-reverse_proxy @post localhost:9000
-```
+**[Read the page about request matchers](/docs/caddyfile/matchers) to learn more.**
 
 
 

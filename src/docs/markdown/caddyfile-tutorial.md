@@ -207,7 +207,7 @@ There; now the reverse proxy will be prioritized for all requests starting with 
 
 The `/api/*` token we just added is called a **matcher token**. You can tell it's a matcher token because it starts with a forward slash `/` and it appears right after the directive (but you can always look it up in the [directive's docs](/docs/caddyfile/directives) to be sure).
 
-Matchers are actually really powerful. You can name matchers and use them like `@name` to match on more than just the request path! Take a moment to [learn more about matchers](/docs/caddyfile/concepts#matchers) before continuing!
+Matchers are actually really powerful. You can name matchers and use them like `@name` to match on more than just the request path! Take a moment to [learn more about matchers](/docs/caddyfile/matchers) before continuing!
 
 <aside class="complete">✅ Matchers</aside>
 

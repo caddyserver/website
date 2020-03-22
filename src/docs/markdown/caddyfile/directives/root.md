@@ -27,7 +27,7 @@ Set the site root to `/home/user/public_html` for all requests:
 root * /home/user/public_html
 ```
 
-(A [wildcard matcher](/docs/caddyfile/concepts#wildcard-matcher) is required in this case because the first argument is ambiguous with a [path matcher](/docs/caddyfile/concepts#path-matcher).)
+(A [wildcard matcher](/docs/caddyfile/matchers#wildcard-matchers) is required in this case because the first argument is ambiguous with a [path matcher](/docs/caddyfile/matchers#path-matchers).)
 
 Set the site root to `public_html` (relative to current working directory) for all requests:
 

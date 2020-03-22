@@ -4,26 +4,118 @@ title: Request matchers (Caddyfile)
 
 # Request Matchers
 
-Matchers are used to filter requests.
+**Request matchers** can be used to filter (or classify) requests by specific criteria.
 
-There are many dimensions across which requests can be matched! This page describes the various ways you can match (i.e. filter or select) requests.
+### Menu
 
-**If you don't know what a matcher is or how to use it, first [visit the "Concepts" page to learn more](/docs/caddyfile/concepts#matchers)**.
+- [Syntax](#syntax)
+	- [Examples](#examples)
+	- [Wildcard matchers](#wildcard-matchers)
+	- [Path matchers](#path-matchers)
+	- [Named matchers](#named-matchers)
+- [Standard matchers](#standard-matchers)
 
 
 ## Syntax
 
-The matchers documented below should be used within the definition of [named matchers](/docs/caddyfile/concepts#named-matcher), in other words, within:
+In the Caddyfile, a **matcher token** immediately following the directive can limit that directive's scope. The matcher token can be one of these forms:
+
+1. **`*`** to match all requests (wildcard; default).
+2. **`/path`** start with a forward slash to match a request path.
+3. **`@name`** to specify a _named matcher_.
+
+Matcher tokens are [usually optional](/docs/caddyfile/directives#matchers). If a matcher token is omitted, it is the same as a wildcard matcher (`*`).
+
+
+#### Examples
+
+This directive applies to [all](#wildcard-matchers) HTTP requests:
+
+```
+reverse_proxy localhost:9000
+```
+
+And this is the same:
+
+```
+reverse_proxy * localhost:9000
+```
+
+But this directive applies only to requests having a [path](#path-matchers) starting with `/api/`:
+
+```
+reverse_proxy /api/* localhost:9000
+```
+
+To match on anything other than a path, define a [named matcher](#named-matchers) and refer to it using `@name`:
+
+```
+@post {
+	method POST
+}
+reverse_proxy @post localhost:9000
+```
+
+
+
+
+### Wildcard matchers
+
+The wildcard matcher `*` matches all requests, and is only needed if a matcher token is required. For example, if the first argument you want to give a directive also happens to be a path, it would look exactly like a path matcher! So you can use a wildcard matcher to disambiguate, for example:
+
+```
+root * /home/www/mysite
+```
+
+Otherwise, this matcher is not often used. It is convenient to omit it when possible; just a matter of preference.
+
+
+### Path matchers
+
+Because matching by path is so common, a single path matcher can be inlined, like so:
+
+```
+redir /old.html /new.html
+```
+
+Path matcher tokens must start with a forward slash `/`.
+
+[Path matching](/docs/caddyfile/matchers#path) is an exact match by default; you must append a `*` for a fast prefix match. Note that `/foo*` will match `/foo` and `/foo/` as well as `/foobar`; you might actually want `/foo/*` instead.
+
+
+### Named matchers
+
+Defining a matcher with a unique name gives you more flexibility, allowing you to combine [any available matchers](#standard-matchers) into a set:
 
 ```
 @name {
-	# here
+	...
 }
 ```
 
-A matcher definition constitutes a _matcher set_. Matchers in a set are AND'ed together; i.e. all must match. For example, if you have both a `header` and `path` matcher in the set, both must match.
+Then you can use the matcher like so: `@name`
+
+For example:
+
+```
+@websockets {
+	header Connection *Upgrade*
+	header Upgrade    websocket
+}
+reverse_proxy @websockets localhost:6001
+```
+
+This proxies only the requests that have a header field named "Connection" containing the word "Upgrade", and another field named "Upgrade" with a value of "websocket".
+
+Like directives, named matcher definitions must go inside the site blocks that use them.
+
+A named matcher definition constitutes a _matcher set_. Matchers in a set are AND'ed together; i.e. all must match. For example, if you have both a `header` and `path` matcher in the set, both must match.
 
 For most matchers that accept multiple values, those values are OR'ed; i.e. one must match in order for the matcher to match.
+
+
+
+
 
 ## Standard matchers
 

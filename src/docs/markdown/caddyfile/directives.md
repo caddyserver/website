@@ -50,7 +50,7 @@ Subdirectives are always optional unless documented otherwise, even though they 
 
 ### Matchers
 
-Most---but not all---directives accept [matcher tokens](/docs/caddyfile/concepts#matchers), which let you filter requests. Matcher tokens are usually optional. If you see this in a directive's syntax:
+Most---but not all---directives accept [matcher tokens](/docs/caddyfile/matchers#syntax), which let you filter requests. Matcher tokens are usually optional. If you see this in a directive's syntax:
 
 ```
 [<matcher>]
@@ -58,7 +58,7 @@ Most---but not all---directives accept [matcher tokens](/docs/caddyfile/concepts
 
 then the directive accepts a matcher token, letting you filter which requests the directive applies to.
 
-Because matcher tokens all work the same, the various possibilities for the matcher token will not be described on every page, to reduce duplication. Instead, refer to the centralized [matcher documentation](/docs/caddyfile/concepts#matchers).
+Because matcher tokens all work the same, the various possibilities for the matcher token will not be described on every page, to reduce duplication. Instead, refer to the centralized [matcher documentation](/docs/caddyfile/matchers).
 
 
 ## Directive order
