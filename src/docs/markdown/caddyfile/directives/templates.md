@@ -11,9 +11,9 @@ Executes the response body as a [template](/docs/json/apps/http/servers/errors/r
 
 ```
 templates [<matcher>] {
-	mime <types...>
+	mime    <types...>
 	between <open_delim> <close_delim>
-	root <path>
+	root    <path>
 }
 ```
 

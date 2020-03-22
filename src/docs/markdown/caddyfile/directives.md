@@ -66,16 +66,17 @@ Because matcher tokens all work the same, the various possibilities for the matc
 Many directives manipulate the HTTP handler chain. The order in which those directives are evaluated matters, so a default ordering is hard-coded into Caddy:
 
 ```
-root
+header
 
 redir
 rewrite
+
+root
 
 uri
 try_files
 
 basicauth
-headers
 request_header
 encode
 templates

@@ -747,6 +747,10 @@ td code {
 		background-color: #000;
 		color: #ccc;
 	}
+	
+	.json .key a:not([href]) {
+		color: #bdd6f7
+	}
 
 	#hovercard,
 	.arrow-box {

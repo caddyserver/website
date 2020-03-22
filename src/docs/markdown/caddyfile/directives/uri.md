@@ -28,10 +28,10 @@ uri [<matcher>] strip_prefix|strip_suffix|replace \
 
 ## Examples
 
-Strip `api/` from the beginning of all request paths:
+Strip `/api` from the beginning of all request paths:
 
 ```
-uri strip_prefix api/
+uri strip_prefix /api
 ```
 
 Strip `.php` from the end of all request paths:
