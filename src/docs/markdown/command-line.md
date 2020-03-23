@@ -246,7 +246,8 @@ This command disables the admin API, making it easier to run multiple instances 
 	[--config &lt;path&gt;]
 	[--adapter &lt;name&gt;]
 	[--environ]
-	[--resume]</code></pre>
+	[--resume]
+	[--watch]</code></pre>
 
 <aside class="tip">
 	To change the active configuration while running in production, do not stop the server! That will result in downtime. (This should be obvious but you'd be surprised how many complaints we get about it.) Use the <a href="#caddy-reload">caddy reload</a> command instead.
@@ -262,14 +263,17 @@ Runs Caddy and blocks indefinitely; i.e. "daemon" mode.
 
 `--resume` uses the last loaded configuration. This flag is useful primarily in [API](/docs/api)-heavy deployments, and overrides `--config` if a saved config exists.
 
+`--watch` will watch the config file and automatically reload it after it changes. ⚠️ This feature is dangerous in production! Only use it in a local development environment.
+
 
 ### `caddy start`
 
 <pre><code class="cmd bash">caddy start
 	[--config &lt;path&gt;]
-	[--adapter &lt;name&gt;]</code></code></pre>
+	[--adapter &lt;name&gt;]
+	[--watch]</code></code></pre>
 
-Same as `caddy run`, but in the background. This command only blocks until the background process is running successfully (or fails to run), then returns.
+Same as [`caddy run`](#caddy-run), but in the background. This command only blocks until the background process is running successfully (or fails to run), then returns.
 
 Use of this command is discouraged with system services or on Windows. On Windows, the child process will remain attached to the terminal, so closing the window will forcefully stop Caddy, which is not obvious.
 

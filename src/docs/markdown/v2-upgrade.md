@@ -7,7 +7,7 @@ Upgrade Guide
 
 Caddy 2 is a whole new code base, written from scratch, to improve on Caddy 1. Caddy 2 is not backwards-compatible with Caddy 1. But don't worry, for most basic setups, not much is different. This guide will help you transition as easily as possible.
 
-This guide won't delve into the [new features](https://caddyserver.com/docs/getting-started) available -- which are really cool, by the way, you should learn them -- the goal here is to just get you up and running on Caddy 2 quickly.
+This guide won't delve into the new features available -- which are really cool, by the way, you should [learn them](https://caddyserver.com/docs/getting-started) -- the goal here is to just get you up and running on Caddy 2 quickly.
 
 
 ### Menu
@@ -67,7 +67,7 @@ This guide won't delve into the [new features](https://caddyserver.com/docs/gett
 
 Caddy's default port is no longer `:2015`. Caddy 2's default port is `:443` or, if no hostname/IP is known, port `:80`. You can always customize the ports in your config.
 
-Caddy 2's default protocol is [_always_ HTTPS if a hostname or IP is known](https://localhost/docs/automatic-https#tldr). This is different from Caddy 1, where only public-looking domains used HTTPS by default. Now, _every_ site uses HTTPS (unless you disable it by explicitly specifying port `:80` or `http://`).
+Caddy 2's default protocol is [_always_ HTTPS if a hostname or IP is known](/docs/automatic-https#tldr). This is different from Caddy 1, where only public-looking domains used HTTPS by default. Now, _every_ site uses HTTPS (unless you disable it by explicitly specifying port `:80` or `http://`).
 
 IP addresses and localhost domains will be issued certificates from a [locally-trusted, embedded CA](/docs/automatic-https#local-https). All other domains will use Let's Encrypt. (This is all configurable.)
 
@@ -179,6 +179,14 @@ log {
 ### proxy
 
 The v2 equivalent is [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy).
+
+Notable subdirective changes are `header_upstream` and `header_downstream` have become `header_up` and `header_down`, respectively; and load-balancing-related subdirectives are prefixed with `lb_`.
+
+One other significant difference is that the v2 proxy passes all incoming headers thru by default (including the `Host` header) and sets the `X-Forwarded-For` header. In other words, v1's "transparent" mode is basically the default in v2 (but if you need other headers like X-Real-IP you have to set those yourself). You can still override/customize the `Host` header using the `header_up` subdirective.
+
+Websocket proxying "just works" in v2; there is no need to "enable" websockets like in v1.
+
+The `without` subdirective has been removed because [rewrite hacks](#rewrite) are no longer necessary in v2 thanks to improved matcher support.
 
 - **v1:** `proxy / localhost:9005`
 - **v2:** `reverse_proxy localhost:9005`
