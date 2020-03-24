@@ -94,6 +94,8 @@ Environment variables are no longer relevant, except for `HOME` (and, optionally
 
 The [v2 Caddyfile](/docs/caddyfile/concepts) is very similar to what you're already familiar with. The main thing you'll need to do is change your directives.
 
+⚠️ **Do not take this advice at face value!** Especially if your config is more advanced, there are many nuances to consider. These tips will get you mostly switched over pretty quickly, but please read the full documentation for each directive so you can understand the implications of the upgrade. And of course, always test your configs thoroughly before putting them into production.
+
 ### Primary changes
 
 

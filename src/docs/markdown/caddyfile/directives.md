@@ -13,6 +13,7 @@ Directive | Description
 **[encode](/docs/caddyfile/directives/encode)** | Encodes (usually compresses) responses
 **[file_server](/docs/caddyfile/directives/file_server)** | Serve files from disk
 **[handle](/docs/caddyfile/directives/handle)** | A mutually-exclusive group of directives
+**[handle_errors](/docs/caddyfile/directives/handle_errors)** | Defines routes for handling errors
 **[header](/docs/caddyfile/directives/header)** | Sets or removes response headers
 **[log](/docs/caddyfile/directives/log)** | Enables access/request logging
 **[php_fastcgi](/docs/caddyfile/directives/php_fastcgi)** | Serve PHP sites over FastCGI

@@ -121,6 +121,7 @@ For most matchers that accept multiple values, those values are OR'ed; i.e. one 
 
 Full matcher documentation can be found [in each respective matcher module's docs](/docs/json/apps/http/servers/routes/match/).
 
+- [expression](#expression)
 - [file](#file)
 - [header](#header)
 - [header_regexp](#header-regexp)
@@ -132,6 +133,26 @@ Full matcher documentation can be found [in each respective matcher module's doc
 - [protocol](#protocol)
 - [query](#query)
 - [remote_ip](#remote-ip)
+
+
+
+### expression
+
+```
+expression <cel...>
+```
+
+By any [CEL (Common Expression Language)](https://github.com/google/cel-spec) expression that returns `true` or `false`.
+
+⚠️ This module is still experimental and, as such, may experience breaking changes.
+
+As a special case, Caddy [placeholders](/docs/conventions#placeholders) (or [Caddyfile shorthands](/docs/caddyfile/concepts#placeholders)) may be used in these CEL expressions, as they are preprocessed and converted to regular CEL function calls before being interpreted by the CEL environment.
+
+Examples:
+
+```
+expression {method}.startsWith("P")
+```
 
 
 ### file
