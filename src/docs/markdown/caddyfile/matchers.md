@@ -146,7 +146,7 @@ file {
 
 By files.
 
-- `root` defines the directory in which to look for files. Default is the current working directory, or the `root` [variable](https://caddyserver.com/docs/json/apps/http/servers/errors/routes/handle/vars/) (`{http.vars.root}`) if set.
+- `root` defines the directory in which to look for files. Default is the current working directory, or the `root` [variable](/docs/modules/http.handlers.vars) (`{http.vars.root}`) if set.
 - `try_files` checks files in its list that match the try_policy.
 - `try_policy` specifies how to choose a file. Default is `first_exist`.
 	- `first_exist` checks for file existence. The first file that exists is selected.

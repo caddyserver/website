@@ -104,7 +104,7 @@ Save that, then restart Caddy, then reload the browser tab. You should see:
 Page loaded at: {{now | date "Mon Jan 2 15:04:05 MST 2006"}}
 ```
 
-With Caddy's [templates module](/docs/json/apps/http/servers/errors/routes/handle/templates/), you can do a lot of useful things with static files, such as including other HTML files, making sub-requests, setting response headers, working with data structures, and more!
+With Caddy's [templates module](/docs/modules/http.handlers.templates), you can do a lot of useful things with static files, such as including other HTML files, making sub-requests, setting response headers, working with data structures, and more!
 
 <aside class="complete">✅ Templates</aside>
 

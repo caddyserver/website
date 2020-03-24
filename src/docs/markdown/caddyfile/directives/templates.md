@@ -4,7 +4,7 @@ title: templates (Caddyfile directive)
 
 # templates
 
-Executes the response body as a [template](/docs/json/apps/http/servers/errors/routes/handle/templates/) document. Templates provide functional primitives for making simple dynamic pages. Features include HTTP subrequests, HTML file includes, Markdown rendering, JSON parsing, basic data structures, randomness, time, and more.
+Executes the response body as a [template](/docs/modules/http.handlers.templates) document. Templates provide functional primitives for making simple dynamic pages. Features include HTTP subrequests, HTML file includes, Markdown rendering, JSON parsing, basic data structures, randomness, time, and more.
 
 
 ## Syntax

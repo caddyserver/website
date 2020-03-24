@@ -76,9 +76,9 @@ Requirements:
 - [Go](https://golang.org/dl) 1.14 or newer
 - [Go modules](https://github.com/golang/go/wiki/Modules) enabled
 
-Download the `v2` branch source code:
+Download the source code:
 
-<pre><code class="cmd bash">git clone -b v2 "https://github.com/caddyserver/caddy.git"</code></pre>
+<pre><code class="cmd bash">git clone "https://github.com/caddyserver/caddy.git"</code></pre>
 
 Build:
 
