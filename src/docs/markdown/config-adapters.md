@@ -12,10 +12,10 @@ For example, a config adapter could [turn your NGINX config into Caddy JSON](htt
 
 The following config adapters are currently available (some are third-party projects):
 
-- [**caddyfile**](/docs/caddyfile) (built-in)
-- **jsonc** (built-in for now)
-- **json5** (built-in for now)
+- [**caddyfile**](/docs/caddyfile) (standard)
 - [**nginx**](https://github.com/caddyserver/nginx-adapter)
+- [**jsonc**](https://github.com/caddyserver/jsonc-adapter)
+- [**json5**](https://github.com/caddyserver/json5-adapter)
 - [**yaml**](https://github.com/iamd3vil/caddy_yaml_adapter)
 
 (This list is the temporary home for known adapters until our new website is finished.)
