@@ -37,7 +37,7 @@ output stderr
 Standard output (console).
 
 ```
-output stderr
+output stdout
 ```
 
 #### discard
