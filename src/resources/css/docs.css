@@ -1,3 +1,7 @@
+body {
+	font-family: Maven Pro, sans-serif;
+}
+
 header {
 	border-bottom: 1px solid #f0f6f7;
 	padding: 10px 20px;

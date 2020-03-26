@@ -2,6 +2,10 @@ body {
 	font-family: 'Inter', sans-serif;
 }
 
+#search {
+	margin-top: 4px;
+}
+
 .hero {
 	background-image: url('/resources/images/bg-teal.jpg');
 	background-repeat: no-repeat;
