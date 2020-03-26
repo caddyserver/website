@@ -71,6 +71,8 @@ Caddy 2's default protocol is [_always_ HTTPS if a hostname or IP is known](/doc
 
 IP addresses and localhost domains will be issued certificates from a [locally-trusted, embedded CA](/docs/automatic-https#local-https). All other domains will use Let's Encrypt. (This is all configurable.)
 
+The storage structure of certificates and ACME resources has changed. Caddy 2 will probably obtain new certificates for your sites; but if you have a lot of certificates you can migrate them manually. See issues [#2955](https://github.com/caddyserver/caddy/issues/2955) and [#3124](https://github.com/caddyserver/caddy/issues/3124) for details.
+
 
 ## Command line
 
@@ -99,7 +101,7 @@ The [v2 Caddyfile](/docs/caddyfile/concepts) is very similar to what you're alre
 ### Primary changes
 
 
-- If you are serving static files, you will need to add a [`file_server` directive](/docs/caddyfile/directives/file_server), since Caddy 2 does not assume this by default.
+- If you are serving static files, you will need to add a [`file_server` directive](/docs/caddyfile/directives/file_server), since Caddy 2 does not assume this by default. Caddy 2 does not sniff MIME by default, either, for security reasons; if a Content-Type is missing you may need to set the header yourself using the [header](/docs/caddyfile/directives/header) directive.
 
 - In v1, you could only filter (or "match") directives by request path. In v2, [request matching](/docs/caddyfile/matchers) is much more powerful. Any v2 directives which add a middleware to the HTTP handler chain or which manipulate the HTTP request/response in any way take advantage of this new matching functionality. [Read more about v2 request matchers.](/docs/caddyfile/matchers) You'll need to know about them to make sense of the v2 Caddyfile.
 
@@ -275,9 +277,9 @@ Most sites will not need this directive at all.
 
 ## Service files
 
-We recommend using [our official service file](https://github.com/caddyserver/dist/blob/master/init/caddy.service) for their Caddy deployments.
+We recommend using [our official service file](https://github.com/caddyserver/dist/blob/master/init/caddy.service) for Caddy deployments.
 
-If you need a custom service file, base it off of ours. It has been carefully set to what it is for good reasons!
+If you need a custom service file, base it off of ours. It has been carefully tuned to what it is for good reasons!
 
 See [install instructions](/docs/install#manually-installing-as-a-linux-service) for details.
 
