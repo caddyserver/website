@@ -1,0 +1,101 @@
+body {
+	background-color: #060e17;
+	color: #bdd6f7;
+}
+
+#search {
+	background: rgb(28, 52, 79);
+	color: #bdd6f7;
+}
+#search:focus {
+	background: rgb(46, 70, 96);
+}
+
+#paper1,
+#paper2 {
+	background-color: #030a11;
+}
+.paper3 {
+	background-color: #051628;
+}
+
+#logo {
+	/* TODO: Add some color */
+	filter: invert(1) opacity(.35);
+}
+
+#logo-docs {
+	color: #5aa3dc;
+}
+
+.breadcrumbs {
+	color: #5aa3dc;
+}
+
+main nav li a {
+	color: #668d9b;
+}
+
+main nav ul li a:hover {
+	color: #5aa3dc;
+}
+
+main nav ul li a.current {
+	background-color: #061b35;
+}
+
+.breadcrumbs {
+	border-color: #061b35;
+}
+
+h1 {
+	color: #5aa3dc;
+}
+
+code {
+	background-color: #122844;
+}
+
+code.cmd {
+	background-color: #000;
+	color: #ccc;
+}
+
+.json .key a:not([href]) {
+	color: #bdd6f7
+}
+
+#hovercard,
+.arrow-box {
+	background-color: #0a192b; 
+}
+
+.arrow-box:after {
+	border-bottom-color: #0a192b;
+}
+
+#hovercard .module-link:hover {
+	background: #0f2c50;
+}
+
+#hovercard .module-link-description {
+	color: rgb(167, 167, 167);
+}
+
+#hovercard-namespace-box,
+#hovercard-inline-link {
+	border-color: #0a2b53;
+}
+
+article aside.tip {
+	color: #8c81e4;
+}
+
+th {
+	background-color: #142638;
+}
+
+th,
+td {
+	border-bottom-color: #233444;
+}
