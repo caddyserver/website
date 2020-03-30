@@ -1,8 +1,8 @@
 ---
-title: File server quick-start
+title: Static files quick-start
 ---
 
-# File server quick-start
+# Static files quick-start
 
 This guide will show you how to get a production-ready static file server up and running quickly.
 
@@ -21,7 +21,7 @@ In your terminal, change to the root directory of your site and run:
 
 <pre><code class="cmd bash">caddy file-server</code></pre>
 
-If you get a permission error, it probably means your OS does not allow you to bind to low ports -- so use a high port instead:
+If you get a permissions error, it probably means your OS does not allow you to bind to low ports -- so use a high port instead:
 
 <pre><code class="cmd bash">caddy file-server --listen :2015</code></pre>
 
@@ -53,7 +53,7 @@ Then, from the same directory, run:
 
 <pre><code class="cmd bash">caddy run</code></pre>
 
-You can then load [localhost](https://localhost) (or whatever the address in your config is) to see your site!
+You can then load [localhost](https://localhost) (or whatever the address is in your config) to see your site!
 
 The [`file_server` directive](/docs/caddyfile/directives/file_server) has more options for you to customize your site. Make sure to [reload](/docs/command-line#caddy-reload) Caddy (or stop and start it again) when you change the Caddyfile!
 

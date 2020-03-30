@@ -112,6 +112,32 @@ reverse_proxy localhost:9000 localhost:9001 {
 Here, `lb_policy` is a subdirective to `reverse_proxy` (it sets the load balancing policy to use between backends).
 
 
+### Tokens and quotes
+
+The Caddyfile is lexed into tokens before being parsed. Whitespace is significant in the Caddyfile, because tokens are separated by whitespace.
+
+Often, directives expect a certain number of arguments; if a single argument has a value with whitespace, it would be lexed as two separate tokens:
+
+```
+directive abc def
+```
+
+This could be problematic and return errors or unexpected behavior.
+
+If `abc def` is supposed to be the value of a single argument, it needs to be quoted:
+
+```
+directive "abc def"
+```
+
+Quotes can be escaped if you need to use quotes in quoted tokens, too:
+
+```
+directive "\"abc def\""
+```
+
+Inside quoted tokens, all other characters are treated literally, including spaces, tabs, and newlines.
+
 
 
 ## Addresses
@@ -119,10 +145,6 @@ Here, `lb_policy` is a subdirective to `reverse_proxy` (it sets the load balanci
 An address always appears at the top of the site block, and is usually the first thing in the Caddyfile.
 
 These are examples of valid addresses:
-
-<aside class="tip">
-	<a href="/docs/automatic-https">Automatic HTTPS</a> is enabled if your site's address contains a hostname or IP address. This behavior is purely implicit, however, so it never overrides any explicit configuration. For example, if the site's address is <code>http://example.com</code>, auto-HTTPS will not activate because the scheme is explicitly <code>http://</code>.
-</aside>
 
 - `localhost`
 - `example.com`
@@ -132,6 +154,10 @@ These are examples of valid addresses:
 - `127.0.0.1`
 - `[::1]:2015`
 - `example.com/foo/*`
+
+<aside class="tip">
+	<a href="/docs/automatic-https">Automatic HTTPS</a> is enabled if your site's address contains a hostname or IP address. This behavior is purely implicit, however, so it never overrides any explicit configuration. For example, if the site's address is <code>http://example.com</code>, auto-HTTPS will not activate because the scheme is explicitly <code>http://</code>.
+</aside>
 
 From the address, Caddy can potentially infer the scheme, host, port, and path of your site.
 

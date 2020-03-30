@@ -67,7 +67,7 @@ This guide won't delve into the new features available -- which are really cool,
 
 Caddy's default port is no longer `:2015`. Caddy 2's default port is `:443` or, if no hostname/IP is known, port `:80`. You can always customize the ports in your config.
 
-Caddy 2's default protocol is [_always_ HTTPS if a hostname or IP is known](/docs/automatic-https#tldr). This is different from Caddy 1, where only public-looking domains used HTTPS by default. Now, _every_ site uses HTTPS (unless you disable it by explicitly specifying port `:80` or `http://`).
+Caddy 2's default protocol is [_always_ HTTPS if a hostname or IP is known](/docs/automatic-https#overview). This is different from Caddy 1, where only public-looking domains used HTTPS by default. Now, _every_ site uses HTTPS (unless you disable it by explicitly specifying port `:80` or `http://`).
 
 IP addresses and localhost domains will be issued certificates from a [locally-trusted, embedded CA](/docs/automatic-https#local-https). All other domains will use Let's Encrypt. (This is all configurable.)
 
@@ -136,10 +136,12 @@ Implied file extensions can be done with [`try_files`](/docs/caddyfile/directive
 
 Assuming you're serving PHP, the v2 equivalent is [`php_fastcgi`](/docs/caddyfile/directives/php_fastcgi).
 
-- **v1:** `fastcgi / localhost:9005`
+- **v1:** `fastcgi / localhost:9005 php`
 - **v2:** `php_fastcgi localhost:9005`
 
 Note that the `fastcgi` directive from v1 did a lot under the hood, including trying files on disk, rewriting requests, and even redirecting. The v2 `php_fastcgi` directive also does these things for you, but the docs give its [expanded form](/docs/caddyfile/directives/php_fastcgi#expanded-form) that you can modify if your requirements are different.
+
+There is no `php` preset needed in v2, since the `php_fastcgi` directive assumes PHP by default. A line such as `php_fastcgi 127.0.0.1:9000 php` will cause the reverse proxy to think that there is a second backend called `php`, leading to connection errors.
 
 
 ### gzip

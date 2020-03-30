@@ -2,7 +2,7 @@
 title: Caddyfile Quick-start
 ---
 
-# Caddyfile quick-start
+# Caddyfile Quick-start
 
 Create a new text file named `Caddyfile` (no extension).
 
@@ -24,11 +24,12 @@ Save this and run Caddy from the same folder that contains your Caddyfile:
 
 <pre><code class="cmd bash">caddy start</code></pre>
 
+You will probably be asked for your password, because Caddy serves all sites -- even local ones -- over HTTPS by default. (The password prompt should only happen the first time!)
+
 <aside class="tip">
-	For local HTTPS, Caddy automatically generates certificates and unique private keys for you. The root certificate is added to your system's trust store, which is why the password prompt is necessary. It allows you to develop locally over HTTPS without certificate errors. Just don't share your root key!
+	For local HTTPS, Caddy automatically generates certificates and unique private keys for you. The root certificate is added to your system's trust store, which is why the password prompt is necessary. It allows you to develop locally over HTTPS without certificate errors.
 </aside>
 
-You will probably be asked for your password, because Caddy will serve all sites -- even local ones -- over HTTPS. (The password prompt should only happen the first time!)
 
 Either open your browser to [localhost](http://localhost) or `curl` it:
 

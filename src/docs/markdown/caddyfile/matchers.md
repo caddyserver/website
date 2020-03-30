@@ -138,13 +138,13 @@ Full matcher documentation can be found [in each respective matcher module's doc
 
 ### expression
 
+⚠️ _This module is still experimental and, as such, may experience breaking changes._
+
 ```
 expression <cel...>
 ```
 
 By any [CEL (Common Expression Language)](https://github.com/google/cel-spec) expression that returns `true` or `false`.
-
-⚠️ This module is still experimental and, as such, may experience breaking changes.
 
 As a special case, Caddy [placeholders](/docs/conventions#placeholders) (or [Caddyfile shorthands](/docs/caddyfile/concepts#placeholders)) may be used in these CEL expressions, as they are preprocessed and converted to regular CEL function calls before being interpreted by the CEL environment.
 
@@ -167,13 +167,15 @@ file {
 
 By files.
 
-- `root` defines the directory in which to look for files. Default is the current working directory, or the `root` [variable](/docs/modules/http.handlers.vars) (`{http.vars.root}`) if set.
+- `root` defines the directory in which to look for files. Default is the current working directory, or the `root` [variable](/docs/modules/http.handlers.vars) (`{http.vars.root}`) if set (can be set via the [`root` directive](/docs/caddyfile/directives/root)).
 - `try_files` checks files in its list that match the try_policy.
 - `try_policy` specifies how to choose a file. Default is `first_exist`.
 	- `first_exist` checks for file existence. The first file that exists is selected.
 	- `smallest_size` chooses the file with the smallest size.
 	- `largest_size` chooses the file with the largest size.
 	- `most_recent_modified` chooses the file that was most recently modified.
+
+An empty `file` matcher will see if the requested file (verbatim from the URI, relative to the [site root](/docs/caddyfile/directives/root)) exists.
 
 
 ### header
