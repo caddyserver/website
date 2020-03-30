@@ -10,23 +10,20 @@
 		{{include "/includes/docs-head.html"}}
 		<meta property="og:title" content="{{$title}} - Caddy Documentation">
 		<meta name="twitter:title" value="{{$title}} - Caddy Documentation">
-		<link rel="stylesheet" href="/resources/css/chroma.css">
 	</head>
 	<body>
 		{{include "/includes/docs-header.html"}}
 		<main>
 			{{include "/includes/docs-nav.html"}}
 			<div class="article-container">
-				<div class="beta-warning">
-					<b>Caddy 2 is beta software.</b> It is ready for production, but some things will change between releases; check the <a href="https://github.com/caddyserver/caddy/releases">release notes</a> before upgrading.
-				</div>
-				<article class="centered">
+				<div class="paper" id="paper1"></div>
+				<div class="paper" id="paper2"></div>
+				<article class="paper paper3">
 					{{markdown $markdownFile.Body}}
 				</article>
 			</div>
 			<div class="sidebar"></div>
 		</main>
-
 		{{include "/includes/footer.html"}}
 	</body>
 </html>

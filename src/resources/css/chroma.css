@@ -8,7 +8,10 @@
 	Solarized Light (High Contrast)
 	Derived from http://ethanschoonover.com/solarized
 */
-.chroma { background-color: #f0f9fb; color: #586e75 }
+.chroma {
+	background: linear-gradient(0deg, #f8fbfd 0%, #edf5fd 100%);
+	color: #254048;
+}
 .chroma .c { color: #93a1a1 } /* Comment */
 .chroma .err { color: #586e75 } /* Error */
 .chroma .g { color: #586e75 } /* Generic */
@@ -83,7 +86,10 @@
 		Solarized Dark (High Contrast)
 		Derived from http://ethanschoonover.com/solarized
 	*/
-	.chroma { background-color: #002b36; color: #93a1a1 }
+	.chroma {
+		background: linear-gradient(0deg, #18384d 0%, #122537 100%);
+		color: #93a1a1;
+	}
 	.chroma .c { color: #586e75 } /* Comment */
 	.chroma .err { color: #93a1a1 } /* Error */
 	.chroma .g { color: #93a1a1 } /* Generic */

@@ -39,17 +39,19 @@ localhost
 respond "Hello, world!"
 ```
 
-Save that and run Caddy:
+Save that and run Caddy (since this is a training tutorial, we'll use the `--watch` flag so changes to our Caddyfile are applied automatically):
 
-<pre><code class="cmd bash">caddy run</code></pre>
+<pre><code class="cmd bash">caddy run --watch</code></pre>
 
-The first time, you'll be asked for your password. This is so Caddy can serve your localhost site over HTTPS. 
+The first time, you'll be asked for your password. This is so Caddy can serve your site over HTTPS.
 
-<aside class="complete">✅ First site</aside>
+<aside class="tip">Caddy serves all sites over HTTPS by default as long as a host or IP is part of the site's address. <a href="/docs/automatic-https">Automatic HTTPS</a> can be disabled by prefixing the address with <code>http://</code> explicitly.</aside>
+
+<aside class="complete">First site</aside>
 
 Open [localhost](https://localhost) in your browser and see your web server working, complete with HTTPS!
 
-Stop Caddy by pressing Ctrl+C in your terminal.
+<aside class="tip">You might need to restart your browser if you get a certificate error the first time.</aside>
 
 That's not particularly exciting, so let's change our static response to a [file server](/docs/caddyfile/directives/file_server) with directory listings enabled:
 
@@ -59,9 +61,9 @@ localhost
 file_server browse
 ```
 
-Save your Caddyfile and run Caddy again. Then refresh your browser tab. You should either see a list of files or an HTML page if there is an index file in the current directory.
+Save your Caddyfile, then refresh your browser tab. You should either see a list of files or an HTML page if there is an index file in the current directory.
 
-<aside class="complete">✅ Static file server</aside>
+<aside class="complete">Static file server</aside>
 
 ## Adding functionality
 
@@ -96,9 +98,7 @@ templates
 file_server browse
 ```
 
-<aside class="tip">You can also reload Caddy's config without downtime (i.e. without stopping it and starting it again) using the <a href="/docs/command-line#caddy-reload"><code>caddy reload</code></a> command.</aside>
-
-Save that, then restart Caddy, then reload the browser tab. You should see:
+Save that, then reload the browser tab. You should see:
 
 ```
 Page loaded at: {{now | date "Mon Jan 2 15:04:05 MST 2006"}}
@@ -106,9 +106,9 @@ Page loaded at: {{now | date "Mon Jan 2 15:04:05 MST 2006"}}
 
 With Caddy's [templates module](/docs/modules/http.handlers.templates), you can do a lot of useful things with static files, such as including other HTML files, making sub-requests, setting response headers, working with data structures, and more!
 
-<aside class="complete">✅ Templates</aside>
+<aside class="complete">Templates</aside>
 
-It's good practice to compress responses with a quick and modern compression algorithm. Let's enable compression using Gzip and Zstandard using the [`encode`](/docs/caddyfile/directives/encode) directive:
+It's good practice to compress responses with a quick and modern compression algorithm. Let's enable Gzip and Zstandard support using the [`encode`](/docs/caddyfile/directives/encode) directive:
 
 ```
 localhost
@@ -118,7 +118,10 @@ templates
 file_server browse
 ```
 
-<aside class="complete">✅ Compression</aside>
+<aside class="tip">Browsers don't support Zstandard encodings yet. Hopefully soon!</aside>
+
+
+<aside class="complete">Compression</aside>
 
 That's the basic process for getting a semi-advanced, production-ready site up and running!
 
@@ -178,7 +181,7 @@ For multiple sites which share the same configuration, you can add more addresse
 
 You can then define as many different sites as you want, as long as each address is unique.
 
-<aside class="complete">✅ Multiple sites</aside>
+<aside class="complete">Multiple sites</aside>
 
 
 ## Matchers
@@ -194,7 +197,7 @@ file_server
 reverse_proxy 127.0.0.1:9005
 ```
 
-In practice, we may want to use the reverse proxy only for API requests, i.e. requests with a base path of `/api/`. This is easy to do, by adding a matcher token:
+In practice, we may want to use the reverse proxy only for API requests, i.e. requests with a base path of `/api/`. This is easy to do by adding a [matcher token](/docs/caddyfile/matchers#syntax):
 
 ```
 localhost
@@ -207,9 +210,9 @@ There; now the reverse proxy will be prioritized for all requests starting with 
 
 The `/api/*` token we just added is called a **matcher token**. You can tell it's a matcher token because it starts with a forward slash `/` and it appears right after the directive (but you can always look it up in the [directive's docs](/docs/caddyfile/directives) to be sure).
 
-Matchers are actually really powerful. You can name matchers and use them like `@name` to match on more than just the request path! Take a moment to [learn more about matchers](/docs/caddyfile/matchers) before continuing!
+Matchers are really powerful. You can name matchers and use them like `@name` to match on more than just the request path! Take a moment to [learn more about matchers](/docs/caddyfile/matchers) before continuing!
 
-<aside class="complete">✅ Matchers</aside>
+<aside class="complete">Matchers</aside>
 
 ## Environment variables
 
@@ -237,7 +240,7 @@ file_server
 
 You can use environment variables anywhere in the Caddyfile, for any number of tokens.
 
-<aside class="complete">✅ Environment variables</aside>
+<aside class="complete">Environment variables</aside>
 
 
 ## Comments
@@ -248,7 +251,7 @@ One last thing that you will find most helpful: if you want to remark or note an
 # this starts a comment
 ```
 
-<aside class="complete">✅ Comments</aside>
+<aside class="complete">Comments</aside>
 
 ## Further reading
 

@@ -25,7 +25,7 @@ To start the Caddy daemon, use the `run` subcommand:
 
 <pre><code class="cmd bash">caddy run</code></pre>
 
-<aside class="complete">✅ Run the daemon</aside>
+<aside class="complete">Run the daemon</aside>
 
 This blocks forever, but what is it doing? At the moment... nothing. By default, Caddy's configuration ("config") is blank. We can verify this using the [admin API](/docs/api) in another terminal:
 
@@ -38,7 +38,7 @@ We can make Caddy useful by giving it a config. One way to do this is by making 
 To prepare our request, we need to make a config. Caddy's configuration is simply a [JSON document](/docs/json/) (or [anything that converts to JSON](/docs/config-adapters)).
 
 <aside class="tip">
-	Config files are not required. The configuration API can always be used without files, which is handy for automating things. This tutorial uses a file because it is convenient when editing by hand.
+	Config files are not required. The configuration API can always be used without files, which is handy when automating things. This tutorial uses a file because it is more convenient for editing by hand.
 </aside>
 
 Save this to a JSON file:
@@ -68,12 +68,12 @@ Save this to a JSON file:
 Then upload it:
 
 <pre><code class="cmd bash">curl localhost:2019/load \
-  -X POST \
-  -H "Content-Type: application/json" \
-  -d @caddy.json
+	-X POST \
+	-H "Content-Type: application/json" \
+	-d @caddy.json
 </code></pre>
 
-<aside class="complete">✅ Give Caddy a config</aside>
+<aside class="complete">Give Caddy a config</aside>
 
 We can verify that Caddy applied our new config with another GET request:
 
@@ -84,7 +84,7 @@ Test that it works by going to [localhost:2015](http://localhost:2015) in your b
 <pre><code class="cmd"><span class="bash">curl localhost:2015</span>
 Hello, world!</code></pre>
 
-<aside class="complete">✅ Test config</aside>
+<aside class="complete">Test config</aside>
 
 If you see _Hello, world!_, then congrats -- it's working! It's always a good idea to make sure your config works as you expect, especially before deploying into production.
 
@@ -100,12 +100,12 @@ Let's change our welcome message from "Hello world!" to something a little more 
 Save the config file, then update Caddy's active configuration by running the same POST request again:
 
 <pre><code class="cmd bash">curl localhost:2019/load \
-  -X POST \
-  -H "Content-Type: application/json" \
-  -d @caddy.json
+	-X POST \
+	-H "Content-Type: application/json" \
+	-d @caddy.json
 </code></pre>
 
-<aside class="complete">✅ Replace active config</aside>
+<aside class="complete">Replace active config</aside>
 
 For good measure, verify that the config was updated:
 
@@ -116,19 +116,19 @@ Test it by refreshing the page in your browser (or running `curl` again), and yo
 
 ## Config traversal
 
+Instead of uploading the entire config file for a small change, let's use a powerful feature of Caddy's API to make the change without ever touching our config file.
+
 <aside class="tip">
 	Making little changes to production servers by replacing the entire config like we did above can be dangerous; it's like having root access to a file system. Caddy's API lets you limit the scope of your changes to guarantee that other parts of your config don't get changed accidentally.
 </aside>
 
-Instead of uploading the entire config file for a small change, let's use a powerful feature of Caddy's API to make the change without ever touching our config file.
-
 Using the request URI's path, we can traverse into the config structure and update only the message string (be sure to scroll right if clipped):
 
 <pre><code class="cmd bash">curl \
-  localhost:2019/config/apps/http/servers/example/routes/0/handle/0/body \
-  -X POST \
-  -H "Content-Type: application/json" \
-  -d '"Work smarter, not harder."'
+	localhost:2019/config/apps/http/servers/example/routes/0/handle/0/body \
+	-X POST \
+	-H "Content-Type: application/json" \
+	-d '"Work smarter, not harder."'
 </code></pre>
 
 <aside class="tip">
@@ -149,13 +149,13 @@ You should see:
 	You can use the <a href="https://stedolan.github.io/jq/">jq command</a> to prettify JSON output: <b><code>curl ... | jq</code></b>
 </aside>
 
+<aside class="complete">Traverse config</aside>
+
 **Important note:** This should be obvious, but once you use the API to make a change that is not in your original config file, your config file becomes obsolete. There are a few ways to handle this:
 
 - Use the `--resume` of the [caddy run](/docs/command-line#caddy-run) command to use the last active config.
-- [Export Caddy's new configuration](/docs/api#get-configpath) with a subsequent GET request.
 - Don't mix the use of config files with changes via the API; have one source of truth.
-
-<aside class="complete">✅ Traverse config</aside>
+- [Export Caddy's new configuration](/docs/api#get-configpath) with a subsequent GET request (less recommended than the first two options).
 
 
 
@@ -166,10 +166,10 @@ Config traversal is certainly useful, but the paths are little long, don't you t
 We can give our handler object an [`@id` tag](/docs/api#using-id-in-json) to make it easier to access:
 
 <pre><code class="cmd bash">curl \
-  localhost:2019/config/apps/http/servers/example/routes/0/handle/0/@id \
-  -X POST \
-  -H "Content-Type: application/json" \
-  -d '"msg"'
+	localhost:2019/config/apps/http/servers/example/routes/0/handle/0/@id \
+	-X POST \
+	-H "Content-Type: application/json" \
+	-d '"msg"'
 </code></pre>
 
 This adds a property to our handler object: `"@id": "msg"`, so it now looks like this:
@@ -193,16 +193,16 @@ We can then access it directly:
 And now we can change the message with a shorter path:
 
 <pre><code class="cmd bash">curl \
-  localhost:2019/id/msg/body \
-  -X POST \
-  -H "Content-Type: application/json" \
-  -d '"Some shortcuts are good."'
+	localhost:2019/id/msg/body \
+	-X POST \
+	-H "Content-Type: application/json" \
+	-d '"Some shortcuts are good."'
 </code></pre>
 
 And check it again:
 
 <pre><code class="cmd bash">curl localhost:2019/id/msg/body</code></pre>
 
-<aside class="complete">✅ Use <code>@id</code> tags</aside>
+<aside class="complete">Use <code>@id</code> tags</aside>
 
 

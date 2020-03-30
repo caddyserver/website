@@ -18,7 +18,16 @@ $(function() {
 	$currentPageLink.addClass('current');
 
 	// add anchor links, inspired by https://github.com/bryanbraun/anchorjs
-	$('article h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]').each(function() {
-		$(this).append($('<a href="#'+this.id+'" class="anchor-link" aria-label="Anchor">&#xe9cb;</a>'));
+	$('article > h1[id], article > h2[id], article > h3[id], article > h4[id], article > h5[id], article > h6[id]').each(function() {
+		var $anchor = $('<a href="#'+this.id+'" class="anchor-link" title="Direct link">🔗</a>');
+		$(this).append($anchor);
 	});
+
+	// the server-side markdown renderer annoyingly renders
+	// colored code blocks differently from plain ones, in that
+	// colorized ones do not have the additional <code> inside
+	// the <pre>; this line finds those and adds a .chroma class
+	// to the outer pre element, and our CSS file has a style to
+	// ensure the inner code block does not produce extra padding
+	$('article > pre:not(.chroma) > code:not(.cmd)').parent().addClass('chroma');
 });

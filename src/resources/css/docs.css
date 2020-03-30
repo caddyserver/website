@@ -1,10 +1,10 @@
 body {
 	font-family: Maven Pro, sans-serif;
+	background: #f1f4f5;
 }
 
 header {
-	border-bottom: 1px solid #f0f6f7;
-	padding: 10px 20px;
+	padding: 20px 40px;
 }
 
 #logo-container {
@@ -20,8 +20,9 @@ header {
 
 #logo-docs {
 	font-family: Montserrat, sans-serif;
+	font-weight: bold;
 	text-transform: uppercase;
-	color: #196165;
+	color: #0e495e;
 	margin-left: 10px;
 	font-size: 12px;
 }
@@ -37,12 +38,20 @@ header nav .button {
 }
 
 .breadcrumbs {
-	color: #196165;
-	border-bottom: 1px solid #f0f6f7;
+	padding: 10px 20px !important;
+	margin-bottom: 0 !important;
+	color: #2861aa;
 	font-size: 16px;
-	padding: 10px 20px;
 	font-weight: bold;
 	line-height: 1.75em;
+}
+
+#top-breadcrumb {
+	font-weight: bold;
+}
+
+#top-breadcrumb:not(:hover) {
+	color: #2861aa;
 }
 
 .breadcrumbs a {
@@ -69,33 +78,26 @@ header nav .button {
 	padding-bottom: 10px;
 }
 
-#top-breadcrumb {
-	font-weight: bold;
-}
-
-#top-breadcrumb:not(:hover) {
-	color: #196165;
-}
-
 main {
 	display: flex;
-}
-
-main > .sidebar,
-article aside {
-	width: 20%;
+	justify-content: center;
 }
 
 main > .sidebar {
+	width: 18%;
 	flex-shrink: 0;
-	padding: 20px 0;
-	border: 0px solid #f0f6f7;
+	flex-grow: 1;
+	padding: 20px;
+	max-width: 400px;
 }
 
-main nav {
-	border-right-width: 1px;
+main > .sidebar:last-child {
+	flex-shrink: 1;
+}
+
+main > nav.sidebar {
 	position: relative;
-	font-size: 18px;
+	font-size: 16px;
 }
 
 main nav ul {
@@ -107,18 +109,18 @@ main nav li {
 }
 
 main nav li a {
-	padding: 8px 22px;
-}
-
-main nav li a {
 	display: block;
 	text-decoration: none;
 	color: inherit;
+	border-radius: 1.5em;
+	padding: 6px 18px 6px 28px;
+	color: #546c75;
 }
 
+
+
 main nav li a:hover {
-	background-color: #f8fcff;
-	color: #196165;
+	color: #01324b;
 }
 
 main nav li a:before {
@@ -128,13 +130,13 @@ main nav li a:before {
 	line-height: 1rem;
 	position: absolute;
 	opacity: 0;
-	left: 5px;
+	left: 0;
 	transition: left .15s, opacity .15s;
 }
 
 main nav li a:hover:before {
 	opacity: 1;
-	left: 10px;
+	left: .75em;
 }
 
 main nav li li a:hover:before {
@@ -142,13 +144,15 @@ main nav li li a:hover:before {
 }
 
 main nav li a.current {
-	background-color: #f0f6f7;
+	background-color: #e0e8f0;
 }
 
 main nav li.heading {
 	font-weight: bold;
-	font-size: 120%;
-	padding: 10px 20px 5px;
+	text-transform: uppercase;
+	font-size: 90%;
+	letter-spacing: 1px;
+	padding: 10px 20px 10px 2em;
 }
 
 main nav li.heading:not(:first-child) {
@@ -158,33 +162,90 @@ main nav li.heading:not(:first-child) {
 main nav li li a {
 	padding-top: 6px;
 	padding-bottom: 4px;
-	padding-left: 2.5em;
+	padding-left: 3em;
 	font-size: 90%;
 }
 
-.article-container {
-	flex-grow: 1;
-	min-width: 0;
+.paper {
+	position: relative;
+	flex-shrink: 0;
+	width: 100%;
+
+	background: white;
+	border-radius: 4px;
+	box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, .15);
 }
 
-article,
-.content {
-	margin: 0 auto;
-	max-width: 950px;
+#paper1,
+#paper2 {
+	background: #f8fafb;
+	max-height: 1500px;
+}
+
+#paper1 {
+	top: -20px;
+	left: 20px;
+	transform: rotate(3deg);
+}
+
+#paper2 {
+	top: 30px;
+	left: -100%;
+	transform: rotate(-5deg);
+}
+
+.paper3 {
+	top: 20px;
+	left: -200%;
+}
+
+.article-container {
+	display: flex;
+	align-content: flex-start;
+	flex-grow: 1;
+	min-width: 0;
+	margin: 20px;
+	width: 100%;
+	max-width: 1100px;
 }
 
 article {
-	padding: 40px;
+	padding-top: 8%;
+	padding-bottom: 8%;
 	font-size: 20px;
 	word-wrap: break-word;
 }
 
+/*
+while we want most elements that are rendered
+server-side from markdown to have a constrained
+width, a few elements should be allowed to
+extend to the borders of the page
+*/
+article > :not(.fullwidth),
+article > .fullwidth > * {
+	padding-left: 8%;
+	padding-right: 8%;
+}
+article > :not(h1),
+dd,
 article p,
-article pre > code,
-article pre.chroma,
+article ol,
 article ul,
-article ol {
-	margin-bottom: 1em;
+article pre,
+article table {
+	margin-bottom: 1.5rem;
+}
+article > .fullwidth { margin-bottom: 1.5rem; }
+article > .fullwidth > * { margin-bottom: 0; }
+
+article > pre.chroma > code {
+	background: none;
+	padding: 0;
+}
+article > pre.chroma {
+	padding-top: 2em;
+	padding-bottom: 2em;
 }
 
 article ul,
@@ -194,22 +255,45 @@ article ol,
 	margin-left: 2.5em;
 }
 
+article ul ul,
+article ol ol,
+article ol ul,
+article ul ol {
+	margin-bottom: 0;
+}
+
 article p,
 article li {
 	line-height: 1.5em;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	/* to ensure that the anchor-link icons stay inside the heading */
+	position: relative;
+}
+
+h1,
+h2 {
+	text-align: center;
+}
+
 h1 {
-	font-size: 80px;
-	color: #196165;
+	font-size: 72px;
+	color: #0e3e5b;
+	letter-spacing: -2px;
 	margin-bottom: 50px;
 }
 
 h2 {
 	font-size: 46px;
 	padding-bottom: 15px;
-	border-bottom: 4px solid #a6d0da;
-	margin: 100px 0 40px;
+	border-bottom: 4px solid #72abe8;
+	margin: 100px 0 40px !important;
 }
 
 h3 {
@@ -227,35 +311,37 @@ h5 {
 	margin: 2em 0 1em;
 }
 
-/* Styles from https://github.com/bryanbraun/anchorjs */
-@font-face {
-	font-family: "anchor-icons";
-	src: url(data:n/a;base64,AAEAAAALAIAAAwAwT1MvMg8yG2cAAAE4AAAAYGNtYXDp3gC3AAABpAAAAExnYXNwAAAAEAAAA9wAAAAIZ2x5ZlQCcfwAAAH4AAABCGhlYWQHFvHyAAAAvAAAADZoaGVhBnACFwAAAPQAAAAkaG10eASAADEAAAGYAAAADGxvY2EACACEAAAB8AAAAAhtYXhwAAYAVwAAARgAAAAgbmFtZQGOH9cAAAMAAAAAunBvc3QAAwAAAAADvAAAACAAAQAAAAEAAHzE2p9fDzz1AAkEAAAAAADRecUWAAAAANQA6R8AAAAAAoACwAAAAAgAAgAAAAAAAAABAAADwP/AAAACgAAA/9MCrQABAAAAAAAAAAAAAAAAAAAAAwABAAAAAwBVAAIAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAMCQAGQAAUAAAKZAswAAACPApkCzAAAAesAMwEJAAAAAAAAAAAAAAAAAAAAARAAAAAAAAAAAAAAAAAAAAAAQAAg//0DwP/AAEADwABAAAAAAQAAAAAAAAAAAAAAIAAAAAAAAAIAAAACgAAxAAAAAwAAAAMAAAAcAAEAAwAAABwAAwABAAAAHAAEADAAAAAIAAgAAgAAACDpy//9//8AAAAg6cv//f///+EWNwADAAEAAAAAAAAAAAAAAAAACACEAAEAAAAAAAAAAAAAAAAxAAACAAQARAKAAsAAKwBUAAABIiYnJjQ3NzY2MzIWFxYUBwcGIicmNDc3NjQnJiYjIgYHBwYUFxYUBwYGIwciJicmNDc3NjIXFhQHBwYUFxYWMzI2Nzc2NCcmNDc2MhcWFAcHBgYjARQGDAUtLXoWOR8fORYtLTgKGwoKCjgaGg0gEhIgDXoaGgkJBQwHdR85Fi0tOAobCgoKOBoaDSASEiANehoaCQkKGwotLXoWOR8BMwUFLYEuehYXFxYugC44CQkKGwo4GkoaDQ0NDXoaShoKGwoFBe8XFi6ALjgJCQobCjgaShoNDQ0NehpKGgobCgoKLYEuehYXAAAADACWAAEAAAAAAAEACAAAAAEAAAAAAAIAAwAIAAEAAAAAAAMACAAAAAEAAAAAAAQACAAAAAEAAAAAAAUAAQALAAEAAAAAAAYACAAAAAMAAQQJAAEAEAAMAAMAAQQJAAIABgAcAAMAAQQJAAMAEAAMAAMAAQQJAAQAEAAMAAMAAQQJAAUAAgAiAAMAAQQJAAYAEAAMYW5jaG9yanM0MDBAAGEAbgBjAGgAbwByAGoAcwA0ADAAMABAAAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAH//wAP) format("truetype");
-}
 .anchor-link {
 	opacity: 0;
-	font: 1em / 1 anchor-icons;
-	text-decoration: none;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	padding-left: 0.375em;
+	font-size: .6em;
+	border-radius: 10px;
+	padding: .3em .5em;
+	margin-left: .25em;
+	position: absolute;
+	top: 5px;
 }
+
 *:hover > .anchor-link,
 .anchor-link:focus {
 	opacity: 1;
+	text-decoration: none;
 }
 
-code,
-pre.chroma {
+.anchor-link:hover {
+	background-color: rgba(0, 0, 0, .075);
+}
+
+pre,
+code {
 	font-family: 'PT Mono', 'Source Code Pro', monospace;
 	padding: 3px 6px;
-	border-radius: 5px;
-	font-size: 90%;
-	line-height: 1.4em;
+	font-size: 95%;
+	line-height: 1.5em;
 }
 
 code {
-	background-color: #f0f9fb;
+	background-color: #e9f1fb;
+	border-radius: 5px;
 }
 
 code.cmd {
@@ -271,15 +357,13 @@ pre.chroma,
 }
 
 pre > code,
-pre.chroma {
+article > pre {
 	padding: 1em;
-	border-radius: 10px;
 	overflow: auto;
 }
 
 pre > code.cmd {
 	border-radius: 5px;
-	tab-size: 2;
 }
 
 code.cmd.bash,
@@ -308,7 +392,7 @@ dd {
 .field-name {
 	display: block;
 	font-family: 'Source Code Pro', monospace;
-	margin: 0;
+	margin-top: 2em;
 	font-weight: bold;
 	margin-bottom: .5em;
 }
@@ -316,9 +400,9 @@ dd {
 .inline-link {
 	text-decoration: none;
 	position: absolute;
-	margin-left: -1.4em;
-	margin-top: -.1em;
-	padding-right: .2em;
+	margin-left: -1.5em;
+	/* margin-top: -.1em; */
+	padding-right: .3em;
 	padding-left: .2em;
 	visibility: hidden;
 }
@@ -329,8 +413,8 @@ dd {
 
 hr {
 	border: none;
-	border-top: 5px solid #186165;
-	margin: 2em 0;
+	border-top: 8px solid #34669b;
+	margin: 4em 0;
 }
 
 article img {
@@ -339,10 +423,6 @@ article img {
 
 iframe {
 	margin: 1em 0 2em;
-}
-
-main > .sidebar:not(:last-child) {
-	border-right-width: 1px;
 }
 
 
@@ -357,7 +437,7 @@ main > .sidebar:not(:last-child) {
 .json .num { color: #038a3f; }
 .json .bool { color: #9b5e14; }
 .json .key a:not([href]) { color: #222; }
-.json a {
+article .json a {
 	text-decoration: none;
 	font-weight: bold;
 }
@@ -485,74 +565,71 @@ main > .sidebar:not(:last-child) {
 	color: #777;
 }
 
-.beta-warning {
-	font-size: 14px;
-	padding: 10px;
-	border-bottom: 1px solid orange;
-	background: #fff5e2;
-	line-height: 1.4em;
-}
-
 article aside {
-	position: absolute;
-	right: 0;
+	position: relative;
 	font-size: 16px;
-	color: #146673;
-	line-height: 1.4em;
-	padding: 10px 3.5% 10px 20px;
-	border: 0px solid #dff9ff;
-	border-top-width: 1px;
-	border-left-width: 1px;
-	background: -webkit-radial-gradient(top left, #d6f0f3, transparent 65%);
-	background: -moz-radial-gradient(top left, #d6f0f3, transparent 65%);
-	background: radial-gradient(top left, #d6f0f3, transparent 65%);
+	margin: 2em auto 3em !important;
+	max-width: 800px;
 }
 
-article aside.complete::before,
-article aside.tip::before {
-	text-transform: uppercase;
-	display: block;
-	line-height: 1em;
-	font-weight: 900;
+article aside.tip,
+article aside.advice {
+	padding-left: calc(8% + 50px) !important;
+}
+
+article aside.tip::before,
+article aside.advice::before {
+	font-size: 45px;
+	position: absolute;
+	top: -4px;
+	left: 8%;
+}
+
+article aside.tip {
+	color: #706b95;
+}
+article aside.advice {
+	color: #826848;
+}
+
+article aside.tip:nth-child(even)::before {
+	content: '💁‍♀️';
+}
+article aside.tip:nth-child(odd)::before {
+	content: '💁‍♂️';
+}
+
+article aside.advice::before {
+	content: '🤦';
+}
+
+article aside.complete {
+	color: #6b6b6b;
+	border: 2px dotted #88db88;
+	text-align: center;
+	max-width: 500px;
+	padding: 15px 25px !important;
 }
 
 article aside.complete::before {
-	content: 'complete';
+	content: '✅ complete';
+	color: #39c849;
+	text-transform: uppercase;
 	font-size: 14px;
-	letter-spacing: 2px;
-	color: #3ea78a;
-	margin-bottom: 10px;
-}
-
-article aside.tip::before {
-	content: 'tip';
-	color: #d0efef;
-	position: absolute;
-	top: -30px;
-	font-size: 35px;
-}
-
-article aside.warning {
-	border-top-color: #ffd6a4;
-	color: #bd6800;
-	background: -webkit-radial-gradient(top left, #ffd6a4, transparent 65%);
-	background: -moz-radial-gradient(top left, #ffd6a4, transparent 65%);
-	background: radial-gradient(top left, #ffd6a4, transparent 65%);
-}
-
-article aside.warning::before {
-	content: 'warning';
-	color: #ffd6a4;
-	position: absolute;
-	top: -30px;
-	font-size: 35px;
+	font-weight: bold;
+	letter-spacing: 1px;
+	margin-right: 2em;
+	margin-bottom: .5em;
 }
 
 table {
 	table-layout: fixed;
 	border-collapse: collapse;
 	font-size: 16px;
-	margin: 25px 0;
+}
+
+article > table {
+	margin: 25px auto;
 }
 
 th, td {
@@ -619,10 +696,6 @@ td code {
 
 
 @media (max-width: 1400px) {
-	article aside {
-		font-size: 14px;
-	}
-
 	table {
 		font-size: 14px;
 	}
@@ -642,59 +715,86 @@ td code {
 	}
 }
 
-@media (max-width: 1000px) {
-	main > .sidebar:last-child,
-	article aside {
-		display: none;
+@media (max-width: 1100px) {
+	header {
+		padding-bottom: 0;
 	}
 
 	main > .sidebar {
-		width: 30%;
-		padding: 10px 0;
+		min-width: 200px;
+		padding: 20px 10px 0 0;
+	}
+
+	main > .sidebar:last-child {
+		display: none;
+	}
+
+	#paper1,
+	#paper2 {
+		display: none;
+	}
+	.paper3 {
+		top: 0;
+		left: 0;
 	}
 
 	article {
-		padding: 20px;
-	}
-}
-
-@media (max-width: 1000px) and (min-width: 600px) {
-	main nav li a {
-		padding: 8px 12px;
-	}
-
-	main nav li li a {
-		padding-left: 1.5em;
-	}
-
-	main nav li a:before {
 		font-size: 18px;
-		left: -5px;
+		padding-top: 40px;
+		padding-bottom: 40px;
 	}
-	
-	main nav li a:hover:before {
-		left: 2px;
+
+	article > :not(.fullwidth),
+	article > .fullwidth > * {
+		padding-left: 40px;
+		padding-right: 40px;
 	}
-	
-	main nav li li a:hover:before {
-		left: .5em;
+	article > :not(h1) {
+		margin-bottom: 1.5rem;
+	}
+
+	article > pre.chroma {
+		padding-top: 1em;
+		padding-bottom: 1em;
+	}
+
+	h1 {
+		font-size: 45px;
+	}
+
+	h2 {
+		font-size: 32px;
 	}
 }
 
-
-@media (max-width: 600px) {
+@media (max-width: 700px) {
 	#logo-docs {
 		display: none;
 	}
 
 	main {
 		flex-direction: column-reverse;
+		align-items: center;
 	}
 
 	main > .sidebar {
 		width: 100%;
 		border-width: 0;
 		border-top-width: 2px;
+	}
+
+	.article-container {
+		max-width: 100%; /* TODO: why is this necessary?? without it, article overflows super wide on narrow screen */
+		margin: 20px 0;
+	}
+
+	.paper {
+		border-radius: 0;
+		box-shadow: none;
+	}
+
+	.anchor-link {
+		display: none;
 	}
 }
 
@@ -706,10 +806,20 @@ td code {
 		color: #bdd6f7;
 	}
 
-	header,
-	main > .sidebar,
-	footer {
-		border-color: #061b35;
+	#search {
+		background: rgb(28, 52, 79);
+		color: #bdd6f7;
+	}
+	#search:focus {
+		background: rgb(46, 70, 96);
+	}
+
+	#paper1,
+	#paper2 {
+		background-color: #030a11;
+	}
+	.paper3 {
+		background-color: #051628;
 	}
 
 	#logo {
@@ -725,8 +835,11 @@ td code {
 		color: #5aa3dc;
 	}
 
+	main nav li a {
+		color: #668d9b;
+	}
+
 	main nav ul li a:hover {
-		background-color: #13243a;
 		color: #5aa3dc;
 	}
 
@@ -734,8 +847,7 @@ td code {
 		background-color: #061b35;
 	}
 
-	.breadcrumbs,
-	main nav {
+	.breadcrumbs {
 		border-color: #061b35;
 	}
 
@@ -777,35 +889,9 @@ td code {
 	#hovercard-inline-link {
 		border-color: #0a2b53;
 	}
-	
 
-	.beta-warning {
-		background-color: #462e00;
-		color: #ffa500;
-	}
-
-	article aside {
-		background: -webkit-radial-gradient(top left, #00515a, transparent 65%);
-		background: -moz-radial-gradient(top left, #00515a, transparent 65%);
-		background: radial-gradient(top left, #00515a, transparent 65%);
-		color: #37c3a9;
-		border-color: #08575a;
-	}
-
-	article aside.warning {
-		border-top-color: #462e00;
-		color: #e1973b;
-		background: -webkit-radial-gradient(top left, #462e00, transparent 65%);
-		background: -moz-radial-gradient(top left, #462e00, transparent 65%);
-		background: radial-gradient(top left, #462e00, transparent 65%);
-		border-left-color: #462e00;
-	}
-	article aside.warning::before {
-		color: #e1973b;
-	}
-
-	article aside.tip:before {
-		color: #185f5b;
+	article aside.tip {
+		color: #8c81e4;
 	}
 
 	th {

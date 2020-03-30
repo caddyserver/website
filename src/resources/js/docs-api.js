@@ -34,7 +34,7 @@ $(function() {
 			// don't allow hoverbox to close anymore, we're re-opening it
 			clearTimeout(hoverTimeout);
 
-			var pos = $(this).position();
+			var pos = $(this).offset();
 
 			// there is a gap between the hoverbox and the link that originated it;
 			// there may be a different link in this gap; if the hover box is visible,
@@ -43,7 +43,7 @@ $(function() {
 			// visit the hoverbox while it is over a list of links that are tightly
 			// stacked vertically; if user wants to visit hoverbox for link in this
 			// gap, they can just move the cursor slow enough to fire the timeout
-			if ($hovercard.is(':visible') && $hovercard.position().top - 10 < pos.top) {
+			if ($hovercard.is(':visible') && $hovercard.offset().top - 10 < pos.top) {
 				return;
 			}
 
@@ -159,8 +159,16 @@ function beginRendering(json) {
 	renderData(pageData.structure, 0, "", $('<div class="group"/>'));
 	console.log("DOCS:", pageDocs);
 
-	if ($('#field-list').html().trim()) {
-		$('#field-list-header').show();
+	if ($('#field-list-contents').html().trim()) {
+		$('#field-list').show();
+	}
+
+	// if the browser tried to navigate directly to an element
+	// on the page when it loaded, it would have failed since
+	// we hadn't rendered it yet; but now we can scroll to it
+	// directly since rendering has finished
+	if (window.location.hash) {
+		window.location.hash = window.location.hash;
 	}
 }
 
@@ -291,7 +299,7 @@ function appendToFieldDocs(cleanFieldPath, fieldDoc) {
 	if (canTraverse()) {
 		dt = '<a href="./'+cleanFieldPath+'/">'+dt+'</a>';
 	}
-	$('#field-list').append('<dt class="field-name" id="'+cleanFieldPath+'"><a href="#'+cleanFieldPath+'" class="inline-link">&#128279;</a>'+dt+'</dt> <dd>'+fieldDoc+'</dd>');
+	$('#field-list-contents').append('<dt class="field-name" id="'+cleanFieldPath+'"><a href="#'+cleanFieldPath+'" class="inline-link">&#128279;</a>'+dt+'</dt> <dd>'+fieldDoc+'</dd>');
 }
 
 function indent(nesting, $group) {

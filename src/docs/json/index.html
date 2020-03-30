@@ -13,13 +13,13 @@
 		<main>
 			{{include "/includes/docs-nav.html"}}
 			<div class="article-container">
-				<div class="breadcrumbs">
-					<!--Populated by JS-->
-				</div>
-				
-				{{include "/includes/docs-renderbox.html"}}
-
-				<article>
+				<div class="paper" id="paper1"></div>
+				<div class="paper" id="paper2"></div>
+				<article class="paper paper3">
+					<div class="breadcrumbs">
+						<!--Populated by JS-->
+					</div>
+					{{include "/includes/docs-renderbox.html"}}
 					{{include "/includes/docs-details.html"}}
 				</article>
 			</div>

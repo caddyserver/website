@@ -6,9 +6,9 @@ title: "Automatic HTTPS"
 
 **Caddy is the first and only web server to use HTTPS automatically _and by default_.**
 
-<aside class="tip">Caddy innovated automatic HTTPS technology; we've been doing this since the first day it was possible in 2015. Caddy's HTTPS automation logic is the most mature and robust in the world.</aside>
-
 Automatic HTTPS provisions TLS certificates for all your sites and keeps them renewed. It also redirects HTTP to HTTPS for you! Caddy uses safe and modern defaults -- no downtime or extra configuration required.
+
+<aside class="tip">Caddy innovated automatic HTTPS technology; we've been doing this since the first day it was possible in 2015. Caddy's HTTPS automation logic is the most mature and robust in the world.</aside>
 
 Here's a 28-second video showing how it works:
 
@@ -16,7 +16,7 @@ Here's a 28-second video showing how it works:
 
 
 
-## tl;dr
+## Overview
 
 **Caddy serves all sites over HTTPS by default.**
 
@@ -32,7 +32,8 @@ Caddy keeps all certificates renewed, and redirects HTTP (default port 80) to HT
 
 **For public domain names:**
 
-<aside class="tip">These are common requirements for any basic production website, not just Caddy. The main thing is to set your DNS records properly <b>before</b> running Caddy and to make sure Caddy can store certificates on disk.</aside>
+<aside class="tip">These are common requirements for any basic production website, not just Caddy. The main difference is to set your DNS records properly <b>before</b> running Caddy.</aside>
+
 
 - If your domain's A/AAAA records point to your server,
 - ports 80 and 443 are open externally,
@@ -42,8 +43,6 @@ Caddy keeps all certificates renewed, and redirects HTTP (default port 80) to HT
 
 then sites will be served over HTTPS automatically and without problems. You won't have to know or do anything else about it. It should "just work"!
 
-<aside class="warning">Public CAs like Let's Encrypt enforce rate limits. If your DNS, network, or server is not properly configured, you could easily hit rate limits. The rest of this page describes how to avoid that.</aside>
-
 If you are still testing your setup, however, please read on or you risk being rate limited by your CA. The rest of this page goes over the details for advanced use cases and troubleshooting purposes.
 
 
@@ -52,9 +51,9 @@ If you are still testing your setup, however, please read on or you risk being r
 
 Caddy implicitly activates automatic HTTPS when it knows a domain name (i.e. hostname) it is serving. Depending on how you run or configure Caddy, there are various ways to tell Caddy which domain names to use:
 
-- The [Caddyfile](/docs/caddyfile/concepts#addresses)
-- A [host matcher](/docs/json/apps/http/servers/routes/match/host/) in a route
-- Command line flags like [--domain](/command-line#caddy-file-server) or [--from](/docs/command-line#caddy-reverse-proxy)
+- A [site address](/docs/caddyfile/concepts#addresses) in the [Caddyfile](/docs/caddyfile)
+- A [host matcher](/docs/json/apps/http/servers/routes/match/host/) in a [route](/docs/modules/http#servers/routes)
+- Command line flags like [--domain](/docs/command-line#caddy-file-server) or [--from](/docs/command-line#caddy-reverse-proxy)
 - The [automate](/docs/json/apps/tls/certificates/automate/) certificate loader
 
 Any of the following will prevent automatic HTTPS from being activated, either in whole or in part:
@@ -70,8 +69,8 @@ Any of the following will prevent automatic HTTPS from being activated, either i
 When automatic HTTPS is activated, the following occurs:
 
 - Certificates are obtained and renewed for [all domain names](#hostname-requirements)
-- The default port (if any) is changed to the [HTTPS port](/docs/json/apps/http/https_port/) 443
-- HTTP is redirected to HTTPS (this uses [HTTP port](/docs/json/apps/http/http_port/) 80)
+- The default port (if any) is changed to the [HTTPS port](/docs/modules/http#https_port) 443
+- HTTP is redirected to HTTPS (this uses [HTTP port](/docs/modules/http#http_port) 80)
 
 Automatic HTTPS never overrides explicit configuration.
 
@@ -86,11 +85,11 @@ All hostnames (domain names and IP addresses) qualify for fully-managed certific
 - consist only of alphanumerics, hyphens, dots, and wildcard (`*`)
 - do not start or end with a dot ([RFC 1034](https://tools.ietf.org/html/rfc1034#section-3.5))
 
-In addition, a hostname qualifies for a publicly-trusted certificate if it:
+In addition, hostnams qualify for publicly-trusted certificates if they:
 
-- is not localhost
-- is not an IP address
-- has only a single wildcard `*` as the left-most label
+- are not localhost
+- are not an IP address
+- have only a single wildcard `*` as the left-most label
 
 
 
@@ -104,13 +103,13 @@ Local HTTPS does not use ACME nor does it perform any DNS validation. It works o
 
 ### CA Root
 
-<aside class="tip">It is safe to trust Caddy's root certificate on your own machine as long as your computer is not compromised and your unique root key is not leaked.</aside>
-
 The root's private key is uniquely generated using a cryptographically-secure pseudorandom source and persisted to storage with limited permissions. It is loaded into memory only to perform signing tasks, after which it leaves scope to be garbage-collected.
 
 Although Caddy can be configured to sign with the root directly (to support non-compliant clients), this is disabled by default, and the root key is only used to sign intermediates.
 
 The first time a root key is used, Caddy will try to install it into the system's local trust store(s). If it does not have permission to do so, it will prompt for a password. This behavior can be disabled in the configuration if it is not desired.
+
+<aside class="tip">It is safe to trust Caddy's root certificate on your own machine as long as your computer is not compromised and your unique root key is not leaked.</aside>
 
 After Caddy's root CA is installed, you will see it in your local trust store as "Caddy Local Authority" (unless you've configured a different name). You can uninstall it any time if you wish (the [`caddy untrust`](/docs/command-line#caddy-untrust) command makes this easy).
 
@@ -127,7 +126,7 @@ Unlike the root certificate, intermediate certificates have a much shorter lifet
 
 ## Testing
 
-To test or experiment with your Caddy configuration, make sure you [change the ACME endpoint](/docs/json/apps/tls/automation/policies/management/acme/ca/) to a staging or development URL, otherwise you are likely to hit rate limits which can block your access to HTTPS for up to a week, depending on which rate limit you hit.
+To test or experiment with your Caddy configuration, make sure you [change the ACME endpoint](/docs/modules/tls.issuance.acme#ca) to a staging or development URL, otherwise you are likely to hit rate limits which can block your access to HTTPS for up to a week, depending on which rate limit you hit.
 
 Caddy's default CA is [Let's Encrypt](https://letsencrypt.org/), which has a [staging endpoint](https://letsencrypt.org/docs/staging-environment/) that is not subject to the same [rate limits](https://letsencrypt.org/docs/rate-limits/):
 
@@ -198,6 +197,8 @@ Here's what happens if there's an error obtaining or renewing a certificate:
 3. After all enabled challenge types have been tried, it backs off exponentially
 	- Maximum of 1 day between attempts
 	- For up to 30 days
+
+During retries with Let's Encrypt, Caddy switches to their [staging environment](https://letsencrypt.org/docs/staging-environment/) to avoid rate limit concerns. This isn't a perfect strategy, but in general it's helpful.
 
 ACME challenges take at least a few seconds, and internal rate limiting helps mitigate accidental abuse. Caddy uses internal rate limiting in addition to what you or the CA configure so that you can hand Caddy a platter with a million domain names and it will gradually -- but as fast as it can -- obtain certificates for all of them.
 

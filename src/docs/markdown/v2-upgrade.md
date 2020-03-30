@@ -71,7 +71,7 @@ Caddy 2's default protocol is [_always_ HTTPS if a hostname or IP is known](/doc
 
 IP addresses and localhost domains will be issued certificates from a [locally-trusted, embedded CA](/docs/automatic-https#local-https). All other domains will use Let's Encrypt. (This is all configurable.)
 
-The storage structure of certificates and ACME resources has changed. Caddy 2 will probably obtain new certificates for your sites; but if you have a lot of certificates you can migrate them manually. See issues [#2955](https://github.com/caddyserver/caddy/issues/2955) and [#3124](https://github.com/caddyserver/caddy/issues/3124) for details.
+The storage structure of certificates and ACME resources has changed. Caddy 2 will probably obtain new certificates for your sites; but if you have a lot of certificates you can migrate them manually if it does not do it for you. See issues [#2955](https://github.com/caddyserver/caddy/issues/2955) and [#3124](https://github.com/caddyserver/caddy/issues/3124) for details.
 
 
 ## Command line
@@ -96,7 +96,7 @@ Environment variables are no longer relevant, except for `HOME` (and, optionally
 
 The [v2 Caddyfile](/docs/caddyfile/concepts) is very similar to what you're already familiar with. The main thing you'll need to do is change your directives.
 
-⚠️ **Do not take this advice at face value!** Especially if your config is more advanced, there are many nuances to consider. These tips will get you mostly switched over pretty quickly, but please read the full documentation for each directive so you can understand the implications of the upgrade. And of course, always test your configs thoroughly before putting them into production.
+⚠️ **Be sure to read into the new directives!** Especially if your config is more advanced, there are many nuances to consider. These tips will get you mostly switched over pretty quickly, but please read the full documentation for each directive so you can understand the implications of the upgrade. And of course, always test your configs thoroughly before putting them into production.
 
 ### Primary changes
 
@@ -105,15 +105,15 @@ The [v2 Caddyfile](/docs/caddyfile/concepts) is very similar to what you're alre
 
 - In v1, you could only filter (or "match") directives by request path. In v2, [request matching](/docs/caddyfile/matchers) is much more powerful. Any v2 directives which add a middleware to the HTTP handler chain or which manipulate the HTTP request/response in any way take advantage of this new matching functionality. [Read more about v2 request matchers.](/docs/caddyfile/matchers) You'll need to know about them to make sense of the v2 Caddyfile.
 
-- Although many [placeholders](/docs/conventions#placeholders) are the same, many have changed, and there are now [many new ones](/docs/modules/http), including [shorthands for the Caddyfile](/docs/caddyfile/concepts#placeholders).
+- Although many [placeholders](/docs/conventions#placeholders) are the same, many have changed, and there are now [many new ones](/docs/modules/http#docs), including [shorthands for the Caddyfile](/docs/caddyfile/concepts#placeholders).
 
 - Caddy 2 logs are all structured, and the default format is JSON. All log levels can simply go to the same log to be processed (but you can customize this if needed).
 
-- Where you matched requests by path prefix in Caddy 1, path matching is now exact by default in Caddy 2, so if you want to match a prefix, for example `/foo/`, you'll need `/foo/*` in Caddy 2.
+- Where you matched requests by path prefix in Caddy 1, path matching is now exact by default in Caddy 2. If you want to match a prefix like `/foo/`, you'll need `/foo/*` in Caddy 2.
 
 We'll list some of the most common v1 directives here and describe how to convert them for use in the v2 Caddyfile.
 
-⚠️ **Just because a v1 directive is missing from this page does not mean v2 can't do it!** Some v1 directives aren't needed, don't translate well, or are fulfilled other ways in v2. For some advanced customization, you may need to drop down to the JSON to get what you want. Explore our documentation to find what you need!
+⚠️ **Just because a v1 directive is missing from this page does not mean v2 can't do it!** Some v1 directives aren't needed, don't translate well, or are fulfilled other ways in v2. For some advanced customization, you may need to drop down to the JSON to get what you want. Explore [our documentation](/docs/caddyfile) to find what you need!
 
 
 ### browse
@@ -143,6 +143,8 @@ Note that the `fastcgi` directive from v1 did a lot under the hood, including tr
 
 There is no `php` preset needed in v2, since the `php_fastcgi` directive assumes PHP by default. A line such as `php_fastcgi 127.0.0.1:9000 php` will cause the reverse proxy to think that there is a second backend called `php`, leading to connection errors.
 
+The subdirectives are different in v2 -- you probably will not need any for PHP.
+
 
 ### gzip
 
@@ -158,15 +160,23 @@ Fun fact: Caddy 2 also supports `zstd` (but no browsers do yet).
 
 [Mostly unchanged](/docs/caddyfile/directives/header), but now way more powerful since it can do substring replacements in v2.
 
-- **v1:** `header / Strict-Transport-Security "max-age=31536000;"`
-- **v2:** `header Strict-Transport-Security "max-age=31536000;"`
+- **v1:** `header / Strict-Transport-Security max-age=31536000;`
+- **v2:** `header Strict-Transport-Security max-age=31536000;`
 
 
 ### log
 
 Enables access logging; the [`log`](/docs/caddyfile/directives/log) directive can still be used in v2, but all logs are structured, encoded as JSON, by default.
 
-Although we recommend everyone use structured logging (it is much more flexible), you can still write Common Log Format to a file, if you must:
+The recommended way to enable access logging is simply:
+
+```
+log
+```
+
+which emits structured logs to stderr. (You can also emit to a file or network socket; see docs.)
+
+Although we recommend everyone use [structured logging](/docs/logging), you can still write Common Log Format (CLF) to a file, if you must:
 
 - **v1:**
 ```
@@ -180,6 +190,8 @@ log {
 	format single_field common_log
 }
 ```
+
+But we recommend this only for transitioning while your legacy systems still require CLF.
 
 
 ### proxy

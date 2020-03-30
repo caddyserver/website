@@ -9,10 +9,6 @@ The Caddy ecosystem adheres to a few conventions to make things consistent and i
 
 ## Network addresses
 
-<aside class="tip">
-	Caddy network addresses are not URLs. URLs couple the lower and higher layers of the <a href="https://en.wikipedia.org/wiki/OSI_model#Layer_architecture">OSI model</a>, but Caddy often uses network addresses independently of a specific application, so combining them would be problematic. In Caddy, network addresses refer precisely to resources that can be dialed or bound at L3-L5, but URLs combine L3-L7, which is too many. A network address requires a host+port and path to be mutually exclusive, but URLs do not. Network addresses sometimes support port ranges, but URLs do not.
-</aside>
-
 When specifying a network address to dial or bind, Caddy accepts a string in the following format:
 
 ```
@@ -47,14 +43,18 @@ udp/localhost:9005
 unix//path/to/socket
 ```
 
+<aside class="tip">
+	Caddy network addresses are not URLs. URLs couple the lower and higher layers of the <a href="https://en.wikipedia.org/wiki/OSI_model#Layer_architecture">OSI model</a>, but Caddy often uses network addresses independently of a specific application, so combining them would be problematic. In Caddy, network addresses refer precisely to resources that can be dialed or bound at L3-L5, but URLs combine L3-L7, which is too many. A network address requires a host+port and path to be mutually exclusive, but URLs do not. Network addresses sometimes support port ranges, but URLs do not.
+</aside>
+
 
 ## Placeholders
+
+Caddy's configuration supports the use of _placeholders_ (variables). Using placeholders is a simple way to inject dynamic values into a static configuration.
 
 <aside class="tip">
 	Placeholders are a similar idea to variables in other software. For example, <a href="https://nginx.org/en/docs/varindex.html">nginx has variables</a> like $uri and $document_root.
 </aside>
-
-Caddy's configuration supports the use of _placeholders_ (variables). Using placeholders is a simple way to inject dynamic values into a static configuration.
 
 Placeholders are bounded on either side by curly braces `{ }` and contain the variable name inside, for example: `{foo.bar}`. Placeholder braces can be escaped, `\{like so\}`. Variable names are typically namespaced with dots to avoid collisions across modules.
 
@@ -81,11 +81,11 @@ This section contains information about where to find various files. File and di
 
 ### Your config files
 
+There is no single, conventional place for you to put your config files. Put them wherever makes the most sense to you.
+
 <aside class="tip">
 	The only exception to this might be a file named "Caddyfile" in the current working directory, which the caddy command tries for convenience if no other config file is specified.
 </aside>
-
-There is no single, conventional place for you to put your config files. Put them wherever makes the most sense to you.
 
 Distributions that ship with a default config file should document where this config file is at, even if it might be obvious to the package/distro maintainers.
 
@@ -98,10 +98,6 @@ If the `XDG_DATA_HOME` environment variable is set, it is `$XDG_DATA_HOME/caddy`
 
 Otherwise, its path varies by platform, adhering to OS conventions:
 
-<aside class="tip">
-	All other OSes use the Linux/BSD directory path.
-</aside>
-
 OS | Data directory path
 ---|---------------------
 **Linux, BSD** | `$HOME/.local/share/caddy`
@@ -110,6 +106,8 @@ OS | Data directory path
 **Plan 9** | `$HOME/lib/caddy`
 **Android** | `$HOME/caddy` (or `/sdcard/caddy`)
 
+All other OSes use the Linux/BSD directory path.
+
 The data directory must not be treated like a cache. Its contents are not ephemeral or merely for the sake of performance. Caddy stores TLS certificates, private keys, OCSP staples, and other necessary information to the data directory. It should not be purged without an understanding of the implications.
 
 It is crucial that this directory is persistent and writeable by Caddy.
@@ -117,21 +115,16 @@ It is crucial that this directory is persistent and writeable by Caddy.
 
 ### Configuration directory
 
+This is where Caddy may store certain configuration to disk. Most notably, it persists the last active configuration (by default) to this folder for easy resumption later using [`caddy run --resume`](/docs/command-line#caddy-run).
+
 <aside class="tip">
 	The configuration directory is <i>not</i> where you need to store <a href="#your-config-files">your config files</a>. (Though, you are allowed to.)
 </aside>
-
-<!-- **The configuration directory is _not_ where you need to store [your config files](#your-config-files).** (Though, you are allowed to.) -->
-
-This is where Caddy may store certain configuration to disk. Most notably, it persists the last active configuration (by default) to this folder for easy resumption later using [`caddy run --resume`](/docs/command-line#caddy-run).
 
 If the `XDG_CONFIG_HOME` environment variable is set, it is `$XDG_CONFIG_HOME/caddy`.
 
 Otherwise, its path varies by platform, adhering to OS conventions:
 
-<aside class="tip">
-	All other OSes use the Linux/BSD directory path.
-</aside>
 
 OS | Config directory path
 ---|---------------------
@@ -139,6 +132,8 @@ OS | Config directory path
 **Windows** | `%AppData%\Caddy`
 **macOS** | `$HOME/Library/Application Support/Caddy`
 **Plan 9** | `$HOME/lib/caddy`
+
+All other OSes use the Linux/BSD directory path.
 
 It is crucial that this directory is persistent and writeable by Caddy.
 
@@ -161,4 +156,4 @@ Examples:
 - `1.5h`
 - `2h45m`
 
-In the [JSON config](/docs/json/), duration values can also be integers which represents nanoseconds.
+In the [JSON config](/docs/json/), duration values can also be integers which represent nanoseconds.

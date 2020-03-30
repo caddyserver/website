@@ -13,6 +13,6 @@ It is **highly recommended** that you follow-up by reading other tutorials and r
 
 - #### [Using the API](/docs/quick-starts/api)
 - #### [Using a Caddyfile](/docs/quick-starts/caddyfile)
-- #### [File server](/docs/quick-starts/file-server)
+- #### [Static file server](/docs/quick-starts/static-files)
 - #### [Reverse proxy](/docs/quick-starts/reverse-proxy)
 - #### [HTTPS](/docs/quick-starts/https)

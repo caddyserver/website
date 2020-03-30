@@ -23,6 +23,10 @@ respond [<matcher>] <status>|<body> [<status>] {
 
 To clarify, the first non-matcher argument can be either a 3-digit status code or a response body string. If it is a body, the next argument can be the status code.
 
+<aside class="tip">
+	Responding with an error status code is different than returning an error in the handler chain, which invokes error handlers internally.
+</aside>
+
 
 ## Examples
 

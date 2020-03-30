@@ -14,16 +14,16 @@ body {
 
 #v1-banner {
 	display: block;
-	background: #5ea9a2;
+	background: #5c92a4;
 	color: #fff;
 	text-align: center;
-	padding: 15px 25px;
-	font-size: 18px;
+	padding: 10px 20px;
+	font-size: 14px;
 	text-decoration: none;
 }
 
 #v1-banner:hover {
-	background: #4e968f;
+	background: #457a8c;
 }
 
 .wrapper {
@@ -89,8 +89,12 @@ header nav > a.current {
 	width: 150px;
 	max-width: 100%;
 	margin-right: 20px;
+	outline: none;
 }
 
+#search:focus {
+	background: #fff;
+}
 /* End Algolia search */
 
 header nav .button {
@@ -166,9 +170,7 @@ footer {
 	display: flex;
 	justify-content: space-between;
 	margin-top: 100px;
-	border-top: 1px solid #CCC;
-	padding-top: 50px;
-	padding-bottom: 100px;
+	padding: 0 50px 100px;
 	line-height: 125%;
 }
 

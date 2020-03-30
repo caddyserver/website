@@ -249,10 +249,6 @@ This command disables the admin API, making it easier to run multiple instances 
 	[--resume]
 	[--watch]</code></pre>
 
-<aside class="tip">
-	To change the active configuration while running in production, do not stop the server! That will result in downtime. (This should be obvious but you'd be surprised how many complaints we get about it.) Use the <a href="#caddy-reload">caddy reload</a> command instead.
-</aside>
-
 Runs Caddy and blocks indefinitely; i.e. "daemon" mode.
 
 `--config` specifies an initial config file to immediately load and use. If no config is specified, Caddy will run with a blank configuration and use default settings for the [admin API endpoints](/docs/api), which can be used to feed it new configuration. As a special case, if the current working directory has a file called "Caddyfile" and the `caddyfile` config adapter is plugged in (default), then that file will be loaded and used to configure Caddy, even without any command line flags.
@@ -264,6 +260,11 @@ Runs Caddy and blocks indefinitely; i.e. "daemon" mode.
 `--resume` uses the last loaded configuration. This flag is useful primarily in [API](/docs/api)-heavy deployments, and overrides `--config` if a saved config exists.
 
 `--watch` will watch the config file and automatically reload it after it changes. ⚠️ This feature is dangerous in production! Only use it in a local development environment.
+
+<aside class="advice">
+	Do not stop the server to change configuration while running in production! That will result in downtime. (This should be obvious but you'd be surprised how many complaints we get about it.) Use the <a href="#caddy-reload">caddy reload</a> command instead.
+</aside>
+
 
 
 ### `caddy start`
@@ -286,7 +287,7 @@ Once started, you can use [`caddy stop`](#caddy-stop) or [the /stop API endpoint
 <pre><code class="cmd bash">caddy stop [--address &lt;interface&gt;]</code></pre>
 
 <aside class="tip">
-	Stopping (and restarting) the server is orthogonal to config changes. Do not use the stop command to change configuration in production, unless you want downtime. Use the <a href="#caddy-reload">caddy reload</a> command instead.
+	Stopping (and restarting) the server is orthogonal to config changes. <b>Do not use the stop command to change configuration in production, unless you want downtime.</b> Use the <a href="#caddy-reload">caddy reload</a> command instead.
 </aside>
 
 Gracefully stops the running Caddy process (other than the process of the stop command) and causes it to exit. It uses the [/stop endpoint](/docs/api#post-stop) of the admin API to perform a graceful shutdown.

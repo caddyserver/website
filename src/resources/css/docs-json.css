@@ -1,5 +1,9 @@
-pre > code.json {
-	background-color: #f0f9f8;
+article {
+	padding-top: 0 !important;
+}
+
+article h1 {
+	padding-top: 8%;
 }
 
 #renderbox {
