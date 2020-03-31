@@ -108,12 +108,12 @@ td {
 /* Arrow triangle between dropdown and input */
 .algolia-autocomplete .ds-dropdown-menu::before {
 	background: #060e17 !important;
-	border-color: #bdd6f79c;
+	border-color: #1c344f;
 }
 
 .algolia-autocomplete .ds-dropdown-menu [class^=ds-dataset-] {
 	background: #060e17 !important;
-	border-color: #bdd6f79c;
+	border-color: #1c344f;
 }
 
 /* Selection highlight */
@@ -130,6 +130,7 @@ td {
 /* Main category (eg. Getting Started) */
 .algolia-autocomplete .algolia-docsearch-suggestion--category-header {
 	color: darkgray;
+	border-color: #1c344f;
 }
 
 /* Category (eg. Downloads) */
@@ -137,10 +138,16 @@ td {
 	color: gray;
 }
 
+/* Category vertical divider */
+.algolia-autocomplete .algolia-docsearch-suggestion--subcategory-column::before,
+.algolia-autocomplete .algolia-docsearch-suggestion--content::before {
+	background: #1c344f;
+}
+
 /* Title (eg. Bootstrap CDN) */
 .algolia-autocomplete .algolia-docsearch-suggestion--title {
 	font-weight: bold;
-	color: #bdd6f7;
+	color: #5aa3dc;
 }
 
 /* Description description (eg. Bootstrap currently works...) */
