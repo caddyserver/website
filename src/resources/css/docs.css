@@ -682,7 +682,10 @@ td code {
 
 
 
-
+#dark-mode-toggle-1 {
+  --dark-mode-toggle-dark-icon: url("/resources/images/sun.png");
+  --dark-mode-toggle-light-icon: url("/resources/images/moon.png");
+}
 
 
 
