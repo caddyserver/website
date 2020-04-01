@@ -154,6 +154,8 @@ These are examples of valid addresses:
 - `127.0.0.1`
 - `[::1]:2015`
 - `example.com/foo/*`
+- `*.example.com`
+- `http://`
 
 <aside class="tip">
 	<a href="/docs/automatic-https">Automatic HTTPS</a> is enabled if your site's address contains a hostname or IP address. This behavior is purely implicit, however, so it never overrides any explicit configuration. For example, if the site's address is <code>http://example.com</code>, auto-HTTPS will not activate because the scheme is explicitly <code>http://</code>.
@@ -162,6 +164,8 @@ These are examples of valid addresses:
 From the address, Caddy can potentially infer the scheme, host, port, and path of your site.
 
 If you specify a hostname, only requests with a matching Host header will be honored. In other words, if the site address is `localhost`, then Caddy will not match requests to `127.0.0.1`.
+
+Wildcards (`*`) may be used, but only to represent precisely one label of the hostname. For example, `*.example.com` matches `foo.example.com` but not `foo.bar.example.com`, and `*` matches `localhost` but not `example.com`. To catch all hosts, omit the host portion of the address.
 
 If multiple sites share the same definition, you can list all of them together:
 

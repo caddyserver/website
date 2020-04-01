@@ -52,7 +52,7 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 - **&lt;upstreams...&gt;** is a list of upstreams (backends) to which to proxy.
 - **to** is an alternate way to specify the list of upstreams, one (or more) per line.
 
-Upstream addresses can take the form of a conventional [Caddy network address](/docs/conventions#network-addresses) or a URL that contains only scheme and host/port. Valid examples:
+Upstream addresses can take the form of a conventional [Caddy network address](/docs/conventions#network-addresses) or a URL that contains only scheme and host/port, with a special exception that the scheme may be prefixed by `srv+` to enable SRV DNS record lookups for load balancing. Valid examples:
 
 - `localhost:4000`
 - `127.0.0.1:4000`
@@ -60,6 +60,7 @@ Upstream addresses can take the form of a conventional [Caddy network address](/
 - `https://example.com`
 - `example.com`
 - `unix//var/php.sock`
+- `srv+http://internal:5099`
 
 Note: Schemes cannot be mixed, since they modify the common transport configuration (a TLS-enabled transport cannot carry both HTTPS and plaintext HTTP). Specifying ports 80 and 443 are the same as specifying the HTTP and HTTPS schemes, respectively. Any explicit transport configuration will not be overwritten, and omitting schemes or using other ports will not assume a particular transport. Additionally, schemes cannot contain paths or query strings, as that would imply simultaneous rewriting the request while proxying, which behavior is not defined or supported.
 

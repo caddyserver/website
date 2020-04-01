@@ -17,6 +17,7 @@ The following config adapters are currently available (some are third-party proj
 - [**jsonc**](https://github.com/caddyserver/jsonc-adapter)
 - [**json5**](https://github.com/caddyserver/json5-adapter)
 - [**yaml**](https://github.com/iamd3vil/caddy_yaml_adapter)
+- [**cue**](https://github.com/caddyserver/cue-adapter)
 
 (This list is the temporary home for known adapters until our new website is finished.)
 

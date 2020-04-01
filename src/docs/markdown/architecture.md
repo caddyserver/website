@@ -135,7 +135,7 @@ You can [watch a video about the design of Caddy 2 here](https://www.youtube.com
 
 A config reload works by provisioning the new modules, and if all succeed, the old ones are cleaned up. For a brief period, two configs are operational at the same time.
 
-Each configuration is associated with a [context](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#Context) which holds all the module state, so most state escapes the scope of a config. This is good news for correctness, performance, and simplicity!
+Each configuration is associated with a [context](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#Context) which holds all the module state, so most state never escapes the scope of a config. This is good news for correctness, performance, and simplicity!
 
 However, sometimes truly global state is necessary. For example, the reverse proxy may keep track of the health of its upstreams; since there is only one of each upstream globally, it would be bad if it forgot about them every time a minor config change was made. Fortunately, Caddy [provides facilities](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#UsagePool) similar to a language runtime's garbage collector to keep global state tidy.
 
