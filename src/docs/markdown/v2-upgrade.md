@@ -306,7 +306,7 @@ If you want to write a plugin for Caddy 2, [learn how to write a Caddy module](/
 
 ### Building Caddy 2 with plugins
 
-Caddy 2 does not (yet) have a public build server and interactive download page like v1 did. We're working on it. In the meantime, our [builder tool](https://github.com/caddyserver/builder) may be helpful. It simply automates the instructions in Caddy's [main.go](https://github.com/caddyserver/caddy/blob/v2/cmd/caddy/main.go) file.
+Caddy 2 does not (yet) have a public build server and interactive download page like v1 did. We're working on it. In the meantime, our [builder tool](https://github.com/caddyserver/xcaddy) may be helpful. It simply automates the instructions in Caddy's [main.go](https://github.com/caddyserver/caddy/blob/v2/cmd/caddy/main.go) file.
 
 We'll also be working on the new website some more so that plugins can be registered and indexed and easily found.
 
