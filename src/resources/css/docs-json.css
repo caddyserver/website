@@ -24,9 +24,3 @@ article h1 {
 .collapsed {
 	display: none;
 }
-
-@media (prefers-color-scheme: dark) {
-	pre > code.json {
-		background-color: #07212b;
-	}
-}
