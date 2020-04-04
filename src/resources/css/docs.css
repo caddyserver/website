@@ -27,6 +27,10 @@ header {
 	font-size: 12px;
 }
 
+#search {
+	margin-top: 0;
+}
+
 header nav {
 	font-size: 16px;
 	line-height: 2em;
@@ -767,7 +771,11 @@ td code {
 	}
 }
 
-@media (max-width: 700px) {
+@media (max-width: 900px) {
+	#logo-container {
+		display: block;
+	}
+
 	#logo-docs {
 		display: none;
 	}

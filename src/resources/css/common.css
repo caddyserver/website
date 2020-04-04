@@ -57,11 +57,14 @@ header {
 	height: 40px;
 }
 
+#search {
+	margin-top: 4px;
+}
+
 header nav {
 	text-align: right;
 	line-height: 40px;
 }
-
 
 header nav > a {
 	display: inline-block;
@@ -193,6 +196,18 @@ footer > div {
 }
 
 @media (max-width: 900px) {
+	header {
+		flex-direction: column;
+	}
+
+	#logo-container {
+		text-align: center;
+	}
+
+	header nav {
+		text-align: center;
+	}
+
 	footer {
 		flex-direction: column;
 		margin-top: 0;

@@ -77,6 +77,9 @@ example2.com {
 }
 ```
 
+If a request matches multiple site blocks, the first matching site is chosen. Requests don't cascade into to other site blocks.
+
+
 ### Directives
 
 **Directives** are keywords which customize how the site is served. For example, a complete file server config might look like this:

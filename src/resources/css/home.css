@@ -2,10 +2,6 @@ body {
 	font-family: 'Inter', sans-serif;
 }
 
-#search {
-	margin-top: 4px;
-}
-
 .hero {
 	background-image: url('/resources/images/bg-teal.jpg');
 	background-repeat: no-repeat;
@@ -171,18 +167,6 @@ iframe.github-stars {
 }
 
 @media (max-width: 900px) {
-	header {
-		flex-direction: column;
-	}
-
-	#logo-container {
-		text-align: center;
-	}
-
-	header nav {
-		text-align: center;
-	}
-
 	h1 {
 		font-size: 50px;
 		word-wrap: break-word;
