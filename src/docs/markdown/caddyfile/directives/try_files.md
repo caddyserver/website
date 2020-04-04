@@ -29,7 +29,7 @@ The `try_files` directive is basically a shortcut for:
 rewrite @try_files {http.matchers.file.relative}
 ```
 
-Since this directive is a shortcut, it does not allow a matcher in its syntax. If you need a more complex matcher, then use the above expanded form as a basis.
+Note that this directive does not accept a matcher token. If you need more complex matching logic, then use the expanded form above as a basis.
 
 
 ## Examples
