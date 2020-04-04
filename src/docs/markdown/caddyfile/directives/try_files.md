@@ -29,6 +29,8 @@ The `try_files` directive is basically a shortcut for:
 rewrite @try_files {http.matchers.file.relative}
 ```
 
+Since this directive is a shortcut, it does not allow a matcher in its syntax. If you need a more complex matcher, then use the above expanded form as a basis.
+
 
 ## Examples
 
