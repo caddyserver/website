@@ -115,7 +115,7 @@ In addition to the syntax for each individual encoder, these common properties c
 The console encoder formats the log entry for human readability while preserving some structure.
 
 ```
-output console
+format console
 ```
 
 #### json
@@ -123,7 +123,7 @@ output console
 Formats each log entry as a JSON object.
 
 ```
-output json
+format json
 ```
 
 #### logfmt
@@ -131,7 +131,7 @@ output json
 Formats each log entry as [logfmt](https://brandur.org/logfmt).
 
 ```
-output logfmt
+format logfmt
 ```
 
 #### single_field
@@ -139,7 +139,7 @@ output logfmt
 Writes only a single field from the structure log entry. Useful if one of the fields has all the information you need.
 
 ```
-output single_field <field_name>
+format single_field <field_name>
 ```
 
 - **&lt;field_name&gt;** is the name of the field whose value to use as the log entry.
