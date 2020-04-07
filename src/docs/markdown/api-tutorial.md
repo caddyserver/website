@@ -76,6 +76,7 @@ Then upload it:
 <aside class="tip">
 	Make sure you don't forget the @ in front of your filename; this tells curl you are sending a file.
 </aside>
+
 <aside class="complete">Give Caddy a config</aside>
 
 We can verify that Caddy applied our new config with another GET request:
@@ -107,8 +108,6 @@ Save the config file, then update Caddy's active configuration by running the sa
 	-H "Content-Type: application/json" \
 	-d @caddy.json
 </code></pre>
-
-
 
 <aside class="complete">Replace active config</aside>
 
