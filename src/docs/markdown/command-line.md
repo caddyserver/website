@@ -212,11 +212,13 @@ NOTE: Due to [a bug in Go](https://github.com/golang/go/issues/29228), version i
 
 Gives the running Caddy instance a new configuration. This has the same effect as POSTing a document to the [/load endpoint](/docs/api#post-load), but this command is convenient for simple workflows revolving around config files. Compared to the `stop`, `start`, and `run` commands, this single command is the correct, semantic way to change/reload the running configuration.
 
+Because this command uses the API, the admin endpoint must not be disabled.
+
 `--config` is the config file to apply. If not specified, it will try a file called `Caddyfile` in the current working directory and, if it exists, it will adapt it using the `caddyfile` config adapter; otherwise, it is an error if there is no config file to load.
 
 `--adapter` specifies a config adapter to use, if any.
 
-`--address` needs to be used if the admin endpoint is not listening on the default address and if it is different from the address in the provided config file.
+`--address` needs to be used if the admin endpoint is not listening on the default address and if it is different from the address in the provided config file. Note that only TCP addresses are supported at this time.
 
 
 
@@ -257,7 +259,7 @@ Runs Caddy and blocks indefinitely; i.e. "daemon" mode.
 
 `--environ` prints out the environment before starting. This is the same as the `caddy environ` command, but does not exit after printing.
 
-`--resume` uses the last loaded configuration. This flag is useful primarily in [API](/docs/api)-heavy deployments, and overrides `--config` if a saved config exists.
+`--resume` uses the last loaded configuration, overriding the `--config` flag (if present) if a previous config was saved. Using this flag guarantees config durability through machine reboots or process restarts. It is most useful in [API](/docs/api)-heavy deployments.
 
 `--watch` will watch the config file and automatically reload it after it changes. ⚠️ This feature is dangerous in production! Only use it in a local development environment.
 
