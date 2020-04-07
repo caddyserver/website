@@ -73,6 +73,10 @@ Then upload it:
 	-d @caddy.json
 </code></pre>
 
+<aside class="tip">
+	Make sure you don't forget the @ in front of your filename; this tells curl you are sending a file.
+</aside>
+
 <aside class="complete">Give Caddy a config</aside>
 
 We can verify that Caddy applied our new config with another GET request:
@@ -204,5 +208,4 @@ And check it again:
 <pre><code class="cmd bash">curl localhost:2019/id/msg/body</code></pre>
 
 <aside class="complete">Use <code>@id</code> tags</aside>
-
 
