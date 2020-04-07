@@ -74,7 +74,7 @@ Then upload it:
 </code></pre>
 
 <aside class="tip">
-	Make sure you dont forget the @ in front of your filename, this tells curl you are sending a file.
+	Make sure you don't forget the @ in front of your filename; this tells curl you are sending a file.
 </aside>
 
 
@@ -211,5 +211,4 @@ And check it again:
 <pre><code class="cmd bash">curl localhost:2019/id/msg/body</code></pre>
 
 <aside class="complete">Use <code>@id</code> tags</aside>
-
 
