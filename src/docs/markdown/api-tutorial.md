@@ -76,8 +76,6 @@ Then upload it:
 <aside class="tip">
 	Make sure you don't forget the @ in front of your filename; this tells curl you are sending a file.
 </aside>
-
-
 <aside class="complete">Give Caddy a config</aside>
 
 We can verify that Caddy applied our new config with another GET request:
