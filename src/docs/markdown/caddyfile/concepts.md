@@ -77,7 +77,7 @@ example2.com {
 }
 ```
 
-If a request matches multiple site blocks, the first matching site is chosen. Requests don't cascade into to other site blocks.
+If a request matches multiple site blocks, the site block with the most specific matching address is chosen. Requests don't cascade into to other site blocks.
 
 
 ### Directives
@@ -204,7 +204,7 @@ root /index.html /var/www  # matcher token: /index.html
 root @post       /var/www  # matcher token: @post
 ```
 
-Matcher tokens can be omitted entirely to match all requests; for example, `*` or `/` do not need to be given.
+Matcher tokens can be omitted entirely to match all requests; for example, `*` does not need to be given if the next argument does not look like a path matcher.
 
 **[Read the page about request matchers](/docs/caddyfile/matchers) to learn more.**
 
