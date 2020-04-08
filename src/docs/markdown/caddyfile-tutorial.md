@@ -32,7 +32,7 @@ localhost
 ```
 
 <aside class="tip">
-	If the HTTP and HTTPS ports (80 and 443, respectively) are privileged ports on your OS, you will either need to run with elevated privileges or use a higher port. To use a higher port, just change the address to something like <code>localhost:2015</code>. You'll still get HTTPS unless you turn it off.
+	If the HTTP and HTTPS ports (80 and 443, respectively) are privileged ports on your OS, you will either need to run with elevated privileges or use a higher port. To use a higher port, just change the address to something like <code>localhost:2015</code> and change the HTTP port using the <a href="/docs/caddyfile/options">http_port</a> Caddyfile option.
 </aside>
 
 Then hit enter and type what you want it to do. For this tutorial, make your Caddyfile look like this:
@@ -48,7 +48,7 @@ Save that and run Caddy (since this is a training tutorial, we'll use the `--wat
 <pre><code class="cmd bash">caddy run --watch</code></pre>
 
 <aside class="tip">
-	If you get permissions errors, try using a higher port in your address, like <code>localhost:2015</code> for example, or run with elevated privileges.
+	If you get permissions errors, try using a higher port in your address (like <code>localhost:2015</code>) and <a href="/docs/caddyfile/options">change the HTTP port</a>, or run with elevated privileges.
 </aside>
 
 The first time, you'll be asked for your password. This is so Caddy can serve your site over HTTPS.
