@@ -8,7 +8,7 @@ Caddy is configured through an administration endpoint which can be accessed via
 
 **Default address: `localhost:2019`**
 
-The latest configuration will be saved to disk after any changes (unless [disabled](/docs/json/admin/config/)). You can resume the last working config after a restart with [`caddy run --resume`](/docs/command-line#caddy-run).
+The latest configuration will be saved to disk after any changes (unless [disabled](/docs/json/admin/config/)). You can resume the last working config after a restart with [`caddy run --resume`](/docs/command-line#caddy-run), which guarantees config durability in the event of a power cycle or similar.
 
 To get started with the API, try our [API tutorial](/docs/api-tutorial) or, if you only have a minute, our [API quick-start guide](/docs/quick-starts/api).
 

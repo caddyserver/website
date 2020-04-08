@@ -12,6 +12,10 @@ The first thing to type in a Caddyfile is your site's address:
 localhost
 ```
 
+<aside class="tip">
+	If the HTTP and HTTPS ports (80 and 443, respectively) are privileged ports on your OS, you will either need to run with elevated privileges or use a higher port. To use a higher port, just change the address to something like <code>localhost:2015</code>. You'll still get HTTPS unless you turn it off.
+</aside>
+
 Then hit enter and type what you want it to do, so it looks like this:
 
 ```
@@ -30,6 +34,7 @@ You will probably be asked for your password, because Caddy serves all sites -- 
 	For local HTTPS, Caddy automatically generates certificates and unique private keys for you. The root certificate is added to your system's trust store, which is why the password prompt is necessary. It allows you to develop locally over HTTPS without certificate errors.
 </aside>
 
+If you get permission errors, you may need to run with elevated privileges or use a higher port; a quick fix is to change your site's address to `localhost:2015` or similar.
 
 Either open your browser to [localhost](http://localhost) or `curl` it:
 
