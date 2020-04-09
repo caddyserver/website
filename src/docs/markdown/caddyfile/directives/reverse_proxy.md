@@ -128,7 +128,7 @@ transport http {
 }
 ```
 
-The `http_ntlm` transport is identical to the `http` transport, but the HTTP version is always 1.1, and Keep-Alive is always disabled.
+The `http_ntlm` transport is identical to the `http` transport, but the HTTP version is always 1.1, and Keep-Alive is always disabled. The `http_ntlm` transport must be compiled as a [separate module](https://github.com/caddyserver/ntlm-transport).
 
 - **read_buffer** is the size of the read buffer in bytes.
 - **write_buffer** is the size of the write buffer in bytes.
