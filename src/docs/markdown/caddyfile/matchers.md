@@ -224,12 +224,18 @@ By the method (verb) of the HTTP request. Verbs should be uppercase, like `POST`
 ### not
 
 ```
+not <any other matcher>
+```
+
+or, to negate multiple matchers which get AND'ed, open a block:
+
+```
 not {
 	<any other matchers...>
 }
 ```
 
-Encloses other matchers and negates their result.
+The results of the enclosed matchers will be negated.
 
 
 ### path
