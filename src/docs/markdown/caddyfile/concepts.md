@@ -173,7 +173,7 @@ Wildcards (`*`) may be used, but only to represent precisely one label of the ho
 If multiple sites share the same definition, you can list all of them together:
 
 ```
-localhost:8080, example.com, www.site.com
+localhost:8080, example.com, www.example.com
 ```
 
 or
@@ -181,7 +181,7 @@ or
 ```
 localhost:8080,
 example.com,
-www.site.com
+www.example.com
 ```
 
 Notice how the commas indicate the continuation of addresses.
