@@ -39,6 +39,7 @@ Possible options are:
 		burst    <n>
 	}
 	local_certs
+	key_type <type>
 }
 ```
 
@@ -57,3 +58,4 @@ Possible options are:
 	- **ask** will cause Caddy to make an HTTP request to the given URL with a query string of `?domain=` containing the value of the domain name. If the endpoint returns 200 OK, Caddy will be authorized to obtain a certificate for that name.
 	- **interval** and **burst** allows `<n>` certificate operations within `<duration>` interval.
 - **local_certs** causes all certificates to be issued internally by default, rather than through a (public) ACME CA such as Let's Encrypt. This is useful in development environments.
+- **key_type** customizes the type of key used to generate certificates. Supported values: `ed25519`, `p256`, `p384`, `rsa2048`, `rsa4096`.
