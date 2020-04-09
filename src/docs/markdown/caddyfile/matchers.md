@@ -224,13 +224,18 @@ By the method (verb) of the HTTP request. Verbs should be uppercase, like `POST`
 ### not
 
 ```
+not <any other matcher>
+```
+
+Or
+
+```
 not {
 	<any other matchers...>
 }
 ```
 
-Encloses other matchers and negates their result.
-
+Encloses one or more other matchers and negates their result.
 
 ### path
 
