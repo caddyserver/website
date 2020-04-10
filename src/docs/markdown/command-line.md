@@ -56,6 +56,9 @@ The ellipses `...` indicates a continuation, i.e. one or more parameters.
 - **[caddy stop](#caddy-stop)**
   Stops the running Caddy process
 
+- **[caddy trust](#caddy-trust)**
+  Installs a certificate into local trust store(s)
+
 - **[caddy untrust](#caddy-untrust)**
   Untrusts a certificate from local trust store(s)
 
@@ -298,6 +301,14 @@ Gracefully stops the running Caddy process (other than the process of the stop c
 
 If you want to stop the current configuration but do not want to exit the process, use [`caddy reload`](#caddy-reload) with a blank config, or the [`DELETE /config/`](/docs/api#delete-configpath) endpoint.
 
+
+### `caddy trust`
+
+<pre><code class="cmd bash">caddy trust</code></pre>
+
+Installs the root certificate for Caddy's default internal CA (named "local") into the local trust store(s); intended for development environments only. May prompt for a password if there are not already sufficient privileges.
+
+**This command is often unnecessary.** Because Caddy will install its root certificate into local trust stores automatically when first needed, this command is only useful if you need to pre-install the certificates while you have elevated privileges, like during system provisioning in automated environments.
 
 
 ### `caddy untrust`
