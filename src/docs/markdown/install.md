@@ -21,15 +21,15 @@ Read how to [install the Caddy COPR](https://copr.fedorainfracloud.org/coprs/g/c
 [docker pull caddy/caddy](https://hub.docker.com/r/caddy/caddy)
 
 
-## Manually installing as a Linux service
+## Linux service
 
 Requirements:
 
-- A `caddy` binary that you downloaded or built from source
-- Systemd version 232 or newer
-- Superuser rights
+- `caddy` binary that you downloaded or built from source
+- `systemctl --version` 232 or newer
+- `sudo` privileges
 
-Move the `caddy` binary into your `$PATH`, for example:
+Move the caddy binary into your `$PATH`, for example:
 <pre><code class="cmd bash">sudo mv caddy /usr/bin/</code></pre>
 
 Test that it worked:
@@ -47,9 +47,14 @@ Create a user named `caddy`, with a writeable home folder:
 	--comment "Caddy web server" \
 	caddy</code></pre>
 
-Next, take [this systemd unit file](https://github.com/caddyserver/dist/blob/master/init/caddy.service) and save it to `/etc/systemd/system/caddy.service`. Double-check the **ExecStart** and **ExecReload** directives---make sure the binary's location and command line arguments are correct for your installation.
+Next, [choose a systemd service file](https://github.com/caddyserver/dist/blob/master/init) based on your use case:
 
-Double-check that both your systemd and Caddy configs are correct before continuing. Make sure your config file is in the location specified in the command.
+- [**`caddy.service`**](https://github.com/caddyserver/dist/blob/master/init/caddy.service) if you configure Caddy with a file.
+- [**`caddy-api.service`**](https://github.com/caddyserver/dist/blob/master/init/caddy-api.service) if you configure Caddy solely through its API.
+
+They are very similar but with minor differences in the ExecStart and ExecReload commands to accommodate your workflow. Customize the file accordingly.
+
+**Double-check the `ExecStart` and `ExecReload` directives.** Make sure the binary's location and command line arguments are correct for your installation!
 
 To start the service for the first time, do the usual systemctl dance:
 
@@ -63,11 +68,15 @@ Verify that it is running:
 When running with our official service file, Caddy's output will be redirected to `journalctl`:
 <pre><code class="cmd bash">journalctl -u caddy</code></pre>
 
-To gracefully apply any changes to your config file (if using one):
+If using a config file, you can gracefully apply any changes:
 <pre><code class="cmd bash">sudo systemctl reload caddy</code></pre>
 
 You can stop the service with:
 <pre><code class="cmd bash">sudo systemctl stop caddy</code></pre>
+
+<aside class="advice">
+	Do not stop the service to change Caddy's configuration. Stopping the server will incur downtime. Use the reload command instead.
+</aside>
 
 ## Build from source
 
@@ -84,3 +93,12 @@ Build:
 
 <pre><code class="cmd"><span class="bash">cd caddy/cmd/caddy/</span>
 <span class="bash">go build</span></code></pre>
+
+
+### With plugins
+
+Using [xcaddy](https://github.com/caddyserver/xcaddy), you can compile Caddy with extra plugins, for example:
+
+<pre><code class="cmd bash">xcaddy build v2.0.0-rc.3 \
+    --with github.com/caddyserver/nginx-adapter
+	--with github.com/caddyserver/ntlm-transport@v0.1.0</code></pre>

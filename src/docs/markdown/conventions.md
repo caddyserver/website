@@ -108,7 +108,7 @@ OS | Data directory path
 
 All other OSes use the Linux/BSD directory path.
 
-The data directory must not be treated like a cache. Its contents are not ephemeral or merely for the sake of performance. Caddy stores TLS certificates, private keys, OCSP staples, and other necessary information to the data directory. It should not be purged without an understanding of the implications.
+**The data directory must not be treated as a cache.** Its contents are **not** ephemeral or merely for the sake of performance. Caddy stores TLS certificates, private keys, OCSP staples, and other necessary information to the data directory. It should not be purged without understanding the implications.
 
 It is crucial that this directory is persistent and writeable by Caddy.
 

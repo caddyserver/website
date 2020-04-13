@@ -22,10 +22,7 @@ package mymodule
 import "github.com/caddyserver/caddy/v2"
 
 func init() {
-	err := caddy.RegisterModule(Gizmo{})
-	if err != nil {
-		log.Fatal(err)
-	}
+	caddy.RegisterModule(Gizmo{})
 }
 
 // Gizmo is an example; put your own type here.

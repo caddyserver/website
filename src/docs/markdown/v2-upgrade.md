@@ -291,11 +291,11 @@ Most sites will not need this directive at all.
 
 ## Service files
 
-We recommend using [our official service file](https://github.com/caddyserver/dist/blob/master/init/caddy.service) for Caddy deployments.
+We recommend using [one of our official service files](https://github.com/caddyserver/dist/blob/master/init) for Caddy deployments.
 
-If you need a custom service file, base it off of ours. It has been carefully tuned to what it is for good reasons!
+If you need a custom service file, base it off of ours. It has been carefully tuned to what it is for good reasons! Be sure to customize yours if needed.
 
-See [install instructions](/docs/install#manually-installing-as-a-linux-service) for details.
+See [install instructions](/docs/install#linux-service) for details.
 
 
 ## Plugins
