@@ -67,3 +67,9 @@ Same, but only for requests under `/blog/`:
 ```
 php_fastcgi /blog/* 127.0.0.1:9000
 ```
+
+When using php-fpm listening via a unix socket:
+
+```
+php_fastcgi unix//run/php/php7.4-fpm.sock
+```
