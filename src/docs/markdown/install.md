@@ -11,14 +11,15 @@ Caddy is available for every platform as a [static binary](https://github.com/ca
 
 We maintain [official distributions](https://github.com/caddyserver/dist) for the following platforms:
 
-- **DigitalOcean**
-[Create a Caddy droplet](https://marketplace.digitalocean.com/apps/caddy) and get started in 90 seconds.
+- **Docker**
+[docker pull caddy](https://hub.docker.com/_/caddy)
 
 - **Fedora, RedHat, CentOS**
 Read how to [install the Caddy COPR](https://copr.fedorainfracloud.org/coprs/g/caddy/caddy/).
 
-- **Docker**
-[docker pull caddy/caddy](https://hub.docker.com/r/caddy/caddy)
+- **DigitalOcean**
+[Create a Caddy droplet](https://marketplace.digitalocean.com/apps/caddy) and get started in 90 seconds.
+
 
 
 ## Linux service
