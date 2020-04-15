@@ -85,7 +85,7 @@ All hostnames (domain names and IP addresses) qualify for fully-managed certific
 - consist only of alphanumerics, hyphens, dots, and wildcard (`*`)
 - do not start or end with a dot ([RFC 1034](https://tools.ietf.org/html/rfc1034#section-3.5))
 
-In addition, hostnams qualify for publicly-trusted certificates if they:
+In addition, hostnames qualify for publicly-trusted certificates if they:
 
 - are not localhost
 - are not an IP address

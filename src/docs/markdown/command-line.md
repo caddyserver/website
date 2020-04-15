@@ -76,14 +76,14 @@ The ellipses `...` indicates a continuation, i.e. one or more parameters.
 ### `caddy adapt`
 
 <pre><code class="cmd bash">caddy adapt
-	--config &lt;path&gt;
+	[--config &lt;path&gt;]
 	[--adapter &lt;name&gt;]
 	[--pretty]
 	[--validate]</code></pre>
 
 Adapts a configuration to Caddy's native JSON config structure and writes the output to stdout, along with any warnings to stderr, then exits.
 
-`--config` is the path to the config file. If blank, will default to `Caddyfile` in current directory if it exists; otherwise, this flag is required.
+`--config` is the path to the config file. If omitted, assumes `Caddyfile` in current directory if it exists; otherwise, this flag is required.
 
 `--adapter` specifies the config adapter to use; default is `caddyfile`.
 

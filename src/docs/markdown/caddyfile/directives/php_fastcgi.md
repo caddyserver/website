@@ -27,27 +27,29 @@ Since this directive is an opinionated wrapper over a reverse proxy, you can ope
 The `php_fastcgi` directive is the same as the following configuration:
 
 ```
-# Add trailing slash for directory requests
-@canonicalPath {
-	file {
-		try_files {path}/index.php
+route {
+	# Add trailing slash for directory requests
+	@canonicalPath {
+		file {
+			try_files {path}/index.php
+		}
+		not {
+			path */
+		}
 	}
-	not {
-		path */
+	redir @canonicalPath {path}/ 308
+
+	# If the requested file does not exist, try index files
+	try_files {path} {path}/index.php index.php
+
+	# Proxy PHP files to the FastCGI responder
+	@phpFiles {
+		path *.php
 	}
-}
-redir @canonicalPath {path}/ 308
-
-# If the requested file does not exist, try index files
-try_files {path} {path}/index.php index.php
-
-# Proxy PHP files to the FastCGI responder
-@phpFiles {
-	path *.php
-}
-reverse_proxy @phpFiles <php-fpm_gateway> {
-	transport fastcgi {
-		split .php
+	reverse_proxy @phpFiles <php-fpm_gateway> {
+		transport fastcgi {
+			split .php
+		}
 	}
 }
 ```
