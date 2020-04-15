@@ -77,8 +77,6 @@ Save your Caddyfile, then refresh your browser tab. You should either see a list
 
 Let's do something interesting with our file server: serve a templated page. Create a new file and paste this into it:
 
-<!-- We use zero-width space character (​) to trick templates into not evaluating in this tutorial. -->
-
 ```html
 <!DOCTYPE html>
 <html>
@@ -86,7 +84,7 @@ Let's do something interesting with our file server: serve a templated page. Cre
 		<title>Caddy tutorial</title>
 	</head>
 	<body>
-		Page loaded at: {​{now | date "Mon Jan 2 15:04:05 MST 2006"}​}
+		Page loaded at: {{`{{`}}now | date "Mon Jan 2 15:04:05 MST 2006"{{`}}`}}
 	</body>
 </html>
 ```
@@ -96,7 +94,7 @@ Save this as `caddy.html` in the current directory and load it in your browser: 
 The output is:
 
 ```
-Page loaded at: {​{now | date "Mon Jan 2 15:04:05 MST 2006"}​}
+Page loaded at: {{`{{`}}now | date "Mon Jan 2 15:04:05 MST 2006"{{`}}`}}
 ```
 
 Wait a minute. We should see today's date. Why didn't it work? It's because the server hasn't yet been configured to evaluate templates! Easy to fix, just add a line to the Caddyfile so it looks like this:
