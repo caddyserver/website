@@ -264,7 +264,7 @@ Runs Caddy and blocks indefinitely; i.e. "daemon" mode.
 
 `--resume` uses the last loaded configuration, overriding the `--config` flag (if present) if a previous config was saved. Using this flag guarantees config durability through machine reboots or process restarts. It is most useful in [API](/docs/api)-heavy deployments.
 
-`--watch` will watch the config file and automatically reload it after it changes. ⚠️ This feature is dangerous in production! Only use it in a local development environment.
+`--watch` will watch the config file and automatically reload it after it changes. ⚠️ This feature is intended for use only in local development environments!
 
 <aside class="advice">
 	Do not stop the server to change configuration while running in production! That will result in downtime. (This should be obvious but you'd be surprised how many complaints we get about it.) Use the <a href="#caddy-reload">caddy reload</a> command instead.

@@ -269,6 +269,8 @@ Comments start with `#` and proceed until the end of the line:
 directive  # or go at the end
 ```
 
+The hash character `#` cannot appear in the middle of a token (i.e. it must be preceded by a space or appear at the beginning of a line). This allows the use of hashes within URIs or other values without requiring quoting.
+
 
 ## Environment variables
 

@@ -105,7 +105,12 @@ It can also **manipulate headers** between itself and the backend:
 - **header_up** Sets, adds, removes, or performs a replacement in a request header going upstream to the backend.
 - **header_down** Sets, adds, removes, or performs a replacement in a response header coming downstream from the backend.
 
-By default, Caddy passes thru incoming headers to the backend&mdash;including the `Host` header&mdash;without modifications, with one exception: it adds or augments the [X-Forwarded-For](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For) header field as is standard for well-mannered proxies.
+By default, Caddy passes thru incoming headers to the backend&mdash;including the `Host` header&mdash;without modifications, with two exceptions:
+
+- It adds or augments the [X-Forwarded-For](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For) header field.
+- It sets the [X-Forwarded-Proto](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Proto) header field.
+
+Since these header fields are only de-facto standards, Caddy may stop setting them implicitly in the future if the standardized [Forwarded](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Forwarded) header field becomes more widely adopted.
 
 Caddy's proxy **transport** is pluggable:
 
