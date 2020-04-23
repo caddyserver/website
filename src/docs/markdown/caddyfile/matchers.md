@@ -276,7 +276,7 @@ By request protocol.
 query <key>=<val>...
 ```
 
-By query string parameters. Should be a sequence of `key=value` pairs.
+By query string parameters. Should be a sequence of `key=value` pairs. Keys are matched exactly, case-sensitively. Values are matched exactly, but also support `*` to match any value.
 
 
 ### remote_ip
