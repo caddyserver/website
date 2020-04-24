@@ -57,7 +57,9 @@ They are very similar but with minor differences in the ExecStart and ExecReload
 
 **Double-check the `ExecStart` and `ExecReload` directives.** Make sure the binary's location and command line arguments are correct for your installation!
 
-To start the service for the first time, do the usual systemctl dance:
+The usual place to save the service file is: `/etc/systemd/system/caddy.service`
+
+After saving your service file, you can start the service for the first time with the usual systemctl dance:
 
 <pre><code class="cmd"><span class="bash">sudo systemctl daemon-reload</span>
 <span class="bash">sudo systemctl enable caddy</span>
