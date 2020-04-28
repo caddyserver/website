@@ -18,6 +18,7 @@ This guide won't delve into the new features available -- which are really cool,
 - [Command line](#command-line)
 - [Caddyfile](#caddyfile)
 	- [Primary changes](#primary-changes)
+	- [basicauth](#basicauth)
 	- [browse](#browse)
 	- [ext](#ext)
 	- [fastcgi](#fastcgi)
@@ -100,7 +101,6 @@ The [v2 Caddyfile](/docs/caddyfile/concepts) is very similar to what you're alre
 
 ### Primary changes
 
-
 - If you are serving static files, you will need to add a [`file_server` directive](/docs/caddyfile/directives/file_server), since Caddy 2 does not assume this by default. Caddy 2 does not sniff MIME by default, either, for security reasons; if a Content-Type is missing you may need to set the header yourself using the [header](/docs/caddyfile/directives/header) directive.
 
 - In v1, you could only filter (or "match") directives by request path. In v2, [request matching](/docs/caddyfile/matchers) is much more powerful. Any v2 directives which add a middleware to the HTTP handler chain or which manipulate the HTTP request/response in any way take advantage of this new matching functionality. [Read more about v2 request matchers.](/docs/caddyfile/matchers) You'll need to know about them to make sense of the v2 Caddyfile.
@@ -114,6 +114,23 @@ The [v2 Caddyfile](/docs/caddyfile/concepts) is very similar to what you're alre
 We'll list some of the most common v1 directives here and describe how to convert them for use in the v2 Caddyfile.
 
 ⚠️ **Just because a v1 directive is missing from this page does not mean v2 can't do it!** Some v1 directives aren't needed, don't translate well, or are fulfilled other ways in v2. For some advanced customization, you may need to drop down to the JSON to get what you want. Explore [our documentation](/docs/caddyfile) to find what you need!
+
+
+### basicauth
+
+HTTP Basic Authentication is still configured with the [`basicauth`](/docs/caddyfile/directives/basicauth) directive. However, Caddy 2 configuration does not accept plaintext passwords. You must hash them, which the [`caddy hash-password`](/docs/command-line#caddy-hash-password) can help with.
+
+- **v1:**
+```
+basicauth /secret/ Bob hiccup
+```
+
+- **v2:**
+```
+basicauth /secret/* {
+	Bob JDJhJDEwJEVCNmdaNEg2Ti5iejRMYkF3MFZhZ3VtV3E1SzBWZEZ5Q3VWc0tzOEJwZE9TaFlZdEVkZDhX
+}
+```
 
 
 ### browse

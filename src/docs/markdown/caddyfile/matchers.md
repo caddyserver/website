@@ -159,9 +159,10 @@ expression {method}.startsWith("P")
 
 ```
 file {
-	root      <paths>
-	try_files <files...>
+	root       <paths>
+	try_files  <files...>
 	try_policy first_exist|smallest_size|largest_size|most_recent_modified
+	split_path <delims...>
 }
 ```
 
@@ -174,6 +175,7 @@ By files.
 	- `smallest_size` chooses the file with the smallest size.
 	- `largest_size` chooses the file with the largest size.
 	- `most_recent_modified` chooses the file that was most recently modified.
+- `split_path` will cause the path to be split at the first delimiter in the list that is found in each filepath to try. For each split value, the left-hand side of the split including the delimiter itself will be the filepath that is tried. For example, `/remote.php/dav/` using a delimiter of `.php` would try the file `/remote.php`. Each delimiter must appear at the end of a URI path component in order to be used as a split delimiter. This is a niche setting and is mostly used when serving PHP sites.
 
 An empty `file` matcher will see if the requested file (verbatim from the URI, relative to the [site root](/docs/caddyfile/directives/root)) exists.
 
