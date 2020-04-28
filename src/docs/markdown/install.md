@@ -11,18 +11,35 @@ Caddy is available for every platform as a [static binary](https://github.com/ca
 
 We maintain [official distributions](https://github.com/caddyserver/dist) for the following platforms:
 
-- **Docker**
-[docker pull caddy](https://hub.docker.com/_/caddy)
+### Docker
 
-- **Fedora, RedHat, CentOS**
-Read how to [install the Caddy COPR](https://copr.fedorainfracloud.org/coprs/g/caddy/caddy/).
+<pre><code class="cmd bash">docker pull caddy</code></pre>
 
-- **DigitalOcean**
-[Create a Caddy droplet](https://marketplace.digitalocean.com/apps/caddy) and get started in 90 seconds.
+[**View on Docker Hub**](https://hub.docker.com/_/caddy)
+
+
+### Debian, Ubuntu, Raspbian
+
+<pre><code class="cmd"><span class="bash">echo "deb [trusted=yes] https://apt.fury.io/caddy/ /" \
+    | sudo tee -a /etc/apt/sources.list.d/caddy-fury.list</span>
+<span class="bash">sudo apt update</span>
+<span class="bash">sudo apt install caddy</span></code></pre>
+
+
+### Fedora, RedHat, CentOS
+
+Read how to [**install the Caddy COPR**](https://copr.fedorainfracloud.org/coprs/g/caddy/caddy/).
+
+
+### DigitalOcean
+
+[**Create a Caddy droplet**](https://marketplace.digitalocean.com/apps/caddy) and get started in 90 seconds.
 
 
 
 ## Linux service
+
+This section describes how to manually install Caddy as a Linux service.
 
 Requirements:
 
@@ -102,6 +119,6 @@ Build:
 
 Using [xcaddy](https://github.com/caddyserver/xcaddy), you can compile Caddy with extra plugins, for example:
 
-<pre><code class="cmd bash">xcaddy build v2.0.0-rc.3 \
+<pre><code class="cmd bash">xcaddy build \
     --with github.com/caddyserver/nginx-adapter
 	--with github.com/caddyserver/ntlm-transport@v0.1.0</code></pre>
