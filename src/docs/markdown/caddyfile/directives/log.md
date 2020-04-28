@@ -65,7 +65,7 @@ output file <filename> {
 - **roll_disabled** disables log rolling. This can lead to disk space depletion, so only use this if your log files are maintained some other way.
 - **roll_size** is the size at which to roll the log file. Default: `100MiB`
 - **roll_keep** is how many log files to keep before deleting the oldest ones. Default: `10`
-- **roll_keep_for** is how long to keep rolled files. Default: 90 days
+- **roll_keep_for** is how long to keep rolled files as a [duration string](/docs/conventions#durations). Default: `2160h`, i.e. 90 days
 
 
 #### net
@@ -173,6 +173,7 @@ log {
 	output file /var/log/access.log {
 		roll_size 1gb
 		roll_keep 5
+		roll_keep_for 720h
 	}
 }
 ```
