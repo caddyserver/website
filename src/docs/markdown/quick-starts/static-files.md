@@ -70,7 +70,7 @@ You can also use another folder as the site root:
 ```
 localhost
 
-root /home/me/mysite
+root * /home/me/mysite
 file_server
 ```
 
