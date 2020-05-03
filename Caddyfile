@@ -4,6 +4,9 @@ root * src
 
 file_server
 templates
+encode gzip
+
+try_files {path}.html {path}
 
 redir   /docs/json      /docs/json/
 redir   /docs/modules   /docs/modules/

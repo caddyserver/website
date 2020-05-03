@@ -335,14 +335,6 @@ h5 {
 	background-color: rgba(0, 0, 0, .075);
 }
 
-pre,
-code {
-	font-family: 'PT Mono', 'Source Code Pro', monospace;
-	padding: 3px 6px;
-	font-size: 95%;
-	line-height: 1.5em;
-}
-
 code {
 	background-color: #e9f1fb;
 	border-radius: 5px;

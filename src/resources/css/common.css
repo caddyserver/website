@@ -109,7 +109,7 @@ header nav .button {
 .button {
 	border-radius: 2em;
 	padding: 10px 20px;
-	margin: 15px 30px 15px 0;
+	margin: 15px 0;
 	height: auto;
 	transition: all .2s;
 	text-decoration: none;
@@ -134,7 +134,7 @@ header nav .button {
 }
 
 .button.blue {
-	background-color: #009ae6;
+	background-color: #0082d0;
 	color: white;
 }
 
@@ -168,12 +168,20 @@ article a:hover {
 	text-decoration: underline;
 }
 
+pre,
+code {
+	font-family: 'PT Mono', 'Source Code Pro', monospace;
+	padding: 3px 6px;
+	font-size: 95%;
+	line-height: 1.5em;
+}
+
 
 footer {
 	display: flex;
 	justify-content: space-between;
 	margin-top: 100px;
-	padding: 0 50px 100px;
+	padding-bottom: 100px;
 	line-height: 125%;
 }
 

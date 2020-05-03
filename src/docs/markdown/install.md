@@ -65,14 +65,16 @@ Create a user named `caddy`, with a writeable home folder:
 	--comment "Caddy web server" \
 	caddy</code></pre>
 
+If using a config file, be sure it is readable by the `caddy` user you just created.
+
 Next, [choose a systemd service file](https://github.com/caddyserver/dist/blob/master/init) based on your use case:
 
 - [**`caddy.service`**](https://github.com/caddyserver/dist/blob/master/init/caddy.service) if you configure Caddy with a file.
 - [**`caddy-api.service`**](https://github.com/caddyserver/dist/blob/master/init/caddy-api.service) if you configure Caddy solely through its API.
 
-They are very similar but with minor differences in the ExecStart and ExecReload commands to accommodate your workflow. Customize the file accordingly.
+They are very similar but have minor differences in the ExecStart and ExecReload commands to accommodate your workflow. Customize the file accordingly.
 
-**Double-check the `ExecStart` and `ExecReload` directives.** Make sure the binary's location and command line arguments are correct for your installation!
+**Double-check the `ExecStart` and `ExecReload` directives.** Make sure the binary's location and command line arguments are correct for your installation! For example: if using a config file, change your `--config` path if it is different from our example.
 
 The usual place to save the service file is: `/etc/systemd/system/caddy.service`
 
