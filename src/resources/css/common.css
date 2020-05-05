@@ -57,10 +57,6 @@ header {
 	height: 40px;
 }
 
-#search {
-	margin-top: 4px;
-}
-
 header nav {
 	text-align: right;
 	line-height: 40px;
@@ -89,16 +85,30 @@ header nav > a.current {
 	font-size: 14px;
 	padding: 8px;
 	background: none;
-	width: 150px;
+	width: 200px;
 	max-width: 100%;
 	margin-right: 20px;
+	margin-top: 4px;
 	outline: none;
 }
 
 #search:focus {
 	background: #fff;
 }
+
+.algolia-autocomplete .ds-dropdown-menu {
+	width: 90%;
+	max-width: 800px;
+}
 /* End Algolia search */
+
+header nav .new {
+	background-color: #ffe300;
+	font-size: 75%;
+	vertical-align: top;
+	padding: 4px 8px;
+	border-radius: 1em;
+}
 
 header nav .button {
 	margin: 0 0 0 10px;

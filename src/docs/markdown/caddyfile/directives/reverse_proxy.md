@@ -185,7 +185,7 @@ Set the upstream Host header to the address of the upstream (by default, it will
 
 ```
 reverse_proxy localhost:9000 {
-    header_up Host {http.reverse_proxy.upstream.hostport}
+	header_up Host {http.reverse_proxy.upstream.hostport}
 }
 ```
 
@@ -195,3 +195,11 @@ Reverse proxy to an HTTPS endpoint:
 reverse_proxy https://example.com
 ```
 
+Strip a path prefix then proxy:
+
+```
+route /prefix/* {
+	uri strip_prefix /prefix
+	reverse_proxy localhost:9000
+}
+```

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Caddy 2</title>
+		{{include "/includes/head.html"}}
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Dancing+Script:wght@700&display=swap">
+		<link rel="stylesheet" href="/resources/css/asciinema-player-2.6.1.css">
+		<link rel="stylesheet" href="/resources/css/v2-landing.css">
+		<meta property="og:title" content="Introducing Caddy 2 - The Ultimate Server with Automatic HTTPS">
+		<meta name="twitter:title" value="Introducing Caddy 2 - The Ultimate Server with Automatic HTTPS">
+	</head>
+	<body>
+		<div class="hero">
+			<div class="wrapper">
+				<header>
+					<div id="logo-container">
+						<a href="/"><img src="/resources/images/caddy-wordmark.svg" id="logo" alt="Caddy"></a>
+					</div>
+					{{include "/includes/header-nav.html"}}
+				</header>
+
+				<img src="/resources/images/v2-landing.png" id="v2logo" title="Caddy 2.0">
+
+				<h1>A new kind of <b>extensible platform</b> for server apps.</h1>
+
+				<h2>Still the only web server to use <b>TLS automatically and by default.</b> <b>Deploy and scale HTTPS effortlessly</b> with Caddy 2.</h2>
+
+				<div class="action">
+					<a href="https://github.com/caddyserver/caddy/releases" class="big cyan button">Download</a>
+					<a href="/docs/getting-started" class="big gray button">Get Started</a>
+					<br>
+					Caddy uses only the Apache 2.0 open source license.
+				</div>
+			</div>
+		</div>
+
+		<section class="lead">
+			<div class="wrapper">
+				<div class="asides">
+					<div>
+						<h3>All-new core ✨</h3>
+						<p>
+							After 14 months of redesign, Caddy 2 has a <a href="/docs/architecture">whole new architecture</a> inspired by 5 years of experience and feedback from v1.
+						</p>
+					</div>
+					<div>
+						<h3>Live config API ⚡️</h3>
+						<p>
+							Seamlessly <a href="/docs/api-tutorial">update your server's config</a> without downtime using elegant and intuitive <a href="/docs/api">REST endpoints</a>.
+						</p>
+					</div>
+					<div>
+						<h3>Fewer moving parts ⚙️</h3>
+						<p>
+							Caddy saves money, increases developer productivity, and reduces problems in production.
+						</p>
+					</div>
+					<!-- <div>
+						<h3>Configure your way 👨‍💻</h3>
+						<p>
+							Caddy's native config format is <a href="/docs/json/">JSON</a>, but you can use <a href="/docs/config-adapters">config adapters</a> to configure Caddy any way you prefer.
+						</p>
+					</div> -->
+				</div>
+			</div>
+		</section>
+
+
+
+
+		<section class="diagonal up gray">
+			<div class="wrapper">
+				<h2>A whole new server experience</h2>
+				<div class="asides">
+					<div>
+						<div class="display left">
+							<div class="caption">
+								<asciinema-player src="/resources/321140.cast" cols="79" rows="20" preload="true" poster="npt:0:30" speed="1.5"></asciinema-player>
+								Play screencast to see Caddy serve HTTPS in &lt; 1 minute.
+							</div>
+						</div>
+					</div>
+					<div>
+						<p>
+							Caddy is <b><a href="https://twitter.com/JackEllis/status/1250779043051388931">"really fun to use"</a></b> and <b>helps make complex deployments simpler</b>. Your Caddy site will have <b>fewer moving parts</b> which <b>lowers costs, increases productivity, and improves reliability</b>.
+						</p>
+						<p>
+							Use Caddy's native <a href="/docs/json/">JSON configuration</a> to customize every inch of your server, or use the <a href="/docs/caddyfile">Caddyfile</a> to stand up a production site in just a few easy lines.
+						</p>
+						<p>
+							With Caddy, <a href="/docs/automatic-https">HTTPS just works</a>; and you can configure and deploy your site in <a href="/docs/config-adapters">more ways</a> than you ever thought possible. The days of hacking your deployment workflows around the limitations of your web server are over!
+						</p>
+						<a href="/docs/quick-starts/https" class="green button">HTTPS quick-start</a>
+						&nbsp;
+						<a href="/docs/v2-upgrade" class="gray button">Upgrade guide</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+
+
+
+		<section>
+			<div class="wrapper">
+				<h2>More than just a web server</h2>
+				<div class="asides">
+					<div>
+						<p>
+							Caddy 2 is a <a href="/docs/extending-caddy">highly extensible</a>, self-hosted platform on which you can build, configure, and deploy long-running services ("apps").
+						</p>
+						<p>
+							Caddy ships with apps for an <a href="/docs/modules/http">HTTPS server</a> (static files, reverse proxing, load balancing, etc.), <a href="/docs/modules/tls">TLS certificate manager</a>, and <a href="/docs/modules/pki">fully-managed internal PKI</a>. Caddy apps collaborate to make complex infrastructure just work with fewer moving parts.
+						</p>
+						<p>
+							<b>For example, the config shown here keeps your TLS certificates renewed for other programs to use;</b> no external tools or HTTP daemon required!
+						</p>
+						<p>
+							Providing a unified configuration, on-line <a href="/docs/api">config API</a>, and <a href="/docs/json/">automatic documentation</a> for all apps, Caddy is nearly infinitely extensible. Thanks to its unique <a href="/docs/architecture">modular architecture</a>, we can offer unlimited features without bloating the code base.
+						</p>
+					</div>
+					<div>
+						<div class="display right">
+							<code class="light">{
+  "apps": {
+    "tls": {
+      "certificates": {
+        "automate": [
+          "example.com",
+          "example.net"
+        ]
+      }
+    }
+  }
+}</code></div>
+					</div>
+				</div>
+				<div class="text-center">
+					<a href="/docs/json/" class="purple button">Explore config</a>
+					&nbsp;
+					<a href="/docs/modules/" class="gray button">See all modules</a>
+				</div>
+			</div>
+		</section>
+
+
+		<div class="thanks">
+			<h2>Thank you</h2>
+			<div class="to">
+				<a href="https://apilayer.com" title="API Layer (business management)"><img src="/resources/images/apilayer-logo.svg" alt="API Layer"></a>
+				<a href="https://ardanlabs.com" title="Ardan Labs (business support)"><img src="/resources/images/ardan-labs.svg" alt="Ardan Labs"></a>
+				<a href="https://smallstep.com" title="Smallstep (special integration partner)"><img src="/resources/images/smallstep.png" alt="Smallstep"></a>
+			</div>
+			<div class="to">
+				<a href="https://github.com/carlwgeorge" title="Fedora/CentOS/RedHat packaging">@carlwgeorge</a>
+				<a href="https://github.com/Conan-Kudo" title="Fedora packaging">@Conan-Kudo</a>
+				<a href="https://github.com/francislavoie" title="Community helper, code contributor">@francislavoie</a>
+				<a href="https://github.com/hairyhenderson" title="Docker image">@hairyhenderson</a>
+				<a href="https://github.com/Mohammed90" title="CI guru">@Mohammed90</a>
+				<a href="https://github.com/sarge" title="Test suite">@sarge</a>
+				<a href="https://github.com/whitestrake" title="Community helper">@whitestrake</a>
+				<a href="https://github.com/sponsors/mholt" class="sponsors">And all other sponsors and contributors</a>
+			</div>
+
+			<hr>
+
+			<p>
+				As I feel our contributors and sponsors do not get enough recognition or appreciation, allow me to interrupt this release announcement with a personal, open letter to the above named...
+			</p>
+			<p>
+				If you're reading this: <i>thank you</i>. You were the primary collaborators on Caddy 2, and this would not have been possible without you. You gave Caddy new <a href="https://github.com/caddyserver/dist">distribution packages</a>, <a href="https://hub.docker.com/_/caddy">containers</a>, docs, features, field testing; and <a href="https://caddy.community/u?period=all">helped countless users</a>. I think almost no topic in our <a href="https://caddy.community">community forums</a> has gone unanswered. That's truly amazing!
+			</p>
+			<p>
+				Thanks for sticking with the project and believing in it enough to yield a second version. We've solved some hard problems together&mdash;usually during nights and weekends&mdash;and in days of isolation during this pandemic, no less.
+			</p>
+			<p>
+				Now look at what we have made! Caddy is the only server that grants privacy to its sites' visitors <i>by default</i>. We've raised the bar for the rest of the Web. I hope you are as pleased with our results as I am. Millions more people will soon benefit from your contributions.
+			</p>
+			
+			&ndash;&nbsp;Matt
+		</div>
+
+
+
+		<section>
+			<div class="wrapper">
+				<div class="grid">
+					<div>
+						<b>Twenty</b>
+						beta versions
+					</div>
+					<div>
+						<b>Thousands</b>
+						of businesses
+					</div>
+					<div>
+						<b>Millions</b>
+						of production hours
+					</div>
+					<div>
+						<b>Billions</b>
+						of connections secured
+					</div>
+					<div>
+						<b>Trillions</b>
+						of requests served
+					</div>
+				</div>
+
+				<p>
+					<b>Caddy 2 is production-ready.</b> It is already serving thousands of sites for businesses and has an unparalleled reliability record in the face of external factors that negatively affect HTTPS uptime. <b>Caddy stays up when other servers let you down.</b>
+				</p>
+				<p>
+					Try your current server with tens of thousands of sites and certificates, then try them with Caddy &ndash; you'll see what we mean.
+				</p>
+
+				<p class="text-center">
+					<a href="https://hub.docker.com/_/caddy" class="cyan button">Deploy with <b>Docker</b></a>
+					&nbsp;
+					<a href="https://marketplace.digitalocean.com/apps/caddy" class="blue button">Deploy on <b>DigitalOcean</b></a>
+				</p>
+			</div>
+		</section>
+		
+
+
+
+		<section>
+			<div class="wrapper">
+				<h2>Familiar Caddyfile, now even better</h2>
+				<div class="asides">
+					<div>
+						<div class="display left">
+							<code class="light">caddyserver.com
+
+root * src
+
+file_server
+templates
+encode zstd gzip
+
+redir   /docs/json   /docs/json/
+rewrite /docs/json/* /docs/json/index.html
+rewrite /docs/*      /docs/index.html
+
+reverse_proxy /api/* localhost:9002</code>
+							<div class="caption">Actual config used by this site.</div>
+						</div>
+					</div>
+					<div>
+						<p>
+							<b><a href="/docs/caddyfile">The Caddyfile</a> lets you get a production-ready site up and running in just a few lines.</b> It's not uncommon for Caddyfiles to be <a href="https://twitter.com/yakczar/status/713712646147743744">~15% the size of a less capable nginx.conf</a>!
+						</p>
+						<p>
+							Although Caddy 2's <a href="/docs/config-adapters">native config language</a> is <a href="/docs/json/">JSON</a>, most users prefer the Caddyfile for its simplicity. In Caddy 2, we've kept the best parts of the Caddyfile and polished the rough parts.
+						</p>
+						<p>
+							"Rewrite hacks" are no longer necessary in v2, because the Caddyfile now lets you <a href="/docs/caddyfile/matchers">match on any property</a> of the request&mdash;not just path. You also have <a href="/docs/caddyfile/directives/route">total control over your HTTP routes</a> when you need it.
+						</p>
+						<!-- <p>
+							Even though the Caddyfile is improved, Caddy's <a href="/docs/json/">native JSON</a> is sometimes the most succinct and elegant way of expressing the right configuration for highly custom use cases.
+						</p> -->
+						<a href="/docs/caddyfile-tutorial" class="purple button">Caddyfile <b>tutorial</b></a>
+						&nbsp;
+						<a href="/docs/caddyfile" class="gray button">Caddyfile <b>reference</b></a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+		<section class="diagonal down gray">
+			<div class="wrapper">
+				<h2>Config API for dynamic, on-line updates</h2>
+				<div class="asides">
+					<div>
+						<p>
+							Caddy is <a href="/docs/api">configured through an intuitive REST API</a> that offers ACID guarantees:
+						</p>
+						<ul>
+							<li><b>Atomic:</b> Multiple changes in a single request are treated as a single unit; any failed change aborts all the other changes.</li>
+							<li><b>Consistent:</b> No invalid configurations can be loaded; your server will never break if a problem is detected at config load.</li>
+							<li><b>Isolated:</b> No config changes rely on another. (It helps that HTTP is a stateless protocol!)</li>
+							<li><b>Durable:</b> Caddy automatically persists the current, valid configuration to disk and can safely resume it after a power cycle if the <code>--resume</code> flag is used.</li>
+						</ul>
+						<p>
+							In addition, Caddy's API is <b>safely scoped</b>, meaning the URI path restricts changes, making it impossible to accidentally alter other parts of your config.
+						</p>
+						<a href="/docs/api-tutorial" class="cyan button">API <b>tutorial</b></a>
+						&nbsp;
+						<a href="/docs/api" class="gray button">API <b>reference</b></a>
+					</div>
+					<div>
+						<div class="display right">
+							<code class="dark">$ caddy start --config caddy.json
+
+$ curl localhost:2019/id/my_handler \
+	-X PATCH \
+	-H "Content-Type: application/json" \
+	-d '{
+			"handler": "static_response",
+			"body": "Work smarter, not harder."
+		}'
+
+$ curl localhost:2019/config/ | jq<div class="blinking"></div></code>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+
+		<section>
+			<div class="wrapper">
+				<h2>Powered by&nbsp;... nginx.conf? 🤔</h2>
+				<div class="asides">
+					<div>
+						<div class="display left">
+							<code class="dark">$ caddy run \
+	--config nginx.conf \
+	--adapter nginx</code>
+						</div>
+					</div>
+					<div>
+						<p>
+							Sure, why not!
+						</p>
+						<p>
+							With first-class support for <a href="/docs/config-adapters">config adaptation</a>, <b>you can use whatever configuration language you prefer</b>, such as <a href="https://github.com/caddyserver/nginx-adapter">NGINX config files</a>! Several other config adapters are already available, including JSONC, JSON5, YAML, and CUE.
+						</p>
+						<p>
+							Our <a href="https://github.com/caddyserver/nginx-adapter">NGINX adapter</a> is still a work in progress, but for some of you Caddy could be a drop-in <strike>replacement</strike> upgrade for NGINX, with memory safety!
+						</p>
+						<!-- <p>
+							Fewer moving parts means fewer failures, lower costs, and less sunk time.
+						</p> -->
+						<a href="/docs/config-adapters" class="gray button">Config adapters</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+
+		<section class="diagonal up gray">
+			<div class="wrapper">
+				<h2>Every site on HTTPS &ndash; including local and internal sites</h2>
+				<div class="asides">
+					<div>
+						<p>
+							Caddy has always been known for serving sites over <a href="/docs/automatic-https">HTTPS by default</a>, and now we're extending that to internal and local development sites, too.
+						</p>
+						<p>
+							<b>Powered by open source <a href="https://smallstep.com/certificates/">Smallstep libraries</a>, Caddy automatically acts as a fully-featured, self-hosted CA when necessary.</b> If you configure sites with local or internal addresses (e.g. localhost or IP addresses), Caddy will still serve them over HTTPS using its locally-trusted certificate authority with short-lived, auto-renewing certificates. This makes it easy to mimic production environments in dev!
+						</p>
+						<a href="https://smallstep.com" title="Powered by Smallstep"><img src="/resources/images/smallstep.png" alt="Smallstep" class="smallstep"></a>
+					</div>
+					<div>
+						<div class="display right">
+							<code class="light">192.168.1.10 {
+	respond "Hello from HTTPS!"
+}
+
+http://localhost {
+	respond "Plain HTTP"
+}</code>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+
+		<section>
+			<div class="wrapper">
+				<h2>We fixed all known limitations of v1</h2>
+				<p>
+					With an <a href="/docs/architecture">all-new architecture</a>, the development of Caddy 2 closed <a href="https://github.com/caddyserver/caddy/issues?q=is%3Aclosed+v2">about 400 issues</a> and solved all known limitations on Caddy 1 caused by fundamental design constraints.
+				</p>
+				<p>
+					Caddy 2 is designed to be highly flexible when needed, but also highly focused on its core competency. If there was anything in Caddy 1 that felt out of place or hacky, it won't in v2.
+				</p>
+				<p>
+					This design was an incredible undertaking: of the approximate 14 months spent developing Caddy 2, only about 7 of them actually consisted of writing code; the other half was solely focused on the design of the underlying architecture.
+				</p>
+			</div>
+		</section>
+
+
+		<section class="diagonal down gray">
+			<div class="wrapper">
+				<h2>Keeps your sites online when other servers... don't</h2>
+				<p>
+					Caddy has the most robust TLS stack on the market. With <b>stronger memory safety guarantees</b> than OpenSSL (Apache & NGINX) and <b>more advanced certificate automation logic</b> than any other server or utility, Caddy <b>keeps your sites online</b> through problems that other servers don't handle.
+				</p>
+				<br><br>
+				<div class="asides top">
+					<div>
+						<h3>Advanced TLS automation</h3>
+						<p>
+							Caddy was the first server to fully automate public certificate management&mdash;so we've been doing this longer than anyone. With more than 5 million certificates under management, Caddy has set the gold standard for other servers to live up to:
+						</p>
+						<ul>
+							<li><b>Async management.</b> Certificate automation never blocks the main thread of the web server.</li>
+							<li><b>Gentle retries.</b> Failed validation attempts are retried with exponential backoff for up to 1 month. They don't count against normal rate limits; Caddy uses staging/test endpoints during retries.</li>
+							<li><b>OCSP stapling and caching.</b> Caddy staples OCSP to all qualifying certificates and keeps them conservatively fresh. It even caches them to disk in case of extended OCSP responder outages.</li>
+							<li><b>Auto-replace after revocation.</b> If the latest OCSP staple indicates a revocation, Caddy automatically replaces the revoked certificate with a new one.</li>
+							<li><b>Storage pre-checks.</b> Before attempting costly or valuable ACME transactions, Caddy checks to ensure its storage space is sufficient and writeable.</li>
+							<li><b>Internal throttling and job scheduling.</b> Give Caddy a million certs to manage: no problem, it will gracefully manage them as fast as it can without hammering the CA or duplicating jobs over a long period of time.</li>
+							<li><b>TLS session ticket key rotation.</b> Caddy automatically rotates TLS 1.2 session ticket keys for better privacy. It can even do this across a cluster!</li>
+							<li><b>Fleet coordination.</b> All Caddy instances configured for the same storage backend will automatically share certificate and coordinate management in its cluster.</li>
+						</ul>
+					</div>
+					<div>
+						<h3>Real-life examples</h3>
+						<p>
+							In 2018, several popular sites went down for many users of mainstream clients because crucial OCSP infrastructure had an extended outage. Only Caddy staples and caches OCSP responses by default, so all Caddy sites were unaffected.
+						</p>
+						<p>
+							More recently in 2020, a mass certificate revocation event left many sysadmins scrambling to renew their certificates ahead of schedule. Caddy automatically renews certificates that get revoked, and all Caddy sites were unaffected.
+						</p>
+						<p>
+							Companies have deployed Caddy in front of their site just hours before important audits&mdash;potentially saving their compliance status&mdash;because of Caddy's safe defaults and "batteries included" approach.
+						</p>
+						<!-- <p>
+							Severa customers have been able to replace piles of scripts, external dependencies, and convoluted deployment workflows with Caddy, which manages complex parts of their infrastructure for them.
+						</p> -->
+
+						<h3>Recommended by experts</h3>
+						<p>
+							<b>"TLS must be enabled by default ... and the Caddy web server is a good and usable example."</b> &nbsp; &mdash;<a href="https://www.usenix.org/conference/usenixsecurity17/technical-sessions/presentation/krombholz">Krombholz et al., USENIX 2017</a>
+						</p>
+						<p>
+							<b>"Caddy is impressive. This is what we want, setting up a secure website."</b> &nbsp; &mdash;<a href="https://www.youtube.com/watch?v=OE5UhQGg_Fo">Josh Aas, Executive Director, Let's Encrypt</a>
+						</p>
+						<p>
+							<b>"No popular server software does [session ticket key rotation], with the exception of Caddy."</b> &nbsp; &mdash;<a href="https://dl.acm.org/doi/10.1145/2987443.2987480">Springall et al., ACM IMC 2016</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+		<section>
+			<div class="wrapper">
+				<h2>There's more around the corner</h2>
+				<p>
+					We already have a number of features to land in the <a href="https://github.com/caddyserver/caddy/milestone/36">upcoming 2.1 release</a>:
+				</p>
+				<p>
+					<b>Client certificate auto-renew.</b> Caddy will be able to <a href="https://github.com/caddyserver/caddy/pull/3198">automatically renew its client certificates</a> used in mTLS, just like it auto-renews its server certificates. You can customize which CA is used for both!
+				</p>
+				<p>
+					<b><a href="https://github.com/caddyserver/caddy/pull/3198">Embedded ACME server.</a></b> No need for extra tooling to achieve fully-automated, trusted mTLS within your network! Caddy has partnered with <a href="https://smallstep.com/certificates/">Smallstep</a> to use their open source libraries to bring you internal/mutual TLS that just works.
+				</p>
+				<p>
+					<b>Numerous Caddyfile improvements.</b> For example: <a href="https://github.com/caddyserver/caddy/pull/3242">enclosing tokens in backticks</a> <code>`</code> makes it easier to express literal JSON; <a href="https://github.com/caddyserver/caddy/pull/3255">special subdirectives for customizing <code>php_fastcgi</code></a>, <a href="https://github.com/caddyserver/caddy/pull/3263">syntax improvements for named matchers</a>, and more advanced routing and error handling capabilities.
+				</p>
+				<p>
+					<b>HTTP/2 over cleartext (H2C).</b> For both <a href="https://github.com/caddyserver/caddy/issues/3218">upstreams</a> and <a href="https://github.com/caddyserver/caddy/issues/3227">downstreams</a>, Caddy 2.1 will be able to serve and proxy plaintext HTTP/2 if required.
+				</p>
+				<p>
+					<b>And much more.</b> There are dozens of open issues, most of which are feature requests! We have our work cut out for us. Won't you <a href="https://github.com/caddyserver/caddy/issues">get involved</a>?
+				</p>
+
+				<br><br>
+
+				<div class="action">
+					<a href="https://github.com/caddyserver/caddy/releases" class="big cyan button">Download</a>
+					<a href="/docs" class="big gray button">Documentation</a>
+				</div>
+			</div>
+		</section>
+
+		
+
+		{{include "/includes/footer.html"}}
+
+		<script src="/resources/js/asciinema-player-2.6.1.min.js"></script>
+	</body>
+</html>
