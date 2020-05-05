@@ -33,14 +33,18 @@ route {
 		file {
 			try_files {path}/index.php
 		}
-		not {
-			path */
-		}
+		not path */
 	}
 	redir @canonicalPath {path}/ 308
 
 	# If the requested file does not exist, try index files
-	try_files {path} {path}/index.php index.php
+	@indexFiles {
+		file {
+			try_files {path} {path}/index.php index.php
+			split_path .php
+		}
+	}
+	rewrite @indexFiles {http.matchers.file.relative}
 
 	# Proxy PHP files to the FastCGI responder
 	@phpFiles {
