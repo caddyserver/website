@@ -316,6 +316,13 @@ asciinema-player {
 	box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.1);
 }
 
+.display > * {
+	transition: transform 0.5s;
+}
+.display:hover > * {
+	transform: none;
+}
+
 .display.right > * {
 	transform: rotateY(-25deg);
 }
