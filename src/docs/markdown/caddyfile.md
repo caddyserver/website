@@ -11,13 +11,12 @@ It looks like this:
 ```
 example.com
 
-root * /path/to/public_html
-try_files {path} /index.php?{query}&p={path}
-php_fastcgi unix//run/php/php-fpm.sock
+root * /var/www/wordpress
+php_fastcgi unix//run/php/php-version-fpm.sock
 file_server
 ```
 
-(That's a real, production-ready Caddyfile that serves a Craft CMS site with fully-managed HTTPS.)
+(That's a real, production-ready Caddyfile that serves WordPress with fully-managed HTTPS.)
 
 The basic idea is that you first type the address of your site, then the features or functionality you need your site to have.
 

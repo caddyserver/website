@@ -60,7 +60,7 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 - **load** specifies a list of folders from which to load PEM files that are certificate+key bundles.
 - **ca** changes the ACME CA endpoint. This is most often used to use [Let's Encrypt's staging endpoint](https://letsencrypt.org/docs/staging-environment/) or an internal ACME server. (To change this value for the whole Caddyfile, use the `acme_ca` [global option](/docs/caddyfile/options) instead.)
 - **ca_root** specifies a PEM file that contains a trusted root certificate for the ACME CA endpoint, if not in the system trust store.
-- **dns** enables the [DNS challenge](/docs/automatic-https#dns-challenge) using the given provider plugin, which must be from one of the [caddy-dns](https://github.com/caddy-dns) repositories. Each provider plugin may have their own syntax following their name; refer to their docs for details.
+- **dns** enables the [DNS challenge](/docs/automatic-https#dns-challenge) using the specified provider plugin, which must be plugged in from one of the [caddy-dns](https://github.com/caddy-dns) repositories. Each provider plugin may have their own syntax following their name; refer to their docs for details.
 - **on_demand** enables [on-demand TLS](/docs/automatic-https#on-demand-tls) for the hostnames given in the site block's address(es).
 
 
