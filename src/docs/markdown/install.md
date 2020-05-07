@@ -4,46 +4,18 @@ title: "Install"
 
 # Install
 
-Caddy is available for every platform as a [static binary](https://github.com/caddyserver/caddy/releases) (it has no dependencies). You can also [build from source](#build-from-source) to customize your build.
+This page describes how to manually install Caddy as a service.
 
-
-## Official packages
-
-We maintain [official distributions](https://github.com/caddyserver/dist) for the following platforms:
-
-### Docker
-
-<pre><code class="cmd bash">docker pull caddy</code></pre>
-
-[**View on Docker Hub**](https://hub.docker.com/_/caddy)
-
-
-### Debian, Ubuntu, Raspbian
-
-<pre><code class="cmd"><span class="bash">echo "deb [trusted=yes] https://apt.fury.io/caddy/ /" \
-    | sudo tee -a /etc/apt/sources.list.d/caddy-fury.list</span>
-<span class="bash">sudo apt update</span>
-<span class="bash">sudo apt install caddy</span></code></pre>
-
-
-### Fedora, RedHat, CentOS
-
-Read how to [**install the Caddy COPR**](https://copr.fedorainfracloud.org/coprs/g/caddy/caddy/).
-
-
-### DigitalOcean
-
-[**Create a Caddy droplet**](https://marketplace.digitalocean.com/apps/caddy) and get started in 90 seconds.
-
+<aside class="tip">
+	If you <a href="/docs/download">downloaded Caddy</a> using a package manager such as <code>apt</code> or <code>dnf</code>, then Caddy is already installed, and you should jump to <a href="/docs/getting-started">Getting Started</a>.
+</aside>
 
 
 ## Linux service
 
-This section describes how to manually install Caddy as a Linux service.
-
 Requirements:
 
-- `caddy` binary that you downloaded or built from source
+- `caddy` binary that you [downloaded](/docs/download) or [built from source](/docs/build)
 - `systemctl --version` 232 or newer
 - `sudo` privileges
 
@@ -100,27 +72,4 @@ You can stop the service with:
 	Do not stop the service to change Caddy's configuration. Stopping the server will incur downtime. Use the reload command instead.
 </aside>
 
-## Build from source
-
-Requirements:
-
-- [Go](https://golang.org/dl) 1.14 or newer
-- [Go modules](https://github.com/golang/go/wiki/Modules) enabled
-
-Download the source code:
-
-<pre><code class="cmd bash">git clone "https://github.com/caddyserver/caddy.git"</code></pre>
-
-Build:
-
-<pre><code class="cmd"><span class="bash">cd caddy/cmd/caddy/</span>
-<span class="bash">go build</span></code></pre>
-
-
-### With plugins
-
-Using [xcaddy](https://github.com/caddyserver/xcaddy), you can compile Caddy with extra plugins, for example:
-
-<pre><code class="cmd bash">xcaddy build \
-    --with github.com/caddyserver/nginx-adapter
-	--with github.com/caddyserver/ntlm-transport@v0.1.0</code></pre>
+Now that Caddy is installed, see our [Getting Started](/docs/getting-started) tutorial to learn how to use it!

@@ -66,3 +66,12 @@ header {
 	Referrer-Policy no-referrer-when-downgrade
 }
 ```
+
+Multiple header directives that are intended to be mutually-exclusive:
+
+```
+route {
+	header           Cache-Control max=age=3600
+	header /static/* Cache-Control max=age=31536000
+}
+```

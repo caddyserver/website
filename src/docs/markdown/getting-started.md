@@ -26,6 +26,8 @@ Welcome to Caddy! This tutorial will explore the basics of using Caddy and help 
 
 ---
 
+**If you [installed Caddy](/docs/download) from a package manager, Caddy might already be running as a service. If so, please stop the service before doing this tutorial.**
+
 Let's start by running it:
 
 <pre><code class="cmd bash">caddy</code></pre>
@@ -166,16 +168,16 @@ The Caddyfile seems easier than JSON, but should you always use it? There are pr
 
 JSON | Caddyfile
 -----|----------
-Ubiquitous | Niche
+Full range of Caddy functionality | Most common parts of Caddy functionality
 Easy to generate | Easy to craft by hand
 Easily programmable | Difficult to automate
-Full range of Caddy functionality | Most common parts of Caddy functionality
 Extremely expressive | Moderately expressive
 Allows config traversal | Cannot traverse within Caddyfile
 Partial config changes | Whole config changes only
 Can be exported | Cannot be exported
 Compatible with all API endpoints | Compatible with some API endpoints
 Documentation generated automatically | Documentation is hand-written
+Ubiquitous | Niche
 More efficient | More computational
 Kind of boring | Kind of fun
 **Learn more: [JSON structure](/docs/json/)** | **Learn more: [Caddyfile docs](/docs/caddyfile)**
