@@ -63,9 +63,9 @@ output file <filename> {
 
 - **&lt;filename&gt;** is the path to the log file.
 - **roll_disabled** disables log rolling. This can lead to disk space depletion, so only use this if your log files are maintained some other way.
-- **roll_size** is the size at which to roll the log file. Default: `100MiB`
+- **roll_size** is the size at which to roll the log file. The current implementation supports megabyte resolution; fractional values are rounded up to the next whole megabyte. For example, `1.1MiB` is rounded up to `2MiB`. Default: `100MiB`
 - **roll_keep** is how many log files to keep before deleting the oldest ones. Default: `10`
-- **roll_keep_for** is how long to keep rolled files as a [duration string](/docs/conventions#durations). Default: `2160h`, i.e. 90 days
+- **roll_keep_for** is how long to keep rolled files as a [duration string](/docs/conventions#durations). The current implementation supports day resolution; fractional values are rounded up to the next whole day. For example, `36h` (1.5 days) is rounded up to `48h` (2 days). Default: `2160h` (90 days)
 
 
 #### net
