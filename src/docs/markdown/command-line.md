@@ -172,13 +172,13 @@ Formats or prettifies a Caddyfile, then exits. The result is printed to stdout u
 ### `caddy hash-password`
 
 <pre><code class="cmd bash">caddy hash-password
-	--plaintext &lt;password&gt;
+	[--plaintext &lt;password&gt;]
 	[--algorithm &lt;name&gt;]
 	[--salt &lt;string&gt;]</code></pre>
 
 Hashes a password and writes the output to stdout in base64 encoding, then exits.
 
-`--plaintext` is the plaintext form of the password.
+`--plaintext` is the plaintext form of the password. If omitted, interactive mode will be assumed and the user will be shown a prompt to enter the password manually.
 
 `--algorithm` may be bcrypt or scrypt. Default is bcrypt.
 
