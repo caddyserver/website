@@ -141,6 +141,14 @@ directive "\"abc def\""
 
 Inside quoted tokens, all other characters are treated literally, including spaces, tabs, and newlines.
 
+You can also use a backtick (`\``) to quote tokens:
+
+```
+directive `"foo bar"`
+```
+
+Backtick strings are convenient when tokens contain quote literals.
+
 
 
 ## Addresses
@@ -219,11 +227,16 @@ You can use any [Caddy placeholders](/docs/conventions#placeholders) in the Cadd
 |-----------------|---------------------------------|
 | `{dir}`         | `{http.request.uri.path.dir}`   |
 | `{file}`        | `{http.request.uri.path.file}`  |
+| `{header.*}`    | `{http.request.header.*}`       |
 | `{host}`        | `{http.request.host}`           |
+| `{labels.*}`    | `{http.request.host.labels.*}`  |
 | `{hostport}`    | `{http.request.hostport}`       |
 | `{method}`      | `{http.request.method}`         |
 | `{path}`        | `{http.request.uri.path}`       |
+| `{path.*}`      | `{http.request.uri.path.*}`     |
 | `{query}`       | `{http.request.uri.query}`      |
+| `{query.*}`     | `{http.request.uri.query.*}`    |
+| `{re.*.*}`      | `{http.regexp.*.*}`             |
 | `{remote}`      | `{http.request.remote}`         |
 | `{remote_host}` | `{http.request.remote.host}`    |
 | `{remote_port}` | `{http.request.remote.port}`    |
@@ -235,6 +248,7 @@ You can use any [Caddy placeholders](/docs/conventions#placeholders) in the Cadd
 | `{tls_client_issuer}`      | `{http.request.tls.client.issuer}`      |
 | `{tls_client_serial}`      | `{http.request.tls.client.serial}`      |
 | `{tls_client_subject}`     | `{http.request.tls.client.subject}`     |
+
 
 
 ## Snippets

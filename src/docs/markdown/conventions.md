@@ -140,7 +140,7 @@ It is crucial that this directory is persistent and writeable by Caddy.
 
 ## Durations
 
-Duration strings are commonly used throughout Caddy's configuration. They take on the same format as [Go's time.ParseDuration syntax](https://golang.org/pkg/time/#ParseDuration). Valid units are:
+Duration strings are commonly used throughout Caddy's configuration. They take on the same format as [Go's time.ParseDuration syntax](https://golang.org/pkg/time/#ParseDuration) except you can also use `d` for day (we assume 1 day = 24 hours for simplicity). Valid units are:
 
 - `ns` (nanosecond)
 - `us`/`µs` (microsecond)
@@ -148,6 +148,7 @@ Duration strings are commonly used throughout Caddy's configuration. They take o
 - `s` (second)
 - `m` (minute)
 - `h` (hour)
+- `d` (day)
 
 Examples:
 
@@ -155,5 +156,6 @@ Examples:
 - `5s`
 - `1.5h`
 - `2h45m`
+- `90d`
 
 In the [JSON config](/docs/json/), duration values can also be integers which represent nanoseconds.
