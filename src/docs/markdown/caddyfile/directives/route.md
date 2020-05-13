@@ -66,11 +66,11 @@ And now `file_server` will be chained in before `redir` because the order is tak
 
 ## Examples
 
-Strip `api/` prefix from request path just before proxying all API requests to a backend:
+Strip `/api` prefix from request path just before proxying all API requests to a backend:
 
 ```
 route /api/* {
-	uri strip_prefix api/
+	uri strip_prefix /api
 	reverse_proxy localhost:9000
 }
 ```
