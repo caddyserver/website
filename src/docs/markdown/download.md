@@ -62,3 +62,5 @@ RHEL/CentOS 7:
 ## macOS
 
 <pre><code class="cmd bash">brew install caddy</code></pre>
+
+[**View the Homebrew formula**](https://formulae.brew.sh/formula/caddy)
