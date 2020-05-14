@@ -58,3 +58,7 @@ RHEL/CentOS 7:
 ## DigitalOcean
 
 [**Deploy a Caddy droplet on DigitalOcean**](https://marketplace.digitalocean.com/apps/caddy)
+
+## macOS
+
+<pre><code class="cmd bash">brew install caddy</code></pre>
