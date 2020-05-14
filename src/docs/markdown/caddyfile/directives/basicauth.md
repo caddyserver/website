@@ -25,7 +25,7 @@ basicauth [<matcher>] [<hash_algorithm>] {
 - **&lt;hash_algorithm&gt;** is the name of the password hashing algorithm (or KDF) used for the hashes in this configuration. Can be `bcrypt` (default) or `scrypt`.
 - **&lt;username&gt;** is a username or user ID.
 - **&lt;hashed_password_base64&gt;** is the base-64 encoding of the hashed password.
-- **&lt;salt_base64&gt;** is the base-64 encoding of the password salt, if an external site is required.
+- **&lt;salt_base64&gt;** is the base-64 encoding of the password salt, if an external salt is required.
 
 
 ## Examples
