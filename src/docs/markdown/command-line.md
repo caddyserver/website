@@ -250,6 +250,7 @@ This command disables the admin API so it is easier to run multiple instances on
 <pre><code class="cmd bash">caddy run
 	[--config &lt;path&gt;]
 	[--adapter &lt;name&gt;]
+	[--pidfile &lt;file&gt;]
 	[--environ]
 	[--resume]
 	[--watch]</code></pre>
@@ -259,6 +260,8 @@ Runs Caddy and blocks indefinitely; i.e. "daemon" mode.
 `--config` specifies an initial config file to immediately load and use. If no config is specified, Caddy will run with a blank configuration and use default settings for the [admin API endpoints](/docs/api), which can be used to feed it new configuration. As a special case, if the current working directory has a file called "Caddyfile" and the `caddyfile` config adapter is plugged in (default), then that file will be loaded and used to configure Caddy, even without any command line flags.
 
 `--adapter` is the name of the config adapter to use when loading the initial config, if any. This flag is not necessary if the `--config` filename starts with "Caddyfile" which assumes the `caddyfile` adapter. Otherwise, this flag is required if the provided config file is not in Caddy's native JSON format. Any warnings will be printed to the log, but beware that any adaptation without errors will immediately be used, even if there are warnings. If you want to review the results of the adaptation first, use the [`caddy adapt`](#caddy-adapt) subcommand.
+
+`--pidfile` writes the PID to the specified file.
 
 `--environ` prints out the environment before starting. This is the same as the `caddy environ` command, but does not exit after printing.
 
@@ -277,6 +280,7 @@ Runs Caddy and blocks indefinitely; i.e. "daemon" mode.
 <pre><code class="cmd bash">caddy start
 	[--config &lt;path&gt;]
 	[--adapter &lt;name&gt;]
+	[--pidfile &lt;file&gt;]
 	[--watch]</code></code></pre>
 
 Same as [`caddy run`](#caddy-run), but in the background. This command only blocks until the background process is running successfully (or fails to run), then returns.
