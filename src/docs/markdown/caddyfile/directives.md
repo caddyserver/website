@@ -15,6 +15,7 @@ Directive | Description
 **[handle](/docs/caddyfile/directives/handle)** | A mutually-exclusive group of directives
 **[handle_errors](/docs/caddyfile/directives/handle_errors)** | Defines routes for handling errors
 **[header](/docs/caddyfile/directives/header)** | Sets or removes response headers
+**[import](/docs/caddyfile/directives/import)** | Include snippets or files
 **[log](/docs/caddyfile/directives/log)** | Enables access/request logging
 **[php_fastcgi](/docs/caddyfile/directives/php_fastcgi)** | Serve PHP sites over FastCGI
 **[redir](/docs/caddyfile/directives/redir)** | Issues an HTTP redirect to the client

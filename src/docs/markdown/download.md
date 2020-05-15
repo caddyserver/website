@@ -21,6 +21,9 @@ Using `wget`:
 <pre><code class="cmd"><span class="bash">wget "https://github.com/caddyserver/caddy/releases/latest/download/ASSET"</span></code></pre>
 
 
+Replace `ASSET` with the filename for your platform.
+
+
 ## Docker
 
 <pre><code class="cmd bash">docker pull caddy</code></pre>
@@ -58,6 +61,7 @@ RHEL/CentOS 7:
 ## DigitalOcean
 
 [**Deploy a Caddy droplet on DigitalOcean**](https://marketplace.digitalocean.com/apps/caddy)
+
 
 ## macOS
 
