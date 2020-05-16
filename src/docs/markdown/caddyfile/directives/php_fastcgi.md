@@ -13,7 +13,7 @@ It expects that any `index.php` at the site root acts as a router. If that is no
 
 ## Syntax
 
-```
+```caddy-d
 php_fastcgi [<matcher>] <php-fpm_gateway>
 ```
 
@@ -26,7 +26,7 @@ Since this directive is an opinionated wrapper over a reverse proxy, you can ope
 
 The `php_fastcgi` directive is the same as the following configuration:
 
-```
+```caddy-d
 route {
 	# Add trailing slash for directory requests
 	@canonicalPath {
@@ -64,18 +64,18 @@ Most modern PHP apps work well with this preset. If yours does not, feel free to
 
 Proxy all PHP requests to a FastCGI responder listening at 127.0.0.1:9000:
 
-```
+```caddy-d
 php_fastcgi 127.0.0.1:9000
 ```
 
 Same, but only for requests under `/blog/`:
 
-```
+```caddy-d
 php_fastcgi /blog/* 127.0.0.1:9000
 ```
 
 When using php-fpm listening via a unix socket:
 
-```
+```caddy-d
 php_fastcgi unix//run/php/php7.4-fpm.sock
 ```

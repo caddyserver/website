@@ -13,7 +13,7 @@ Because `rewrite` essentially performs an internal redirect, the Caddyfile adapt
 
 ## Syntax
 
-```
+```caddy-d
 rewrite [<matcher>] <to>
 ```
 
@@ -24,25 +24,25 @@ rewrite [<matcher>] <to>
 
 Rewrite all requests to `foo.html`, leaving any query string unchanged:
 
-```
+```caddy-d
 rewrite * /foo.html
 ```
 
 Replace the query string on API requests with `a=b`, leaving the path unchanged:
 
-```
+```caddy-d
 rewrite /api/* ?a=b
 ```
 
 Preserve the existing query string and add a key-value pair:
 
-```
+```caddy-d
 rewrite /api/* ?{query}&a=b
 ```
 
 Change both the path and query string, preserving the original query string while adding the original path as the `p` parameter:
 
-```
+```caddy-d
 rewrite * /index.php?{query}&p={path}
 ```
 

@@ -9,7 +9,7 @@ Rewrites the request URI path to the first of the listed files which exists in t
 
 ## Syntax
 
-```
+```caddy-d
 try_files <files...>
 ```
 
@@ -20,7 +20,7 @@ try_files <files...>
 
 The `try_files` directive is basically a shortcut for:
 
-```
+```caddy-d
 @try_files {
 	file {
 		try_files <files...>
@@ -36,18 +36,18 @@ Note that this directive does not accept a matcher token. If you need more compl
 
 If the request does not match any static files, rewrite to an index/router file:
 
-```
+```caddy-d
 try_files {path} /index.php
 ```
 
 Same, but adding the original path to the query string:
 
-```
+```caddy-d
 try_files {path} /index.php?{query}&p={path}
 ```
 
 Same, but also match directories:
 
-```
+```caddy-d
 try_files {path} {path}/ /index.php?{query}&p={path}
 ```

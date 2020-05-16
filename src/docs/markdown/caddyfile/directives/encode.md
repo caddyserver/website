@@ -8,7 +8,7 @@ Encodes responses using the configured encoding(s). A typical use for encoding i
 
 ## Syntax
 
-```
+```caddy-d
 encode [<matcher>] <formats...> {
 	gzip [<level>]
 	zstd
@@ -24,13 +24,13 @@ encode [<matcher>] <formats...> {
 
 Enable Gzip compression:
 
-```
+```caddy-d
 encode gzip
 ```
 
 Enable Zstandard and Gzip compression:
 
-```
+```caddy-d
 encode zstd gzip
 ```
 

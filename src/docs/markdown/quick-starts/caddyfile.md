@@ -8,7 +8,7 @@ Create a new text file named `Caddyfile` (no extension).
 
 The first thing to type in a Caddyfile is your site's address:
 
-```
+```caddy
 localhost
 ```
 
@@ -18,7 +18,7 @@ localhost
 
 Then hit enter and type what you want it to do, so it looks like this:
 
-```
+```caddy
 localhost
 
 respond "Hello, world!"
@@ -43,7 +43,7 @@ Hello, world!</code></pre>
 
 You can define multiple sites in a Caddyfile by wrapping them in curly braces `{ }`. Change your Caddyfile to be:
 
-```
+```caddy
 localhost {
 	respond "Hello, world!"
 }

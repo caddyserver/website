@@ -10,7 +10,7 @@ This directive is a special case: it is evaluated before the structure is parsed
 
 ## Syntax
 
-```
+```caddy-d
 import <pattern>
 ```
 
@@ -21,6 +21,6 @@ import <pattern>
 
 Import all files in an adjacent sites-enabled folder:
 
-```
+```caddy-d
 import sites-enabled/*
 ```

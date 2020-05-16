@@ -11,7 +11,7 @@ Specifically, this directive sets the `{http.vars.root}` placeholder. It is mutu
 
 ## Syntax
 
-```
+```caddy-d
 root [<matcher>] <path>
 ```
 
@@ -23,7 +23,7 @@ Note that a matcher token is usually required since the first argument is a path
 
 Set the site root to `/home/user/public_html` for all requests:
 
-```
+```caddy-d
 root * /home/user/public_html
 ```
 
@@ -31,7 +31,7 @@ root * /home/user/public_html
 
 Set the site root to `public_html` (relative to current working directory) for all requests:
 
-```
+```caddy-d
 root public_html
 ```
 
@@ -39,6 +39,6 @@ root public_html
 
 Set the site root only for requests in `/foo`:
 
-```
+```caddy-d
 root /foo/* /home/user/public_html/foo
 ```

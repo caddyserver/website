@@ -9,7 +9,7 @@ Proxies requests to one or more backends with configurable transport, load balan
 
 ## Syntax
 
-```
+```caddy-d
 reverse_proxy [<matcher>] [<upstreams...>] {
     # backends
     to <upstreams...>
@@ -118,7 +118,7 @@ Caddy's proxy **transport** is pluggable:
 
 The `http` transport can look like this:
 
-```
+```caddy-d
 transport http {
 	read_buffer  <size>
 	write_buffer <size>
@@ -146,7 +146,7 @@ transport http {
 
 The `fastcgi` transport can look like this:
 
-```
+```caddy-d
 transport fastcgi {
 	root  <path>
 	split <at>
@@ -163,19 +163,19 @@ transport fastcgi {
 
 Reverse proxy all requests to a local backend:
 
-```
+```caddy-d
 reverse_proxy localhost:9005
 ```
 
 Load-balance all requests between 3 backends:
 
-```
+```caddy-d
 reverse_proxy node1:80 node2:80 node3:80
 ```
 
 Same, but only requests within `/api`, and with header affinity:
 
-```
+```caddy-d
 reverse_proxy /api/* node1:80 node2:80 node3:80 {
 	lb_policy header X-My-Header
 }
@@ -183,7 +183,7 @@ reverse_proxy /api/* node1:80 node2:80 node3:80 {
 
 Set the upstream Host header to the address of the upstream (by default, it will retain its original, incoming value):
 
-```
+```caddy-d
 reverse_proxy localhost:9000 {
 	header_up Host {http.reverse_proxy.upstream.hostport}
 }
@@ -191,13 +191,13 @@ reverse_proxy localhost:9000 {
 
 Reverse proxy to an HTTPS endpoint:
 
-```
+```caddy-d
 reverse_proxy https://example.com
 ```
 
 Strip a path prefix then proxy:
 
-```
+```caddy-d
 route /prefix/* {
 	uri strip_prefix /prefix
 	reverse_proxy localhost:9000

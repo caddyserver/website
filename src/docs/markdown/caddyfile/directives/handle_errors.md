@@ -10,7 +10,7 @@ When the normal HTTP request handlers return an error, normal procesing stops an
 
 ## Syntax
 
-```
+```caddy-d
 handle_errors {
 	<directives...>
 }

@@ -36,7 +36,7 @@ Then make a request to [localhost](https://localhost) (or whatever address you s
 
 In the current working directory, create a file called `Caddyfile` with these contents:
 
-```
+```caddy
 localhost
 
 reverse_proxy 127.0.0.1:9000
@@ -50,7 +50,7 @@ You can then make a request to [https://localhost](https://localhost) to see it 
 
 It's easy to change the proxy's address:
 
-```
+```caddy
 :2016
 
 reverse_proxy 127.0.0.1:9000

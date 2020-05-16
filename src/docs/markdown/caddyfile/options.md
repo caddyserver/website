@@ -8,7 +8,7 @@ The Caddyfile has a way for you to specify options that apply globally. Some opt
 
 The very top of your Caddyfile can be a **global options block**. This is a block that has no keys:
 
-```
+```caddy
 {
 	...
 }
@@ -18,7 +18,7 @@ There can only be one at most, and it must be the first block of the Caddyfile.
 
 Possible options are:
 
-```
+```caddy
 {
 	debug
 	http_port   <port>

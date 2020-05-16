@@ -11,7 +11,7 @@ This directive is distinct from [`rewrite`](rewrite) in that `uri` _partially_ c
 
 ## Syntax
 
-```
+```caddy-d
 uri [<matcher>] strip_prefix|strip_suffix|replace \
 	<target> \
 	[<replacement> [<limit>]]
@@ -30,18 +30,18 @@ uri [<matcher>] strip_prefix|strip_suffix|replace \
 
 Strip `/api` from the beginning of all request paths:
 
-```
+```caddy-d
 uri strip_prefix /api
 ```
 
 Strip `.php` from the end of all request paths:
 
-```
+```caddy-d
 uri strip_suffix .php
 ```
 
 Replace "/docs/" with "/v1/docs/" in any request URI:
 
-```
+```caddy-d
 uri replace /docs/ /v1/docs/
 ```

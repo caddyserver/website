@@ -31,25 +31,25 @@ Matcher tokens are [usually optional](/docs/caddyfile/directives#matchers). If a
 
 This directive applies to [all](#wildcard-matchers) HTTP requests:
 
-```
+```caddy-d
 reverse_proxy localhost:9000
 ```
 
 And this is the same:
 
-```
+```caddy-d
 reverse_proxy * localhost:9000
 ```
 
 But this directive applies only to requests having a [path](#path-matchers) starting with `/api/`:
 
-```
+```caddy-d
 reverse_proxy /api/* localhost:9000
 ```
 
 To match on anything other than a path, define a [named matcher](#named-matchers) and refer to it using `@name`:
 
-```
+```caddy-d
 @post {
 	method POST
 }
@@ -63,7 +63,7 @@ reverse_proxy @post localhost:9000
 
 The wildcard matcher `*` matches all requests, and is only needed if a matcher token is required. For example, if the first argument you want to give a directive also happens to be a path, it would look exactly like a path matcher! So you can use a wildcard matcher to disambiguate, for example:
 
-```
+```caddy-d
 root * /home/www/mysite
 ```
 
@@ -74,7 +74,7 @@ Otherwise, this matcher is not often used. It is convenient to omit it when poss
 
 Because matching by path is so common, a single path matcher can be inlined, like so:
 
-```
+```caddy-d
 redir /old.html /new.html
 ```
 
@@ -87,7 +87,7 @@ Path matcher tokens must start with a forward slash `/`.
 
 Defining a matcher with a unique name gives you more flexibility, allowing you to combine [any available matchers](#standard-matchers) into a set:
 
-```
+```caddy-d
 @name {
 	...
 }
@@ -97,7 +97,7 @@ Then you can use the matcher like so: `@name`
 
 For example:
 
-```
+```caddy-d
 @websockets {
 	header Connection *Upgrade*
 	header Upgrade    websocket
@@ -140,7 +140,7 @@ Full matcher documentation can be found [in each respective matcher module's doc
 
 ⚠️ _This module is still experimental and, as such, may experience breaking changes._
 
-```
+```caddy-d
 expression <cel...>
 ```
 
@@ -150,14 +150,14 @@ As a special case, Caddy [placeholders](/docs/conventions#placeholders) (or [Cad
 
 Examples:
 
-```
+```caddy-d
 expression {method}.startsWith("P")
 ```
 
 
 ### file
 
-```
+```caddy-d
 file {
 	root       <paths>
 	try_files  <files...>
@@ -182,7 +182,7 @@ An empty `file` matcher will see if the requested file (verbatim from the URI, r
 
 ### header
 
-```
+```caddy-d
 header <field> <value>
 ```
 
@@ -198,7 +198,7 @@ By request header fields.
 
 ### header_regexp
 
-```
+```caddy-d
 header_regexp [<name>] <field> <regexp>
 ```
 
@@ -207,7 +207,7 @@ Like `header`, but supports regular expressions. Capture groups can be accessed 
 
 ### host
 
-```
+```caddy-d
 host <hosts...>
 ```
 
@@ -216,7 +216,7 @@ Matches request by the `Host` header field of the request. It is not common to u
 
 ### method
 
-```
+```caddy-d
 method <verbs...>
 ```
 
@@ -225,13 +225,13 @@ By the method (verb) of the HTTP request. Verbs should be uppercase, like `POST`
 
 ### not
 
-```
+```caddy-d
 not <any other matcher>
 ```
 
 or, to negate multiple matchers which get AND'ed, open a block:
 
-```
+```caddy-d
 not {
 	<any other matchers...>
 }
@@ -242,7 +242,7 @@ The results of the enclosed matchers will be negated.
 
 ### path
 
-```
+```caddy-d
 path <paths...>
 ```
 
@@ -256,7 +256,7 @@ By request path, meaning the path component of the request's URI. Path matches a
 
 ### path_regexp
 
-```
+```caddy-d
 path_regexp [<name>] <regexp>
 ```
 
@@ -265,7 +265,7 @@ Like `path`, but supports regular expressions. Capture groups can be accessed vi
 
 ### protocol
 
-```
+```caddy-d
 protocol http|https|grpc
 ```
 
@@ -274,7 +274,7 @@ By request protocol.
 
 ### query
 
-```
+```caddy-d
 query <key>=<val>...
 ```
 
@@ -283,7 +283,7 @@ By query string parameters. Should be a sequence of `key=value` pairs. Keys are 
 
 ### remote_ip
 
-```
+```caddy-d
 remote_ip <ranges...>
 ```
 

@@ -35,7 +35,7 @@ Directive | Description
 
 The syntax of each directive will look something like this:
 
-```
+```caddy-d
 directive [<matcher>] <args...> {
 	subdirective [<args...>]
 }
@@ -54,7 +54,7 @@ Subdirectives are always optional unless documented otherwise, even though they 
 
 Most---but not all---directives accept [matcher tokens](/docs/caddyfile/matchers#syntax), which let you filter requests. Matcher tokens are usually optional. If you see this in a directive's syntax:
 
-```
+```caddy-d
 [<matcher>]
 ```
 
@@ -67,7 +67,7 @@ Because matcher tokens all work the same, the various possibilities for the matc
 
 Many directives manipulate the HTTP handler chain. The order in which those directives are evaluated matters, so a default ordering is hard-coded into Caddy:
 
-```
+```caddy-d
 root
 
 header

@@ -93,7 +93,7 @@ Adapts a configuration to Caddy's native JSON config structure and writes the ou
 
 Note that a config which is successfully adapted may still fail validation. For an example of this, use this Caddyfile:
 
-```
+```caddy
 localhost
 
 tls cert_notexist.pem key_notexist.pem

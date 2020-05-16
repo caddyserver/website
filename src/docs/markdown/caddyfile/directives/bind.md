@@ -11,7 +11,7 @@ Note that binding sites inconsistently may result in unintended consequences. Fo
 
 ## Syntax
 
-```
+```caddy-d
 bind <hosts...>
 ```
 
@@ -22,12 +22,12 @@ bind <hosts...>
 
 To make a socket accessible only on the current machine, bind to the loopback interface (localhost):
 
-```
+```caddy-d
 bind 127.0.0.1
 ```
 
 To include IPv6:
 
-```
+```caddy-d
 bind 127.0.0.1 ::1
 ```

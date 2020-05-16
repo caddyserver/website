@@ -9,7 +9,7 @@ A static file server. It works by appending the request's URI path to the [site'
 
 ## Syntax
 
-```
+```caddy-d
 file_server [<matcher>] [browse] {
 	root   <path>
 	hide   <files...>
@@ -29,18 +29,18 @@ file_server [<matcher>] [browse] {
 
 A static file server out of the current directory:
 
-```
+```caddy-d
 file_server
 ```
 
 With file listings enabled:
 
-```
+```caddy-d
 file_server browse
 ```
 
 Only serve static files out of the `/static` folder:
 
-```
+```caddy-d
 file_server /static/*
 ```

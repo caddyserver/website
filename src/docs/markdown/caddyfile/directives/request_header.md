@@ -9,7 +9,7 @@ Manipulates HTTP header fields on the request. It can set, add, and delete heade
 
 ## Syntax
 
-```
+```caddy-d
 request_header [<matcher>] [[+|-]<field> [<value>|<find>] [<replace>]]
 ```
 
@@ -23,6 +23,6 @@ request_header [<matcher>] [[+|-]<field> [<value>|<find>] [<replace>]]
 
 Remove the Referer header from the request:
 
-```
+```caddy-d
 request_header -Referer
 ```

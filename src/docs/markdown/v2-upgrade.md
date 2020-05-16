@@ -126,7 +126,7 @@ basicauth /secret/ Bob hiccup
 ```
 
 - **v2:**
-```
+```caddy-d
 basicauth /secret/* {
 	Bob JDJhJDEwJEVCNmdaNEg2Ti5iejRMYkF3MFZhZ3VtV3E1SzBWZEZ5Q3VWc0tzOEJwZE9TaFlZdEVkZDhX
 }
@@ -137,8 +137,14 @@ basicauth /secret/* {
 
 File browsing is now enabled through the [`file_server`](/docs/caddyfile/directives/file_server) directive.
 
-- **v1:** `browse /subfolder/`
-- **v2:** `file_server /subfolder/* browse`
+- **v1:**
+```
+browse /subfolder/
+```
+- **v2:** 
+```caddy-d
+file_server /subfolder/* browse
+```
 
 
 ### ext
@@ -153,8 +159,14 @@ Implied file extensions can be done with [`try_files`](/docs/caddyfile/directive
 
 Assuming you're serving PHP, the v2 equivalent is [`php_fastcgi`](/docs/caddyfile/directives/php_fastcgi).
 
-- **v1:** `fastcgi / localhost:9005 php`
-- **v2:** `php_fastcgi localhost:9005`
+- **v1:**
+```
+fastcgi / localhost:9005 php
+```
+- **v2:** 
+```caddy-d
+php_fastcgi localhost:9005
+```
 
 Note that the `fastcgi` directive from v1 did a lot under the hood, including trying files on disk, rewriting requests, and even redirecting. The v2 `php_fastcgi` directive also does these things for you, but the docs give its [expanded form](/docs/caddyfile/directives/php_fastcgi#expanded-form) that you can modify if your requirements are different.
 
@@ -167,8 +179,14 @@ The subdirectives are different in v2 -- you probably will not need any for PHP.
 
 A single directive [`encode`](/docs/caddyfile/directives/encode) is now used for all response encodings, including multiple compression formats.
 
-- **v1:** `gzip`
-- **v2:** `encode gzip`
+- **v1:**
+```
+gzip
+```
+- **v2:** 
+```caddy-d
+encode gzip
+```
 
 Fun fact: Caddy 2 also supports `zstd` (but no browsers do yet).
 
@@ -177,8 +195,14 @@ Fun fact: Caddy 2 also supports `zstd` (but no browsers do yet).
 
 [Mostly unchanged](/docs/caddyfile/directives/header), but now way more powerful since it can do substring replacements in v2.
 
-- **v1:** `header / Strict-Transport-Security max-age=31536000;`
-- **v2:** `header Strict-Transport-Security max-age=31536000;`
+- **v1:**
+```
+header / Strict-Transport-Security max-age=31536000;
+```
+- **v2:**
+```caddy-d
+header Strict-Transport-Security max-age=31536000;
+```
 
 
 ### log
@@ -187,7 +211,7 @@ Enables access logging; the [`log`](/docs/caddyfile/directives/log) directive ca
 
 The recommended way to enable access logging is simply:
 
-```
+```caddy-d
 log
 ```
 
@@ -201,7 +225,7 @@ log access.log
 ```
 
 - **v2:**
-```
+```caddy-d
 log {
 	output file         access.log
 	format single_field common_log
@@ -223,8 +247,14 @@ Websocket proxying "just works" in v2; there is no need to "enable" websockets l
 
 The `without` subdirective has been removed because [rewrite hacks](#rewrite) are no longer necessary in v2 thanks to improved matcher support.
 
-- **v1:** `proxy / localhost:9005`
-- **v2:** `reverse_proxy localhost:9005`
+- **v1:**
+```
+proxy / localhost:9005
+```
+- **v2:**
+```caddy-d
+reverse_proxy localhost:9005
+```
 
 
 ### redir
@@ -249,7 +279,7 @@ rewrite {
 }
 ```
 - **v2:**
-```
+```caddy-d
 @mobile {
 	header User-Agent *mobile*
 }
@@ -277,8 +307,14 @@ Because it accepts a matcher in v2, this means you can also change the site root
 
 The v2 equivalent is [`respond`](/docs/caddyfile/directives/respond), which can also write a response body.
 
-- **v1:** `status 404 /secrets/`
-- **v2:** `respond /secrets/* 404`
+- **v1:** 
+```
+status 404 /secrets/
+```
+- **v2:** 
+```caddy-d
+respond /secrets/* 404
+```
 
 ### templates
 

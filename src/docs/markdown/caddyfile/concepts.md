@@ -46,7 +46,7 @@ Opening and closing a **block** is done with curly braces:
 
 When there is only one site block, the curly braces (and indentation) are optional. This is for convenience to quickly define a single site, for example, this:
 
-```
+```caddy
 localhost
 
 reverse_proxy /api/* localhost:9001
@@ -55,7 +55,7 @@ file_server
 
 is equivalent to:
 
-```
+```caddy
 localhost {
 	reverse_proxy /api/* localhost:9001
 	file_server
@@ -66,7 +66,7 @@ when you have only a single site block; it's a matter of preference.
 
 To configure multiple sites with the same Caddyfile, you **must** use curly braces around each one to separate their configurations:
 
-```
+```caddy
 example1.com {
 	root * /www/example.com
 	file_server
@@ -84,7 +84,7 @@ If a request matches multiple site blocks, the site block with the most specific
 
 **Directives** are keywords which customize how the site is served. For example, a complete file server config might look like this:
 
-```
+```caddy
 localhost
 
 file_server
@@ -92,7 +92,7 @@ file_server
 
 Or a reverse proxy:
 
-```
+```caddy
 localhost
 
 reverse_proxy localhost:9000
@@ -104,7 +104,7 @@ In the second example, `localhost:9000` is an **argument** because it appears on
 
 **Subdirectives** can appear in directive blocks:
 
-```
+```caddy
 localhost
 
 reverse_proxy localhost:9000 localhost:9001 {
@@ -121,7 +121,7 @@ The Caddyfile is lexed into tokens before being parsed. Whitespace is significan
 
 Often, directives expect a certain number of arguments; if a single argument has a value with whitespace, it would be lexed as two separate tokens:
 
-```
+```caddy-d
 directive abc def
 ```
 
@@ -129,13 +129,13 @@ This could be problematic and return errors or unexpected behavior.
 
 If `abc def` is supposed to be the value of a single argument, it needs to be quoted:
 
-```
+```caddy-d
 directive "abc def"
 ```
 
 Quotes can be escaped if you need to use quotes in quoted tokens, too:
 
-```
+```caddy-d
 directive "\"abc def\""
 ```
 
@@ -172,13 +172,13 @@ Wildcards (`*`) may be used, but only to represent precisely one label of the ho
 
 If multiple sites share the same definition, you can list all of them together:
 
-```
+```caddy
 localhost:8080, example.com, www.example.com
 ```
 
 or
 
-```
+```caddy
 localhost:8080,
 example.com,
 www.example.com
@@ -198,7 +198,7 @@ Request matchers can be used to classify requests by a given criteria. This conc
 
 For directives that support matchers, the first argument after the directive is the **matcher token**. Here are some examples:
 
-```
+```caddy-d
 root *           /var/www  # matcher token: *
 root /index.html /var/www  # matcher token: /index.html
 root @post       /var/www  # matcher token: @post
@@ -241,7 +241,7 @@ You can use any [Caddy placeholders](/docs/conventions#placeholders) in the Cadd
 
 You can define special blocks called snippets by giving them a name surrounded in parentheses:
 
-```
+```caddy
 (redirect) {
 	@http {
 		scheme http
@@ -252,7 +252,7 @@ You can define special blocks called snippets by giving them a name surrounded i
 
 And then you can reuse this anywhere you need:
 
-```
+```caddy-d
 import redirect
 ```
 
@@ -264,7 +264,7 @@ The `import` directive can also be used to include other files in its place. As 
 
 Comments start with `#` and proceed until the end of the line:
 
-```
+```caddy-d
 # Comments can start a line
 directive  # or go at the end
 ```
@@ -276,7 +276,7 @@ The hash character `#` cannot appear in the middle of a token (i.e. it must be p
 
 If your configuration relies on environment variables, you can use them in the Caddyfile:
 
-```
+```caddy
 {$SITE_ADDRESS}
 ```
 
@@ -289,7 +289,7 @@ If you want to defer the substitution of an environment variable until runtime, 
 
 A Caddyfile may optionally start with a special block that has no keys, called a [global options block](/docs/caddyfile/options):
 
-```
+```caddy
 {
 	...
 }
