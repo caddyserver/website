@@ -23,22 +23,29 @@ Note that a matcher token is usually required since the first argument is a path
 
 Set the site root to `/home/user/public_html` for all requests:
 
+(Note that a [wildcard matcher](/docs/caddyfile/matchers#wildcard-matchers) is required here because the first argument is ambiguous with a [path matcher](/docs/caddyfile/matchers#path-matchers).)
+
 ```caddy-d
 root * /home/user/public_html
 ```
 
-(A [wildcard matcher](/docs/caddyfile/matchers#wildcard-matchers) is required in this case because the first argument is ambiguous with a [path matcher](/docs/caddyfile/matchers#path-matchers).)
-
 Set the site root to `public_html` (relative to current working directory) for all requests:
+
+(No matcher token is required here because our site root is a relative path, so it does not start with a forward slash and thus is not ambiguous.)
 
 ```caddy-d
 root public_html
 ```
 
-(No matcher token is required here because our site root is a relative path, so it does not start with a forward slash and thus is not ambiguous.)
-
 Set the site root only for requests in `/foo`:
 
 ```caddy-d
 root /foo/* /home/user/public_html/foo
+```
+
+The `root` directive is commonly paired with [`file_server`](/docs/caddyfile/directives/file_server) to serve static files and/or with [`php_fastcgi`](/docs/caddyfile/directives/php_fastcgi) to serve a PHP site:
+
+```caddy-d
+root * /home/user/public_html
+file_server
 ```
