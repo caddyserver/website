@@ -17,28 +17,28 @@ First start Caddy:
 Caddy is currently running idle (with a blank configuration). Give it a simple config with `curl`:
 
 <pre><code class="cmd bash">curl localhost:2019/load \
-	-X POST \
+    -X POST \
     -H "Content-Type: application/json" \
     -d @- << EOF
-	{
-		"apps": {
-			"http": {
-				"servers": {
-					"hello": {
-						"listen": [":2015"],
-						"routes": [
-							{
-								"handle": [{
-									"handler": "static_response",
-									"body": "Hello, world!"
-								}]
-							}
-						]
-					}
-				}
-			}
-		}
-	}
+    {
+        "apps": {
+            "http": {
+                "servers": {
+                    "hello": {
+                        "listen": [":2015"],
+                        "routes": [
+                            {
+                                "handle": [{
+                                    "handler": "static_response",
+                                    "body": "Hello, world!"
+                                }]
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
 EOF</code></pre>
 
 Giving a POST body with [Heredoc](https://en.wikipedia.org/wiki/Here_document#Unix_shells) can be tedious, so if you prefer to use files, save the JSON to a file called `caddy.json` and then use this command instead:
