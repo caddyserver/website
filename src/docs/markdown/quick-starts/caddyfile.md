@@ -76,5 +76,6 @@ When you are done with Caddy, make sure to stop it:
 
 ## Further reading
 
+- [Common patterns](/docs/caddyfile/patterns)
 - [Caddyfile concepts](/docs/caddyfile/concepts)
 - [Directives](/docs/caddyfile/directives)
