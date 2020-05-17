@@ -806,6 +806,10 @@ td code {
 		color: #bdd6f7;
 	}
 
+	header nav .new {
+		color: black;
+	}
+
 	#search {
 		background: rgb(28, 52, 79);
 		color: #bdd6f7;
