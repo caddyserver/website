@@ -80,7 +80,7 @@ When using php-fpm listening via a unix socket:
 php_fastcgi unix//run/php/php7.4-fpm.sock
 ```
 
-The `php_fastcgi` directive is usually paired with the [`root`](/docs/caddyfile/directives/root) directive to set the root path from which to serve PHP files
+The [`root` directive](/docs/caddyfile/directives/root) is often used to specify the directory containing the PHP files:
 
 ```caddy-d
 root * /var/www/html

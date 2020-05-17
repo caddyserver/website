@@ -8,6 +8,8 @@ Sets the root path of the site, used by various matchers and directives that acc
 
 Specifically, this directive sets the `{http.vars.root}` placeholder. It is mutually exclusive to other `root` directives in the same block, so it is safe to define multiple roots with matchers that intersect: they will not cascade and overwrite each other.
 
+This directive does not automatically enable serving static files, so it is often used in conjunction with the [`file_server` directive](/docs/caddyfile/directives/file_server) or the [`php_fastcgi` directive](/docs/caddyfile/directives/php_fastcgi).
+
 
 ## Syntax
 
@@ -17,7 +19,7 @@ root [<matcher>] <path>
 
 - **&lt;path&gt;** is the path to use for the site root.
 
-Note that a matcher token is usually required since the first argument is a path, which could look like a path matcher.
+Note that the `<path>` argument could be confused by the parser as a [matcher token](/docs/caddyfile/matchers#syntax) if the it begins with `/`. To disambiguate, specify a wildcard matcher token (`*`). See examples below.
 
 ## Examples
 
@@ -37,7 +39,7 @@ Set the site root to `public_html` (relative to current working directory) for a
 root public_html
 ```
 
-Set the site root only for requests in `/foo`:
+Change the site root only for requests in `/foo/*`:
 
 ```caddy-d
 root /foo/* /home/user/public_html/foo
