@@ -6,7 +6,7 @@ title: Common Caddyfile Uses
 
 This page presents some complete, minimal Caddyfile configurations for common use cases, which you might find helpful when building your own configs.
 
-These are not drop-in solutions; you will have to customize your domain name, ports/sockets, directory paths, etc. They are intended to illustrate only the basic requirements for the most common use cases.
+These are not drop-in solutions; you will have to customize your domain name, ports/sockets, directory paths, etc. They are intended to illustrate some of the most common configuration patterns.
 
 #### Menu
 
@@ -19,7 +19,7 @@ These are not drop-in solutions; you will have to customize your domain name, po
 
 ## Static file server
 
-```
+```caddy
 example.com
 
 root * /var/www  # optional; default root is current directory
@@ -31,7 +31,7 @@ file_server
 
 All requests:
 
-```
+```caddy
 example.com
 
 reverse_proxy localhost:5000
@@ -39,7 +39,7 @@ reverse_proxy localhost:5000
 
 Just requests having a path starting with `/api/`; static files for everything else:
 
-```
+```caddy
 example.com
 
 reverse_proxy /api/* localhost:5000
@@ -50,9 +50,9 @@ file_server
 
 ## PHP
 
-With FastCGI running, something like this works for most modern PHP apps:
+With a PHP FastCGI service running, something like this works for most modern PHP apps:
 
-```
+```caddy
 example.com
 
 php_fastcgi unix//run/php/php-fpm.sock
@@ -60,7 +60,7 @@ php_fastcgi unix//run/php/php-fpm.sock
 
 If your PHP site relies on static files too, you may need to enable a static file server (but this depends on your PHP app):
 
-```
+```caddy
 example.com
 
 php_fastcgi /blog/* localhost:9000
@@ -72,7 +72,7 @@ file_server
 
 To **add** the `www.` subdomain with an HTTP redirect:
 
-```
+```caddy
 example.com {
 	redir https://www.example.com{uri}
 }
@@ -85,7 +85,7 @@ www.example.com {
 
 To **remove** it:
 
-```
+```caddy
 www.example.com {
 	redir https://example.com{uri}
 }
@@ -104,7 +104,7 @@ HTTP redirects are external, but you can internally [`rewrite`](/docs/caddyfile/
 
 To add or remove a trailing slash:
 
-```
+```caddy
 example.com
 
 rewrite /add     /add/
@@ -113,10 +113,9 @@ rewrite /remove/ /remove
 
 To perform the equivalent change externally (with a redirect), simply replaces `rewrite` with [`redir`](/docs/caddyfile/directives/redir):
 
-```
+```caddy
 example.com
 
 redir /add     /add/
 redir /remove/ /remove
 ```
-
