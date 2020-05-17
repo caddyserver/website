@@ -15,3 +15,16 @@ rewrite /docs/modules/* /docs/modules/index.html
 rewrite /docs/*         /docs/index.html
 
 reverse_proxy /api/* localhost:4444
+
+handle_errors {
+	@error {
+		expression {http.error.status_code} in [404, 500]
+	}
+	handle @error {
+		rewrite 404.html
+		root * src
+		encode gzip
+		templates
+		file_server
+	}
+}

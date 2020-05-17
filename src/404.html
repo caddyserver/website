@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>404 &mdash; Caddy Documentation</title>
+		{{include "/includes/docs-head.html"}}
+		<meta property="og:title" content="404 - Caddy Documentation">
+		<meta name="twitter:title" value="404 - Caddy Documentation">
+	</head>
+	<body>
+		{{include "/includes/docs-header.html"}}
+		<main>
+			{{include "/includes/docs-nav.html"}}
+			<div class="article-container">
+				<div class="paper" id="paper1"></div>
+				<div class="paper" id="paper2"></div>
+				<article class="paper paper3">
+					{{markdown "# 404\n\n<center>Sorry! The page you requested wasn't found.</center>"}}
+				</article>
+			</div>
+			<div class="sidebar"></div>
+		</main>
+		{{include "/includes/footer.html"}}
+	</body>
+</html>
