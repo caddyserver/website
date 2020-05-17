@@ -141,13 +141,13 @@ directive "\"abc def\""
 
 Inside quoted tokens, all other characters are treated literally, including spaces, tabs, and newlines.
 
-You can also use a backtick (`\``) to quote tokens:
+You can also use a backtick <code>`</code> to quote tokens:
 
-```
+```caddy-d
 directive `"foo bar"`
 ```
 
-Backtick strings are convenient when tokens contain quote literals.
+Backtick strings are convenient when tokens contain quote literals, e.g. JSON text.
 
 
 
@@ -231,6 +231,7 @@ You can use any [Caddy placeholders](/docs/conventions#placeholders) in the Cadd
 | `{host}`        | `{http.request.host}`           |
 | `{labels.*}`    | `{http.request.host.labels.*}`  |
 | `{hostport}`    | `{http.request.hostport}`       |
+| `{port}`        | `{http.request.port}`           |
 | `{method}`      | `{http.request.method}`         |
 | `{path}`        | `{http.request.uri.path}`       |
 | `{path.*}`      | `{http.request.uri.path.*}`     |
