@@ -79,3 +79,10 @@ When using php-fpm listening via a unix socket:
 ```caddy-d
 php_fastcgi unix//run/php/php7.4-fpm.sock
 ```
+
+The [`root` directive](/docs/caddyfile/directives/root) is often used to specify the directory containing the PHP files:
+
+```caddy-d
+root * /var/www/html
+php_fastcgi 127.0.0.1:9000
+```
