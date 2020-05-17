@@ -22,14 +22,16 @@ These are not drop-in solutions; you will have to customize your domain name, po
 ```caddy
 example.com
 
-root * /var/www  # optional; default root is current directory
+root * /var/www
 file_server
 ```
+
+As usual, the first line is the site address. The [`root` directive](/docs/caddyfile/directives/root) specifies the path to the root of the site (the `*` means to match all requests, so as to disambiguate from a [path matcher](/docs/caddyfile/matchers#path-matchers))&mdash;change the path to your site if it isn't the current working directory. Finally, we enable the [static file server](/docs/caddyfile/directives/file_server).
 
 
 ## Reverse proxy
 
-All requests:
+Proxy all requests:
 
 ```caddy
 example.com
@@ -37,13 +39,13 @@ example.com
 reverse_proxy localhost:5000
 ```
 
-Just requests having a path starting with `/api/`; static files for everything else:
+Only proxy requests having a path starting with `/api/` and serve static files for everything else:
 
 ```caddy
 example.com
 
+root * /var/www
 reverse_proxy /api/* localhost:5000
-root * /var/www  # optional; default root is current directory
 file_server
 ```
 
@@ -55,18 +57,15 @@ With a PHP FastCGI service running, something like this works for most modern PH
 ```caddy
 example.com
 
-php_fastcgi unix//run/php/php-fpm.sock
-```
-
-If your PHP site relies on static files too, you may need to enable a static file server (but this depends on your PHP app):
-
-```caddy
-example.com
-
+root * /var/www
 php_fastcgi /blog/* localhost:9000
-root * /var/www  # optional; default root is current directory
 file_server
 ```
+
+Customize the site root and path matcher accordingly; this example assumes PHP is only in the `/blog/` subdirectory&mdash;all other requests will be served as static files.
+
+The [`php_fastcgi` directive](/docs/caddyfile/directives/php_fastcgi) is actually just a shortcut for [several pieces of configuration](/docs/caddyfile/directives/php_fastcgi#expanded-form).
+
 
 ## Redirect `www.` subdomain
 
@@ -78,7 +77,6 @@ example.com {
 }
 
 www.example.com {
-	...
 }
 ```
 
@@ -91,7 +89,6 @@ www.example.com {
 }
 
 example.com {
-	...
 }
 ```
 
@@ -100,9 +97,11 @@ example.com {
 
 You will not usually need to configure this yourself; the [`file_server` directive](/docs/caddyfile/directives/file_server) will automatically add or remove trailing slashes from requests by way of HTTP redirects, depending on whether the requested resource is a directory or file, respectively.
 
-HTTP redirects are external, but you can internally [`rewrite`](/docs/caddyfile/directives/rewrite) add the slash if you want both URIs to be used for the same resource.
+However, if you need to, you can still enforce trailing slashes with your config. There are two ways to do it: internally or externally.
 
-To add or remove a trailing slash:
+### Internal enforcement
+
+This uses the [`rewrite`](/docs/caddyfile/directives/rewrite) directive. Caddy will rewrite the URI internally to add or remove the trailing slash:
 
 ```caddy
 example.com
@@ -111,7 +110,12 @@ rewrite /add     /add/
 rewrite /remove/ /remove
 ```
 
-To perform the equivalent change externally (with a redirect), simply replaces `rewrite` with [`redir`](/docs/caddyfile/directives/redir):
+Using a rewrite, requests with and without the trailing slash will be the same.
+
+
+### External enforcement
+
+This uses the [`redir`](/docs/caddyfile/directives/redir) directive. Caddy will ask the browser to change the URI to add or remove the trailing slash:
 
 ```caddy
 example.com
@@ -119,3 +123,5 @@ example.com
 redir /add     /add/
 redir /remove/ /remove
 ```
+
+Using a redirect, the client will have to re-issue the request, enforcing a single acceptable URI for a resource.
