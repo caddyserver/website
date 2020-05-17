@@ -1,10 +1,10 @@
 ---
-title: Common Caddyfile Uses
+title: Common Caddyfile Patterns
 ---
 
-# Common Caddyfile Uses
+# Common Caddyfile Patterns
 
-This page presents some complete, minimal Caddyfile configurations for common use cases, which you might find helpful when building your own configs.
+This page demonstrates a few complete and minimal Caddyfile configurations for common use cases. These can be helpful starting points for your own Caddyfile documents.
 
 These are not drop-in solutions; you will have to customize your domain name, ports/sockets, directory paths, etc. They are intended to illustrate some of the most common configuration patterns.
 

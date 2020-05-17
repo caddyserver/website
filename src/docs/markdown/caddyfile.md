@@ -8,7 +8,7 @@ The **Caddyfile** is a convenient Caddy configuration format for humans. It is m
 
 It looks like this:
 
-```
+```caddy
 example.com
 
 root * /var/www/wordpress
@@ -18,7 +18,7 @@ file_server
 
 (That's a real, production-ready Caddyfile that serves WordPress with fully-managed HTTPS.)
 
-The basic idea is that you first type the address of your site, then the features or functionality you need your site to have.
+The basic idea is that you first type the address of your site, then the features or functionality you need your site to have. [View more common patterns.](/docs/caddyfile/patterns)
 
 ## Menu
 
@@ -28,6 +28,7 @@ The basic idea is that you first type the address of your site, then the feature
 - #### [Directives](/docs/caddyfile/directives)
 - #### [Request matchers](/docs/caddyfile/matchers)
 - #### [Global options](/docs/caddyfile/options)
+- #### [Common patterns](/docs/caddyfile/patterns)
 <!-- - #### [Caddyfile specification](/docs/caddyfile/spec) TODO: Finish this -->
 
 
