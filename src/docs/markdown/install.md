@@ -26,16 +26,16 @@ Test that it worked:
 <pre><code class="cmd bash">caddy version</code></pre>
 
 Create a group named `caddy`:
-<pre><code class="cmd bash">groupadd --system caddy</code></pre>
+<pre><code class="cmd bash">sudo groupadd --system caddy</code></pre>
 
 Create a user named `caddy`, with a writeable home folder:
-<pre><code class="cmd bash">useradd --system \
-	--gid caddy \
-	--create-home \
-	--home-dir /var/lib/caddy \
-	--shell /usr/sbin/nologin \
-	--comment "Caddy web server" \
-	caddy</code></pre>
+<pre><code class="cmd bash">sudo useradd --system \
+    --gid caddy \
+    --create-home \
+    --home-dir /var/lib/caddy \
+    --shell /usr/sbin/nologin \
+    --comment "Caddy web server" \
+    caddy</code></pre>
 
 If using a config file, be sure it is readable by the `caddy` user you just created.
 

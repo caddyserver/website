@@ -164,11 +164,9 @@ This challenge is enabled by default and does not require explicit configuration
 
 The DNS challenge performs an authoritative DNS lookup for the candidate hostname's TXT records, and looks for a special TXT record with a certain value. If the CA sees the expected value, a certificate is issued.
 
-This challenge does not require any open ports, and the server requesting a certificate does not need to be externally accessible.
+This challenge does not require any open ports, and the server requesting a certificate does not need to be externally accessible. However, the DNS challenge requires configuration. Caddy needs to know the credentials to access your domain's DNS provider so it can set (and clear) the special TXT records. If the DNS challenge is enabled, other challenges are disabled by default.
 
-However, the DNS challenge requires configuration. Caddy needs to know the credentials to access your domain's DNS provider so it can set (and clear) the special TXT records.
-
-If the DNS challenge is enabled, other challenges are disabled by default.
+DNS provider support is a community effort. [Learn how to enable the DNS challenge for your provider at our wiki.](https://caddy.community/t/how-to-use-dns-provider-modules-in-caddy-2/8148)
 
 
 ## On-Demand TLS
