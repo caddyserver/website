@@ -41,7 +41,7 @@ You can use another folder as the site root:
 
 In the root of your site, create a file called `Caddyfile` with these contents:
 
-```
+```caddy
 localhost
 
 file_server
@@ -59,7 +59,7 @@ The [`file_server` directive](/docs/caddyfile/directives/file_server) has more o
 
 If you don't have an index file but you want to display a file listing, use the `browse` argument:
 
-```
+```caddy
 localhost
 
 file_server browse
@@ -67,7 +67,7 @@ file_server browse
 
 You can also use another folder as the site root:
 
-```
+```caddy
 localhost
 
 root * /home/me/mysite

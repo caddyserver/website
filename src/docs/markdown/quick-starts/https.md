@@ -40,7 +40,7 @@ This is the most common way to get HTTPS.
 
 Create a file called `Caddyfile` (no extension) where the first line is your domain name, for example:
 
-```
+```caddy
 example.com
 
 respond "Hello, privacy!"

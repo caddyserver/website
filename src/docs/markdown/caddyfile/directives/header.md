@@ -11,7 +11,7 @@ By default, header operations are performed immediately unless any of the header
 
 ## Syntax
 
-```
+```caddy-d
 header [<matcher>] [[+|-]<field> [<value>|<find>] [<replace>]] {
 	<field> <find> <replace>
 	[+]<field> <value>
@@ -33,25 +33,25 @@ For multiple header manipulations, you can open a block and specify one manipula
 
 Set a custom header field on all requests:
 
-```
+```caddy-d
 header Custom-Header "My value"
 ```
 
 Strip the "Hidden" header field:
 
-```
+```caddy-d
 header -Hidden
 ```
 
 Replace `http://` with `https://` in any Location header:
 
-```
+```caddy-d
 header Location http:// https://
 ```
 
 Set security headers on all pages: (**WARNING:** only use if you understand the implications!)
 
-```
+```caddy-d
 header {
 	# enable HSTS
 	Strict-Transport-Security max-age=31536000;
@@ -69,7 +69,7 @@ header {
 
 Multiple header directives that are intended to be mutually-exclusive:
 
-```
+```caddy-d
 route {
 	header           Cache-Control max=age=3600
 	header /static/* Cache-Control max-age=31536000

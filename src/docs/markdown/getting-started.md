@@ -112,7 +112,7 @@ That was _kind of a lot of work_ just for Hello World.
 
 Another way to configure Caddy is with the [**Caddyfile**](/docs/caddyfile). The same config we wrote in JSON above can be expressed simply as:
 
-```
+```caddy
 :2015
 
 respond "Hello, world!"

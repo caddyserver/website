@@ -8,7 +8,7 @@ Enables and configures HTTP request logging (also known as access logs).
 
 ## Syntax
 
-```
+```caddy-d
 log {
 	output <writer_module> ...
 	format <encoder_module> ...
@@ -28,7 +28,7 @@ The **output** subdirective lets you customize where logs get written. It appear
 
 Standard error (console, default).
 
-```
+```caddy-d
 output stderr
 ```
 
@@ -36,7 +36,7 @@ output stderr
 
 Standard output (console).
 
-```
+```caddy-d
 output stdout
 ```
 
@@ -44,7 +44,7 @@ output stdout
 
 No output.
 
-```
+```caddy-d
 output discard
 ```
 
@@ -52,7 +52,7 @@ output discard
 
 A file. By default, log files are rotated ("rolled") to prevent disk space exhaustion.
 
-```
+```caddy-d
 output file <filename> {
 	roll_disabled
 	roll_size     <size>
@@ -72,7 +72,7 @@ output file <filename> {
 
 A network socket.
 
-```
+```caddy-d
 output net <address>
 ```
 
@@ -86,8 +86,8 @@ The **format** subdirective lets you customize how logs get encoded (formatted).
 
 In addition to the syntax for each individual encoder, these common properties can be set on most encoders:
 
-```
-{
+```caddy-d
+format <encoder_module> {
 	message_key <key>
 	level_key   <key>
 	time_key    <key>
@@ -114,7 +114,7 @@ In addition to the syntax for each individual encoder, these common properties c
 
 The console encoder formats the log entry for human readability while preserving some structure.
 
-```
+```caddy-d
 format console
 ```
 
@@ -122,7 +122,7 @@ format console
 
 Formats each log entry as a JSON object.
 
-```
+```caddy-d
 format json
 ```
 
@@ -130,7 +130,7 @@ format json
 
 Formats each log entry as [logfmt](https://brandur.org/logfmt).
 
-```
+```caddy-d
 format logfmt
 ```
 
@@ -138,7 +138,7 @@ format logfmt
 
 Writes only a single field from the structure log entry. Useful if one of the fields has all the information you need.
 
-```
+```caddy-d
 format single_field <field_name>
 ```
 
@@ -154,13 +154,13 @@ format single_field <field_name>
 
 Enable access logging (to the console):
 
-```
+```caddy-d
 log
 ```
 
 Write logs to a file (with log rolling, which is enabled by default):
 
-```
+```caddy-d
 log {
 	output file /var/log/access.log
 }
@@ -168,7 +168,7 @@ log {
 
 Customize log rolling:
 
-```
+```caddy-d
 log {
 	output file /var/log/access.log {
 		roll_size 1gb
@@ -180,7 +180,7 @@ log {
 
 Use common log format (deprecated, but can be useful for older setups):
 
-```
+```caddy-d
 log {
 	format single_field common_log
 }

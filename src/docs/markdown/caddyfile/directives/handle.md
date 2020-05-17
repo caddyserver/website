@@ -10,7 +10,7 @@ The `handle` directive is kind of similar to the `location` directive from nginx
 
 ## Syntax
 
-```
+```caddy-d
 handle [<matcher>] {
 	<directives...>
 }
@@ -27,7 +27,7 @@ If you prefer crafting HTTP handler logic in a more inheritence-based way like n
 
 Handle requests in `/foo/` by the static file server, and send all other requests to the reverse proxy:
 
-```
+```caddy-d
 handle /foo/* {
 	file_server
 }

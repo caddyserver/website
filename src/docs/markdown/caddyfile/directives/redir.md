@@ -11,7 +11,7 @@ This directive implies that a matched request is to be rejected. It is ordered v
 
 ## Syntax
 
-```
+```caddy-d
 redir [<matcher>] <to> [<code>]
 ```
 
@@ -28,18 +28,18 @@ redir [<matcher>] <to> [<code>]
 
 Redirect all requests to `https://example.com`:
 
-```
+```caddy-d
 redir https://example.com
 ```
 
 Same, but preserve the existing URI:
 
-```
+```caddy-d
 redir https://example.com{uri}
 ```
 
 Same, but permanent:
 
-```
+```caddy-d
 redir https://example.com{uri} permanent
 ```

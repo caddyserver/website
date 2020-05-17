@@ -13,7 +13,7 @@ This directive is a special case in that its subdirectives are also regular dire
 
 ## Syntax
 
-```
+```caddy-d
 route [<matcher>] {
 	<directives...>
 }
@@ -37,7 +37,7 @@ However, there may be occasions where the second directive (`redir`) has a more 
 
 So you might try a Caddyfile like this (but this will not work as expected!):
 
-```
+```caddy
 example.com
 
 file_server /specific.html
@@ -48,7 +48,7 @@ The problem is that, internally, `redir` comes before `file_server`, but in this
 
 Fortunately, the solution is easy: just wrap those two directives in a `route` block:
 
-```
+```caddy
 example.com
 
 route {
@@ -68,7 +68,7 @@ And now `file_server` will be chained in before `redir` because the order is tak
 
 Strip `/api` prefix from request path just before proxying all API requests to a backend:
 
-```
+```caddy-d
 route /api/* {
 	uri strip_prefix /api
 	reverse_proxy localhost:9000

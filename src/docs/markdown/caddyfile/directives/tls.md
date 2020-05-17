@@ -13,7 +13,7 @@ Compatibility note: Due to its sensitive nature as a security protocol, delibera
 
 ## Syntax
 
-```
+```caddy-d
 tls [internal|<email>] | [<cert_file> <key_file>] {
 	protocols <min> [<max>]
 	ciphers   <cipher_suites...>
@@ -69,19 +69,19 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 
 Use a custom certificate and key:
 
-```
+```caddy-d
 tls cert.pem key.pem
 ```
 
 Use locally-trusted certificates for all hosts on the current site block, rather than public certificates via ACME / Let's Encrypt (useful in dev environments):
 
-```
+```caddy-d
 tls internal
 ```
 
 Use locally-trusted certificates, but managed on-demand intead of in the background:
 
-```
+```caddy-d
 tls internal {
 	on_demand
 }
@@ -89,13 +89,13 @@ tls internal {
 
 Specify an email address for your ACME account (but if only one email is used for all sites, we recommend the `email` [global option](/docs/caddyfile/options) instead):
 
-```
+```caddy-d
 tls your@email.com
 ```
 
 Enable the DNS challenge for a domain managed on Cloudflare with account credentials in an environment variable:
 
-```
+```caddy-d
 tls {
 	dns cloudflare {env.CLOUDFLARE_API_TOKEN}
 }

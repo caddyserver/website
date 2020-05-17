@@ -8,7 +8,7 @@ The **Caddyfile** is a convenient Caddy configuration format for humans. It is m
 
 It looks like this:
 
-```
+```caddy
 example.com
 
 root * /var/www/wordpress

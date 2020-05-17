@@ -9,7 +9,7 @@ Executes the response body as a [template](/docs/modules/http.handlers.templates
 
 ## Syntax
 
-```
+```caddy-d
 templates [<matcher>] {
 	mime    <types...>
 	between <open_delim> <close_delim>
@@ -26,7 +26,7 @@ templates [<matcher>] {
 
 Enable templates on all requests:
 
-```
+```caddy-d
 templates
 ```
 

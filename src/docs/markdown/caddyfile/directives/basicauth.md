@@ -15,7 +15,7 @@ Caddy configuration does not accept plaintext passwords; you MUST hash them befo
 
 ## Syntax
 
-```
+```caddy-d
 basicauth [<matcher>] [<hash_algorithm>] {
 	<username> <hashed_password_base64> [<salt_base64>]
 	...
@@ -32,7 +32,7 @@ basicauth [<matcher>] [<hash_algorithm>] {
 
 Protect all resources in /secret so only Bob can access them with the password "hiccup":
 
-```
+```caddy-d
 basicauth /secret/* {
 	Bob JDJhJDEwJEVCNmdaNEg2Ti5iejRMYkF3MFZhZ3VtV3E1SzBWZEZ5Q3VWc0tzOEJwZE9TaFlZdEVkZDhX
 }

@@ -27,7 +27,7 @@ Create a new text file named `Caddyfile` (no extension).
 
 The first thing you should type is your site's [address](/docs/caddyfile/concepts#addresses):
 
-```
+```caddy
 localhost
 ```
 
@@ -37,7 +37,7 @@ localhost
 
 Then hit enter and type what you want it to do. For this tutorial, make your Caddyfile look like this:
 
-```
+```caddy
 localhost
 
 respond "Hello, world!"
@@ -63,7 +63,7 @@ Open [localhost](https://localhost) in your browser and see your web server work
 
 That's not particularly exciting, so let's change our static response to a [file server](/docs/caddyfile/directives/file_server) with directory listings enabled:
 
-```
+```caddy
 localhost
 
 file_server browse
@@ -99,7 +99,7 @@ Page loaded at: {{`{{`}}now | date "Mon Jan 2 15:04:05 MST 2006"{{`}}`}}
 
 Wait a minute. We should see today's date. Why didn't it work? It's because the server hasn't yet been configured to evaluate templates! Easy to fix, just add a line to the Caddyfile so it looks like this:
 
-```
+```caddy
 localhost
 
 templates
@@ -118,7 +118,7 @@ With Caddy's [templates module](/docs/modules/http.handlers.templates), you can 
 
 It's good practice to compress responses with a quick and modern compression algorithm. Let's enable Gzip and Zstandard support using the [`encode`](/docs/caddyfile/directives/encode) directive:
 
-```
+```caddy
 localhost
 
 encode zstd gzip
@@ -143,7 +143,7 @@ But it is easy to make it so we can add more sites!
 
 Our Caddyfile so far:
 
-```
+```caddy
 localhost
 
 encode zstd gzip
@@ -153,7 +153,7 @@ file_server browse
 
 is equivalent to this one:
 
-```
+```caddy
 localhost {
 	encode zstd gzip
 	templates
@@ -167,7 +167,7 @@ By wrapping our site block in curly braces `{ }` we are able to define multiple,
 
 For example:
 
-```
+```caddy
 :8080 {
 	respond "I am 8080"
 }
@@ -181,7 +181,7 @@ When wrapping site blocks in curly braces, only [addresses](/docs/caddyfile/conc
 
 For multiple sites which share the same configuration, you can add more addresses, for example:
 
-```
+```caddy
 :8080, :8081 {
 	...
 }
@@ -198,7 +198,7 @@ We may want to apply some directives only to certain requests. For example, let'
 
 This config will not work like we want:
 
-```
+```caddy
 localhost
 
 file_server
@@ -207,7 +207,7 @@ reverse_proxy 127.0.0.1:9005
 
 In practice, we may want to use the reverse proxy only for API requests, i.e. requests with a base path of `/api/`. This is easy to do by adding a [matcher token](/docs/caddyfile/matchers#syntax):
 
-```
+```caddy
 localhost
 
 file_server
@@ -232,7 +232,7 @@ First, set an environment variable (in the same shell that runs Caddy):
 
 Then you can use it like this in the Caddyfile:
 
-```
+```caddy
 {$SITE_ADDRESS}
 
 file_server
@@ -240,7 +240,7 @@ file_server
 
 Before the Caddyfile is parsed, it will be expanded to:
 
-```
+```caddy
 localhost:9055
 
 file_server
@@ -255,7 +255,7 @@ You can use environment variables anywhere in the Caddyfile, for any number of t
 
 One last thing that you will find most helpful: if you want to remark or note anything in your Caddyfile, you can use comments, starting with `#`:
 
-```
+```caddy
 # this starts a comment
 ```
 

@@ -9,7 +9,7 @@ Writes a hard-coded/static response to the client.
 
 ## Syntax
 
-```
+```caddy-d
 respond [<matcher>] <status>|<body> [<status>] {
 	body <text>
 	close
@@ -32,19 +32,19 @@ To clarify, the first non-matcher argument can be either a 3-digit status code o
 
 Write a 200 status with an empty body to all health checks:
 
-```
+```caddy-d
 respond /health-check 200
 ```
 
 Write a simple response body to all requests:
 
-```
+```caddy-d
 respond "Hello, world!"
 ```
 
 Write an error response and close the connection:
 
-```
+```caddy-d
 respond /secret/* "Access denied" 403 {
 	close
 }
