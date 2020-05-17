@@ -142,7 +142,7 @@ transport http {
 - **tls_insecure_skip_verify** turns off security. _Do not use in production._
 - **tls_timeout** is a [duration value](/docs/conventions#durations) that specifies how long to wait for the TLS handshake to complete.
 - **tls_trusted_ca_certs** is a list of PEM files that specify CA public keys to trust when connecting to the backend.
-- **tls_server_name** sets the ServerName (SNI) to put in the ClientHello; only needed if the remote server it.
+- **tls_server_name** sets the ServerName (SNI) to put in the ClientHello; only needed if the remote server requires it.
 - **keepalive** is either `off` or a [duration value](/docs/conventions#durations) that specifies how long to keep connections open.
 - **keepalive_idle_conns** defines the maximum number of connections to keep alive.
 

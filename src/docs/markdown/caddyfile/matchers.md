@@ -98,7 +98,7 @@ Defining a matcher with a unique name gives you more flexibility, allowing you t
 
 or, if there is only one matcher in the set:
 
-```
+```caddy-d
 @name ...
 ```
 
@@ -118,7 +118,7 @@ This proxies only the requests that have a header field named "Connection" conta
 
 If the matcher set consists of only one matcher, a one-liner syntax also works:
 
-```
+```caddy-d
 @post method POST
 reverse_proxy @post localhost:6001
 ```
@@ -197,7 +197,7 @@ By files.
 
 Because `try_files` with a policy of `first_exist` is so common, there is a one-line shortcut for that:
 
-```
+```caddy-d
 file <files...>
 ```
 
