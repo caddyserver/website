@@ -21,5 +21,5 @@ and operates primarily at L4 (transport layer) and L7 (application layer) of the
 
 Configuration is both dynamic and exportable with [Caddy's API](/docs/api). Although no config files required, you can still use them; most people's favorite way of configuring Caddy is using the [Caddyfile](/docs/caddyfile). The format of the config document takes many forms with [config adapters](/docs/config-adapters), but Caddy's native config language is [JSON](/docs/json/).
 
-Caddy compiles for all major platforms and has no dependencies.
+Caddy compiles for all major platforms and has no runtime dependencies.
 
