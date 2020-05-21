@@ -138,9 +138,9 @@ Enable TLS Client Authentication
 
 ```caddy-d
 tls {
-  clients {
-    mode                    require_and_verify
-    trusted_ca_certs_file   cacerts.crt
-  }
+	clients {
+		mode                    require_and_verify
+		trusted_ca_certs_file   cacerts.crt
+	}
 }
 ```
