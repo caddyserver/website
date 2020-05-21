@@ -25,12 +25,12 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 	dns       <provider_name> [<params...>]
 	on_demand
 	clients {
-    mode [request|require|verify_if_given|require_and_verify]
+		mode [request|require|verify_if_given|require_and_verify]
 		trusted_ca_certs        <trusted_ca_certs...>
 		trusted_ca_certs_file   <filename...>
 		trusted_leaf_certs      <trusted_leaf_certs...>
 		trusted_leaf_certs_file <filename...>
-  }
+	}
 }
 ```
 
