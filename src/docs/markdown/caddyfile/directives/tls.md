@@ -93,7 +93,7 @@ clients {
   | request            | Ask clients for a certificate, but allow even if there isn't one; do not verify it       |
   | require            | Require clients to present a certificate, but do not verify it                           |
   | verify_if_given    | Ask clients for a certificate; allow even if there isn't one, but verify it if there is  |
-	| require_and_verify | Require clients to present a valid certificate that is verified                          |
+  | require_and_verify | Require clients to present a valid certificate that is verified                          |
 
 	The default mode is `require_and_verify` if any TrustedCACerts or TrustedLeafCerts are provided; otherwise, the default mode is `require`
 
