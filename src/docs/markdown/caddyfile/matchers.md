@@ -149,19 +149,20 @@ As a special case, Caddy [placeholders](/docs/conventions#placeholders) (or [Cad
 
 #### Examples:
 
+Match requests whose methods start with `P`, e.g. `PUT` or `POST`.
+
 ```caddy-d
-# Match requests whose methods start with "P", e.g. PUT or POST.
 expression {method}.startsWith("P")
 ```
 
+Match requests where handler returned error status code `404`, would be used in conjunction with the [`handle_errors` directive](/docs/caddyfile/directives/handle_errors).
+
 ```caddy-d
-# Match requests where handler returned error status code 404,
-# would be used in conjunction with the handle_errors directive.
 expression {http.error.status_code} == 404
 ```
 
 
-
+---
 ### file
 
 ```caddy-d
@@ -190,21 +191,22 @@ Since rewriting based on the existence of a file on disk is so common, there is 
 
 #### Examples:
 
+Match requests where the path is a file that exists.
+
 ```caddy-d
-# Match requests where the path is a file that exists.
 file
 ```
 
+Match requests where the path followed by `.html` is a file that exists, or if not, where the path is a file that exists.
+
 ```caddy-d
-# Match requests where the path followed by .html is a file that
-# exists, or if not, where the path is a file that exists.
 file {
 	try_files {path}.html {path} 
 }
 ```
 
 
-
+---
 ### header
 
 ```caddy-d
@@ -222,13 +224,14 @@ By request header fields.
 
 #### Example:
 
+Match requests with the Connection header containing `Upgrade`.
+
 ```caddy-d
-# Match requests with the Connection header containing "Upgrade"
 header Connection *Upgrade*
 ```
 
 
-
+---
 ### header_regexp
 
 ```caddy-d
@@ -239,14 +242,14 @@ Like `header`, but supports regular expressions. Capture groups can be accessed 
 
 #### Example:
 
+Match requests where the Cookie header contains `login_` followed by a hex string, with a capture group that can be accessed with `{http.regexp.login.1}`.
+
 ```caddy-d
-# Match requests where the Cookie header contains login_ followed by
-# a hex string, with a capture group that can be accessed with {http.regexp.login.1}
 header_regexp login Cookie login_([a-f0-9]+)
 ```
 
 
-
+---
 ### host
 
 ```caddy-d
@@ -262,7 +265,7 @@ method sub.example.com
 ```
 
 
-
+---
 ### method
 
 ```caddy-d
@@ -273,18 +276,20 @@ By the method (verb) of the HTTP request. Verbs should be uppercase, like `POST`
 
 #### Examples:
 
+Match requests with the `GET` method.
+
 ```caddy-d
-# Match requests with the GET method.
 method GET
 ```
 
+Match requests with the `PUT` or `DELETE` methods.
+
 ```caddy-d
-# Match requests with the PUT or DELETE methods.
 method PUT DELETE
 ```
 
 
-
+---
 ### not
 
 ```caddy-d
@@ -303,25 +308,30 @@ The results of the enclosed matchers will be negated.
 
 #### Examples:
 
+Match requests with paths that do NOT begin with `/css/` OR `/js/`.
+
 ```caddy-d
-# Match requests with paths that do NOT begin with /css/ OR /js/
 not path /css/* /js/*
 ```
 
+Match requests WITH NEITHER:
+- an `/api/` path prefix, NOR
+- the `POST` request method
+
+i.e. can have none of these to match
+
 ```caddy-d
-# Match requests WITH NEITHER:
-# - an /api/ path prefix, NOR
-# - the POST request method
-# i.e. can have none of these to match
 not path /api/*
 not method POST
 ```
 
+Match requests WITHOUT BOTH:
+- an `/api/` path prefix, AND
+- the `POST` request method
+
+i.e. can have zero or one of these to match
+
 ```caddy-d
-# Match requests WITHOUT BOTH:
-# - an /api/ path prefix, AND
-# - the POST request method
-# i.e. can have zero or one of these to match
 not {
 	path /api/*
 	method POST
@@ -329,7 +339,7 @@ not {
 ```
 
 
-
+---
 ### path
 
 ```caddy-d
@@ -344,7 +354,7 @@ By request path, meaning the path component of the request's URI. Path matches a
 - In the middle, for a globular match (`/accounts/*/info`)
 
 
-
+---
 ### path_regexp
 
 ```caddy-d
@@ -355,15 +365,14 @@ Like `path`, but supports regular expressions. Capture groups can be accessed vi
 
 #### Example:
 
+Match requests where the path ends a 6 character hex string followed by `.css` or `.js` as the file extension, with capture groups that can be accessed with `{http.regexp.static.1}` and `{http.regexp.static.2}` for each part enclosed in `( )`, respectively.
+
 ```caddy-d
-# Match requests where the path ends a 6 character hex string followed
-# by "css" or "js" as the file extension, with capture groups for
-# that can be accessed with {http.regexp.static.1} and {http.regexp.static.2}
 path_regexp static \.([a-f0-9]{6})\.(css|js)$
 ```
 
 
-
+---
 ### protocol
 
 ```caddy-d
@@ -373,7 +382,7 @@ protocol http|https|grpc
 By request protocol.
 
 
-
+---
 ### query
 
 ```caddy-d
@@ -384,13 +393,14 @@ By query string parameters. Should be a sequence of `key=value` pairs. Keys are 
 
 #### Example:
 
+Match requests with a `sort` query parameter with the value `asc`
+
 ```caddy-d
-# Match requests with a "sort" query parameter with the value "asc"
 query sort=asc
 ```
 
 
-
+---
 ### remote_ip
 
 ```caddy-d
@@ -401,7 +411,8 @@ By remote (client) IP address. Accepts exact IPs or CIDR ranges.
 
 #### Example:
 
+Match requests from private IPv4 addresses.
+
 ```caddy-d
-# Match requests from private IPv4 addresses
 remote_ip 192.168.0.0/16 172.16.0.0/12 10.0.0.0/8
 ```
