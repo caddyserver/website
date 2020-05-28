@@ -4,17 +4,20 @@ title: "Extending Caddy"
 
 # Extending Caddy
 
-Caddy is easy to extend because of its modular architecture. Most kinds of Caddy extensions (or plugins) are known as _modules_ if they extend or plug into Caddy's configuration structure. To be clear, Caddy modules are distinct from [Go modules](https://github.com/golang/go/wiki/Modules) (but they are also Go modules). On this page, we refer to Caddy modules.
+Caddy is easy to extend because of its modular architecture. Most kinds of Caddy extensions (or plugins) are known as _modules_ if they extend or plug into Caddy's configuration structure. To be clear, Caddy modules are distinct from [Go modules](https://github.com/golang/go/wiki/Modules) (but they are also Go modules).
+
+**Prerequisites:**
+- Basic understanding of [Caddy's architecture](/docs/architecture)
+- Go language proficiency
+- [`go`](https://golang.org/dl)
+- [`xcaddy`](https://github.com/caddyserver/xcaddy)
 
 
+## Quick Start
 
-## Module Basics
+A Caddy module is any named type that registers itself as a Caddy module when its package is imported. Crucially, a module always implements the [caddy.Module](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#Module) interface, which provides its name and a constructor function.
 
-A Caddy module is any named type that registers itself as a Caddy module when its package is imported.
-
-Crucially, a module always implements the [caddy.Module](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#Module) interface, which provides its name and a constructor function.
-
-Here's a template you can copy & paste:
+In a new Go module, paste the following template into a Go file and customize your package name, type name, and Caddy module ID:
 
 ```go
 package mymodule
@@ -38,13 +41,27 @@ func (Gizmo) CaddyModule() caddy.ModuleInfo {
 }
 ```
 
-A module is "plugged in" by adding an import to the program:
+Then run this command from your project's directory, and you should see your module in the list:
+
+<pre><code class="cmd bash">xcaddy list-modules
+...
+foo.gizmo
+...</code></pre>
+
+<aside class="tip">
+	The <a href="https://github.com/caddyserver/xcaddy"><code>xcaddy</code> command</a> is an important part of every module developer's workflow. It compiles Caddy with your plugin, then runs it with the given arguments. It discards the temporary binary each time (similar to <code>go run</code>).
+</aside>
+
+Congratulations, your module registers with Caddy and can be used in [Caddy's config document](/docs/json/) in whatever places use modules in the same namespace.
+
+Under the hood, `xcaddy` is simply making a new Go module that requires both Caddy and your plugin (with an appropriate `replace` to use your local development version), then adds an import to ensure it is compiled in:
 
 ```go
 import _ "github.com/example/mymodule"
 ```
 
-## Module Requirements
+
+## Module Basics
 
 Caddy modules:
 
@@ -52,7 +69,10 @@ Caddy modules:
 2. Have a unique name in the proper namespace
 3. Usually satisfy some interface(s) that are meaningful to the host module for that namespace
 
-The next sections explain how to satisfy these properties!
+**Host modules** (or _parent modules_) are modules which load/initialize other modules. They typically define namespaces for guest modules.
+
+**Guest modules** (or _child modules_) are modules which get loaded or initialized. All modules are guest modules.
+
 
 ## Module IDs
 
@@ -62,32 +82,28 @@ Each Caddy module has a unique ID, consisting of a namespace and name:
 - The namespace would be `foo.bar`
 - The name would be `module_name` which must be unique in its namespace
 
-**Host modules** (or _parent modules_) are modules which load/initialize other modules. They typically define namespaces for guest modules.
-
-**Guest modules** (or _child modules_) are modules which get loaded or initialized. All modules are guest modules.
-
 Module IDs must use `snake_case` convention.
 
 ### Namespaces
 
-Namespaces are like classes, i.e. a namespace defines some functionality that is common among all modules within it. For example, we can expect that all modules within the `http.handlers` namespace are HTTP handlers. It follows that a host module may type-assert guest modules in that namespace from `interface{}` types into a more specific, useful type such as `http.Handler`.
+Namespaces are like classes, i.e. a namespace defines some functionality that is common among all modules within it. For example, we can expect that all modules within the `http.handlers` namespace are HTTP handlers. It follows that a host module may type-assert guest modules in that namespace from `interface{}` types into a more specific, useful type such as `caddyhttp.MiddlewareHandler`.
 
-A guest module must be properly namespaced in order for it to be recognized by a host module, because host modules will often ask Caddy core for a list of all modules within a certain namespace for a specific functionality it requires.
+A guest module must be properly namespaced in order for it to be recognized by a host module because host modules will ask Caddy for modules within a certain namespace to provide the functionality desired by the host module. For example, if you were to write an HTTP handler module called `gizmo`, your module's name would be `http.handlers.gizmo`, because the `http` app will look for handlers in the `http.handlers` namespace.
 
-Usually, but not always, a Caddy module namespaces correlates with a Go interface type that the modules in that namespace are expected to implement.
+Put another way, Caddy modules are expected to implement [certain interfaces](/docs/extending-caddy/namespaces) depending on their module namespace. With this convention, module developers can say intuitive things such as, "All modules in the `http.handlers` namespace are HTTP handlers." More technically, this usually means, "All modules in the `http.handlers` namespace implement the `caddyhttp.MiddlewareHandler` interface." Because that method set is known, the more specific type can be asserted and used.
 
-For example, if you were to write an HTTP handler module called `gizmo`, your module's name would be `http.handlers.gizmo`, because the `http` app will look for handlers in the `http.handlers` namespace.
+**[View a table mapping all the standard Caddy namespaces to their Go types.](/docs/extending-caddy/namespaces)**
 
-The `caddy` and `admin` namespaces are reserved.
+The `caddy` and `admin` namespaces are reserved and cannot be app names.
 
 To write modules which plug into 3rd-party host modules, consult those modules for their namespace documentation.
 
 ### Names
 
-The name within a namespace is not particularly important, as long as it is unique, concise, and makes sense for what it does.
+The name within a namespace is significant and highly visible to users, but is not particularly important, as long as it is unique, concise, and makes sense for what it does.
 
 
-### Apps
+## App Modules
 
 Apps are modules with an empty namespace, and which conventionally become their own top-level namespace. App modules implement the [caddy.App](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#App) interface.
 
@@ -141,7 +157,7 @@ Note that multiple loaded instances of your module may overlap at a given time! 
 
 A module's configuration will be unmarshaled into its value automatically. This means, for example, that struct fields will be filled out for you.
 
-However, if your module requires additional provisioning steps, you can implement the [caddy.Provisioner](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#Provisioner) interface:
+However, if your module requires additional provisioning steps, you can implement the (optional) [caddy.Provisioner](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#Provisioner) interface:
 
 ```go
 // Provision sets up the module.
@@ -151,9 +167,9 @@ func (g *Gizmo) Provision(ctx caddy.Context) error {
 }
 ```
 
-This is typically where host modules will load their guest/child modules, but it can be used for pretty much anything.
+This is typically where host modules will load their guest/child modules, but it can be used for pretty much anything. Module provisioning is done in an arbitrary order.
 
-Provisioning MUST NOT depend on other apps, since provisioning apps is done in an arbitrary order. To rely on other app modules, you must wait until after the Provision phase.
+A module may access other apps by calling `ctx.App()`, but modules must not have circular dependencies. In other words, a module loaded by the `http` app cannot depend on the `tls` app if a module loaded by the `tls` app depends on the `http` app. (Very similar to rules forbidding import cycles in Go.)
 
 Additionally, you should avoid performing expensive operations in `Provision`, since provisioning is performed even if a config is only being validated. When in the provisioning phase, do not expect that the module will actually be used.
 
@@ -174,7 +190,7 @@ Then you can emit structured, leveled logs using `g.logger`. See [zap's godoc](h
 
 ### Validating
 
-Modules which would like to validate their configuration may do so by satisfying the [`caddy.Validator`](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#Validator) interface:
+Modules which would like to validate their configuration may do so by satisfying the (optional) [`caddy.Validator`](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#Validator) interface:
 
 ```go
 // Validate validates that the module has a usable config.
@@ -184,7 +200,7 @@ func (g Gizmo) Validate() error {
 }
 ```
 
-Validate should be a read-only function. It is run during the provisioning phase right after the `Provision()` method.
+Validate should be a read-only function. It is run after the `Provision()` method.
 
 
 ### Interface guards
@@ -271,6 +287,9 @@ Note that the `LoadModule()` call takes a pointer to the struct and the field na
 
 If a guest module must explicitly be set by the user, you should return an error if the Raw field is nil or empty before trying to load it.
 
+Notice how the loaded module is type-asserted: `g.Gadget = val.(Gadgeter)` - this is because the returned `val` is a `interface{}` type which is not very useful. However, we expect that all modules in the declared namespace (`foo.gizmo.gadgets` from the struct tag in our example) implement the `Gadgeter` interface, so this type assertion is safe, and then we can use it!
+
+If your host module defines a new namespace, be sure to document both that namespace and its Go type(s) for developers [like we have done here](/docs/extending-caddy/namespaces).
 
 ## Complete Example
 
