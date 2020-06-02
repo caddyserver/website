@@ -261,7 +261,7 @@ Matches request by the `Host` header field of the request. It is not common to u
 #### Example:
 
 ```caddy-d
-method sub.example.com
+host sub.example.com
 ```
 
 
