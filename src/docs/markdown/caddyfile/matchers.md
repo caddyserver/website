@@ -318,7 +318,7 @@ Match requests WITH NEITHER:
 - an `/api/` path prefix, NOR
 - the `POST` request method
 
-i.e. can have none of these to match
+i.e. must have none of these to match:
 
 ```caddy-d
 not path /api/*
@@ -329,7 +329,7 @@ Match requests WITHOUT BOTH:
 - an `/api/` path prefix, AND
 - the `POST` request method
 
-i.e. can have zero or one of these to match
+i.e. must have neither or either of these to match:
 
 ```caddy-d
 not {
