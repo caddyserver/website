@@ -14,6 +14,18 @@ title: Request matchers (Caddyfile)
 	- [Path matchers](#path-matchers)
 	- [Named matchers](#named-matchers)
 - [Standard matchers](#standard-matchers)
+	- [expression](#expression)
+	- [file](#file)
+	- [header](#header)
+	- [header_regexp](#header-regexp)
+	- [host](#host)
+	- [method](#method)
+	- [not](#not)
+	- [path](#path)
+	- [path_regexp](#path-regexp)
+	- [protocol](#protocol)
+	- [query](#query)
+	- [remote_ip](#remote-ip)
 
 
 ## Syntax
@@ -121,19 +133,6 @@ For most matchers that accept multiple values, those values are OR'ed; i.e. one 
 
 Full matcher documentation can be found [in each respective matcher module's docs](/docs/json/apps/http/servers/routes/match/).
 
-- [expression](#expression)
-- [file](#file)
-- [header](#header)
-- [header_regexp](#header-regexp)
-- [host](#host)
-- [method](#method)
-- [not](#not)
-- [path](#path)
-- [path_regexp](#path-regexp)
-- [protocol](#protocol)
-- [query](#query)
-- [remote_ip](#remote-ip)
-
 
 
 ### expression
@@ -148,13 +147,22 @@ By any [CEL (Common Expression Language)](https://github.com/google/cel-spec) ex
 
 As a special case, Caddy [placeholders](/docs/conventions#placeholders) (or [Caddyfile shorthands](/docs/caddyfile/concepts#placeholders)) may be used in these CEL expressions, as they are preprocessed and converted to regular CEL function calls before being interpreted by the CEL environment.
 
-Examples:
+#### Examples:
+
+Match requests whose methods start with `P`, e.g. `PUT` or `POST`.
 
 ```caddy-d
 expression {method}.startsWith("P")
 ```
 
+Match requests where handler returned error status code `404`, would be used in conjunction with the [`handle_errors` directive](/docs/caddyfile/directives/handle_errors).
 
+```caddy-d
+expression {http.error.status_code} == 404
+```
+
+
+---
 ### file
 
 ```caddy-d
@@ -179,7 +187,26 @@ By files.
 
 An empty `file` matcher will see if the requested file (verbatim from the URI, relative to the [site root](/docs/caddyfile/directives/root)) exists.
 
+Since rewriting based on the existence of a file on disk is so common, there is also a [`try_files` directive](/docs/caddyfile/directives/try_files) which is a shortcut of the `file` matcher and a [`rewrite` handler](/docs/caddyfile/directives/rewrite).
 
+#### Examples:
+
+Match requests where the path is a file that exists.
+
+```caddy-d
+file
+```
+
+Match requests where the path followed by `.html` is a file that exists, or if not, where the path is a file that exists.
+
+```caddy-d
+file {
+	try_files {path}.html {path} 
+}
+```
+
+
+---
 ### header
 
 ```caddy-d
@@ -195,7 +222,16 @@ By request header fields.
 	- If enclosed by `*`, it performs a fast substring match.
 	- Otherwise, it is a fast exact match.
 
+#### Example:
 
+Match requests with the Connection header containing `Upgrade`.
+
+```caddy-d
+header Connection *Upgrade*
+```
+
+
+---
 ### header_regexp
 
 ```caddy-d
@@ -204,7 +240,16 @@ header_regexp [<name>] <field> <regexp>
 
 Like `header`, but supports regular expressions. Capture groups can be accessed via placeholder like `{http.regexp.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
 
+#### Example:
 
+Match requests where the Cookie header contains `login_` followed by a hex string, with a capture group that can be accessed with `{http.regexp.login.1}`.
+
+```caddy-d
+header_regexp login Cookie login_([a-f0-9]+)
+```
+
+
+---
 ### host
 
 ```caddy-d
@@ -213,16 +258,38 @@ host <hosts...>
 
 Matches request by the `Host` header field of the request. It is not common to use this in the Caddyfile, since most site blocks already indicate hosts in the address of the site. This matcher is mostly used in site blocks that don't define specific hostnames.
 
+#### Example:
 
+```caddy-d
+host sub.example.com
+```
+
+
+---
 ### method
 
 ```caddy-d
 method <verbs...>
 ```
 
-By the method (verb) of the HTTP request. Verbs should be uppercase, like `POST`.
+By the method (verb) of the HTTP request. Verbs should be uppercase, like `POST`. Can match one or many methods.
+
+#### Examples:
+
+Match requests with the `GET` method.
+
+```caddy-d
+method GET
+```
+
+Match requests with the `PUT` or `DELETE` methods.
+
+```caddy-d
+method PUT DELETE
+```
 
 
+---
 ### not
 
 ```caddy-d
@@ -239,7 +306,40 @@ not {
 
 The results of the enclosed matchers will be negated.
 
+#### Examples:
 
+Match requests with paths that do NOT begin with `/css/` OR `/js/`.
+
+```caddy-d
+not path /css/* /js/*
+```
+
+Match requests WITH NEITHER:
+- an `/api/` path prefix, NOR
+- the `POST` request method
+
+i.e. must have none of these to match:
+
+```caddy-d
+not path /api/*
+not method POST
+```
+
+Match requests WITHOUT BOTH:
+- an `/api/` path prefix, AND
+- the `POST` request method
+
+i.e. must have neither or either of these to match:
+
+```caddy-d
+not {
+	path /api/*
+	method POST
+}
+```
+
+
+---
 ### path
 
 ```caddy-d
@@ -254,6 +354,7 @@ By request path, meaning the path component of the request's URI. Path matches a
 - In the middle, for a globular match (`/accounts/*/info`)
 
 
+---
 ### path_regexp
 
 ```caddy-d
@@ -262,7 +363,16 @@ path_regexp [<name>] <regexp>
 
 Like `path`, but supports regular expressions. Capture groups can be accessed via placeholder like `{http.regexp.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
 
+#### Example:
 
+Match requests where the path ends a 6 character hex string followed by `.css` or `.js` as the file extension, with capture groups that can be accessed with `{http.regexp.static.1}` and `{http.regexp.static.2}` for each part enclosed in `( )`, respectively.
+
+```caddy-d
+path_regexp static \.([a-f0-9]{6})\.(css|js)$
+```
+
+
+---
 ### protocol
 
 ```caddy-d
@@ -272,6 +382,7 @@ protocol http|https|grpc
 By request protocol.
 
 
+---
 ### query
 
 ```caddy-d
@@ -280,7 +391,16 @@ query <key>=<val>...
 
 By query string parameters. Should be a sequence of `key=value` pairs. Keys are matched exactly, case-sensitively. Values are matched exactly, but also support `*` to match any value.
 
+#### Example:
 
+Match requests with a `sort` query parameter with the value `asc`
+
+```caddy-d
+query sort=asc
+```
+
+
+---
 ### remote_ip
 
 ```caddy-d
@@ -288,3 +408,11 @@ remote_ip <ranges...>
 ```
 
 By remote (client) IP address. Accepts exact IPs or CIDR ranges.
+
+#### Example:
+
+Match requests from private IPv4 addresses.
+
+```caddy-d
+remote_ip 192.168.0.0/16 172.16.0.0/12 10.0.0.0/8
+```
