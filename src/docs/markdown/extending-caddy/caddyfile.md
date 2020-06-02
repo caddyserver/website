@@ -121,4 +121,4 @@ Structurally, the Caddyfile is a simple format, so there can be different types 
 
 The default Caddyfile format is the HTTP Caddyfile, which you are probably familiar with. This format primarily configures the [`http` app](/docs/modules/http) while only potentially sprinkling some config in other parts of the Caddy config structure (e.g. the `tls` app to load and automate certificates).
 
-To configure apps other than HTTP, you may want to implement your own config adate
+To configure apps other than HTTP, you may want to implement your own config adapter that uses [your own server type](https://pkg.go.dev/github.com/caddyserver/caddy/v2/caddyconfig/caddyfile?tab=doc#Adapter). The Caddyfile adapter will actually parse the input for you and give you the list of server blocks, and options, and it's up to your adapter to make sense of that structure and turn it into a JSON config.
