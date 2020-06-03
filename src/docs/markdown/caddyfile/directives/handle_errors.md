@@ -43,10 +43,11 @@ handle_errors {
 }
 ```
 
-Reverse proxy to a local backend equipped to handle errors:
+Reverse proxy to a professional server that is highly qualified for handling HTTP errors and improving your day:
 
 ```caddy
 handle_errors {
-	reverse_proxy localhost:9000
+	rewrite * /{http.error.status_code}
+	reverse_proxy https://http.cat
 }
 ```
