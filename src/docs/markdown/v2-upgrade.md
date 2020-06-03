@@ -20,6 +20,7 @@ This guide won't delve into the new features available -- which are really cool,
 	- [Primary changes](#primary-changes)
 	- [basicauth](#basicauth)
 	- [browse](#browse)
+        - [errors](#errors)	
 	- [ext](#ext)
 	- [fastcgi](#fastcgi)
 	- [gzip](#gzip)
@@ -146,6 +147,48 @@ browse /subfolder/
 file_server /subfolder/* browse
 ```
 
+### errors
+
+Implied file extensions can be done with [`try_files`](/docs/caddyfile/directives/try_files).
+
+Custom error pages can be accomplished with [`handle_errors`](/docs/caddyfile/directives/handle_errors).
+
+
+- **v1:**:
+
+```
+errors {
+	404 404.html # Not Found
+	500 500.html # Internal Server Error
+}
+```
+
+or
+
+```
+errors {
+	* default_error.html
+}
+```
+
+
+- **v2:**: 
+
+```
+handle_errors {
+	rewrite * /{http.error.status_code}.html
+	file_server
+}
+```
+
+or even
+
+```
+handle_errors {
+	rewrite * /{http.error.status_code}
+	reverse_proxy https://http.cat
+}
+```
 
 ### ext
 
