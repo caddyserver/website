@@ -104,6 +104,10 @@ main > nav.sidebar {
 	font-size: 16px;
 }
 
+main nav li img {
+	max-height: .9em;
+}
+
 main nav ul {
 	list-style-type: none;
 }
