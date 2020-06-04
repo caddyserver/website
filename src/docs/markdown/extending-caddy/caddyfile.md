@@ -83,7 +83,7 @@ func init() {
 }
 ```
 
-The basic idea is that [the parsing function](https://pkg.go.dev/github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile?tab=doc#UnmarshalFunc) you associate with your directive returns one or more [`ConfigValue`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile?tab=doc#ConfigValue) values. (Or, if using `RegisterHandlerDirective`, it simply returns the populated `caddyhttp.MiddlewareHandler` value directly.) Each config value is associated with a "class" which helps the HTTP Caddyfile adapter to know which part(s) of the final JSON config it can be used in. All the config values get dumped into a pile from which the adapter draws when constructing the final JSON config.
+The basic idea is that [the parsing function](https://pkg.go.dev/github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile?tab=doc#UnmarshalFunc) you associate with your directive returns one or more [`ConfigValue`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile?tab=doc#ConfigValue) values. (Or, if using `RegisterHandlerDirective`, it simply returns the populated `caddyhttp.MiddlewareHandler` value directly.) Each config value is associated with a ["class"](#classes) which helps the HTTP Caddyfile adapter to know which part(s) of the final JSON config it can be used in. All the config values get dumped into a pile from which the adapter draws when constructing the final JSON config.
 
 This design allows your directive to return any config values for any recognized classes, which means it can influence any parts of the config that the HTTP Caddyfile adapter has a designated class for.
 
@@ -99,6 +99,20 @@ func parseCaddyfileHandler(h httpcaddyfile.Helper) (caddyhttp.MiddlewareHandler,
 ```
 
 See the [`httpcaddyfile` package godoc](https://pkg.go.dev/github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile?tab=doc) for more information about how to use the `httpcaddyfile.Helper` type.
+
+
+### Handler order
+
+All directives which return HTTP middleware/handler values need to be evaluated in the correct order. For example, a handler that sets the root directory of the site has to come before a handler that accesses the root directory, so that it will know what the directory path is.
+
+The HTTP Caddyfile [has a hard-coded ordering for the standard directives](/docs/caddyfile/directives#directive-order). This ensures that users do not need to know the implementation details of the most common functions of their web server, and makes it easier for them to write correct configurations. A single, hard-coded list also prevents nondeterminism given the extensible nature of the Caddyfile.
+
+**When you register a new handler directive, it must be added to that list before it can be used (outside of a `route` block).** This is done in configuration using one of two methods:
+
+- The [`order` global option](/docs/caddyfile/options) modifies the standard order for that configuration only. For example: `order mydir before respond` will insert a new directive `mydir` to be evaluated before the `respond` handler. Then the directive can be used normally.
+- Or, use the directive in a [`route` block](/docs/caddyfile/directives/route). Because directives in a route block are not reordered, the directives used in a route block do not need to appear in the list.
+
+Please document for your users where in the list is the right place for your directive to be ordered so that they can use it properly.
 
 
 ### Classes
