@@ -156,19 +156,10 @@ Custom error pages can be accomplished with [`handle_errors`](/docs/caddyfile/di
 
 ```
 errors {
-	404 404.html # Not Found
-	500 500.html # Internal Server Error
+	404 404.html
+	500 500.html
 }
 ```
-
-or
-
-```
-errors {
-	* default_error.html
-}
-```
-
 
 - **v2:**: 
 
@@ -176,15 +167,6 @@ errors {
 handle_errors {
 	rewrite * /{http.error.status_code}.html
 	file_server
-}
-```
-
-or even
-
-```
-handle_errors {
-	rewrite * /{http.error.status_code}
-	reverse_proxy https://http.cat
 }
 ```
 
