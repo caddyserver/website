@@ -20,7 +20,7 @@ This guide won't delve into the new features available -- which are really cool,
 	- [Primary changes](#primary-changes)
 	- [basicauth](#basicauth)
 	- [browse](#browse)
-        - [errors](#errors)	
+	- [errors](#errors)	
 	- [ext](#ext)
 	- [fastcgi](#fastcgi)
 	- [gzip](#gzip)
@@ -148,8 +148,6 @@ file_server /subfolder/* browse
 ```
 
 ### errors
-
-Implied file extensions can be done with [`try_files`](/docs/caddyfile/directives/try_files).
 
 Custom error pages can be accomplished with [`handle_errors`](/docs/caddyfile/directives/handle_errors).
 
