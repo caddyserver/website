@@ -69,6 +69,7 @@ Placeholder | Description
 `{system.slash}` | The system's filepath separator
 `{system.os}` | The system's OS
 `{system.arch}` | The system's architecture
+`{time.now}` | The current timestamp
 `{time.now.common_log}` | The current timestamp in Common Log Format
 `{time.now.year}` | The current year in YYYY format
 
