@@ -88,6 +88,9 @@ client_auth {
 - **trusted_ca_cert_file** is a base64 DER-encoded CA certificate file against which to validate client certificates. Client certificates which are not signed by any of these CAs will be rejected.
 - **trusted_leaf_cert** is a base64 DER-encoded client leaf certificate to accept. Client certificates which are not signed by any of these CAs will be rejected.
 - **trusted_leaf_cert_file** is a base64 DER-encoded CA certificate file against which to validate client certificates. Client certificates which are not signed by any of these CAs will be rejected.
+
+	Multiple `trusted_*` directives may be specified as a way to chain multiple CA or leaf certificates.
+
 - **mode** is the mode for authenticating the client. Allowed values are:
   | Mode               | Description                                                                              |
   |--------------------|------------------------------------------------------------------------------------------|
@@ -134,13 +137,14 @@ tls {
 }
 ```
 
-Enable TLS Client Authentication and require clients to present a valid certificate that is verified against the provided `trusted_ca_cert_file`
+Enable TLS Client Authentication and require clients to present a valid certificate that is verified against all the provided CA's via `trusted_ca_cert_file`
 
 ```caddy-d
 tls {
 	client_auth {
 		mode                 require_and_verify
 		trusted_ca_cert_file ../caddy.ca.cer
+		trusted_ca_cert_file ../root.ca.cer
 	}
 }
 ```
