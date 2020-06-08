@@ -15,6 +15,7 @@ Directive | Description
 **[file_server](/docs/caddyfile/directives/file_server)** | Serve files from disk
 **[handle](/docs/caddyfile/directives/handle)** | A mutually-exclusive group of directives
 **[handle_errors](/docs/caddyfile/directives/handle_errors)** | Defines routes for handling errors
+**[handle_path](/docs/caddyfile/directives/handle_path)** | Like handle, but strips path prefix
 **[header](/docs/caddyfile/directives/header)** | Sets or removes response headers
 **[import](/docs/caddyfile/directives/import)** | Include snippets or files
 **[log](/docs/caddyfile/directives/log)** | Enables access/request logging
@@ -85,12 +86,14 @@ encode
 templates
 
 handle
+handle_path
 route
 
 respond
 reverse_proxy
 php_fastcgi
 file_server
+acme_server
 ```
 
 You can override/customize this ordering by using the [`order` global option](/docs/caddyfile/options) or the [`route` directive](/docs/caddyfile/directives/route).

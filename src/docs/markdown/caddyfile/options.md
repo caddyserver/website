@@ -40,6 +40,7 @@ Possible options are:
 	}
 	local_certs
 	key_type ed25519|p256|p384|rsa2048|rsa4096
+	auto_https off|disable_redirects
 }
 ```
 
@@ -59,3 +60,4 @@ Possible options are:
 	- **interval** and **burst** allows `<n>` certificate operations within `<duration>` interval.
 - **local_certs** causes all certificates to be issued internally by default, rather than through a (public) ACME CA such as Let's Encrypt. This is useful in development environments.
 - **key_type** specifies the type of key to generate for TLS certificates; only change this if you have a specific need to customize it.
+- **auto_https** configure automatic HTTPS. It can either disable it entirely (`off`) or disable only HTTP-to-HTTPS redirects (`disable_redirects`).

@@ -10,16 +10,30 @@ Caddy's [reverse_proxy](/docs/caddyfile/directives/reverse_proxy) is capable of 
 
 It expects that any `index.php` at the site root acts as a router. If that is not desirable, either perform your own URI rewrite or use something like the [expanded form](#expanded-form) below and customize it to your needs.
 
+It supports all the subdirectives of [reverse_proxy](/docs/caddyfile/directives/reverse_proxy) and passes them through to the underlying reverse_proxy handler, plus a few subdirectives that customize the FastCGI transport specifically.
+
+**Most modern PHP apps work fine without extra subdirectives or customization.** Subdirectives are usually only used in certain edge cases or with legacy PHP apps.
 
 ## Syntax
 
 ```caddy-d
-php_fastcgi [<matcher>] <php-fpm_gateway>
+php_fastcgi [<matcher>] <php-fpm_gateways...> {
+	split <substrings...>
+	env [<key> <value>]
+	root <path>
+	index <filenames...>
+
+	<any other reverse_proxy subdirectives...>
+}
 ```
 
-- **<php-fpm_gateway>** is the address of the FastCGI server.
+- **<php-fpm_gateways...>** are the [addresses](/docs/conventions#network-addresses) of the FastCGI servers.
+- **split** sets the substrings for splitting the URI into two parts. The first matching substring will be used to split the "path info" from the path. The first piece is suffixed with the matching substring and will be assumed as the actual resource (CGI script) name. The second piece will be set to PATH_INFO for the CGI script to use. Default: `.php`
+- **env** sets an extra environment variable to the given value.
+- **root** sets the root folder to the site. Default: [`root` directive](/docs/caddyfile/directives/root).
+- **index** specifies the list of filenames to treat as directory index files. This affects the file matcher in the [expanded form](#expanded-form).
 
-Since this directive is an opinionated wrapper over a reverse proxy, you can open a block and use any of reverse_proxy's subdirectives to customize it.
+Since this directive is an opinionated wrapper over a reverse proxy, you can use any of reverse_proxy's subdirectives to customize it.
 
 
 ## Expanded form

@@ -136,7 +136,8 @@ Prints the environment as seen by caddy, then exits. Can be useful when debuggin
 	[--listen &lt;addr&gt;]
 	[--domain &lt;example.com&gt;]
 	[--browse]
-	[--templates]</code></pre>
+	[--templates]
+	[--access-log]</code></pre>
 
 Spins up a simple but production-ready static file server.
 
@@ -149,6 +150,8 @@ Spins up a simple but production-ready static file server.
 `--browse` will enable directory listings if a directory without an index file is requested.
 
 `--templates` will enable template rendering.
+
+`--access-log` enables the request/access log.
 
 This command disables the admin API, making it easier to run multiple instances on a local development machine.
 
@@ -252,6 +255,7 @@ This command disables the admin API so it is easier to run multiple instances on
 	[--adapter &lt;name&gt;]
 	[--pidfile &lt;file&gt;]
 	[--environ]
+	[--envfile &lt;file&gt;]
 	[--resume]
 	[--watch]</code></pre>
 
@@ -264,6 +268,8 @@ Runs Caddy and blocks indefinitely; i.e. "daemon" mode.
 `--pidfile` writes the PID to the specified file.
 
 `--environ` prints out the environment before starting. This is the same as the `caddy environ` command, but does not exit after printing.
+
+`--envfile` loads environment variables from the specified file.
 
 `--resume` uses the last loaded configuration, overriding the `--config` flag (if present) if a previous config was saved. Using this flag guarantees config durability through machine reboots or process restarts. It is most useful in [API](/docs/api)-heavy deployments.
 

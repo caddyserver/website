@@ -93,7 +93,7 @@ redir /old.html /new.html
 
 Path matcher tokens must start with a forward slash `/`.
 
-[Path matching](/docs/caddyfile/matchers#path) is an exact match by default; you must append a `*` for a fast prefix match. Note that `/foo*` will match `/foo` and `/foo/` as well as `/foobar`; you might actually want `/foo/*` instead.
+**[Path matching](/docs/caddyfile/matchers#path) is an exact match by default;** you must append a `*` for a fast prefix match. Note that `/foo*` will match `/foo` and `/foo/` as well as `/foobar`; you might actually want `/foo/*` instead.
 
 
 ### Named matchers
@@ -134,8 +134,6 @@ If the matcher set consists of only one matcher, a one-liner syntax also works:
 @post method POST
 reverse_proxy @post localhost:6001
 ```
-
-(One-liner named matchers cannot open a block.)
 
 Like directives, named matcher definitions must go inside the site blocks that use them.
 

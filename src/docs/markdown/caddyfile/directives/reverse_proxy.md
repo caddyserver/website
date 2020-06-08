@@ -124,7 +124,7 @@ transport http {
 	write_buffer <size>
 	dial_timeout <duration>
 	tls
-	tls_client_auth <cert_file> <key_file>
+	tls_client_auth <automate_name> | <cert_file> <key_file>
 	tls_insecure_skip_verify
 	tls_timeout <duration>
 	tls_trusted_ca_certs <pem_files...>
@@ -138,7 +138,7 @@ transport http {
 - **write_buffer** is the size of the write buffer in bytes.
 - **dial_timeout** is how long to wait when connecting to the upstream socket.
 - **tls** uses HTTPS with the backend. This will be enabled automatically if you specify backends using the `https://` scheme or port `:443`.
-- **tls_client_auth** specifies a certificate and key file to present for TLS client authentication with the backend.
+- **tls_client_auth** enables TLS client authentication one of two ways: (1) by specifying a domain name for which Caddy should obtain a certificate and keep it renewed, or (2) by specifying a certificate and key file to present for TLS client authentication with the backend.
 - **tls_insecure_skip_verify** turns off security. _Do not use in production._
 - **tls_timeout** is a [duration value](/docs/conventions#durations) that specifies how long to wait for the TLS handshake to complete.
 - **tls_trusted_ca_certs** is a list of PEM files that specify CA public keys to trust when connecting to the backend.
