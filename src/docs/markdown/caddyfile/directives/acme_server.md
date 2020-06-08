@@ -11,7 +11,7 @@ When enabled, requests matching the path `/acme/*` will be handled by the ACME s
 
 ## Client configuration
 
-Using ACME server defaults, ACME clients should simply be configured to use `https://localhost/acme/directory` as their ACME endpoint.
+Using ACME server defaults, ACME clients should simply be configured to use `https://localhost/acme/local/directory` as their ACME endpoint. (`local` is the name of Caddy's default CA.)
 
 
 ## Syntax
