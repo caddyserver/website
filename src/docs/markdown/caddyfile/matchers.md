@@ -62,10 +62,11 @@ reverse_proxy /api/* localhost:9000
 To match on anything other than a path, define a [named matcher](#named-matchers) and refer to it using `@name`:
 
 ```caddy-d
-@post {
+@postfoo {
 	method POST
+	path /foo/*
 }
-reverse_proxy @post localhost:9000
+reverse_proxy @postfoo localhost:9000
 ```
 
 
@@ -73,7 +74,7 @@ reverse_proxy @post localhost:9000
 
 ### Wildcard matchers
 
-The wildcard matcher `*` matches all requests, and is only needed if a matcher token is required. For example, if the first argument you want to give a directive also happens to be a path, it would look exactly like a path matcher! So you can use a wildcard matcher to disambiguate, for example:
+The wildcard (or "catch-all") matcher `*` matches all requests, and is only needed if a matcher token is required. For example, if the first argument you want to give a directive also happens to be a path, it would look exactly like a path matcher! So you can use a wildcard matcher to disambiguate, for example:
 
 ```caddy-d
 root * /home/www/mysite
@@ -97,12 +98,20 @@ Path matcher tokens must start with a forward slash `/`.
 
 ### Named matchers
 
+All matchers that are not comprised of a single path matcher or a wildcard matcher must be named matchers. This is a matcher that is defined outside of any particular directive, and can be reused.
+
 Defining a matcher with a unique name gives you more flexibility, allowing you to combine [any available matchers](#standard-matchers) into a set:
 
 ```caddy-d
 @name {
 	...
 }
+```
+
+or, if there is only one matcher in the set:
+
+```caddy-d
+@name ...
 ```
 
 Then you can use the matcher like so: `@name`
@@ -118,6 +127,15 @@ reverse_proxy @websockets localhost:6001
 ```
 
 This proxies only the requests that have a header field named "Connection" containing the word "Upgrade", and another field named "Upgrade" with a value of "websocket".
+
+If the matcher set consists of only one matcher, a one-liner syntax also works:
+
+```caddy-d
+@post method POST
+reverse_proxy @post localhost:6001
+```
+
+(One-liner named matchers cannot open a block.)
 
 Like directives, named matcher definitions must go inside the site blocks that use them.
 
@@ -185,7 +203,13 @@ By files.
 	- `most_recent_modified` chooses the file that was most recently modified.
 - `split_path` will cause the path to be split at the first delimiter in the list that is found in each filepath to try. For each split value, the left-hand side of the split including the delimiter itself will be the filepath that is tried. For example, `/remote.php/dav/` using a delimiter of `.php` would try the file `/remote.php`. Each delimiter must appear at the end of a URI path component in order to be used as a split delimiter. This is a niche setting and is mostly used when serving PHP sites.
 
-An empty `file` matcher will see if the requested file (verbatim from the URI, relative to the [site root](/docs/caddyfile/directives/root)) exists.
+Because `try_files` with a policy of `first_exist` is so common, there is a one-line shortcut for that:
+
+```caddy-d
+file <files...>
+```
+
+An empty `file` matcher (one with no files listed after it) will see if the requested file&mdash;verbatim from the URI, relative to the [site root](/docs/caddyfile/directives/root)&mdash;exists.
 
 Since rewriting based on the existence of a file on disk is so common, there is also a [`try_files` directive](/docs/caddyfile/directives/try_files) which is a shortcut of the `file` matcher and a [`rewrite` handler](/docs/caddyfile/directives/rewrite).
 

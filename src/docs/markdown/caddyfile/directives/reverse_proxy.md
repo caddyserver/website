@@ -62,7 +62,7 @@ Upstream addresses can take the form of a conventional [Caddy network address](/
 - `unix//var/php.sock`
 - `srv+http://internal:5099`
 
-Note: Schemes cannot be mixed, since they modify the common transport configuration (a TLS-enabled transport cannot carry both HTTPS and plaintext HTTP). Specifying ports 80 and 443 are the same as specifying the HTTP and HTTPS schemes, respectively. Any explicit transport configuration will not be overwritten, and omitting schemes or using other ports will not assume a particular transport. Additionally, schemes cannot contain paths or query strings, as that would imply simultaneous rewriting the request while proxying, which behavior is not defined or supported.
+Note: Schemes cannot be mixed, since they modify the common transport configuration (a TLS-enabled transport cannot carry both HTTPS and plaintext HTTP). Specifying ports 80 and 443 are the same as specifying the HTTP and HTTPS schemes, respectively. Any explicit transport configuration will not be overwritten, and omitting schemes or using other ports will not assume a particular transport. Additionally, schemes cannot contain paths or query strings, as that would imply simultaneous rewriting the request while proxying, which behavior is not defined or supported. If the address is not a URL (i.e. does not have a scheme), then placeholders can be used, but this makes the upstream dynamic.
 
 **Load balancing** is used whenever more than one upstream is defined.
 
@@ -128,6 +128,7 @@ transport http {
 	tls_insecure_skip_verify
 	tls_timeout <duration>
 	tls_trusted_ca_certs <pem_files...>
+    tls_server_name <sni>
 	keepalive [off|<duration>]
 	keepalive_idle_conns <max_count>
 }
@@ -141,6 +142,7 @@ transport http {
 - **tls_insecure_skip_verify** turns off security. _Do not use in production._
 - **tls_timeout** is a [duration value](/docs/conventions#durations) that specifies how long to wait for the TLS handshake to complete.
 - **tls_trusted_ca_certs** is a list of PEM files that specify CA public keys to trust when connecting to the backend.
+- **tls_server_name** sets the ServerName (SNI) to put in the ClientHello; only needed if the remote server requires it.
 - **keepalive** is either `off` or a [duration value](/docs/conventions#durations) that specifies how long to keep connections open.
 - **keepalive_idle_conns** defines the maximum number of connections to keep alive.
 
