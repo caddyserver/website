@@ -134,7 +134,7 @@ tls {
 }
 ```
 
-Enable TLS Client Authentication
+Enable TLS Client Authentication and require clients to present a valid certificate that is verified against the provided `trusted_ca_cert_file`
 
 ```caddy-d
 tls {
