@@ -275,6 +275,12 @@ article li {
 	line-height: 1.5em;
 }
 
+article li p,
+article li ul,
+article li ol {
+	margin-bottom: .5em;
+}
+
 h1,
 h2,
 h3,
