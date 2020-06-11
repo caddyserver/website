@@ -24,6 +24,13 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 	ca_root   <pem_file>
 	dns       <provider_name> [<params...>]
 	on_demand
+	client_auth {
+		mode                   [request|require|verify_if_given|require_and_verify]
+		trusted_ca_cert        <base64_der>
+		trusted_ca_cert_file   <filename>
+		trusted_leaf_cert      <base64_der>
+		trusted_leaf_cert_file <filename>
+	}
 }
 ```
 
@@ -62,6 +69,24 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 - **ca_root** specifies a PEM file that contains a trusted root certificate for the ACME CA endpoint, if not in the system trust store.
 - **dns** enables the [DNS challenge](/docs/automatic-https#dns-challenge) using the specified provider plugin, which must be plugged in from one of the [caddy-dns](https://github.com/caddy-dns) repositories. Each provider plugin may have their own syntax following their name; refer to their docs for details. Maintaining support for each DNS provider is a community effort. [Learn how to enable the DNS challenge for your provider at our wiki.](https://caddy.community/t/how-to-use-dns-provider-modules-in-caddy-2/8148)
 - **on_demand** enables [on-demand TLS](/docs/automatic-https#on-demand-tls) for the hostnames given in the site block's address(es).
+- **client_auth** enables and configures TLS client authentication:
+	- **mode** is the mode for authenticating the client. Allowed values are:
+
+		| Mode               | Description                                                                              |
+		|--------------------|------------------------------------------------------------------------------------------|
+		| request            | Ask clients for a certificate, but allow even if there isn't one; do not verify it       |
+		| require            | Require clients to present a certificate, but do not verify it                           |
+		| verify_if_given    | Ask clients for a certificate; allow even if there isn't one, but verify it if there is  |
+		| require_and_verify | Require clients to present a valid certificate that is verified                          |
+
+	Default: `require_and_verify` if any `trusted_ca_cert` or `trusted_leaf_cert` are provided; otherwise, `require`.
+	
+	- **trusted_ca_cert** is a base64 DER-encoded CA certificate against which to validate client certificates. Client certificates which are not signed by any of these CAs will be rejected.
+	- **trusted_ca_cert_file** is a base64 DER-encoded CA certificate file against which to validate client certificates. Client certificates which are not signed by any of these CAs will be rejected.
+	- **trusted_leaf_cert** is a base64 DER-encoded client leaf certificate to accept. Client certificates which are not signed by any of these CAs will be rejected.
+	- **trusted_leaf_cert_file** is a base64 DER-encoded CA certificate file against which to validate client certificates. Client certificates which are not signed by any of these CAs will be rejected.
+
+	Multiple `trusted_*` directives may be specified as a way to chain multiple CA or leaf certificates.
 
 
 
@@ -98,5 +123,17 @@ Enable the DNS challenge for a domain managed on Cloudflare with account credent
 ```caddy-d
 tls {
 	dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+}
+```
+
+Enable TLS Client Authentication and require clients to present a valid certificate that is verified against all the provided CA's via `trusted_ca_cert_file`
+
+```caddy-d
+tls {
+	client_auth {
+		mode                 require_and_verify
+		trusted_ca_cert_file ../caddy.ca.cer
+		trusted_ca_cert_file ../root.ca.cer
+	}
 }
 ```
