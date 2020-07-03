@@ -178,21 +178,19 @@ If you specify a hostname, only requests with a matching Host header will be hon
 
 Wildcards (`*`) may be used, but only to represent precisely one label of the hostname. For example, `*.example.com` matches `foo.example.com` but not `foo.bar.example.com`, and `*` matches `localhost` but not `example.com`. To catch all hosts, omit the host portion of the address.
 
-If multiple sites share the same definition, you can list all of them together:
+If multiple sites share the same definition, you can list all of them together, separated by spaces or commas:
 
 ```caddy
-localhost:8080, example.com, www.example.com
+localhost:8080 example.com www.example.com
 ```
 
-or
+To specify multiple addresses on separate lines, use commas to indicate continuation:
 
 ```caddy
 localhost:8080,
 example.com,
 www.example.com
 ```
-
-Notice how the commas indicate the continuation of addresses.
 
 An address must be unique; you cannot specify the same address more than once.
 
