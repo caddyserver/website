@@ -1,0 +1,303 @@
+body {
+	background-color: #f0f6f9;
+}
+
+.download-bar {
+	display: flex;
+	justify-content: space-between;
+	background: white;
+	border-radius: 4px;
+	box-shadow: 0 3px 6px rgba(0, 0, 0, .1);
+	font-size: 20px;
+	margin-top: 20px;
+	position: sticky; /* uwu 💓 */
+	top: 0;
+	z-index: 1;
+}
+
+.download-bar > * {
+	padding: 15px;
+	display: flex;
+	align-items: center;
+}
+
+#platform {
+	padding: 5px 15px;
+	font-size: 16px;
+}
+
+#download {
+	margin: 0;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.packages-explanation {
+	margin: 20px auto;
+}
+
+.warning {
+	margin-left: 1em;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 2px 15px;
+	border-radius: 1em;
+	border: 2px solid rgb(255, 201, 0);
+	color: rgb(206, 151, 0);
+}
+
+input:disabled,
+select:disabled,
+#optional-packages.disabled .optpkg label {
+	cursor: not-allowed !important;
+}
+
+
+
+
+
+
+
+.loader {
+	display: inline-block;
+	font-size: 10px;
+	text-indent: -9999em;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: #aaa;
+	background: -moz-linear-gradient(left, #aaa 10%, rgba(255, 255, 255, 0) 42%);
+	background: -webkit-linear-gradient(left, #aaa 10%, rgba(255, 255, 255, 0) 42%);
+	background: -o-linear-gradient(left, #aaa 10%, rgba(255, 255, 255, 0) 42%);
+	background: -ms-linear-gradient(left, #aaa 10%, rgba(255, 255, 255, 0) 42%);
+	background: linear-gradient(to right, #aaa 10%, rgba(255, 255, 255, 0) 42%);
+	animation: load3 1.4s infinite linear;
+	transform: translateZ(0);
+	vertical-align: middle;
+	margin-right: .5em;
+	margin-top: -2px;
+}
+#signature .loader {
+	width: 12px;
+	height: 12px;
+}
+.loader:before {
+	width: 50%;
+	height: 50%;
+	background: #fff;
+	border-radius: 100% 0 0 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	content: '';
+}
+.loader:after {
+	background: #aaa;
+	width: 75%;
+	height: 75%;
+	border-radius: 50%;
+	content: '';
+	margin: auto;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+@-webkit-keyframes load3 {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+@keyframes load3 {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+
+
+
+
+
+
+.table-container {
+	overflow-x: auto;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+}
+
+#optional-packages {
+	width: 100%;
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+
+/* #optional-packages tr {
+	height: 1px;
+} */
+
+#optional-packages th,
+#optional-packages td {
+	border-bottom: 1px solid #dfeaf0;
+}
+
+#optional-packages th:first-child { border-top-left-radius: 8px; }
+#optional-packages th:last-child  { border-top-right-radius: 8px; }
+
+#optional-packages th {
+	background: #dfe8ec;
+	text-align: left;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	color: #54676f;
+	font-weight: bold;
+	font-size: 12px;
+	margin-bottom: 1em;
+	border-color: #90a2ac;
+}
+
+#optional-packages th:first-child {
+	padding-left: 4.25em;
+}
+
+#optional-packages td {
+	background: #fff;
+	height: 1px; /* TODO: works on Chrome, but not Firefox */
+	/* height: 100%; TODO: works on Firefox, but not Chrome */
+	/* TODO:
+		see https://stackoverflow.com/a/34781198/1048862
+		(could also do tr with height: 1px which gets ignored,
+		then td with height: inherit; but this effectively the
+		same as just doing a td with height: 1px.)
+		I don't like how either Firefox or Chrome handle this
+		styling (setting the height of the parent shouldn't be
+		required at all, the browser is rendering a height
+		regardless!) but I think I lean toward Firefox's as
+		being more correct; the hack in Firefox is setting a
+		flexible 100% height on the parent, rather than the hack
+		in Chrome which is setting a height that is too small
+		and stretched or ignored anyway.
+	*/
+}
+
+#optional-packages th,
+#optional-packages .optpkg td:first-child label,
+#optional-packages td:not(:first-child) {
+	padding: 15px;
+}
+
+#optional-packages .optpkg-name {
+	font-weight: bold;
+}
+
+#optional-packages .optpkg input[type=checkbox] {
+	transform: scale(1.5);
+	cursor: pointer;
+	margin-right: 2em;
+}
+
+#optional-packages .optpkg label {
+	display: flex;
+	align-items: center;
+	height: 100%;
+	line-height: 1em;
+	cursor: pointer;
+}
+
+#optional-packages:not(.disabled) .optpkg label:hover {
+	background: linear-gradient(90deg, rgba(242,248,253,1) 75%, rgba(242,248,253,0) 100%);
+}
+
+#optional-packages .optpkg.selected td {
+	background-color: #f2f8fd;
+}
+
+#optional-packages .optpkg input[type=text] {
+	font-size: 12px;
+	padding: 6px;
+	outline: none;
+	text-align: center;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+#optional-packages .optpkg input[type=text]::placeholder {
+	font-style: italic;
+}
+
+#optional-packages .optpkg-no-modules {
+	font-size: 12px;
+	font-style: italic;
+	color: #555;
+}
+
+#optional-packages .optpkg-module {
+	margin-top: .5em;
+	margin-bottom: .5em;
+}
+
+#optional-packages .optpkg-module .module-name {
+	font-weight: bold;
+	font-family: 'PT Mono', monospace;
+}
+
+#optional-packages .optpkg-module .module-description {
+	color: #444;
+	margin-left: 1em;
+	font-size: 14px;
+}
+
+
+
+
+
+
+
+.swal-custom-content {
+	text-align: left;
+}
+
+.swal-custom-content ol {
+	margin: 1em 0 1em 2em;
+}
+
+.swal-custom-content li {
+	margin-bottom: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 860px) {
+	.download-bar {
+		flex-direction: column;
+		align-items: center;
+	}
+}
+
+@media (max-width: 600px) {
+	.download-bar {
+		font-size: inherit;
+	}
+
+	.download-bar > * {
+		padding: 5px;
+	}
+}

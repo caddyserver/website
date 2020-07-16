@@ -9,21 +9,24 @@ if (moduleID) {
 		$(function() {
 			$('#module-docs-container').show();
 			$('h1').text("Module "+moduleID);
-			beginRendering(json);
+			beginRendering(json.result);
 		});
 	});
 } else {
 	// populate the module list
-	$.get("/api/modules", function(moduleList) {
+	$.get("/api/modules", function(json) {
+		var moduleList = json.result;
+		
 		// wait until the DOM has finished loading before rendering the results
 		$(function() {
 			$('#module-list-container').show();
 			$table = $('#module-list');
 			for (modID in moduleList) {
-				var doc = moduleList[modID];
+				var val = moduleList[modID];
+				var standard = isStandard(val.type_name);
 				var $tr = $('<tr/>');
-				$tr.append('<td><a href="./'+modID+'" class="module-link">'+modID+'</a></td>');
-				$tr.append('<td>'+markdown(truncate(doc, 200))+'</td>');
+				$tr.append('<td><a href="./'+modID+'" class="module-link">'+modID+'</a>'+(standard ? '' : ' '+nonStandardFlag)+'</td>');
+				$tr.append('<td>'+markdown(truncate(val.doc, 200))+'</td>');
 				$table.append($tr);
 			}
 		});

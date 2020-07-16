@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Confirm Account - Caddy</title>
+		{{include "/includes/account-head.html"}}
+		<script src="/resources/js/account/verify.js"></script>
+	</head>
+	<body>
+		<form action="/api/verify-account" class="card">
+			<section class="head">
+				<a href="/"><img src="/resources/images/caddy-lock.png" alt="Caddy Portal" class="logo"></a>
+			</section>
+			<section>
+				<h1>Confirm Account</h1>
+				or <a href="/account/login">log in</a>
+				<div class="form-fields">
+					<input type="email" name="email" id="email" placeholder="Email address" required>
+					<input type="text" name="account_id" placeholder="Account ID" required>
+					<button type="submit" id="submit" class="blue">Confirm</button>
+				</div>
+			</section>
+		</form>
+	</body>
+</html>

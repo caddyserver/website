@@ -4,6 +4,8 @@ var pageData = {}, pageDocs = {};
 
 var $renderbox, $hovercard;
 
+const nonStandardFlag = '<span class="nonstandard-flag" title="This module does not come with official Caddy distributions by default; it needs to be added to custom Caddy builds.">Non-standard</span>';
+
 $(function() {
 	$renderbox = $('#renderbox');
 	$hovercard = $('#hovercard');
@@ -61,7 +63,12 @@ $(function() {
 					for (var i = 0; i < pageData.namespaces[modNamespace].length; i++) {
 						var modInfo = pageData.namespaces[modNamespace][i];
 						var href = canTraverse() ? '.'+elemPath+'/'+modInfo.name+'/' : './'+modNamespace+'.'+modInfo.name;
-						$list.append('<a href="'+href+'" class="module-link">'+modInfo.name+'<span class="module-link-description">'+truncate(modInfo.docs, 115)+'</span></a>');
+						var content = '<a href="'+href+'" class="module-link"> '+modInfo.name;
+						if (!isStandard(modInfo.package)) {
+							content += nonStandardFlag;
+						}
+						content += '<span class="module-link-description">'+truncate(modInfo.docs, 115)+'</span></a>';
+						$list.append(content);
 					}
 				}
 				$('#hovercard-module-list').html($list);
@@ -88,7 +95,7 @@ $(function() {
 				case "struct":
 					for (var j = 0; j < bcVal.struct_fields.length; j++) {
 						var sf = bcVal.struct_fields[j];
-						bcSiblings.push({name: sf.key, path: siblingPath})
+						bcSiblings.push({name: sf.key, path: siblingPath, isStandard: isStandard(bcVal.type_name)})
 					}
 					break;
 
@@ -96,7 +103,7 @@ $(function() {
 				case "module_map":
 					for (var j = 0; j < pageData.namespaces[bcVal.module_namespace].length; j++) {
 						var mod = pageData.namespaces[bcVal.module_namespace][j];
-						bcSiblings.push({name: mod.name, path: siblingPath})
+						bcSiblings.push({name: mod.name, path: siblingPath, isStandard: isStandard(mod.package)})
 					}
 				}
 
@@ -108,7 +115,12 @@ $(function() {
 						sibPath += "/";
 					}
 					sibPath += sib.name+"/";
-					$siblings.append('<a href="'+jsonDocsPathPrefix+sibPath+'">'+sib.name+'</a>');
+					var aTag = '<a href="'+jsonDocsPathPrefix+sibPath+'"';
+					if (!sib.isStandard) {
+						aTag += ' class="nonstandard" title="Non-standard module"';
+					}
+					aTag += '>'+sib.name+'</a>';
+					$siblings.append(aTag);
 				}
 				$('#hovercard-breadcrumb-siblings').html($siblings).show();
 
@@ -147,6 +159,14 @@ function beginRendering(json) {
 	pageData = json;
 	console.log("DATA:", pageData);
 	
+	// show notice if module is non-standard
+	if (!isStandard(pageData.structure.type_name)) {
+		var projectHref = 'https://'+pageData.structure.type_name;
+		projectHref = substrBeforeLastDot(projectHref);
+		$('.nonstandard-project-link').attr('href', projectHref).text(projectHref);
+		$('.nonstandard-notice').prepend(nonStandardFlag).show();
+	}
+
 	if (pageData.structure.doc) {
 		// for most types, just render their docs
 		$('#top-doc').html(markdown(pageData.structure.doc));
@@ -308,16 +328,6 @@ function indent(nesting, $group) {
 	$group.append($span);
 }
 
-function truncate(str, len) {
-	if (!str) return "";
-	var startLen = str.length;
-	str = str.substring(0, len);
-	if (startLen > len) {
-		str += "...";
-	}
-	return str;
-}
-
 function makeSubmoduleList(path, value) {
 	while (value.elems) {
 		value = value.elems;
@@ -330,7 +340,11 @@ function makeSubmoduleList(path, value) {
 		for (var j = 0; j < pageData.namespaces[value.module_namespace].length; j++) {
 			var submod = pageData.namespaces[value.module_namespace][j];
 			var href = canTraverse() ? '.'+path+'/'+submod.name+'/' : './'+value.module_namespace+'.'+submod.name;
-			submodList += '<li><a href="'+href+'">'+submod.name+'</li>';
+			var submodLink = '<a href="'+href+'">'+submod.name+'</a>';
+			if (!isStandard(submod.package)) {
+				submodLink += ' '+nonStandardFlag;
+			}
+			submodList += '<li>'+submodLink+'</li>';
 		}
 	}
 	submodList += '</ul>';

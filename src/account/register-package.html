@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Register Package - Caddy</title>
+		{{include "/includes/account-head.html"}}
+		<script src="/resources/js/account/register-package.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			{{include "/includes/account-nav.html"}}
+			<main>
+				<section>
+					<form action="/api/claim-package">
+						<div class="form-fields">
+							<div class="field">
+								<label>
+									<b>Package import path</b>
+									<input type="text" name="package" required>
+								</label>
+								<div class="description">
+									You must use <a href="https://github.com/golang/go/wiki/Modules#semantic-import-versioning" target="_blank">semantic import versioning</a>. Basically, this means if your module is at v2 or higher the import path must be suffixed with <b>/vN</b> (where <b>N</b> is the major version number).
+								</div>
+							</div>
+							<div class="field">
+								<label>
+									<b>Version</b>
+									<input type="text" name="version" placeholder="latest">
+								</label>
+								<div class="description">
+									Optional. Any version string recognized by <a href="https://github.com/golang/go/wiki/Modules#version-selection">Go module</a> tooling is acceptable.
+								</div>
+							</div>
+							<div class="text-center">
+								<button type="submit" id="submit" class="blue">Claim Package</button>
+							</div>
+						</div>
+					</form>
+				</section>
+			</main>
+		</div>
+	</body>
+</html>

@@ -9,7 +9,7 @@ setPageTitle();
 $.get("/api/docs/config"+configPath, function(json) {
 	// wait until the DOM has finished loading before rendering the results
 	$(function() {
-		beginRendering(json);
+		beginRendering(json.result);
 
 		// establish the breadcrumb
 		var $bc = $('.breadcrumbs');

@@ -431,6 +431,39 @@ iframe {
 	margin: 1em 0 2em;
 }
 
+.nonstandard-notice {
+	font-size: 14px;
+	max-width: 500px;
+	margin: 25px auto;
+	border: 1px solid #ecd200;
+	background: #fffddf;
+	border-radius: 5px;
+	padding: 10px;
+	color: #886c00;
+	line-height: 1.4em;
+	display: none;
+}
+
+.nonstandard {
+	color: rgb(214, 145, 16);
+}
+
+.nonstandard-flag {
+	cursor: help;
+	font-size: 8px;
+	line-height: 1em;
+	padding: 4px 8px;
+	text-transform: uppercase;
+	font-weight: bold;
+	background-color: rgb(238, 167, 34);
+	color: white;
+	border-radius: 4px;
+	white-space: nowrap;
+}
+
+
+
+
 
 
 
@@ -513,6 +546,10 @@ article .json a {
 #hovercard li {
 	padding-top: 0;
 	padding-bottom: 0;
+}
+
+#hovercard .nonstandard-flag {
+	float: right;
 }
 
 #hovercard .module-link {

@@ -12,20 +12,6 @@ body {
 	-moz-tab-size: 4;
 }
 
-#v1-banner {
-	display: block;
-	background: #5c92a4;
-	color: #fff;
-	text-align: center;
-	padding: 10px 20px;
-	font-size: 14px;
-	text-decoration: none;
-}
-
-#v1-banner:hover {
-	background: #457a8c;
-}
-
 .wrapper {
 	max-width: 1400px;
 	margin-left: auto;
@@ -36,6 +22,14 @@ body {
 
 .text-center {
 	text-align: center;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.float-right {
+	float: right;
 }
 
 a {
@@ -64,8 +58,8 @@ header nav {
 
 header nav > a {
 	display: inline-block;
-	padding-left: 10px;
-	padding-right: 10px;
+	padding-left: 12px;
+	padding-right: 12px;
 	text-decoration: none;
 	color: inherit;
 }
@@ -116,6 +110,7 @@ header nav .button {
 	padding-bottom: 2px;
 }  
 
+button,
 .button {
 	border-radius: 2em;
 	padding: 10px 20px;
@@ -124,43 +119,54 @@ header nav .button {
 	transition: all .2s;
 	text-decoration: none;
 	display: inline-block;
+	border: 0;
+	cursor: pointer;
 }
 
+button:hover,
 .button:hover {
 	transform: scale(1.05);
 }
 
+button:active,
 .button:active {
 	transform: translateY(2px);
 }
 
+button.red,
 .button.red {
 	background-color: #d9552b;
 	color: white;
 }
 
+button.red:hover,
 .button.red:hover {
 	background-color: #fd511a;
 }
 
+button.blue,
 .button.blue {
 	background-color: #0082d0;
 	color: white;
 }
 
+button.blue:hover,
 .button.blue:hover {
 	background-color: #00aaff;
 }
 
+button.gray,
 .button.gray {
 	background-color: #4c6a79;
 	color: white;
 }
 
+button.gray:hover,
 .button.gray:hover {
 	background-color: #4f8098;
 }
 
+button.big,
 .button.big {
 	font-size: 125%;
 	text-transform: uppercase;
@@ -169,10 +175,23 @@ header nav .button {
 	margin-right: 20px;
 }
 
+button.disabled,
+.button.disabled,
+button:disabled,
+.button:disabled {
+	background-color: #aaa !important;
+	color: white !important;
+	transform: none !important;
+	cursor: not-allowed;
+}
+
+
+p button,
 p .button {
 	font-size: 18px;
 	padding: 12px 30px;
 }
+
 
 article a:hover {
 	text-decoration: underline;

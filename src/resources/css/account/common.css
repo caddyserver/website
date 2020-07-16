@@ -1,0 +1,289 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html, body {
+	min-height: 100%;
+}
+
+html {
+	/* by setting the min-height of both html and body to 100%,
+	   it ensures that flex items are centered on screen, but
+	   also allows body to overflow screen height for tall content */
+	height: 100%;
+}
+
+body {
+	font: 16px sans-serif;
+	-webkit-font-smoothing: antialiased;
+	background: #e8ebf0;
+	display: flex;
+}
+
+a {
+	color: #2b9cff;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #0f6ab9;
+}
+
+.card {
+	background: white;
+	margin: auto;
+	box-shadow: 0 20px 40px rgba(0, 0, 0, .1);
+	display: flex;
+	border-radius: 5px;
+	width: 100%;
+	max-width: 800px;
+}
+
+.card section {
+	padding: 50px;
+	text-align: center;
+	flex-grow: 1;
+}
+
+.card section.head {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	flex-grow: 0;
+	background: #f3f7ff;
+	border-right: 1px solid #e8ebf0;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+.card p {
+	margin: 0 auto;
+	max-width: 400px;
+	line-height: 1.25em;
+	font-size: 14px;
+}
+
+.card .logo {
+	width: 100%;
+	max-width: 100px;
+	display: block;
+}
+
+.card h1 {
+	font-size: 42px;
+	margin-bottom: 10px;
+}
+
+.form-fields {
+	padding: 20px 0;
+}
+
+input {
+	font-size: 16px;
+	font-family: 'PT Mono', 'Source Code Pro', monospace;
+}
+
+.card input,
+.card button {
+	display: block;
+	margin: 1em auto;
+	padding: 8px;
+}
+
+.card input[type=text],
+.card input[type=email],
+.card input[type=password] {
+	width: 100%;
+	max-width: 400px;
+}
+
+.card button {
+	font-size: 16px;
+	font-weight: bold;
+	padding: 10px 20px;
+}
+
+@media (max-width: 800px) {
+	.card {
+		flex-direction: column;
+	}
+}
+
+.swal-content p {
+	margin: .5em 0;
+}
+
+#reset-password-step2 {
+	display: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.logo-container {
+	text-align: center;
+	margin: 20px auto;
+}
+
+.logo {
+	max-width: 100px;
+}
+
+.help {
+	border-bottom: 1px dotted #222;
+	cursor: help;
+}
+
+.beta {
+	font-size: 12px;
+}
+
+
+.container {
+	display: flex;
+	flex-grow: 1;
+	justify-content: space-between;
+	font-family: Maven Pro, sans-serif;
+}
+
+.container > nav {
+	background: #f8faff;
+	width: 25%;
+	max-width: 250px;
+}
+
+.container > nav ul {
+	list-style: none;
+}
+
+.container > nav ul a {
+	display: block;
+	padding: 10px 20px;
+	color: #546c75;
+}
+
+.container > nav ul a:hover {
+	color: #01324b;
+	background-color: #ebf3fb;
+}
+
+.container > nav ul a.current {
+	background-color: #e0ecfb;
+	font-weight: bold;
+	color: #01324b;
+}
+
+.container > main {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	justify-content: center;
+}
+
+.container > main.dashboard {
+	align-items: flex-start;
+	justify-content: flex-start;
+}
+
+.container section {
+	background: white;
+	border-radius: 5px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, .08);
+	margin: 25px;
+}
+
+
+
+input[type=text],
+input[type=email],
+input[type=password] {
+	padding: 8px;
+	width: 100%;
+	max-width: 400px;
+	border: 1px solid #ccc;
+}
+
+form .field {
+	padding: 0 20px 20px;
+	max-width: 600px;
+	margin: 0 auto 20px auto;
+	border-bottom: 1px solid #eee;
+}
+
+form label b {
+	display: block;
+	margin-bottom: 10px;
+}
+
+form .description {
+	font-size: 14px;
+	color: #777;
+	margin-top: 5px;
+}
+
+form button,
+form input[type=submit] {
+	font-size: 16px;
+	margin: 0 auto;
+}
+
+input[type=checkbox] {
+	cursor: pointer;
+	transform: scale(1.25);
+}
+
+
+
+section .pad {
+	margin: 15px 20px;
+}
+
+section button:not([type=submit]),
+section .button:not([type=submit]) {
+	font-size: 14px;
+	padding: 6px 15px;
+	margin: auto;
+}
+
+
+section h1 {
+	font-size: 22px;
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+tr {
+	border-bottom: 1px solid #ddd;
+}
+
+th,
+td {
+	padding: 10px;
+}
+
+th {
+	background-color: #ebf3ff;
+	text-align: left;
+}
