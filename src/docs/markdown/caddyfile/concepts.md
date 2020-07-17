@@ -259,7 +259,7 @@ You can define special blocks called snippets by giving them a name surrounded i
 ```caddy
 (redirect) {
 	@http {
-		scheme http
+		protocol http
 	}
 	redir @http https://{host}{uri}
 }
