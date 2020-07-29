@@ -100,9 +100,9 @@ format <encoder_module> {
 }
 ```
 
-- **message_key** The key for the message field of the log entry. Default: `message`
+- **message_key** The key for the message field of the log entry. Default: `msg`
 - **level_key** The key for the level field of the log entry. Default: `level`
-- **time_key** The key for the time field of the log entry. Default: `time`
+- **time_key** The key for the time field of the log entry. Default: `ts`
 - **name_key** The key for the name field of the log entry (i.e. the name of the logger itself). Default: `name`
 - **caller_key** The key for the caller field of the log entry.
 - **stacktrace_key** The key for the stacktrace field of the log entry.
