@@ -325,6 +325,8 @@ You may find the new [`route`](/docs/caddyfile/directives/route) and [`handle`](
 
 Because it accepts a matcher in v2, this means you can also change the site root depending on the request.
 
+Remember to add a [`file_server` directive](https://caddyserver.com/docs/caddyfile/directives/file_server) if serving static files, since Caddy 2 does not assume this by default, whereas in v1 always had it enabled.
+
 
 ### status
 
