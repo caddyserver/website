@@ -10,7 +10,7 @@ $.get("/api/user-packages").done(function(json) {
 			var $tdPath = $('<td><input type="text" name="path" maxlength="255"></td>');
 			var $tdListed = $('<td class="text-center"><input type="checkbox" name="listed"></td>');
 			var $tdAvail = $('<td class="text-center"><input type="checkbox" name="available"></td>');
-			var $tdDownloads = $('<td>');
+			var $tdDownloads = $('<td>0</td>');
 			var $tdLinks = $('<td><a href="javascript:" class="rescan-package">Rescan</a> &nbsp; <a href="javascript:" class="delete-package">Delete</a></td>');
 
 			if (pkg.listed) {
@@ -18,6 +18,9 @@ $.get("/api/user-packages").done(function(json) {
 			}
 			if (pkg.available) {
 				$('input', $tdAvail).prop('checked', true);
+			}
+			if (pkg.downloads) {
+				$tdDownloads.text(pkg.downloads);
 			}
 			var $pathInput = $('input', $tdPath);
 			$pathInput.val(pkg.path).attr('size', pkg.path.length);

@@ -703,6 +703,10 @@ td code {
 	display: none;
 }
 
+#module-list-container {
+	overflow-x: auto;
+}
+
 #module-list {
 	margin-top: 50px;
 }

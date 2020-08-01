@@ -160,7 +160,7 @@ function beginRendering(json) {
 	console.log("DATA:", pageData);
 	
 	// show notice if module is non-standard
-	if (!isStandard(pageData.structure.type_name)) {
+	if (pageData.structure.type_name && !isStandard(pageData.structure.type_name)) {
 		var projectHref = 'https://'+pageData.structure.type_name;
 		projectHref = substrBeforeLastDot(projectHref);
 		$('.nonstandard-project-link').attr('href', projectHref).text(projectHref);
