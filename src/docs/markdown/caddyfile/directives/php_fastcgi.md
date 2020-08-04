@@ -21,7 +21,7 @@ php_fastcgi [<matcher>] <php-fpm_gateways...> {
 	split <substrings...>
 	env [<key> <value>]
 	root <path>
-	index <filenames...>
+	index <filename>
 
 	<any other reverse_proxy subdirectives...>
 }
@@ -31,14 +31,14 @@ php_fastcgi [<matcher>] <php-fpm_gateways...> {
 - **split** sets the substrings for splitting the URI into two parts. The first matching substring will be used to split the "path info" from the path. The first piece is suffixed with the matching substring and will be assumed as the actual resource (CGI script) name. The second piece will be set to PATH_INFO for the CGI script to use. Default: `.php`
 - **env** sets an extra environment variable to the given value.
 - **root** sets the root folder to the site. Default: [`root` directive](/docs/caddyfile/directives/root).
-- **index** specifies the list of filenames to treat as directory index files. This affects the file matcher in the [expanded form](#expanded-form).
+- **index** specifies the filename to treat as the directory index file. This affects the file matcher in the [expanded form](#expanded-form). Default: `index.php`
 
 Since this directive is an opinionated wrapper over a reverse proxy, you can use any of reverse_proxy's subdirectives to customize it.
 
 
 ## Expanded form
 
-The `php_fastcgi` directive is the same as the following configuration:
+The `php_fastcgi` directive is roughly the same as the following configuration (note that currently, declaring named matchers is not supported inside of `route` blocks, but this is written as such for illustrative purposes):
 
 ```caddy-d
 route {
@@ -94,7 +94,7 @@ When using php-fpm listening via a unix socket:
 php_fastcgi unix//run/php/php7.4-fpm.sock
 ```
 
-The [`root` directive](/docs/caddyfile/directives/root) is often used to specify the directory containing the PHP files:
+The [`root` directive](/docs/caddyfile/directives/root) is often used to specify the directory containing the PHP scripts:
 
 ```caddy-d
 root * /var/www/html
