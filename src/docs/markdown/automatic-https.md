@@ -227,7 +227,7 @@ To get a wildcard from Let's Encrypt, you simply need to enable the [DNS challen
 
 ## Examples
 
-Caddy implicitly uses the HTTPS port (default 443) for your [server addresses](/docs/conventions#network-addresses) that don't specify a port explicitly (which would disable automatic HTTPS). 
+Caddy implicitly uses the HTTPS port (default 443) for your [site addresses](/docs/conventions#network-addresses) that don't specify a port explicitly (which would disable automatic HTTPS). 
 
 Automatic HTTPS can be configured via the Caddyfile with the [`auto_https` global option](/docs/caddyfile/options), or via [per-server JSON configuration](/docs/json/apps/http/servers/automatic_https/). The Caddyfile option can be set to either of the following:
 - `disable_redirects` which disables the implicit HTTP->HTTPS redirect.
@@ -247,12 +247,13 @@ Automatic HTTPS can be configured via the Caddyfile with the [`auto_https` globa
 
 For local development environments, you can prevent serving via HTTPS by either specifying `http://` or providing a non-HTTPS port to disable per site, or by adding `auto_https off` to the Caddyfile global options which will change Caddy's implicit port to be the HTTP port (default 80).
 
+Have caddy implicitly use the HTTP port:
+
 ```caddy
 {
 	auto_https off
 }
 
-# Have caddy implicitly use the HTTP port
 localhost {
 	root * /usr/share/caddy
 
@@ -260,8 +261,9 @@ localhost {
 }
 ```
 
+Alternatively, provide an explicit port:
+
 ```caddy
-# Alternatively, provide an explicit port
 localhost:9000 {
 	root * /usr/share/caddy
 
@@ -272,17 +274,15 @@ localhost:9000 {
 
 ### HTTP and HTTPS without redirect
 
-If you want to serve content through both HTTP and HTTPS ports without HTTP redirects, your server address cannot rely on a single implicit port and you must explicitly declare the intent to listen from both ports.
+If you wish to serve content through both HTTP and HTTPS, without HTTP->HTTPS redirects, your site address must explicitly declare the intent to listen on both ports. To do so, [specify multiple site labels](/docs/caddyfile/concepts#addresses), separated by a comma or whitespace.
 
-To do so, you can [map several addresses to a site block as a list](/docs/caddyfile/concepts#addresses) separated with `,`:
+HTTP and HTTPS by protocol, default ports can be configured via the Caddyfile [`http_port` and `https_port` global options](/docs/caddyfile/options):
 
 ```caddy
 {
 	auto_https disable_redirects
 }
 
-# Uses the HTTP and HTTPS by protocol
-# These are configurable as global settings
 http://localhost, https://localhost {
 	root * /usr/share/caddy
 
@@ -290,12 +290,13 @@ http://localhost, https://localhost {
 }
 ```
 
+Alternatively specify the ports explicitly:
+
 ```caddy
 {
 	auto_https disable_redirects
 }
 
-# Alternatively provide explicit ports
 localhost:80, localhost:443 {
 	root * /usr/share/caddy
 
