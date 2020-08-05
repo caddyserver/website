@@ -38,7 +38,7 @@ Since this directive is an opinionated wrapper over a reverse proxy, you can use
 
 ## Expanded form
 
-The `php_fastcgi` directive is the same as the following configuration: 
+The `php_fastcgi` directive is the same as the following configuration:
 
 ```caddy-d
 route {
