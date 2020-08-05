@@ -23,7 +23,7 @@ Here's a 28-second video showing how it works:
 - Caddy serves IP addresses and local/internal hostnames over HTTPS with locally-trusted certificates. Examples: `localhost`, `127.0.0.1`.
 - Caddy serves public DNS names over HTTPS with certificates from [Let's Encrypt](https://letsencrypt.org). Examples: `example.com`, `sub.example.com`, `*.example.com`.
 
-Caddy keeps all certificates renewed, and redirects HTTP (default port 80) to HTTPS (default port 443) automatically (provided [Activation](/docs/automatic-https#activation) is successful).
+Caddy keeps all certificates renewed, and redirects HTTP (default port 80) to HTTPS (default port 443) automatically, provided that [activation](/docs/automatic-https#activation) is successful.
 
 **For local HTTPS:**
 
@@ -76,7 +76,7 @@ Automatic HTTPS never overrides explicit configuration.
 
 You can [customize or disable automatic HTTPS](/docs/json/apps/http/servers/automatic_https/) if necessary.
 
-<aside class="tip">Disabling redirects keeps the HTTPS port enabled as the default port implicitly assigned to an address. The HTTP port was only binded for redirects, to support connecting to both ports, you must [explicitly listen on both for an address](/docs/automatic-https#examples).</aside>
+<aside class="tip">Disabling redirects keeps the HTTPS port enabled as the default port implicitly assigned to an address. The HTTP port is only bound for redirects and for the ACME HTTP challenge. If you need to serve over HTTP, you must explicitly configure Caddy to do it. [See the examples](/docs/automatic-https#examples).</aside>
 
 
 ## Hostname requirements
@@ -227,11 +227,11 @@ To get a wildcard from Let's Encrypt, you simply need to enable the [DNS challen
 
 ## Examples
 
-Caddy implicitly uses the HTTPS port (default 443) for your [server addresses](/docs/conventions#network-addresses) that don't assign an explicit port (which would disable automatic HTTPS). 
+Caddy implicitly uses the HTTPS port (default 443) for your [server addresses](/docs/conventions#network-addresses) that don't specify a port explicitly (which would disable automatic HTTPS). 
 
-The global setting `auto_https` has two values:
-- `disable_redirects` adds an implicit HTTP port redirect.
-- `off` disables automatic HTTPS, default implicit port changes to HTTP for all server addresses.
+Automatic HTTPS can be configured via the Caddyfile with the [`auto_https` global option](/docs/caddyfile/options), or via [per-server JSON configuration](/docs/json/apps/http/servers/automatic_https/). The Caddyfile option can be set to either of the following:
+- `disable_redirects` which disables the implicit HTTP->HTTPS redirect.
+- `off` which disables automatic HTTPS altogether, including the HTTP->HTTPS redirect and automatic enabling of TLS for sites that meet the requirements.
 
 | auto_https        | HTTP        | HTTPS       |
 |-------------------|-------------|-------------|
@@ -245,27 +245,27 @@ The global setting `auto_https` has two values:
 
 ### Disabling automatic HTTPS
 
-For local development environments, you can prevent serving via HTTPS by providing an explicit port assignment(disable per server address) or using the global `auto_https off` setting which will change Caddy's implicit port to be the HTTP port (default 80) globally.
+For local development environments, you can prevent serving via HTTPS by either specifying `http://` or providing a non-HTTPS port to disable per site, or by adding `auto_https off` to the Caddyfile global options which will change Caddy's implicit port to be the HTTP port (default 80).
 
 ```caddy
 {
-  auto_https off
+	auto_https off
 }
 
 # Have caddy implicitly use the HTTP port
 localhost {
-  root * /usr/share/caddy
+	root * /usr/share/caddy
 
-  file_server
+	file_server
 }
 ```
 
 ```caddy
 # Alternatively, provide an explicit port
 localhost:9000 {
-  root * /usr/share/caddy
+	root * /usr/share/caddy
 
-  file_server
+	file_server
 }
 ```
 
@@ -278,27 +278,27 @@ To do so, you can [map several addresses to a site block as a list](/docs/caddyf
 
 ```caddy
 {
-  auto_https disable_redirects
+	auto_https disable_redirects
 }
 
 # Uses the HTTP and HTTPS by protocol
 # These are configurable as global settings
 http://localhost, https://localhost {
-  root * /usr/share/caddy
+	root * /usr/share/caddy
 
-  file_server
+	file_server
 }
 ```
 
 ```caddy
 {
-  auto_https disable_redirects
+	auto_https disable_redirects
 }
 
 # Alternatively provide explicit ports
 localhost:80, localhost:443 {
-  root * /usr/share/caddy
+	root * /usr/share/caddy
 
-  file_server
+	file_server
 }
 ```
