@@ -7,7 +7,9 @@ title: HTTPS quick-start
 This guide will show you how to get up and running with [fully-managed HTTPS](/docs/automatic-https) in no time.
 
 <aside class="tip">
-	Caddy uses HTTPS for all sites by default, as long as a host name is provided in the config. This tutorial assumes you want to get a publicly-trusted site (i.e. not "localhost") up over HTTPS, so we'll be using a public domain name and external ports.
+	Caddy uses HTTPS for all sites by default, as long as a host name is provided in the config. This tutorial assumes you want to get a publicly-trusted site (i.e. not "localhost") up over HTTPS, so we'll be using a public domain name and external ports. 
+
+	For a "localhost" setup, see examples [here](/docs/automatic-https#examples).
 </aside>
 
 **Prerequisites:**

@@ -23,7 +23,7 @@ Here's a 28-second video showing how it works:
 - Caddy serves IP addresses and local/internal hostnames over HTTPS with locally-trusted certificates. Examples: `localhost`, `127.0.0.1`.
 - Caddy serves public DNS names over HTTPS with certificates from [Let's Encrypt](https://letsencrypt.org). Examples: `example.com`, `sub.example.com`, `*.example.com`.
 
-Caddy keeps all certificates renewed, and redirects HTTP (default port 80) to HTTPS (default port 443) automatically.
+Caddy keeps all certificates renewed, and redirects HTTP (default port 80) to HTTPS (default port 443) automatically (provided [Activation](/docs/automatic-https#activation) is successful).
 
 **For local HTTPS:**
 
@@ -75,6 +75,8 @@ When automatic HTTPS is activated, the following occurs:
 Automatic HTTPS never overrides explicit configuration.
 
 You can [customize or disable automatic HTTPS](/docs/json/apps/http/servers/automatic_https/) if necessary.
+
+<aside class="tip">Disabling redirects keeps the HTTPS port enabled as the default port implicitly assigned to an address. The HTTP port was only binded for redirects, to support connecting to both ports, you must [explicitly listen on both for an address](/docs/automatic-https#examples).</aside>
 
 
 ## Hostname requirements
@@ -220,3 +222,83 @@ Before attempting any ACME transactions, Caddy will test the configured storage 
 Caddy can obtain and manage wildcard certificates when it is configured to serve a site with a qualifying wildcard name. A site name qualifies for a wildcard if only its left-most domain label is a wildcard. For example, `*.example.com` qualifies, but these do not: `sub.*.example.com`, `foo*.example.com`, `*bar.example.com`, and `*.*.example.com`.
 
 To get a wildcard from Let's Encrypt, you simply need to enable the [DNS challenge](#dns-challenge) and use a wildcard domain in your config. We recommend using wildcards only when you have so many subdomains that you would encounter CA rate limits trying to obtain certificates for them all.
+
+
+
+## Examples
+
+Caddy implicitly uses the HTTPS port (default 443) for your [server addresses](/docs/conventions#network-addresses) that don't assign an explicit port (which would disable automatic HTTPS). 
+
+The global setting `auto_https` has two values:
+- `disable_redirects` adds an implicit HTTP port redirect.
+- `off` disables automatic HTTPS, default implicit port changes to HTTP for all server addresses.
+
+| auto_https        | HTTP        | HTTPS       |
+|-------------------|-------------|-------------|
+| *default*         | redirects   | connects    |
+| disable_redirects | unreachable | connects    |
+| off               | connects    | unreachable |
+
+`unreachable` is the default without additional configuration when using the related `auto_https` setting.
+`connects` is the implicitly assigned port.
+
+
+### Disabling automatic HTTPS
+
+For local development environments, you can prevent serving via HTTPS by providing an explicit port assignment(disable per server address) or using the global `auto_https off` setting which will change Caddy's implicit port to be the HTTP port (default 80) globally.
+
+```caddy
+{
+  auto_https off
+}
+
+# Have caddy implicitly use the HTTP port
+localhost {
+  root * /usr/share/caddy
+
+  file_server
+}
+```
+
+```caddy
+# Alternatively, provide an explicit port
+localhost:9000 {
+  root * /usr/share/caddy
+
+  file_server
+}
+```
+
+
+### HTTP and HTTPS without redirect
+
+If you want to serve content through both HTTP and HTTPS ports without HTTP redirects, your server address cannot rely on a single implicit port and you must explicitly declare the intent to listen from both ports.
+
+To do so, you can [map several addresses to a site block as a list](/docs/caddyfile/concepts#addresses) separated with `,`:
+
+```caddy
+{
+  auto_https disable_redirects
+}
+
+# Uses the HTTP and HTTPS by protocol
+# These are configurable as global settings
+http://localhost, https://localhost {
+  root * /usr/share/caddy
+
+  file_server
+}
+```
+
+```caddy
+{
+  auto_https disable_redirects
+}
+
+# Alternatively provide explicit ports
+localhost:80, localhost:443 {
+  root * /usr/share/caddy
+
+  file_server
+}
+```
