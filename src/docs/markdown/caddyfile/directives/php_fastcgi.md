@@ -38,7 +38,7 @@ Since this directive is an opinionated wrapper over a reverse proxy, you can use
 
 ## Expanded form
 
-The `php_fastcgi` directive is roughly the same as the following configuration (note that currently, declaring named matchers is not supported inside of `route` blocks, but this is written as such for illustrative purposes):
+The `php_fastcgi` directive is the same as the following configuration: 
 
 ```caddy-d
 route {
