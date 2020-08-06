@@ -98,7 +98,7 @@ Path matcher tokens must start with a forward slash `/`.
 
 ### Named matchers
 
-All matchers that are not composed of a single path matcher or a wildcard matcher must be named matchers. This is a matcher that is defined outside of any particular directive, and can be reused.
+All matchers that are not path or wildcard matchers must be named matchers. This is a matcher that is defined outside of any particular directive, and can be reused.
 
 Defining a matcher with a unique name gives you more flexibility, allowing you to combine [any available matchers](#standard-matchers) into a set:
 
