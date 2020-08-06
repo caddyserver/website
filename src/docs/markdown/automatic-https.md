@@ -230,6 +230,7 @@ To get a wildcard from Let's Encrypt, you simply need to enable the [DNS challen
 Caddy implicitly uses the HTTPS port (default 443) for your [site addresses](/docs/conventions#network-addresses) that don't specify a port explicitly (which would disable automatic HTTPS). 
 
 Automatic HTTPS can be configured via the Caddyfile with the [`auto_https` global option](/docs/caddyfile/options), or via [per-server JSON configuration](/docs/json/apps/http/servers/automatic_https/). The Caddyfile option can be set to either of the following:
+
 - `disable_redirects` which disables the implicit HTTP->HTTPS redirect.
 - `off` which disables automatic HTTPS altogether, including the HTTP->HTTPS redirect and automatic enabling of TLS for sites that meet the requirements.
 
@@ -276,7 +277,7 @@ localhost:9000 {
 
 If you wish to serve content through both HTTP and HTTPS, without HTTP->HTTPS redirects, your site address must explicitly declare the intent to listen on both ports. To do so, [specify multiple site labels](/docs/caddyfile/concepts#addresses), separated by a comma or whitespace.
 
-HTTP and HTTPS by protocol, default ports can be configured via the Caddyfile [`http_port` and `https_port` global options](/docs/caddyfile/options):
+One way to do this is by specifying the protocol scheme, which infers the standard ports (the respective ports can be customized using [`http_port` and `https_port` global options](/docs/caddyfile/options)):
 
 ```caddy
 {
