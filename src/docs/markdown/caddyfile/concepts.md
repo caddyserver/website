@@ -82,7 +82,7 @@ If a request matches multiple site blocks, the site block with the most specific
 
 ### Directives
 
-**Directives** are keywords which customize how the site is served. For example, a complete file server config might look like this:
+[**Directives**](/docs/caddyfile/directives) are keywords which customize how the site is served. For example, a complete file server config might look like this:
 
 ```caddy
 localhost
@@ -98,7 +98,7 @@ localhost
 reverse_proxy localhost:9000
 ```
 
-In these examples, `file_server` and `reverse_proxy` are directives. Directives are the first word on a line in a site block.
+In these examples, [`file_server`](/docs/caddyfile/directives/file_server) and [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy) are directives. Directives are the first word on a line in a site block.
 
 In the second example, `localhost:9000` is an **argument** because it appears on the same line after the directive.
 
@@ -112,7 +112,7 @@ reverse_proxy localhost:9000 localhost:9001 {
 }
 ```
 
-Here, `lb_policy` is a subdirective to `reverse_proxy` (it sets the load balancing policy to use between backends).
+Here, `lb_policy` is a subdirective to [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy) (it sets the load balancing policy to use between backends).
 
 
 ### Tokens and quotes
@@ -271,7 +271,7 @@ And then you can reuse this anywhere you need:
 import redirect
 ```
 
-The `import` directive can also be used to include other files in its place. As a special case, it can appear almost anywhere within the Caddyfile.
+The [`import`](/docs/caddyfile/directives/import) directive can also be used to include other files in its place. As a special case, it can appear almost anywhere within the Caddyfile.
 
 
 
