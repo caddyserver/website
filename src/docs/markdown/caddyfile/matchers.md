@@ -211,6 +211,11 @@ An empty `file` matcher (one with no files listed after it) will see if the requ
 
 Since rewriting based on the existence of a file on disk is so common, there is also a [`try_files` directive](/docs/caddyfile/directives/try_files) which is a shortcut of the `file` matcher and a [`rewrite` handler](/docs/caddyfile/directives/rewrite).
 
+Upon matching, two new placeholders will be made available:
+
+- `{http.matchers.file.relative}` The root-relative path of the file. This is often useful when rewriting requests.
+- `{http.matchers.file.absolute}` The absolute path of the matched file.
+
 #### Examples:
 
 Match requests where the path is a file that exists.
