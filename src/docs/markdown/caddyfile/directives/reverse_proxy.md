@@ -146,6 +146,7 @@ transport http {
     tls_server_name <sni>
 	keepalive [off|<duration>]
 	keepalive_idle_conns <max_count>
+    compression off
 }
 ```
 
@@ -160,6 +161,7 @@ transport http {
 - **tls_server_name** sets the ServerName (SNI) to put in the ClientHello; only needed if the remote server requires it.
 - **keepalive** is either `off` or a [duration value](/docs/conventions#durations) that specifies how long to keep connections open.
 - **keepalive_idle_conns** defines the maximum number of connections to keep alive.
+- **compression** can be used to disable compression to the backend by setting it to `off`.
 
 #### The `fastcgi` transport
 
