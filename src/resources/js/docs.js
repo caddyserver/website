@@ -30,4 +30,20 @@ $(function() {
 	// to the outer pre element, and our CSS file has a style to
 	// ensure the inner code block does not produce extra padding
 	$('article > pre:not(.chroma) > code:not(.cmd)').parent().addClass('chroma');
+
+	// Add links to Caddyfile directives in code blocks.
+	// See include/docs-head.html for the whitelist bootstrapping logic
+	$('pre.chroma .k')
+		.filter(function (k, item) {
+			return window.CaddyfileDirectives.includes(item.innerText);
+		})
+		.map(function(k, item) {
+			$(item).html(
+				'<a href="/docs/caddyfile/directives/' + item.innerText + '"'
+					+ 'style="color: inherit;"'
+				+ '>'
+					+ item.innerText
+				+ '</a>'
+			);
+		});
 });
