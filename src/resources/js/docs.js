@@ -31,19 +31,34 @@ $(function() {
 	// ensure the inner code block does not produce extra padding
 	$('article > pre:not(.chroma) > code:not(.cmd)').parent().addClass('chroma');
 
-	// Add links to Caddyfile directives in code blocks.
+	// Add links to Caddyfile directive tokens in code blocks.
 	// See include/docs-head.html for the whitelist bootstrapping logic
 	$('pre.chroma .k')
 		.filter(function (k, item) {
-			return window.CaddyfileDirectives.includes(item.innerText);
+			return window.CaddyfileDirectives.includes(item.innerText)
+				|| item.innerText === '<directives...>';
 		})
 		.map(function(k, item) {
-			$(item).html(
-				'<a href="/docs/caddyfile/directives/' + item.innerText + '"'
-					+ 'style="color: inherit;"'
-				+ '>'
-					+ item.innerText
-				+ '</a>'
-			);
+			let text = item.innerText;
+			let url = text === '<directives...>'
+				? '/docs/caddyfile/directives'
+				: '/docs/caddyfile/directives/' + text;
+			$(item)
+				.html('<a href="' + url + '" style="color: inherit;"></a>')
+				.find('a')
+				.text(text);
+		});
+
+	// Add links to [<matcher>] or named matcher tokens in code blocks.
+	// We can't do it exactly the same as the above block, because
+	// the matcher text includes <> character which are parsed as HTML
+	// unless we use text() to change the link text.
+	$('pre.chroma .nd')
+		.map(function(k, item) {
+			let text = item.innerText;
+			$(item)
+				.html('<a href="/docs/caddyfile/matchers" style="color: inherit;"></a>')
+				.find('a')
+				.text(text);
 		});
 });
