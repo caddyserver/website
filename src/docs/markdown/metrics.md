@@ -61,7 +61,7 @@ You can see the metrics with any browser or HTTP client like `curl`:
 $ curl http://localhost:2019/metrics
 # HELP caddy_admin_http_requests_total Counter of requests made to the Admin API's HTTP endpoints.
 # TYPE caddy_admin_http_requests_total counter
-caddy_admin_http_requests_total{code="200",handler="metrics",method="get",path="/metrics"} 2
+caddy_admin_http_requests_total{code="200",handler="metrics",method="GET",path="/metrics"} 2
 # HELP caddy_http_request_duration_seconds Histogram of round-trip request durations.
 # TYPE caddy_http_request_duration_seconds histogram
 caddy_http_request_duration_seconds_bucket{code="308",handler="static_response",method="GET",server="remaining_auto_https_redirects",le="0.005"} 1
@@ -99,11 +99,11 @@ For example:
 
 ```console
 $ curl -s http://localhost:2019/metrics | grep ^caddy_admin
-caddy_admin_http_requests_total{code="200",handler="admin",method="get",path="/config/"} 1
-caddy_admin_http_requests_total{code="200",handler="admin",method="get",path="/debug/pprof/"} 2
-caddy_admin_http_requests_total{code="200",handler="admin",method="get",path="/debug/pprof/cmdline"} 1
-caddy_admin_http_requests_total{code="200",handler="load",method="post",path="/load"} 1
-caddy_admin_http_requests_total{code="200",handler="metrics",method="get",path="/metrics"} 3
+caddy_admin_http_requests_total{code="200",handler="admin",method="GET",path="/config/"} 1
+caddy_admin_http_requests_total{code="200",handler="admin",method="GET",path="/debug/pprof/"} 2
+caddy_admin_http_requests_total{code="200",handler="admin",method="GET",path="/debug/pprof/cmdline"} 1
+caddy_admin_http_requests_total{code="200",handler="load",method="POST",path="/load"} 1
+caddy_admin_http_requests_total{code="200",handler="metrics",method="GET",path="/metrics"} 3
 ```
 
 #### `caddy_admin_http_requests_total`

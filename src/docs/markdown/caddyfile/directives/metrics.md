@@ -19,7 +19,7 @@ See also [Monitoring Caddy with Prometheus metrics](/docs/metrics).
 ## Syntax
 
 ```caddy-d
-metrics <matcher>
+metrics [<matcher>]
 ```
 
 ## Examples
@@ -34,4 +34,12 @@ Expose metrics at another path:
 
 ```caddy-d
 metrics /foo/bar/baz
+```
+
+Serve metrics at a separate subdomain:
+
+```caddy
+metrics.example.com {
+	metrics
+}
 ```
