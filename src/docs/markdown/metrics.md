@@ -45,13 +45,13 @@ $ prometheus --config.file=prometheus.yaml
 ## Caddy's metrics
 
 Like any process monitored with Prometheus, Caddy exposes an HTTP endpoint
-that responds with in the [Prometheus exposition format](https://prometheus.io/docs/instrumenting/exposition_formats/#text-based-format).
+that responds in the [Prometheus exposition format](https://prometheus.io/docs/instrumenting/exposition_formats/#text-based-format).
 Caddy's Prometheus client is also configured to respond with the [OpenMetrics exposition format](https://pkg.go.dev/github.com/prometheus/client_golang@v1.7.1/prometheus/promhttp#HandlerOpts)
 if negotiated (that is, if the `Accept` header is set to
 `application/openmetrics-text; version=0.0.1`).
 
 By default, there is a `/metrics` endpoint available at the [admin API](/docs/api)
-(i.e. http://localhost:2019/metrics by default). But if the admin API is
+(i.e. http://localhost:2019/metrics). But if the admin API is
 disabled or you wish to listen on a different port or path, you can use the
 [`metrics` handler](/docs/caddyfile/directives/metrics) to configure this.
 
@@ -131,7 +131,7 @@ Label  | Description
 
 ### HTTP Middleware metrics
 
-All Caddy HTTP Middleware Handlers are instrumented automatically for
+All Caddy HTTP middleware handlers are instrumented automatically for
 determining request latency, time-to-first-byte, errors, and request/response
 body sizes.
 
