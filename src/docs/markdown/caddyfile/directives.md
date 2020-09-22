@@ -19,6 +19,7 @@ Directive | Description
 **[header](/docs/caddyfile/directives/header)** | Sets or removes response headers
 **[import](/docs/caddyfile/directives/import)** | Include snippets or files
 **[log](/docs/caddyfile/directives/log)** | Enables access/request logging
+**[metrics](/docs/caddyfile/directives/metrics)** | Configures the Prometheus metrics exposition endpoint
 **[php_fastcgi](/docs/caddyfile/directives/php_fastcgi)** | Serve PHP sites over FastCGI
 **[redir](/docs/caddyfile/directives/redir)** | Issues an HTTP redirect to the client
 **[request_header](/docs/caddyfile/directives/request_header)** | Manipulates request headers
@@ -90,6 +91,7 @@ handle_path
 route
 
 respond
+metrics
 reverse_proxy
 php_fastcgi
 file_server
