@@ -13,7 +13,7 @@ In other words, you're going to want to be able to _monitor_ Caddy.
 
 [Prometheus](https://prometheus.io) is a monitoring platform that collects
 metrics from monitored targets by scraping metrics HTTP endpoints on these
-targets.
+targets. As well as helping you to display metrics with a dashboarding tool like [Grafana](https://grafana.com/docs/grafana/latest/getting-started/what-is-grafana/), Prometheus is also used for [alerting](https://prometheus.io/docs/alerting/latest/overview/).
 
 Like Caddy, Prometheus is written in Go and distributed as a single binary. To
 install it, see the [Prometheus Installation docs](https://prometheus.io/docs/prometheus/latest/installation/),
