@@ -179,8 +179,8 @@ function beginRendering(json) {
 	renderData(pageData.structure, 0, "", $('<div class="group"/>'));
 	console.log("DOCS:", pageDocs);
 
-	if ($('#field-list-contents').html().trim()) {
-		$('#field-list').show();
+	if ($('#field-list-contents').text().trim()) {
+		$('#field-list-header').show();
 	}
 
 	// if the browser tried to navigate directly to an element

@@ -50,9 +50,8 @@ $(function() {
 		});
 
 	// Add links to [<matcher>] or named matcher tokens in code blocks.
-	// We can't do it exactly the same as the above block, because
-	// the matcher text includes <> character which are parsed as HTML
-	// unless we use text() to change the link text.
+	// The matcher text includes <> characters which are parsed as HTML,
+	// so we must use text() to change the link text.
 	$('pre.chroma .nd')
 		.map(function(k, item) {
 			let text = item.innerText;
