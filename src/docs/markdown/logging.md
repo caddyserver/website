@@ -94,7 +94,7 @@ Now compare an equivalent structured log message from Caddy, encoded as JSON and
 
 You can see how the structured log is much more useful and contains much more information. The abundance of information in this log message is not only useful, but it comes at virtually no performance overhead: Caddy's logs are zero-allocation. Structured logs have no restrictions on data types or context: they can be used in any code path and include any kind of information.
 
-Because the logs are structured and strongly-typed, they can be encoded into any format. So if you don't want to work with JSON, logs can be encoded into any other representation. Caddy supports [logfmt](https://brandur.org/logfmt) and others through [log encoder modules](/docs/json/logging/logs/encoder/), and even more can be added.
+Because the logs are structured and strongly-typed, they can be encoded into any format. So if you don't want to work with JSON, logs can be encoded into any other representation. Caddy supports others through [log encoder modules](/docs/json/logging/logs/encoder/), and even more can be added.
 
 **Most importantly** in the distinction between structured logs and legacy formats, a structured log can be encoded as Common Log Format (or anything else!), but not the other way around. It is non-trivial (or at least inefficient) to go from CLF to structured formats, and impossible considering the lack of information.
 

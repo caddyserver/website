@@ -126,14 +126,6 @@ Formats each log entry as a JSON object.
 format json
 ```
 
-#### logfmt
-
-Formats each log entry as [logfmt](https://brandur.org/logfmt).
-
-```caddy-d
-format logfmt
-```
-
 #### single_field
 
 Writes only a single field from the structure log entry. Useful if one of the fields has all the information you need.

@@ -84,7 +84,7 @@ header nav .button {
 
 main {
 	display: flex;
-	justify-content: center;
+	justify-content: space-between;
 }
 
 main > .sidebar {
@@ -104,7 +104,8 @@ main > nav.sidebar {
 	font-size: 16px;
 }
 
-main nav li img {
+main nav li img,
+article li img {
 	max-height: .9em;
 }
 

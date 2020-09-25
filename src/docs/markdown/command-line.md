@@ -165,9 +165,9 @@ This command disables the admin API, making it easier to run multiple instances 
 
 Formats or prettifies a Caddyfile, then exits. The result is printed to stdout unless `--overwrite` is used.
 
-`<path>` specifies the path to the Caddyfile. If omitted, a file named Caddyfile in the current directory is assumed instead.
+`<path>` specifies the path to the Caddyfile. If `-`, the input is read from stdin. If omitted, a file named Caddyfile in the current directory is assumed instead.
 
-`--overwrite` causes the result to be written to the input file instead of being printed to the terminal.
+`--overwrite` causes the result to be written to the input file instead of being printed to the terminal. If the input is not a regular file, this flag has no effect.
 
 
 

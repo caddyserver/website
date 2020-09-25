@@ -21,6 +21,7 @@ Directive | Description
 **[log](/docs/caddyfile/directives/log)** | Enables access/request logging
 **[metrics](/docs/caddyfile/directives/metrics)** | Configures the Prometheus metrics exposition endpoint
 **[php_fastcgi](/docs/caddyfile/directives/php_fastcgi)** | Serve PHP sites over FastCGI
+**[push](/docs/caddyfile/directives/push)** | Push content to the client using HTTP/2 server push
 **[redir](/docs/caddyfile/directives/redir)** | Issues an HTTP redirect to the client
 **[request_header](/docs/caddyfile/directives/request_header)** | Manipulates request headers
 **[respond](/docs/caddyfile/directives/respond)** | Writes a hard-coded response to the client

@@ -44,7 +44,7 @@ $(function() {
 				? '/docs/caddyfile/directives'
 				: '/docs/caddyfile/directives/' + text;
 			$(item)
-				.html('<a href="' + url + '" style="color: inherit;"></a>')
+				.html('<a href="' + url + '" style="color: inherit;" title="Directive"></a>')
 				.find('a')
 				.text(text);
 		});
@@ -57,7 +57,7 @@ $(function() {
 		.map(function(k, item) {
 			let text = item.innerText;
 			$(item)
-				.html('<a href="/docs/caddyfile/matchers" style="color: inherit;"></a>')
+				.html('<a href="/docs/caddyfile/matchers" style="color: inherit;" title="Matcher token"></a>')
 				.find('a')
 				.text(text);
 		});

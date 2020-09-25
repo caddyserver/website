@@ -109,7 +109,7 @@ Passive health checks happen inline with actual proxied requests:
 
 The proxy **buffers responses** by default for wire efficiency:
 
-- **flush_interval** is a [duration value](/docs/conventions#durations) that defines how often Caddy should flush the buffered response body to the client. Set to -1 to disable buffering.
+- **flush_interval** is a [duration value](/docs/conventions#durations) that defines how often Caddy should flush the buffered response body to the client. Set to -1 to disable buffering. It is set to -1 automatically for requests that have a `text/event-stream` response or for HTTP/2 requests where the Content-Length is unspecified.
 
 ### Headers
 
@@ -146,7 +146,9 @@ transport http {
     tls_server_name <sni>
 	keepalive [off|<duration>]
 	keepalive_idle_conns <max_count>
+    versions <versions...>
     compression off
+    buffer_requests
 }
 ```
 
@@ -161,7 +163,10 @@ transport http {
 - **tls_server_name** sets the ServerName (SNI) to put in the ClientHello; only needed if the remote server requires it.
 - **keepalive** is either `off` or a [duration value](/docs/conventions#durations) that specifies how long to keep connections open.
 - **keepalive_idle_conns** defines the maximum number of connections to keep alive.
+- **versions** allows customizing which versions of HTTP to support. As a special case, "h2c" is a valid value which will enable cleartext HTTP/2 connections to the upstream (however, this is a non-standard feature that does not use Go's default HTTP transport, so it is exclusive of other features; subject to change or removal). Default: `1.1 2`
 - **compression** can be used to disable compression to the backend by setting it to `off`.
+- **buffer_requests** will cause the proxy to read the entire request body into a buffer before sending it upstream. This is very inefficient and should only be done if the upstream requires reading request bodies without delay (which is something the upstream application should fix).
+
 
 #### The `fastcgi` transport
 
@@ -170,12 +175,14 @@ transport fastcgi {
 	root  <path>
 	split <at>
 	env   <key> <value>
+    resolve_root_symlink
 }
 ```
 
 - **root** is the root of the site. Default: `{http.vars.root}` or current working directory.
 - **split** is where to split the path to get PATH_INFO at the end of the URI.
 - **env** sets custom environment variables.
+- **resolve_root_symlink** The declared root directory will be resolved to its actual value by evaluating any symbolic links.
 
 
 ## Examples

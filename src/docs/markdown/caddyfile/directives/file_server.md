@@ -22,7 +22,7 @@ file_server [<matcher>] [browse] {
 
 - **browse** enables file listings for requests to directories that do not have an index file.
 - **root** sets the path to the site root for just this file server instance, overriding any other. Default: `{http.vars.root}` or the current working directory. Note: This subdirective only changes the root for this directive. For other directives (like [`try_files`](/docs/caddyfile/directives/try_files) or [`templates`](/docs/caddyfile/directives/templates)) to know the same site root, use the [`root`](/docs/caddyfile/directives/root) directive, not this subdirective.
-- **hide** is a list of files to hide; if requested, the file server will pretend they do not exist. The active configuration file will be added by default.
+- **hide** is a list of files to hide; if requested, the file server will pretend they do not exist. The active configuration file will be added by default. Specifying a file name without path will hide all files with that name; otherwise, a prefix match will be attempted, and then a globular match.
 - **index** is a list of filenames to look for as index files. Default: `index.html index.txt`
 - **<template_file>** is an optional custom template file to use for directory listings. Defaults to the template that can be found [here in the source code <img src="/resources/images/external-link.svg">](https://github.com/caddyserver/caddy/blob/master/modules/caddyhttp/fileserver/browsetpl.go).
 

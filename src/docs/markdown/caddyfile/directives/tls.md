@@ -32,6 +32,7 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 		trusted_leaf_cert      <base64_der>
 		trusted_leaf_cert_file <filename>
 	}
+	issuer <issuer_name> [<params...>]
 }
 ```
 
@@ -89,6 +90,70 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 	- **trusted_leaf_cert_file** is a base64 DER-encoded CA certificate file against which to validate client certificates. Client certificates which are not signed by any of these CAs will be rejected.
 
 	Multiple `trusted_*` directives may be specified as a way to chain multiple CA or leaf certificates.
+
+- **issuer** configures a custom certificate issuer, or a source from which to obtain certificates. Which issuer is used and the options that follow in this segment depend on the issuer modules that are available (see below for the standard issuers). Some of the other subdirectives such as `ca` and `dns` are actually shortcuts for configuring the `acme` issuer (and this subdirective was added later), so specifying this directive and some of the others is confusing and thus prohibited.
+
+### Issuers
+
+These issuers come standard with the `tls` directive:
+
+#### acme
+
+Obtains certificates using the ACME protocol.
+
+```caddy
+... acme {
+	dir      <directory_url>
+	test_dir <test_directory_url>
+	email    <email>
+	timeout  <duration>
+	disable_http_challenge
+	disable_tlsalpn_challenge
+	alt_http_port    <port>
+	alt_tlsalpn_port <port>
+	eab <key_id> <mac_key>
+	trusted_roots <pem_files...>
+	dns <provider_name> [<options>]
+	resolvers <dns_servers...>
+}
+```
+
+- **dir** is the URL to the ACME CA's directory. Default: `https://acme-v02.api.letsencrypt.org/directory`
+- **test_dir** is an optional fallback directory to use when retrying challenges; if all challenges fail, this endpoint will be used during retries; useful if a CA has a staging endpoint where you want to avoid rate limits on their production endpoint. Default: `https://acme-staging-v02.api.letsencrypt.org/directory`
+- **email** is the ACME account contact email address.
+- **timeout** is how long to wait before timing out an ACME operation.
+- **disable_http_challenge** will disable the HTTP challenge.
+- **disable_tlsalpn_challenge** will disable the TLS-ALPN challenge.
+- **alt_http_port** is an alternate port on which to serve the HTTP challenge; it has to happen on port 80 so you must forward packets to this alternate port.
+- **alt_tlsalpn_port** is an alternate port on which to serve the TLS-ALPN challenge; it has to happen on port 443 so you must forward packets to this alternate port.
+- **eab** specifies an External Account Binding which may be required with some ACME CAs.
+- **trusted_roots** is one or more root certificates (as PEM filenames) to trust when connecting to the ACME CA server.
+- **dns** configures the DNS challenge.
+- **resolvers** customizes the DNS resolvers used when performing the DNS challenge; these take precedence over system resolvers or any default ones.
+
+
+#### zerossl
+
+Obtains certificates using the ACME protocol, specifically with ZeroSSL.
+
+The config for `zerossl` is exactly the same as the config for `acme`, except that its name is `zerossl`, it will use ZeroSSL's directory, and it will automatically negotiate EAB credentials. In other words, simply specifying this issuer (with no other configuration) is enough to use ZeroSSL.
+
+Its default directory endpoint is `https://acme.zerossl.com/v2/DV90`.
+
+Note that ZeroSSL is RFC-8555-compliant and can be used with the `acme` issuer module instead, but this module is more convenient because it handles the EAB credentials under the hood for you.
+
+
+#### internal
+
+Obtains certificates from an internal certificate authority.
+
+```caddy
+... internal {
+	ca <name>
+}
+```
+
+- **ca** is the name of the internal CA to use. Default: `local`
 
 
 
