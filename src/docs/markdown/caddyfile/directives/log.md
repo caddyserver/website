@@ -136,8 +136,44 @@ format single_field <field_name>
 
 - **&lt;field_name&gt;** is the name of the field whose value to use as the log entry.
 
+#### filter
+
+Wraps another encoder module, allowing per-field filtering.
+
+```caddy-d
+format filter {
+	wrap <encode_module> ...
+	fields {
+		<field> <filter> ...
+	}
+}
+```
+
+Nested fields can be referenced by representing a layer of nesting with `>`. In other words, for an object like `{"a":{"b":0}}`, the inner field can be referenced as `a>b`.
+
+The following fields are fundamental to the log and cannot be filtered because they are added by the underlying logging library as special cases: `ts`, `level`, `logger`, and `msg`.
+
+These are the available filters:
+
+##### delete
+
+Marks a field to be skipped from being encoded.
+
+```caddy-d
+<field> delete
+```
+
+##### ip_mask
+
+Masks IP addresses in the field using a CIDR mask, i.e. the number of bytes from the IP to retain, starting from the left side. There is separate configuration for IPv4 and IPv6 addresses.
 
 
+```caddy-d
+<field> ip_mask {
+	ipv4 <cidr>
+	ipv6 <cidr>
+}
+```
 
 
 
@@ -175,5 +211,34 @@ Use common log format (deprecated, but can be useful for older setups):
 ```caddy-d
 log {
 	format single_field common_log
+}
+```
+
+Delete the Authorization request header from the logs:
+
+```caddy-d
+log {
+	format filter {
+		wrap console
+		fields {
+			request>headers>Authorization delete
+		}
+	}
+}
+```
+
+Mask the remote address from the request, keeping the first 16 bytes (i.e. 255.255.0.0) for IPv4 addresses, and the first 64 bytes from IPv6 addresses:
+
+```caddy-d
+log {
+	format filter {
+		wrap console
+		fields {
+			request>remote_addr ip_mask {
+				ipv4 24
+				ipv6 32
+			}
+		}
+	}
 }
 ```
