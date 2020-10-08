@@ -43,9 +43,7 @@ see the Webi [Caddy Cheat Sheet](https://webinstall.dev/caddy).
 
 To allow non-root users to bind to ports 80 and 443, use setcap.
 
-```
-sudo setcap cap_net_bind_service=+ep
-```
+<pre><code class="cmd bash">sudo setcap cap_net_bind_service=+ep $(readlink $(command -v caddy))</code></pre>
 
 ## Debian, Ubuntu, Raspbian
 
