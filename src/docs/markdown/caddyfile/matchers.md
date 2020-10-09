@@ -434,7 +434,7 @@ query sort=asc
 remote_ip <ranges...>
 ```
 
-By remote (client) IP address. Accepts exact IPs or CIDR ranges.
+By remote (client) IP address. If `X-Forwarded-For` is passed in request headers, this will be used for remote IP address. Accepts exact IPs or CIDR ranges
 
 #### Example:
 
