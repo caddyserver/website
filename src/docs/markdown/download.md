@@ -31,20 +31,6 @@ Replace `ASSET` with the filename for your platform.
 [**View on Docker Hub**](https://hub.docker.com/_/caddy)
 
 
-## Linux & Raspberry Pi
-
-You can use Webi to automate the processes of downloading the latest release and putting it
-in your PATH, without requiring admin permissions.
-
-<pre><code class="cmd bash">curl -sS https://webinstall.dev/caddy | bash</code></pre>
-
-If you'd like a simple way to launch Caddy as a system service and bind to privilege ports,
-see the Webi [Caddy Cheat Sheet](https://webinstall.dev/caddy).
-
-To allow non-root users to bind to ports 80 and 443, use setcap.
-
-<pre><code class="cmd bash">sudo setcap cap_net_bind_service=+ep $(readlink $(command -v caddy))</code></pre>
-
 ## Debian, Ubuntu, Raspbian
 
 <pre><code class="cmd"><span class="bash">echo "deb [trusted=yes] https://apt.fury.io/caddy/ /" \
@@ -70,6 +56,21 @@ RHEL/CentOS 7:
 <span class="bash">yum install caddy</span></code></pre>
 
 [**View the Caddy COPR**](https://copr.fedorainfracloud.org/coprs/g/caddy/caddy/)
+
+
+## Linux & Raspberry Pi
+
+You can use Webi to automate the processes of downloading the latest release and putting it
+in your PATH, without requiring admin permissions.
+
+<pre><code class="cmd bash">curl -sS https://webinstall.dev/caddy | bash</code></pre>
+
+If you'd like a simple way to launch Caddy as a system service and bind to privilege ports,
+see the Webi [Caddy Cheat Sheet](https://webinstall.dev/caddy).
+
+To allow non-root users to bind to ports 80 and 443, use setcap.
+
+<pre><code class="cmd bash">sudo setcap cap_net_bind_service=+ep $(readlink $(command -v caddy))</code></pre>
 
 
 ## DigitalOcean
