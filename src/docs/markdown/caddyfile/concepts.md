@@ -102,6 +102,8 @@ In these examples, [`file_server`](/docs/caddyfile/directives/file_server) and [
 
 In the second example, `localhost:9000` is an **argument** because it appears on the same line after the directive.
 
+Note that when the Caddyfile is adapted, directives are sorted according to a specific default [directive order](/docs/caddyfile/directives#directive-order).
+
 **Subdirectives** can appear in directive blocks:
 
 ```caddy
