@@ -12,16 +12,18 @@ By default, header operations are performed immediately unless any of the header
 ## Syntax
 
 ```caddy-d
-header [<matcher>] [[+|-]<field> [<value>|<find>] [<replace>]] {
+header [<matcher>] [[+|-|?]<field> [<value>|<find>] [<replace>]] {
 	<field> <find> <replace>
 	[+]<field> <value>
 	-<field>
+	?<field> <default_value>
 	[defer]
 }
 ```
 
 - **&lt;field&gt;** is the name of the header field. By default, will overwrite any existing field of the same name. Prefix with `+` to add the field instead of replace, or prefix with `-` to remove the field.
 - **&lt;value&gt;** is the header field value, if adding or setting a field.
+- **&lt;default_value&gt;** is the header field value that will be set only if the header does not already exist.
 - **&lt;find&gt;** is the substring or regular expression to search for.
 - **&lt;replace&gt;** is the replacement value; required if performing a search-and-replace.
 - **defer** will force the header operations to be deferred until the response is written out to the client. This is automatically enabled if any of the header fields are being deleted.
@@ -58,7 +60,7 @@ header {
 
 	# disable clients from sniffing the media type
 	X-Content-Type-Options nosniff
-	
+
 	# clickjacking protection
 	X-Frame-Options DENY
 
@@ -74,4 +76,11 @@ route {
 	header           Cache-Control max-age=3600
 	header /static/* Cache-Control max-age=31536000
 }
+```
+
+Set a default cache expiration if upstream doesn't define one:
+
+```caddy-d
+header ?Cache-Control "max-age=3600"
+reverse_proxy upstream:443
 ```
