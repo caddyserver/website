@@ -8,6 +8,8 @@ bind overrides the interface to which the server's socket should bind. Normally,
 
 Note that binding sites inconsistently may result in unintended consequences. For example, if two sites on the same port resolve to 127.0.0.1 and only one of those sites is configured with `bind 127.0.0.1`, then only one site will be accessible since the other will bind to the port without a specific host; the OS will choose the more specific matching socket. (Virtual hosts are not shared across different listeners.)
 
+bind also accepts an optional network name: `<network>/<host>`.
+
 
 ## Syntax
 
@@ -30,4 +32,10 @@ To include IPv6:
 
 ```caddy-d
 bind 127.0.0.1 ::1
+```
+
+To bind to a Unix domain socket at `/run/caddy`:
+
+```caddy-d
+bind unix//run/caddy
 ```
