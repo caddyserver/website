@@ -60,4 +60,23 @@ $(function() {
 				.find('a')
 				.text(text);
 		});
+
+	// On the global options page only, we'll add links to the options to the anchor tags
+	if (window.location.pathname === '/docs/caddyfile/options') {
+		let headers = $('article h5').map(function (i, el) {
+			return el.id.replace(/-/g, "_");
+		}).toArray();
+		$('pre.chroma .k')
+			.filter(function (k, item) {
+				return headers.includes(item.innerText);
+			})
+			.map(function(k, item) {
+				let text = item.innerText;
+				let url = '#' + item.innerText.replace(/_/g, "-");
+				$(item)
+					.html('<a href="' + url + '" style="color: inherit;" title="Global option"></a>')
+					.find('a')
+					.text(text);
+			});
+	}
 });
