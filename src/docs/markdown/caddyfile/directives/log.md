@@ -227,13 +227,14 @@ log {
 }
 ```
 
-Mask the remote address from the request, keeping the first 16 bytes (i.e. 255.255.0.0) for IPv4 addresses, and the first 64 bytes from IPv6 addresses:
+Mask the remote address from the request, keeping the first 16 bytes (i.e. 255.255.0.0) for IPv4 addresses, and the first 64 bytes from IPv6 addresses, and also deletes the `common_log` field which would normally contain an unmasked IP address:
 
 ```caddy-d
 log {
 	format filter {
 		wrap console
 		fields {
+			common_log delete
 			request>remote_addr ip_mask {
 				ipv4 24
 				ipv6 32
