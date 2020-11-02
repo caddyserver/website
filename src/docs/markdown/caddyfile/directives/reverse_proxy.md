@@ -37,6 +37,7 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 
     # streaming
     flush_interval <duration>
+    buffer_requests
 
     # header manipulation
     header_up   [+|-]<field> [<value|regexp> [<replacement>]]
@@ -110,6 +111,7 @@ Passive health checks happen inline with actual proxied requests:
 The proxy **buffers responses** by default for wire efficiency:
 
 - **flush_interval** is a [duration value](/docs/conventions#durations) that defines how often Caddy should flush the buffered response body to the client. Set to -1 to disable buffering. It is set to -1 automatically for requests that have a `text/event-stream` response or for HTTP/2 requests where the Content-Length is unspecified.
+- **buffer_requests** will cause the proxy to read the entire request body into a buffer before sending it upstream. This is very inefficient and should only be done if the upstream requires reading request bodies without delay (which is something the upstream application should fix).
 
 ### Headers
 
@@ -148,7 +150,8 @@ transport http {
 	keepalive_idle_conns <max_count>
     versions <versions...>
     compression off
-    buffer_requests
+    max_conns_per_host <count>
+    max_idle_conns_per_host <count>
 }
 ```
 
@@ -165,8 +168,8 @@ transport http {
 - **keepalive_idle_conns** defines the maximum number of connections to keep alive.
 - **versions** allows customizing which versions of HTTP to support. As a special case, "h2c" is a valid value which will enable cleartext HTTP/2 connections to the upstream (however, this is a non-standard feature that does not use Go's default HTTP transport, so it is exclusive of other features; subject to change or removal). Default: `1.1 2`
 - **compression** can be used to disable compression to the backend by setting it to `off`.
-- **buffer_requests** will cause the proxy to read the entire request body into a buffer before sending it upstream. This is very inefficient and should only be done if the upstream requires reading request bodies without delay (which is something the upstream application should fix).
-
+- **max_conns_per_host** optionally limits the total number of connections per host, including connections in the dialing, active, and idle states. Has no limit by default.
+- **max_idle_conns_per_host** if non-zero, controls the maximum idle (keepalive) connections to keep per-host. Default: `2`
 
 #### The `fastcgi` transport
 
