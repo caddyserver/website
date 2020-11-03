@@ -249,7 +249,7 @@ By request header fields.
 	- If enclosed by `*`, it performs a fast substring match.
 	- Otherwise, it is a fast exact match.
 
-If used multiple times in the same named matcher, matchers with the same header field will be merged, which will OR the values of each.
+Different header fields within the same set are AND-ed. Multiple values per field are OR-ed.
 
 #### Example:
 
@@ -277,7 +277,7 @@ header_regexp [<name>] <field> <regexp>
 
 Like `header`, but supports regular expressions. Capture groups can be accessed via placeholder like `{http.regexp.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
 
-There can only be multiple `header_regexp` matchers per named matcher, but only one per field. Each field will be AND'ed.
+Only one regular expression is supported per header field. Multiple different fields will be AND-ed.
 
 #### Example:
 
@@ -297,7 +297,7 @@ host <hosts...>
 
 Matches request by the `Host` header field of the request. It is not common to use this in the Caddyfile, since most site blocks already indicate hosts in the address of the site. This matcher is mostly used in site blocks that don't define specific hostnames.
 
-There can be multiple `host` matchers per named matcher, merging them. The hosts will be OR'ed.
+Multiple `host` matchers will be OR'ed together.
 
 #### Example:
 
@@ -315,7 +315,7 @@ method <verbs...>
 
 By the method (verb) of the HTTP request. Verbs should be uppercase, like `POST`. Can match one or many methods.
 
-There can be multiple `method` matchers per named matcher, merging them. The verbs will be OR'ed.
+Multiple `method` matchers will be OR'ed together.
 
 #### Examples:
 
@@ -396,7 +396,7 @@ By request path, meaning the path component of the request's URI. Path matches a
 - On both sides, for a substring match (`*/contains/*`)
 - In the middle, for a globular match (`/accounts/*/info`)
 
-There can be multiple `path` matchers per named matcher, merging them. The paths will be OR'ed.
+Multiple `path` matchers will be OR'ed together.
 
 
 ---
@@ -438,9 +438,9 @@ There can only be one `protocol` matcher per named matcher.
 query <key>=<val>...
 ```
 
-By query string parameters. Should be a sequence of `key=value` pair. Keys are matched exactly, case-sensitively. Values can contain placeholders. Values are matched exactly, but also support `*` to match any value.
+By query string parameters. Should be a sequence of `key=value` pairs. Keys are matched exactly, case-sensitively. Values can contain placeholders. Values are matched exactly, but also support `*` to match any value.
 
-There can be multiple `query` matchers per named matcher, and pairs with the same keys will be merged together, which will OR the values of each.
+There can be multiple `query` matchers per named matcher, and pairs with the same keys will be OR'ed together.
 
 #### Example:
 
@@ -460,7 +460,7 @@ remote_ip <ranges...>
 
 By remote (client) IP address. If `X-Forwarded-For` is passed in request headers, this will be used for remote IP address. Accepts exact IPs or CIDR ranges.
 
-There can be multiple `remote_ip` matchers per named matcher, merging them. The addresses will be OR'ed. 
+Multiple `remote_ip` matchers will be OR'ed together.
 
 #### Example:
 
