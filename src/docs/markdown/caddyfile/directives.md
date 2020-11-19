@@ -23,6 +23,7 @@ Directive | Description
 **[php_fastcgi](/docs/caddyfile/directives/php_fastcgi)** | Serve PHP sites over FastCGI
 **[push](/docs/caddyfile/directives/push)** | Push content to the client using HTTP/2 server push
 **[redir](/docs/caddyfile/directives/redir)** | Issues an HTTP redirect to the client
+**[request_body](/docs/caddyfile/directives/request_body)** | Manipulates request body
 **[request_header](/docs/caddyfile/directives/request_header)** | Manipulates request headers
 **[respond](/docs/caddyfile/directives/respond)** | Writes a hard-coded response to the client
 **[reverse_proxy](/docs/caddyfile/directives/reverse_proxy)** | A powerful and extensible reverse proxy
@@ -75,6 +76,7 @@ Many directives manipulate the HTTP handler chain. The order in which those dire
 root
 
 header
+request_body
 
 redir
 rewrite
