@@ -15,7 +15,7 @@ request_body [<matcher>] {
 }
 ```
 
-- **&lt;value&gt;** is the maximum size in bytes allowed for the request body. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
+- **max_size** is the maximum size in bytes allowed for the request body. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
 
 
 ## Examples
