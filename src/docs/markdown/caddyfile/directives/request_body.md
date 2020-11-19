@@ -4,7 +4,7 @@ title: request_body (Caddyfile directive)
 
 # request_body
 
-Manipulates request body.
+Manipulates or sets restrictions on the bodies of incoming requests.
 
 
 ## Syntax
