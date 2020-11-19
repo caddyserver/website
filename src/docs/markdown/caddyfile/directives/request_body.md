@@ -20,7 +20,7 @@ request_body [<matcher>] {
 
 ## Examples
 
-Limit request body s to 10 mega bytes:
+Limit request body sizes to 10 megabytes:
 
 ```caddy-d
 request_body {
