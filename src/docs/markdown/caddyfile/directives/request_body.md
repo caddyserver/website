@@ -10,7 +10,7 @@ Manipulates request body.
 ## Syntax
 
 ```caddy-d
-request_body {
+request_body [<matcher>] {
   max_size <value>
 }
 ```
