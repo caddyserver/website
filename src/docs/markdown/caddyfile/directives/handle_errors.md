@@ -53,3 +53,11 @@ handle_errors {
 	}
 }
 ```
+
+Simply use [`respond`](/docs/caddyfile/directives/respond) to return the error code and name
+
+```caddy
+handle_errors {
+	respond "{http.error.status_code} {http.error.status_text}"
+}
+```
