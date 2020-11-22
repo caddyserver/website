@@ -48,6 +48,8 @@ Reverse proxy to a professional server that is highly qualified for handling HTT
 ```caddy
 handle_errors {
 	rewrite * /{http.error.status_code}
-	reverse_proxy https://http.cat
+	reverse_proxy https://http.cat {
+		header_up Host http.cat
+	}
 }
 ```
