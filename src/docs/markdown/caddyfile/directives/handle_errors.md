@@ -48,6 +48,16 @@ Reverse proxy to a professional server that is highly qualified for handling HTT
 ```caddy
 handle_errors {
 	rewrite * /{http.error.status_code}
-	reverse_proxy https://http.cat
+	reverse_proxy https://http.cat {
+		header_up Host http.cat
+	}
+}
+```
+
+Simply use [`respond`](/docs/caddyfile/directives/respond) to return the error code and name
+
+```caddy
+handle_errors {
+	respond "{http.error.status_code} {http.error.status_text}"
 }
 ```
