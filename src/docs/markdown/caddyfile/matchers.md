@@ -139,7 +139,7 @@ Like directives, named matcher definitions must go inside the site blocks that u
 
 A named matcher definition constitutes a _matcher set_. Matchers in a set are AND'ed together; i.e. all must match. For example, if you have both a `header` and `path` matcher in the set, both must match.
 
-For some matchers that accept multiple values, those values are OR'ed; i.e. one must match in order for the matcher to match. See the docs for each matcher for details on how they are merged.
+Multiple matchers of the same type (e.g. multiple `path` matchers in the same set) may be combined using boolean algebra (AND/OR), as described in their respective sections below.
 
 
 
