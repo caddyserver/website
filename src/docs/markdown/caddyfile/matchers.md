@@ -139,7 +139,7 @@ Like directives, named matcher definitions must go inside the site blocks that u
 
 A named matcher definition constitutes a _matcher set_. Matchers in a set are AND'ed together; i.e. all must match. For example, if you have both a `header` and `path` matcher in the set, both must match.
 
-Multiple matchers of the same type (e.g. multiple `path` matchers in the same set) may be combined using boolean algebra (AND/OR), as described in their respective sections below.
+Multiple matchers of the same type may be combined (e.g. multiple `path` matchers in the same set) using boolean algebra (AND/OR), as described in their respective sections below.
 
 
 
@@ -249,7 +249,7 @@ By request header fields.
 	- If enclosed by `*`, it performs a fast substring match.
 	- Otherwise, it is a fast exact match.
 
-Different header fields within the same set are AND-ed. Multiple values per field are OR-ed.
+Different header fields within the same set are AND-ed. Multiple values per field are OR'ed.
 
 #### Example:
 
@@ -277,7 +277,7 @@ header_regexp [<name>] <field> <regexp>
 
 Like `header`, but supports regular expressions. Capture groups can be accessed via placeholder like `{http.regexp.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
 
-Only one regular expression is supported per header field. Multiple different fields will be AND-ed.
+Only one regular expression is supported per header field. Multiple different fields will be AND'ed.
 
 #### Example:
 
