@@ -249,6 +249,7 @@ You can use any [Caddy placeholders](/docs/conventions#placeholders) in the Cadd
 | `{tls_client_issuer}`      | `{http.request.tls.client.issuer}`      |
 | `{tls_client_serial}`      | `{http.request.tls.client.serial}`      |
 | `{tls_client_subject}`     | `{http.request.tls.client.subject}`     |
+| `{tls_client_certificate_pem}` | `{http.request.tls.client.certificate_pem}` |
 
 
 
