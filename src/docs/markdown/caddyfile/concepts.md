@@ -298,6 +298,12 @@ If your configuration relies on environment variables, you can use them in the C
 
 Environment variables in this form are substituted before parsing begins, so they can expand to empty values, partial tokens, complete tokens, or even multiple tokens and lines.
 
+A default value can be specified for when the environment variable is not found, by using `:` as the delimiter between the variable name and the default value:
+
+```caddy
+{$DOMAIN:localhost}
+```
+
 If you want to defer the substitution of an environment variable until runtime, you can use the [standard `{env.*}` placeholders](/docs/conventions#placeholders).
 
 
