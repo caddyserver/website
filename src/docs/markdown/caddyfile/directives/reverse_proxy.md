@@ -190,7 +190,7 @@ transport fastcgi {
 	split <at>
 	env   <key> <value>
     resolve_root_symlink
-    dial_timeout  <duration>
+	dial_timeout  <duration>
 	read_timeout  <duration>
 	write_timeout <duration>
 }
