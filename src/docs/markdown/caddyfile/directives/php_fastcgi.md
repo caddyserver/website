@@ -18,20 +18,29 @@ It supports all the subdirectives of [reverse_proxy](/docs/caddyfile/directives/
 
 ```caddy-d
 php_fastcgi [<matcher>] <php-fpm_gateways...> {
+	root <path>
 	split <substrings...>
 	env [<key> <value>]
-	root <path>
 	index <filename>
+	resolve_root_symlink
+	dial_timeout  <duration>
+	read_timeout  <duration>
+	write_timeout <duration>
 
 	<any other reverse_proxy subdirectives...>
 }
 ```
 
 - **<php-fpm_gateways...>** are the [addresses](/docs/conventions#network-addresses) of the FastCGI servers.
-- **split** sets the substrings for splitting the URI into two parts. The first matching substring will be used to split the "path info" from the path. The first piece is suffixed with the matching substring and will be assumed as the actual resource (CGI script) name. The second piece will be set to PATH_INFO for the CGI script to use. Default: `.php`
-- **env** sets an extra environment variable to the given value.
 - **root** sets the root folder to the site. Default: [`root` directive](/docs/caddyfile/directives/root).
+- **split** sets the substrings for splitting the URI into two parts. The first matching substring will be used to split the "path info" from the path. The first piece is suffixed with the matching substring and will be assumed as the actual resource (CGI script) name. The second piece will be set to PATH_INFO for the CGI script to use. Default: `.php`
+- **env** sets an extra environment variable to the given value. Can be specified more than once for multiple environment variables.
 - **index** specifies the filename to treat as the directory index file. This affects the file matcher in the [expanded form](#expanded-form). Default: `index.php`
+- **resolve_root_symlink** enables resolving the `root` directory to its actual value by evaluating a symbolic link, if one exists.
+- **dial_timeout** is how long to wait when connecting to the upstream socket. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
+- **read_timeout** is how long to wait when reading from the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
+- **write_timeout** is how long to wait when sending to the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
+
 
 Since this directive is an opinionated wrapper over a reverse proxy, you can use any of reverse_proxy's subdirectives to customize it.
 
