@@ -81,6 +81,7 @@ Load balancing is used whenever more than one upstream is defined.
 	- `random_choose <n>` - selects two or more upstreams randomly, then chooses one with least load (`n` is usually 2)
 	- `round_robin` - iterate each upstream in turn
 	- `uri_hash` - map URI to sticky upstream
+    - `cookie [<name> [<secret>]]` - based on the given cookie (default name is `lb` if not specified), whose value is hashed; optionally with a secret for HMAC-SHA256
 
 - **lb_try_duration** is a [duration value](/docs/conventions#durations) that defines how long to try selecting available backends for each request if the next available host is down. By default, this retry is disabled. Clients will wait for up to this long while the load balancer tries to find an available upstream host.
 - **lb_try_interval** is a [duration value](/docs/conventions#durations) that defines how long to wait between selecting the next host from the pool. Default is `250ms`. Only relevant when a request to an upstream host fails. Be aware that setting this to 0 with a non-zero `lb_try_duration` can cause the CPU to spin if all backends are down and latency is very low.
