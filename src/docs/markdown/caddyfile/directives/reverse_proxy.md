@@ -61,6 +61,7 @@ Upstream addresses can take the form of a conventional [Caddy network address](/
 - `127.0.0.1:4000`
 - `http://localhost:4000`
 - `https://example.com`
+- `h2c://127.0.0.1`
 - `example.com`
 - `unix//var/php.sock`
 - `srv+http://internal.service.consul`
@@ -166,7 +167,7 @@ transport http {
 - **tls_server_name** sets the ServerName (SNI) to put in the ClientHello; only needed if the remote server requires it.
 - **keepalive** is either `off` or a [duration value](/docs/conventions#durations) that specifies how long to keep connections open.
 - **keepalive_idle_conns** defines the maximum number of connections to keep alive.
-- **versions** allows customizing which versions of HTTP to support. As a special case, "h2c" is a valid value which will enable cleartext HTTP/2 connections to the upstream (however, this is a non-standard feature that does not use Go's default HTTP transport, so it is exclusive of other features; subject to change or removal). Default: `1.1 2`
+- **versions** allows customizing which versions of HTTP to support. As a special case, "h2c" is a valid value which will enable cleartext HTTP/2 connections to the upstream (however, this is a non-standard feature that does not use Go's default HTTP transport, so it is exclusive of other features; subject to change or removal). Default: `1.1 2`, or if scheme is `h2c://`, `h2c 2`
 - **compression** can be used to disable compression to the backend by setting it to `off`.
 - **max_conns_per_host** optionally limits the total number of connections per host, including connections in the dialing, active, and idle states. Has no limit by default.
 - **max_idle_conns_per_host** if non-zero, controls the maximum idle (keepalive) connections to keep per-host. Default: `2`
