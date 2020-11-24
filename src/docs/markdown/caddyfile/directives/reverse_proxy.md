@@ -140,11 +140,11 @@ Caddy's proxy **transport** is pluggable:
 transport http {
 	read_buffer             <size>
 	write_buffer            <size>
-    max_response_header     <size>
+	max_response_header     <size>
 	dial_timeout            <duration>
-    dial_fallback_delay     <duration>
-    response_header_timeout <duration>
-    expect_continue_timeout <duration>
+	dial_fallback_delay     <duration>
+	response_header_timeout <duration>
+	expect_continue_timeout <duration>
 	tls
 	tls_client_auth <automate_name> | <cert_file> <key_file>
 	tls_insecure_skip_verify
