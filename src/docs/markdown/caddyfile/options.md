@@ -140,7 +140,7 @@ Defines the issuer (or source) of TLS certificates.
 
 ## Server Options
 
-Allows configuring options of the [HTTP servers](/docs/json/apps/http/servers/) that can't otherwise be provided in site blocks.
+Customizes [HTTP servers](/docs/json/apps/http/servers/) with settings that potentially span multiple sites and thus can't be rightly configured in site blocks. These options affect the listener/socket, or other behavior beneath the HTTP layer.
 
 Can be specified more than once, with different `listener_address` values, to configure different options per server. For example, `servers :443` will only apply to the server that is bound to the listener address `:443`. Omitting the listener address will apply the options to any remaining server.
 
@@ -195,6 +195,7 @@ listener_wrappers {
 - **idle_timeout** is a [duration value](/docs/conventions#durations) that sets the maximum time to wait for the next request when keep-alives are enabled. Defaults to 5 minutes to help avoid resource exhaustion.
 
 ##### `max_header_size`
+
 The maximum size to parse from a client's HTTP request headers. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
 
 ##### `protocol`
