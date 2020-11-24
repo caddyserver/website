@@ -133,13 +133,18 @@ Caddy's proxy **transport** is pluggable:
 
 - **transport** defines how to communicate with the backend. Default is `http`.
 
+
 #### The `http` transport
 
 ```caddy-d
 transport http {
-	read_buffer  <size>
-	write_buffer <size>
-	dial_timeout <duration>
+	read_buffer             <size>
+	write_buffer            <size>
+    max_response_header     <size>
+	dial_timeout            <duration>
+    dial_fallback_delay     <duration>
+    response_header_timeout <duration>
+    expect_continue_timeout <duration>
 	tls
 	tls_client_auth <automate_name> | <cert_file> <key_file>
 	tls_insecure_skip_verify
@@ -157,7 +162,11 @@ transport http {
 
 - **read_buffer** is the size of the read buffer in bytes.
 - **write_buffer** is the size of the write buffer in bytes.
-- **dial_timeout** is how long to wait when connecting to the upstream socket.
+- **max_response_header** is the maximum amount of bytes to read from response headers.
+- **dial_timeout** is how long to wait when connecting to the upstream socket. Accepts [duration values](/docs/conventions#durations).
+- **dial_fallback_delay** is how long to wait before spawning an RFC 6555 Fast Fallback connection. A negative value disables this. Accepts [duration values](/docs/conventions#durations).
+- **response_header_timeout** is how long to wait for reading response headers from the upstream. Accepts [duration values](/docs/conventions#durations).
+- **expect_continue_timeout** is how long to wait for the upstreams's first response headers after fully writing the request headers if the request has the header `Expect: 100-continue`. Accepts [duration values](/docs/conventions#durations).
 - **tls** uses HTTPS with the backend. This will be enabled automatically if you specify backends using the `https://` scheme or port `:443`.
 - **tls_client_auth** enables TLS client authentication one of two ways: (1) by specifying a domain name for which Caddy should obtain a certificate and keep it renewed, or (2) by specifying a certificate and key file to present for TLS client authentication with the backend.
 - **tls_insecure_skip_verify** turns off security. _Do not use in production._
@@ -171,6 +180,8 @@ transport http {
 - **max_conns_per_host** optionally limits the total number of connections per host, including connections in the dialing, active, and idle states. Has no limit by default.
 - **max_idle_conns_per_host** if non-zero, controls the maximum idle (keepalive) connections to keep per-host. Default: `2`
 
+
+
 #### The `fastcgi` transport
 
 ```caddy-d
@@ -179,13 +190,19 @@ transport fastcgi {
 	split <at>
 	env   <key> <value>
     resolve_root_symlink
+    dial_timeout  <duration>
+	read_timeout  <duration>
+	write_timeout <duration>
 }
 ```
 
 - **root** is the root of the site. Default: `{http.vars.root}` or current working directory.
 - **split** is where to split the path to get PATH_INFO at the end of the URI.
-- **env** sets custom environment variables.
-- **resolve_root_symlink** The declared root directory will be resolved to its actual value by evaluating any symbolic links.
+- **env** sets an extra environment variable to the given value. Can be specified more than once for multiple environment variables.
+- **resolve_root_symlink** enables resolving the `root` directory to its actual value by evaluating a symbolic link, if one exists.
+- **dial_timeout** is how long to wait when connecting to the upstream socket. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
+- **read_timeout** is how long to wait when reading from the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
+- **write_timeout** is how long to wait when sending to the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
 
 
 ## Examples
