@@ -27,3 +27,5 @@ request_body {
   max_size 10MB
 }
 ```
+
+If the request body size exceeds the limit, it returns 502 Bad Gateway.
