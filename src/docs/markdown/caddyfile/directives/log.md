@@ -6,6 +6,8 @@ title: log (Caddyfile directive)
 
 Enables and configures HTTP request logging (also known as access logs).
 
+The `log` directive applies to the host/port of the site block it appears in, not any other part of the site address (e.g. path).
+
 ## Syntax
 
 ```caddy-d

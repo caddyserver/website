@@ -136,12 +136,19 @@ Obtains certificates using the ACME protocol.
 
 Obtains certificates using the ACME protocol, specifically with ZeroSSL.
 
-The config for `zerossl` is exactly the same as the config for `acme`, except that its name is `zerossl`, it will use ZeroSSL's directory, and it will automatically negotiate EAB credentials. In other words, simply specifying this issuer (with no other configuration) is enough to use ZeroSSL.
+```caddy
+... zerossl [<api_key>] {
+	...
+}
+```
 
-Its default directory endpoint is `https://acme.zerossl.com/v2/DV90`.
+The syntax for `zerossl` is exactly the same as for `acme`, except that its name is `zerossl` and it can optionally take your ZeroSSL API key.
 
-Note that ZeroSSL is RFC-8555-compliant and can be used with the `acme` issuer module instead, but this module is more convenient because it handles the EAB credentials under the hood for you.
+The functionality of the `zerossl` issuer is the same as the `acme` issuer, except that it will use ZeroSSL's directory by default and it can automatically negotiate EAB credentials (whereas with the `acme` issuer, you have to manually provide EAB credentials and set the directory endpoint).
 
+When explicitly configuring `zerossl`, an email address is required so that your certificates can appear in your ZeroSSL dashboard.
+
+Note that ZeroSSL is a default issuer, so configuring it explicitly is usually unnecessary.
 
 #### internal
 
