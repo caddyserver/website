@@ -38,7 +38,7 @@ Replace `ASSET` with the filename for your platform.
 <span class="bash">sudo apt update</span>
 <span class="bash">sudo apt install caddy</span></code></pre>
 
-Installing this package automatically starts and runs Caddy for you.
+Installing this package automatically starts and runs Caddy for you as a systemd service named `caddy` using the [caddy.service](https://github.com/caddyserver/dist/blob/master/init/caddy.service) unit file.
 
 
 ## Fedora, RedHat, CentOS
