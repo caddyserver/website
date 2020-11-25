@@ -27,6 +27,12 @@ header {
 	font-size: 12px;
 }
 
+#zerossl-project {
+	font-size: 12px;
+	line-height: 1em;
+	padding-left: 1.5em;
+}
+
 #search {
 	margin-top: 0;
 }
@@ -818,6 +824,11 @@ td code {
 @media (max-width: 900px) {
 	#logo-container {
 		display: block;
+	}
+
+	#zerossl-project {
+		text-align: center;
+		margin-bottom: 1em;
 	}
 
 	#logo-docs {

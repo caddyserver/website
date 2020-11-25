@@ -47,8 +47,18 @@ header {
 	padding: 25px 0;
 }
 
+#logo-container {
+	flex: 1;
+}
+
 #logo {
 	height: 40px;
+}
+
+#zerossl-logo {
+	height: 1.5em;
+	vertical-align: middle;
+	margin: 0 4px;
 }
 
 header nav {
