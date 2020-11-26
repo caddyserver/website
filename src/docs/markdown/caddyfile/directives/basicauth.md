@@ -12,6 +12,8 @@ When a user requests a resource that is protected, the browser will prompt the u
 
 Caddy configuration does not accept plaintext passwords; you MUST hash them before putting them into the configuration. The [`caddy hash-password`](/docs/command-line#caddy-hash-password) command can help with this.
 
+After a successful authentication, the `{http.auth.user.id}` placeholder will be available, which contains the authenticated username.
+
 
 ## Syntax
 
