@@ -177,7 +177,8 @@ Masks IP addresses in the field using a CIDR mask, i.e. the number of bytes from
 }
 ```
 
-
+### Levels
+The following log levels are available with `INFO` being the default: `DEBUG`, `INFO`, `WARN`, `ERROR`, `PANIC`, and `FATAL`.
 
 
 ## Examples
