@@ -243,11 +243,22 @@ Reverse proxy to an HTTPS endpoint:
 reverse_proxy https://example.com
 ```
 
-Strip a path prefix then proxy:
+Configure some transport options:
 
 ```caddy-d
-route /prefix/* {
-	uri strip_prefix /prefix
+reverse_proxy https://example.com {
+	transport http {
+		dial_timeout 2s
+		tls_timeout  2s
+	}
+}
+```
+
+Replace a path prefix before proxying:
+
+```caddy-d
+handle_path /old-prefix/* {
+	rewrite * /new-prefix{path}
 	reverse_proxy localhost:9000
 }
 ```
