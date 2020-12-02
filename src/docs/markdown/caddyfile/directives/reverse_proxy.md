@@ -249,16 +249,16 @@ Configure some transport options:
 reverse_proxy https://example.com {
 	transport http {
 		dial_timeout 2s
-		tls_timeout 2s
+		tls_timeout  2s
 	}
 }
 ```
 
-Strip a path prefix then proxy with a new path:
+Replace a path prefix before proxying:
 
 ```caddy-d
-handle_path /prefix/* {
-	rewrite * /foo{path}
+handle_path /old-prefix/* {
+	rewrite * /new-prefix{path}
 	reverse_proxy localhost:9000
 }
 ```
