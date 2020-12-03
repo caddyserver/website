@@ -220,7 +220,7 @@ Gives the running Caddy instance a new configuration. This has the same effect a
 
 Because this command uses the API, the admin endpoint must not be disabled.
 
-`--config` is the config file to apply. If not specified, it will try a file called `Caddyfile` in the current working directory and, if it exists, it will adapt it using the `caddyfile` config adapter; otherwise, it is an error if there is no config file to load.
+`--config` is the config file to apply. If `-`, the config is read from stdin. If not specified, it will try a file called `Caddyfile` in the current working directory and, if it exists, it will adapt it using the `caddyfile` config adapter; otherwise, it is an error if there is no config file to load.
 
 `--adapter` specifies a config adapter to use, if any.
 
@@ -261,7 +261,7 @@ This command disables the admin API so it is easier to run multiple instances on
 
 Runs Caddy and blocks indefinitely; i.e. "daemon" mode.
 
-`--config` specifies an initial config file to immediately load and use. If no config is specified, Caddy will run with a blank configuration and use default settings for the [admin API endpoints](/docs/api), which can be used to feed it new configuration. As a special case, if the current working directory has a file called "Caddyfile" and the `caddyfile` config adapter is plugged in (default), then that file will be loaded and used to configure Caddy, even without any command line flags.
+`--config` specifies an initial config file to immediately load and use. If `-`, the config is read from stdin. If no config is specified, Caddy will run with a blank configuration and use default settings for the [admin API endpoints](/docs/api), which can be used to feed it new configuration. As a special case, if the current working directory has a file called "Caddyfile" and the `caddyfile` config adapter is plugged in (default), then that file will be loaded and used to configure Caddy, even without any command line flags.
 
 `--adapter` is the name of the config adapter to use when loading the initial config, if any. This flag is not necessary if the `--config` filename starts with "Caddyfile" which assumes the `caddyfile` adapter. Otherwise, this flag is required if the provided config file is not in Caddy's native JSON format. Any warnings will be printed to the log, but beware that any adaptation without errors will immediately be used, even if there are warnings. If you want to review the results of the adaptation first, use the [`caddy adapt`](#caddy-adapt) subcommand.
 
@@ -290,6 +290,8 @@ Runs Caddy and blocks indefinitely; i.e. "daemon" mode.
 	[--watch]</code></code></pre>
 
 Same as [`caddy run`](#caddy-run), but in the background. This command only blocks until the background process is running successfully (or fails to run), then returns.
+
+Note: the flag `--config` doesn't support `-` to read the config from stdin.
 
 Use of this command is discouraged with system services or on Windows. On Windows, the child process will remain attached to the terminal, so closing the window will forcefully stop Caddy, which is not obvious.
 
@@ -345,7 +347,7 @@ Untrusts a root certificate from the local trust store(s). Intended for developm
 
 Validates a configuration file, then exits. This command deserializes the config, then loads and provisions all of its modules as if to start the config, but the config is not actually started. This exposes errors in a configuration that arise during loading or provisioning phases and is a stronger error check than merely serializing a config as JSON.
 
-`--config` is the config file to validate. Default is the `Caddyfile` in the current directory, if any.
+`--config` is the config file to validate. If `-`, the config is read from stdin. Default is the `Caddyfile` in the current directory, if any.
 
 `--adapter` is the name of the config adapter to use, if the config file is not in Caddy's native JSON format. If the config file starts with `Caddyfile`, the `caddyfile` adapter is used by default.
 
