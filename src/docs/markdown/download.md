@@ -60,13 +60,11 @@ RHEL/CentOS 7:
 
 ## Linux & Raspberry Pi
 
-You can use Webi to automate the processes of downloading the latest release and putting it
-in your PATH, without requiring admin permissions.
+You can use Webi to automate the processes of downloading the latest release and putting it in your PATH, without requiring admin permissions.
 
 <pre><code class="cmd bash">curl -sS https://webinstall.dev/caddy | bash</code></pre>
 
-If you'd like a simple way to launch Caddy as a system service and bind to privilege ports,
-see the Webi [Caddy Cheat Sheet](https://webinstall.dev/caddy).
+If you'd like a simple way to launch Caddy as a system service and bind to privilege ports, see the Webi [Caddy Cheat Sheet](https://webinstall.dev/caddy).
 
 To allow non-root users to bind to ports 80 and 443, use setcap.
 
@@ -92,8 +90,14 @@ To allow non-root users to bind to ports 80 and 443, use setcap.
 
 [**View the Webi installer**](https://github.com/webinstall/webi-installers/tree/master/caddy)
 
-## Windows 10
+## Windows 10 (Powershell)
 
 <pre><code class="cmd pwsh">curl.exe -A MS https://webinstall.dev/caddy | powershell</code></pre>
 
 You may need to adjust the Windows firewall rules to allow non-localhost incoming connections.
+
+## Windows (Chocolatey)
+
+<pre><code class="cmd pwsh">choco install caddy</code></pre>
+
+[**View the Chocolatey package**](https://chocolatey.org/packages/caddy)
