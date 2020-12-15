@@ -19,6 +19,7 @@ Directive | Description
 **[header](/docs/caddyfile/directives/header)** | Sets or removes response headers
 **[import](/docs/caddyfile/directives/import)** | Include snippets or files
 **[log](/docs/caddyfile/directives/log)** | Enables access/request logging
+**[map](/docs/caddyfile/directives/map)** | Maps an input value to one or more outputs
 **[metrics](/docs/caddyfile/directives/metrics)** | Configures the Prometheus metrics exposition endpoint
 **[php_fastcgi](/docs/caddyfile/directives/php_fastcgi)** | Serve PHP sites over FastCGI
 **[push](/docs/caddyfile/directives/push)** | Push content to the client using HTTP/2 server push
@@ -73,6 +74,7 @@ Because matcher tokens all work the same, the various possibilities for the matc
 Many directives manipulate the HTTP handler chain. The order in which those directives are evaluated matters, so a default ordering is hard-coded into Caddy:
 
 ```caddy-d
+map
 root
 
 header
