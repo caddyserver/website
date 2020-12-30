@@ -26,7 +26,7 @@ Welcome to Caddy! This tutorial will explore the basics of using Caddy and help 
 
 ---
 
-**If you [installed Caddy](/docs/download) from a package manager, Caddy might already be running as a service. If so, please stop the service before doing this tutorial.**
+**If you [installed Caddy](/docs/install) from a package manager, Caddy might already be running as a service. If so, please stop the service before doing this tutorial.**
 
 Let's start by running it:
 

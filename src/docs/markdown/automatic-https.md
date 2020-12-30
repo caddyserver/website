@@ -6,50 +6,66 @@ title: "Automatic HTTPS"
 
 **Caddy is the first and only web server to use HTTPS automatically _and by default_.**
 
-Automatic HTTPS provisions TLS certificates for all your sites and keeps them renewed. It also redirects HTTP to HTTPS for you! Caddy uses safe and modern defaults -- no downtime or extra configuration required.
+Automatic HTTPS provisions TLS certificates for all your sites and keeps them renewed. It also redirects HTTP to HTTPS for you! Caddy uses safe and modern defaults -- no downtime, extra configuration, or separate tooling is required.
 
-<aside class="tip">Caddy innovated automatic HTTPS technology; we've been doing this since the first day it was possible in 2015. Caddy's HTTPS automation logic is the most mature and robust in the world.</aside>
+<aside class="tip">Caddy innovated automatic HTTPS technology; we've been doing this since the first day it was feasible in 2015. Caddy's HTTPS automation logic is the most mature and robust in the world.</aside>
 
 Here's a 28-second video showing how it works:
 
 <iframe width="100%" height="480" src="https://www.youtube-nocookie.com/embed/nk4EWHvvZtI?rel=0" frameborder="0" allowfullscreen=""></iframe>
 
 
+**Menu:**
+
+- [Overview](#overview)
+- [Activation](#activation)
+- [Effects](#effects)
+- [Hostname requirements](#hostname-requirements)
+- [Local HTTPS](#local-https)
+- [Testing](#testing)
+- [ACME Challenges](#acme-challenges)
+- [On-Demand TLS](#on-demand-tls)
+- [Errors](#errors)
+- [Storage](#storage)
+- [Wildcard certificates](#wildcard-certificates)
+
+
 
 ## Overview
 
-**Caddy serves all sites over HTTPS by default.**
+**By default, Caddy serves all sites over HTTPS.**
 
-- Caddy serves IP addresses and local/internal hostnames over HTTPS with locally-trusted certificates. Examples: `localhost`, `127.0.0.1`.
-- Caddy serves public DNS names over HTTPS with certificates from [Let's Encrypt](https://letsencrypt.org). Examples: `example.com`, `sub.example.com`, `*.example.com`.
+- Caddy serves IP addresses and local/internal hostnames over HTTPS using self-signed certificates that are automatically trusted locally (if permitted).
+	- Examples: `localhost`, `127.0.0.1`
+- Caddy serves public DNS names over HTTPS using certificates from a public ACME CA such as [Let's Encrypt](https://letsencrypt.org) or [ZeroSSL](https://zerossl.com).
+	- Examples: `example.com`, `sub.example.com`, `*.example.com`
 
-Caddy keeps all certificates renewed, and redirects HTTP (default port 80) to HTTPS (default port 443) automatically.
+Caddy keeps all managed certificates renewed and redirects HTTP (default port 80) to HTTPS (default port 443) automatically.
 
 **For local HTTPS:**
 
-- Caddy may prompt for a password to install its root certificate into your trust store. This happens only once per root.
-- Any client accessing the site without trusting the root cert will show security errors.
+- Caddy may prompt for a password to install its unique root certificate into your trust store. This happens only once per root; and you can remove it at any time.
+- Any client accessing the site without trusting Caddy's root will show security errors.
 
 **For public domain names:**
 
-<aside class="tip">These are common requirements for any basic production website, not just Caddy. The main difference is to set your DNS records properly <b>before</b> running Caddy.</aside>
-
+<aside class="tip">These are common requirements for any basic production website, not just Caddy. The main difference is to set your DNS records properly <b>before</b> running Caddy so it can provision certificates.</aside>
 
 - If your domain's A/AAAA records point to your server,
 - ports 80 and 443 are open externally,
 - Caddy can bind to those ports (_or_ those ports are forwarded to Caddy),
-- your `$HOME` folder is writeable and persistent,
+- your [data directory](/docs/conventions#data-directory) is writeable and persistent,
 - and your domain name appears somewhere relevant in the config,
 
-then sites will be served over HTTPS automatically and without problems. You won't have to know or do anything else about it. It should "just work"!
+then sites will be served over HTTPS automatically. You won't have to do anything else about it. It just works!
 
-If you are still testing your setup, however, please read on or you risk being rate limited by your CA. The rest of this page goes over the details for advanced use cases and troubleshooting purposes.
+Because HTTPS utilizes a shared, public infrastructure, you as the server admin should understand the rest of the information on this page so that you can avoid unnecessary problems, troubleshoot them when they occur, and properly configure advanced deployments.
 
 
 
 ## Activation
 
-Caddy implicitly activates automatic HTTPS when it knows a domain name (i.e. hostname) it is serving. Depending on how you run or configure Caddy, there are various ways to tell Caddy which domain names to use:
+Caddy implicitly activates automatic HTTPS when it knows a domain name (i.e. hostname) or IP address it is serving. There are various ways to tell Caddy your domain/IP, depending on how you run or configure Caddy:
 
 - A [site address](/docs/caddyfile/concepts#addresses) in the [Caddyfile](/docs/caddyfile)
 - A [host matcher](/docs/json/apps/http/servers/routes/match/host/) in a [route](/docs/modules/http#servers/routes)
@@ -74,12 +90,12 @@ When automatic HTTPS is activated, the following occurs:
 
 Automatic HTTPS never overrides explicit configuration.
 
-You can [customize or disable automatic HTTPS](/docs/json/apps/http/servers/automatic_https/) if necessary.
+You can [customize or disable automatic HTTPS](/docs/json/apps/http/servers/automatic_https/) if necessary; for example, you can skip certain domain names or disable redirects.
 
 
 ## Hostname requirements
 
-All hostnames (domain names and IP addresses) qualify for fully-managed certificates if they:
+All hostnames (domain names) qualify for fully-managed certificates if they:
 
 - are non-empty
 - consist only of alphanumerics, hyphens, dots, and wildcard (`*`)
@@ -87,10 +103,9 @@ All hostnames (domain names and IP addresses) qualify for fully-managed certific
 
 In addition, hostnames qualify for publicly-trusted certificates if they:
 
-- are not localhost
+- are not localhost (including `.localhost` and `.local` TLDs)
 - are not an IP address
 - have only a single wildcard `*` as the left-most label
-
 
 
 ## Local HTTPS
@@ -121,25 +136,21 @@ An intermediate certificate and key will also be generated, which will be used f
 Unlike the root certificate, intermediate certificates have a much shorter lifetime and will automatically be renewed as needed.
 
 
-
-
-
 ## Testing
 
 To test or experiment with your Caddy configuration, make sure you [change the ACME endpoint](/docs/modules/tls.issuance.acme#ca) to a staging or development URL, otherwise you are likely to hit rate limits which can block your access to HTTPS for up to a week, depending on which rate limit you hit.
 
-Caddy's default CA is [Let's Encrypt](https://letsencrypt.org/), which has a [staging endpoint](https://letsencrypt.org/docs/staging-environment/) that is not subject to the same [rate limits](https://letsencrypt.org/docs/rate-limits/):
+One of Caddy's default CAs is [Let's Encrypt](https://letsencrypt.org/), which has a [staging endpoint](https://letsencrypt.org/docs/staging-environment/) that is not subject to the same [rate limits](https://letsencrypt.org/docs/rate-limits/):
 
 ```
 https://acme-staging-v02.api.letsencrypt.org/directory
 ```
 
-
 ## ACME challenges
 
 Obtaining a publicly-trusted TLS certificate requires validation from a publicly-trusted, third-party authority. These days, this validation process is automated with the [ACME protocol](https://tools.ietf.org/html/rfc8555), and can be performed one of three ways ("challenge types"), described below.
 
-The first two challenge types are enabled by default. If multiple challenges are enabled, Caddy chooses one at random to avoid accidental dependence on a particular challenge.
+The first two challenge types are enabled by default. If multiple challenges are enabled, Caddy chooses one at random to avoid accidental dependence on a particular challenge. Over time, it learns which challenge type is most successful and will begin to prefer it first, but will fall back to other available challenge types if necessary.
 
 
 ### HTTP challenge
@@ -171,16 +182,21 @@ DNS provider support is a community effort. [Learn how to enable the DNS challen
 
 ## On-Demand TLS
 
-Caddy pioneered a new technology we call On-Demand TLS, which obtains the certificate for a name during the first TLS handshake that requires it, rather than at config load. You can enable it using the [on_demand](/docs/json/apps/tls/automation/on_demand/) property in your TLS automation config, or the [on_demand Caddyfile subdirective](/docs/caddyfile/directives/tls#syntax).
+Caddy pioneered a new technology we call **On-Demand TLS**. Many businesses rely on this feature to scale their TLS deployments at lower cost and without operational headaches when serving tens of thousands of sites.
 
-This feature can be useful if you do not know all the domain names up front, or if domain names you know of may not be properly configured right away (e.g. DNS records not yet set correctly). Certificates managed on-demand will be obtained and renewed in the foreground of TLS handshakes that require it. This process slows down only the initial TLS handshake; all others will not be affected.
+This unique feature obtains the certificate for a name during the first TLS handshake that requires it, rather than at config load. This is useful if:
 
-To prevent abuse, you should specify rate limits and/or an endpoint that Caddy can query to ask if a certificate is allowed to be obtained for a hostname. Essentially, you still need a way to provide a whitelist, but this can be managed dynamically using your own scripts or programs if you'd rather keep Caddy's config more static.
+- you do not know all the domain names up front,
+- domain names might not be properly configured right away (e.g. DNS records not yet set),
+- or you are not in control of the domain names (e.g. they are customer domains).
+
+When on-demand TLS is enabled, a TLS handshake may trigger maintenance for the relevant certificate. If no existing certificate is available, this process slows down only the initial TLS handshake while a certificate is obtained in the foreground; all other handshakes will not be affected (except those waiting on the same certificate). If an existing certificate can be used, the handshake will complete immediately, and maintenance (i.e. renewal) will happen in the background.
+
+You can enable it using the [on_demand](/docs/json/apps/tls/automation/on_demand/) property in your TLS automation config, or the [on_demand Caddyfile subdirective](/docs/caddyfile/directives/tls#syntax). Note that enabling on-demand TLS is separate from configuring how it works. To prevent abuse, you should specify rate limits and/or an endpoint that Caddy can query to ask if a certificate is allowed to be obtained for a hostname.
 
 **Future support:** This feature relies on the CA issuing certificates without delay. If instantaneous issuance becomes uncommon among ACME CAs, we may discontinue this feature in Caddy.
 
-Due to its deferred nature and the possibility that some ACME challenges can take more than a few seconds (especially when using the DNS challenge), we typically recommend using On-Demand TLS only when there are specific technical or operational advantages to you; namely, if the DNS records for a domain are not in your control, and you do not know when they will be properly set and ready to get certificates.
-
+Due to its deferred nature and potential for abuse (if not mitigated through proper configuration), we recommend enabling on-demand TLS only when your actual use case is described above.
 
 ## Errors
 
@@ -192,31 +208,43 @@ Here's what happens if there's an error obtaining or renewing a certificate:
 
 1. Caddy retries once after a brief pause just in case it was a fluke
 2. Caddy pauses briefly, then switches to the next enabled challenge type
-3. After all enabled challenge types have been tried, it backs off exponentially
+3. After all enabled challenge types have been tried, [it tries the next configured issuer](#issuer-fallback)
+	- Let's Encrypt
+	- ZeroSSL
+4. After all issuers have been tried, it backs off exponentially
 	- Maximum of 1 day between attempts
 	- For up to 30 days
 
 During retries with Let's Encrypt, Caddy switches to their [staging environment](https://letsencrypt.org/docs/staging-environment/) to avoid rate limit concerns. This isn't a perfect strategy, but in general it's helpful.
 
-ACME challenges take at least a few seconds, and internal rate limiting helps mitigate accidental abuse. Caddy uses internal rate limiting in addition to what you or the CA configure so that you can hand Caddy a platter with a million domain names and it will gradually -- but as fast as it can -- obtain certificates for all of them.
+ACME challenges take at least a few seconds, and internal rate limiting helps mitigate accidental abuse. Caddy uses internal rate limiting in addition to what you or the CA configure so that you can hand Caddy a platter with a million domain names and it will gradually -- but as fast as it can -- obtain certificates for all of them. Caddy's internal rate limit is currently 10 attempts per ACME account per minute.
 
-Caddy's internal rate limit is currently 10 attempts per ACME account per minute.
+To avoid leaking resources, Caddy aborts in-flight tasks (including ACME transactions) when config is changed. While Caddy is capable of handling frequent config reloads, be mindful of operational considerations such as this, and consider batching config changes to reduce reloads and give Caddy a chance to actually finish obtaining certificates in the background.
+
+### Issuer fallback
+
+Caddy is the first (and so far only) server to support fully-redundant, automatic failover to other CAs in the event it cannot successfully get a certificate.
+
+By default, Caddy enables two ACME-compatible CAs: [**Let's Encrypt**](https://letsencrypt.org) and [**ZeroSSL**](https://zerossl.com). If Caddy cannot get a certificate from Let's Encrypt, it will try with ZeroSSL; if both fail, it will backoff and retry again later. In your config, you can customize which issuers Caddy uses to obtain certificates, either universally or for specific names.
 
 
 ## Storage
 
 Caddy will store public certificates, private keys, and other assets in its [configured storage facility](/docs/json/storage/) (or the default one, if not configured -- see link for details).
 
-**The main thing you need to know is that the `$HOME` folder must be writeable and persistent.**
+**The main thing you need to know using the default config is that the `$HOME` folder must be writeable and persistent.** To help you troubleshoot, Caddy prints its environment variables at startup if the `--environ` flag is specified.
 
 Any Caddy instances that are configured to use the same storage will automatically share those resources and coordinate certificate management as a cluster.
 
-Before attempting any ACME transactions, Caddy will test the configured storage to ensure it is writeable and has sufficient capacity. This helps reduce unnecessary rate limit contention.
-
+Before attempting any ACME transactions, Caddy will test the configured storage to ensure it is writeable and has sufficient capacity. This helps reduce unnecessary lock contention.
 
 
 ## Wildcard certificates
 
 Caddy can obtain and manage wildcard certificates when it is configured to serve a site with a qualifying wildcard name. A site name qualifies for a wildcard if only its left-most domain label is a wildcard. For example, `*.example.com` qualifies, but these do not: `sub.*.example.com`, `foo*.example.com`, `*bar.example.com`, and `*.*.example.com`.
 
-To get a wildcard from Let's Encrypt, you simply need to enable the [DNS challenge](#dns-challenge) and use a wildcard domain in your config. We recommend using wildcards only when you have so many subdomains that you would encounter CA rate limits trying to obtain certificates for them all.
+If using the Caddyfile, Caddy takes site names literally with regards to the certificate subject names. In other words, a site defined as `sub.example.com` will cause Caddy to manage a certificate for `sub.example.com`, and a site defined as `*.example.com` will cause Caddy to manage a wildcard certificate for `*.example.com`. If you need different behavior, the [JSON config](/docs/json/) gives you precise control over certificate subjects and site names ("host matchers").
+
+Wildcard certificates represent a wide degree of authority and should only be used when you have so many subdomains that managing individual certificates for them would strain the PKI or cause you to hit CA-enforced rate limits.
+
+**Note:** [Let's Encrypt requires](https://letsencrypt.org/docs/challenge-types/) the [DNS challenge](#dns-challenge) to obtain wildcard certificates.

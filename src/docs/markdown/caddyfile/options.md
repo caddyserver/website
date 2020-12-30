@@ -112,7 +112,7 @@ Sets a default TLS ServerName for when clients do not use SNI in their ClientHel
 Causes all certificates to be issued internally by default, rather than through a (public) ACME CA such as Let's Encrypt. This is useful in development environments.
 
 ##### `acme_ca`
-Specifies the URL to the ACME CA's directory. It is strongly recommended to set this to Let's Encrypt's [staging endpoint](https://letsencrypt.org/docs/staging-environment/) for testing or development. Default: Let's Encrypt's production endpoint.
+Specifies the URL to the ACME CA's directory. It is strongly recommended to set this to Let's Encrypt's [staging endpoint](https://letsencrypt.org/docs/staging-environment/) for testing or development. Default: ZeroSSL and Let's Encrypt's production endpoints.
 
 ##### `acme_ca_root`
 Specifies a PEM file that contains a trusted root certificate for ACME CA endpoints, if not in the system trust store.

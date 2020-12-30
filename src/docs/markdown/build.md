@@ -20,7 +20,7 @@ Build:
 <span class="bash">go build</span></code></pre>
 
 <aside class="tip">
-	Due to <a href="https://github.com/golang/go/issues/29228">a bug in Go</a>, these basic steps do not embed version information. If you want the version (<code>caddy version</code>), you need to compile Caddy as a dependency rather than as the main module. Instructions for this are in Caddy's <a href="https://github.com/caddyserver/caddy/blob/master/cmd/caddy/main.go">main.go</a> file. Or, you can use <b>xcaddy</b> which automates this.
+	Due to <a href="https://github.com/golang/go/issues/29228">a bug in Go</a>, these basic steps do not embed version information. If you want the version (<code>caddy version</code>), you need to compile Caddy as a dependency rather than as the main module. Instructions for this are in Caddy's <a href="https://github.com/caddyserver/caddy/blob/master/cmd/caddy/main.go">main.go</a> file. Or, you can use <a href="#xcaddy"><code>xcaddy</code></a> which automates this.
 </aside>
 
 ## xcaddy
@@ -30,7 +30,7 @@ The [`xcaddy` command](https://github.com/caddyserver/xcaddy) is the easiest way
 Requirements:
 
 - Go installed (see above)
-- Make sure [xcaddy](https://github.com/caddyserver/xcaddy/releases) is in your PATH
+- Make sure [`xcaddy`](https://github.com/caddyserver/xcaddy/releases) is in your PATH
 
 You do **not** need to download the Caddy source code (it will do that for you).
 
@@ -44,7 +44,7 @@ To build with plugins, use `--with`:
     --with github.com/caddyserver/nginx-adapter
 	--with github.com/caddyserver/ntlm-transport@v0.1.1</code></pre>
 
-As you can see, you can customize the versions of plugins with `@` syntax. Versions can be a tag name or commit SHA.
+As you can see, you can customize the versions of plugins with `@` syntax. Versions can be a tag name, commit SHA, or branch.
 
 Cross-platform compilation with `xcaddy` works the same as with the `go` command (see below).
 

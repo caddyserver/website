@@ -203,9 +203,9 @@ Prints CLI help text, optionally for a specific subcommand, then exits.
 <pre><code class="cmd bash">caddy list-modules
 	[--versions]</code></pre>
 
-Prints the Caddy modules that are installed, optionally with version information from their associated Go modules, then exits.
+Prints the Caddy modules that are installed, optionally with package and/or version information from their associated Go modules, then exits.
 
-NOTE: Due to [a bug in Go](https://github.com/golang/go/issues/29228), version information is only available if Caddy is built as a dependency and not as the main module. TODO: Link to docs that explain how to build Caddy with version info
+NOTE: Due to [a bug in Go](https://github.com/golang/go/issues/29228), version information is only available if Caddy is built as a dependency and not as the main module. Use [xcaddy](/docs/build#xcaddy) to make this easier.
 
 
 

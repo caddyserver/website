@@ -237,12 +237,13 @@ file {
 ### header
 
 ```caddy-d
-header <field> <value>
+header <field> [<value>]
 ```
 
 By request header fields.
 
 - `<field>` is the name of the HTTP header field to check.
+	- If prefixed with `!`, the field must not exist to match (omit value arg).
 - `<value>` is the value the field must have to match.
 	- If prefixed with `*`, it performs a fast suffix match.
 	- If suffixed with `*`, it performs a fast prefix match.
@@ -264,6 +265,13 @@ Match requests with the `Foo` header containing `bar` OR `baz`.
 @foo {
 	header Foo bar
 	header Foo baz
+}
+```
+
+Match requests that do not have the `Foo` header field at all:
+```caddy-d
+@not_foo {
+	header !Foo
 }
 ```
 

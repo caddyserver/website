@@ -4,18 +4,80 @@ title: "Install"
 
 # Install
 
-This page describes how to manually install Caddy as a service.
+This page describes various methods for installing Caddy on your system.
+
+**Official:**
+
+- [Static binaries](#static-binaries)
+- [Debian, Ubuntu, Raspbian](#debian-ubuntu-raspbian)
+- [Fedora, RedHat, CentOS](#fedora-redhat-centos)
+- [Docker](#docker)
+- [DigitalOcean](#digitalocean)
+- [Linux service](#linux-service)
 
 <aside class="tip">
-	If you <a href="/docs/download">downloaded Caddy</a> using a package manager such as <code>apt</code> or <code>dnf</code>, then Caddy is already installed, and you should jump to <a href="/docs/getting-started">Getting Started</a>.
+    Our <a href="https://github.com/caddyserver/dist">official packages</a> come only with the standard modules. If you need third-party plugins, <a href="/docs/build#xcaddy">build from source with <code>xcaddy</code></a> or use <a href="/download">our download page</a>.
 </aside>
 
 
+**Community-maintained:**
+
+- [Homebrew](#homebrew)
+- [Webi](#webi)
+- [Chocolatey](#chocolatey)
+
+
+## Static binaries
+
+Simply downloading a Caddy binary does not <a href="#linux-service">install it as a service</a>, but can be useful in dev or when upgrading an existing installation.
+
+- [**View releases on GitHub**](https://github.com/caddyserver/caddy/releases) (expand "Assets")
+- [**Use our download page**](/download)
+
+
+## Debian, Ubuntu, Raspbian
+
+<pre><code class="cmd"><span class="bash">echo "deb [trusted=yes] https://apt.fury.io/caddy/ /" \
+    | sudo tee -a /etc/apt/sources.list.d/caddy-fury.list</span>
+<span class="bash">sudo apt update</span>
+<span class="bash">sudo apt install caddy</span></code></pre>
+
+Installing this package automatically starts and runs Caddy for you as a systemd service named `caddy` using our official [caddy.service](https://github.com/caddyserver/dist/blob/master/init/caddy.service) unit file.
+
+## Fedora, RedHat, CentOS
+
+Fedora or RHEL/CentOS 8:
+
+<pre><code class="cmd"><span class="bash">dnf install 'dnf-command(copr)'</span>
+<span class="bash">dnf copr enable @caddy/caddy</span>
+<span class="bash">dnf install caddy</span></code></pre>
+
+RHEL/CentOS 7:
+
+<pre><code class="cmd"><span class="bash">yum install yum-plugin-copr</span>
+<span class="bash">yum copr enable @caddy/caddy</span>
+<span class="bash">yum install caddy</span></code></pre>
+
+[**View the Caddy COPR**](https://copr.fedorainfracloud.org/coprs/g/caddy/caddy/)
+
+
+## Docker
+
+<pre><code class="cmd bash">docker pull caddy</code></pre>
+
+[**View on Docker Hub**](https://hub.docker.com/_/caddy)
+
+## DigitalOcean
+
+[**Deploy a Caddy droplet on DigitalOcean**](https://marketplace.digitalocean.com/apps/caddy)
+
 ## Linux service
 
-Requirements:
+Manually install Caddy as a service on Linux with these instructions.
 
-- `caddy` binary that you [downloaded](/docs/download) or [built from source](/docs/build)
+**Requirements:**
+
+- `caddy` binary that you [downloaded](/download) or [built from source](/docs/build)
 - `systemctl --version` 232 or newer
 - `sudo` privileges
 
@@ -72,4 +134,37 @@ You can stop the service with:
 	Do not stop the service to change Caddy's configuration. Stopping the server will incur downtime. Use the reload command instead.
 </aside>
 
-Now that Caddy is installed, see our [Getting Started](/docs/getting-started) tutorial to learn how to use it!
+
+## Homebrew
+
+_Note: This is a community-maintained installation method._
+
+<pre><code class="cmd bash">brew install caddy</code></pre>
+
+[**View the Homebrew formula**](https://formulae.brew.sh/formula/caddy)
+
+
+## Webi
+
+_Note: This is a community-maintained installation method._
+
+Linux and macOS:
+
+<pre><code class="cmd bash">curl -sS https://webinstall.dev/caddy | bash</code></pre>
+
+Windows:
+
+<pre><code class="cmd">curl.exe -A MS https://webinstall.dev/caddy | powershell</code></pre>
+
+You may need to adjust the Windows firewall rules to allow non-localhost incoming connections.
+
+[**View on Webi**](https://webinstall.dev/caddy)
+
+
+## Chocolatey
+
+_Note: This is a community-maintained installation method._
+
+<pre><code class="cmd">choco install caddy</code></pre>
+
+[**View the Chocolatey package**](https://chocolatey.org/packages/caddy)

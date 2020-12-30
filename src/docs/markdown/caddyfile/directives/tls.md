@@ -38,7 +38,7 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 
 - **internal** means to use Caddy's internal, locally-trusted CA to produce certificates for this site.
 - **&lt;email&gt;** is the email address to use for the ACME account managing the site's certificates.
-- **&lt;cert_file&gt;** and **&lt;key_file&gt;** are the paths to the certificate and private key PEM files. Specifying just one is invalid; specifying both will disable automatic HTTPS.
+- **&lt;cert_file&gt;** and **&lt;key_file&gt;** are the paths to the certificate and private key PEM files. Specifying just one is invalid.
 - **protocols** specifies the minimum and maximum protocol versions. Default min: `tls1.2`. Default max: `tls1.3`
 - **ciphers** specifies the list of cipher suite names in descending preference order. Note that cipher suites are not customizable with TLS 1.3. The supported names are (in no particular order here):
 	- TLS_RSA_WITH_3DES_EDE_CBC_SHA
@@ -67,7 +67,7 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 	- secp521r1
 - **alpn** is the list of values to advertise in the ALPN extension of the TLS handshake.
 - **load** specifies a list of folders from which to load PEM files that are certificate+key bundles.
-- **ca** changes the ACME CA endpoint. This is most often used to use [Let's Encrypt's staging endpoint](https://letsencrypt.org/docs/staging-environment/) or an internal ACME server. (To change this value for the whole Caddyfile, use the `acme_ca` [global option](/docs/caddyfile/options) instead.)
+- **ca** changes the ACME CA endpoint. This is most often used to set [Let's Encrypt's staging endpoint](https://letsencrypt.org/docs/staging-environment/) when testing, or an internal ACME server. (To change this value for the whole Caddyfile, use the `acme_ca` [global option](/docs/caddyfile/options) instead.)
 - **ca_root** specifies a PEM file that contains a trusted root certificate for the ACME CA endpoint, if not in the system trust store.
 - **dns** enables the [DNS challenge](/docs/automatic-https#dns-challenge) using the specified provider plugin, which must be plugged in from one of the [caddy-dns](https://github.com/caddy-dns) repositories. Each provider plugin may have their own syntax following their name; refer to their docs for details. Maintaining support for each DNS provider is a community effort. [Learn how to enable the DNS challenge for your provider at our wiki.](https://caddy.community/t/how-to-use-dns-provider-modules-in-caddy-2/8148)
 - **eab** configures ACME external account binding (EAB) for this site, using the key ID and MAC key provided by your CA.
@@ -91,7 +91,7 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 
 	Multiple `trusted_*` directives may be specified as a way to chain multiple CA or leaf certificates.
 
-- **issuer** configures a custom certificate issuer, or a source from which to obtain certificates. Which issuer is used and the options that follow in this segment depend on the issuer modules that are available (see below for the standard issuers). Some of the other subdirectives such as `ca` and `dns` are actually shortcuts for configuring the `acme` issuer (and this subdirective was added later), so specifying this directive and some of the others is confusing and thus prohibited.
+- **issuer** configures a custom certificate issuer, or a source from which to obtain certificates. Which issuer is used and the options that follow in this segment depend on the issuer modules that are available (see below for the standard issuers; plugins may add others). Some of the other subdirectives such as `ca` and `dns` are actually shortcuts for configuring the `acme` issuer (and this subdirective was added later), so specifying this directive and some of the others is confusing and thus prohibited. This subdirective can be specified multiple times to configure multiple, redundant issuers; if one fails to issue a cert, the next one will be tried.
 
 ### Issuers
 

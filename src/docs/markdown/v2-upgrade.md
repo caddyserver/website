@@ -71,7 +71,7 @@ Caddy's default port is no longer `:2015`. Caddy 2's default port is `:443` or, 
 
 Caddy 2's default protocol is [_always_ HTTPS if a hostname or IP is known](/docs/automatic-https#overview). This is different from Caddy 1, where only public-looking domains used HTTPS by default. Now, _every_ site uses HTTPS (unless you disable it by explicitly specifying port `:80` or `http://`).
 
-IP addresses and localhost domains will be issued certificates from a [locally-trusted, embedded CA](/docs/automatic-https#local-https). All other domains will use Let's Encrypt. (This is all configurable.)
+IP addresses and localhost domains will be issued certificates from a [locally-trusted, embedded CA](/docs/automatic-https#local-https). All other domains will use ZeroSSL or Let's Encrypt. (This is all configurable.)
 
 The storage structure of certificates and ACME resources has changed. Caddy 2 will probably obtain new certificates for your sites; but if you have a lot of certificates you can migrate them manually if it does not do it for you. See issues [#2955](https://github.com/caddyserver/caddy/issues/2955) and [#3124](https://github.com/caddyserver/caddy/issues/3124) for details.
 
