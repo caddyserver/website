@@ -93,7 +93,7 @@ Distributions that ship with a default config file should document where this co
 
 ### Data directory
 
-Caddy stores TLS certificates and other important assets in a data directory.
+Caddy stores TLS certificates and other important assets in a data directory, which is backed by [the configured storage module](/docs/json/storage/) (default: local file system).
 
 If the `XDG_DATA_HOME` environment variable is set, it is `$XDG_DATA_HOME/caddy`.
 

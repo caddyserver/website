@@ -90,7 +90,7 @@ When automatic HTTPS is activated, the following occurs:
 
 Automatic HTTPS never overrides explicit configuration.
 
-You can [customize or disable automatic HTTPS](/docs/json/apps/http/servers/automatic_https/) if necessary; for example, you can skip certain domain names or disable redirects.
+You can [customize or disable automatic HTTPS](/docs/json/apps/http/servers/automatic_https/) if necessary; for example, you can skip certain domain names or disable redirects (for Caddyfile, do this with [global options](/docs/caddyfile/options)).
 
 
 ## Hostname requirements
@@ -110,7 +110,7 @@ In addition, hostnames qualify for publicly-trusted certificates if they:
 
 ## Local HTTPS
 
-To serve non-public sites over HTTPS, Caddy generates its own certificate authority (CA) and uses it to sign certificates. The trust chain consists of a root and intermediate certificate. Leaf certificates are signed by the intermediate.
+To serve non-public sites over HTTPS, Caddy generates its own certificate authority (CA) and uses it to sign certificates. The trust chain consists of a root and intermediate certificate. Leaf certificates are signed by the intermediate. They are stored in [Caddy's data directory](/docs/conventions#data-directory) at `pki/authorities/local`.
 
 Caddy's local CA is powered by [Smallstep libraries](https://smallstep.com/certificates/).
 
@@ -192,9 +192,9 @@ This unique feature obtains the certificate for a name during the first TLS hand
 
 When on-demand TLS is enabled, a TLS handshake may trigger maintenance for the relevant certificate. If no existing certificate is available, this process slows down only the initial TLS handshake while a certificate is obtained in the foreground; all other handshakes will not be affected (except those waiting on the same certificate). If an existing certificate can be used, the handshake will complete immediately, and maintenance (i.e. renewal) will happen in the background.
 
-You can enable it using the [on_demand](/docs/json/apps/tls/automation/on_demand/) property in your TLS automation config, or the [on_demand Caddyfile subdirective](/docs/caddyfile/directives/tls#syntax). Note that enabling on-demand TLS is separate from configuring how it works. To prevent abuse, you should specify rate limits and/or an endpoint that Caddy can query to ask if a certificate is allowed to be obtained for a hostname.
+You can enable it using the [on_demand](/docs/json/apps/tls/automation/on_demand/) property in your TLS automation config, or the [on_demand Caddyfile subdirective](/docs/caddyfile/directives/tls#syntax). Note that enabling on-demand TLS is separate from configuring how it works. **Important:** To prevent abuse, you should specify rate limits and/or an endpoint that Caddy can query to ask if a certificate is allowed to be obtained for a hostname.
 
-**Future support:** This feature relies on the CA issuing certificates without delay. If instantaneous issuance becomes uncommon among ACME CAs, we may discontinue this feature in Caddy.
+Be mindful of how quickly your CA is able to issue certificates. If it takes more than a few seconds, this will negatively impact the user experience (for the first client only).
 
 Due to its deferred nature and potential for abuse (if not mitigated through proper configuration), we recommend enabling on-demand TLS only when your actual use case is described above.
 
