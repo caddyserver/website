@@ -37,12 +37,27 @@ Simply downloading a Caddy binary does not <a href="#linux-service">install it a
 
 ## Debian, Ubuntu, Raspbian
 
-<pre><code class="cmd"><span class="bash">echo "deb [trusted=yes] https://apt.fury.io/caddy/ /" \
-    | sudo tee -a /etc/apt/sources.list.d/caddy-fury.list</span>
+Installing this package automatically starts and runs Caddy for you as a systemd service named `caddy` using our official [`caddy.service`](https://github.com/caddyserver/dist/blob/master/init/caddy.service) unit file.
+
+This package also comes with a `caddy-api` systemd service using our official [`caddy-api.service`](https://github.com/caddyserver/dist/blob/master/init/caddy-api.service) unit file, which is disabled by default. If you plan to configure Caddy solely through its [API](/docs/api), then you should disable the `caddy` service, and enable the `caddy-api` service.
+
+Stable releases:
+
+<pre><code class="cmd"><span class="bash">sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https</span>
+<span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/cfg/gpg/gpg.155B6D79CA56EA34.key' | sudo apt-key add -</span>
+<span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/cfg/setup/config.deb.txt?distro=debian&version=any-version' | sudo tee -a /etc/apt/sources.list.d/caddy-stable.list</span>
 <span class="bash">sudo apt update</span>
 <span class="bash">sudo apt install caddy</span></code></pre>
 
-Installing this package automatically starts and runs Caddy for you as a systemd service named `caddy` using our official [caddy.service](https://github.com/caddyserver/dist/blob/master/init/caddy.service) unit file.
+Testing releases (includes betas and release candidates):
+
+<pre><code class="cmd"><span class="bash">sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https</span>
+<span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/testing/cfg/gpg/gpg.155B6D79CA56EA34.key' | sudo apt-key add -</span>
+<span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/testing/cfg/setup/config.deb.txt?distro=debian&version=any-version' | sudo tee -a /etc/apt/sources.list.d/caddy-testing.list</span>
+<span class="bash">sudo apt update</span>
+<span class="bash">sudo apt install caddy</span></code></pre>
+
+[**View the Cloudsmith repos**](https://cloudsmith.io/~caddy/repos/)
 
 ## Fedora, RedHat, CentOS
 
@@ -122,7 +137,7 @@ Verify that it is running:
 <pre><code class="cmd bash">systemctl status caddy</code></pre>
 
 When running with our official service file, Caddy's output will be redirected to `journalctl`:
-<pre><code class="cmd bash">journalctl -u caddy</code></pre>
+<pre><code class="cmd bash">journalctl -u caddy --no-pager | less</code></pre>
 
 If using a config file, you can gracefully apply any changes:
 <pre><code class="cmd bash">sudo systemctl reload caddy</code></pre>
