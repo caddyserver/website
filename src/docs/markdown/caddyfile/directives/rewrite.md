@@ -17,7 +17,7 @@ Because `rewrite` essentially performs an internal redirect, the Caddyfile adapt
 rewrite [<matcher>] <to>
 ```
 
-- **<to>** is the URI to set on the request. Only designated parts will be replaced. The URI path is any substring that comes before `?`. If `?` is omitted, then the whole token is considered to be the path.
+- **&lt;to&gt;** is the URI to set on the request. Only designated parts will be replaced. The URI path is any substring that comes before `?`. If `?` is omitted, then the whole token is considered to be the path.
 
 
 ## Examples
