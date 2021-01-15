@@ -18,7 +18,7 @@ log {
 }
 ```
 
-- **output** configures a where to write the logs to. See [Output modules](#output-modules) below. Default: `stderr`
+- **output** configures where to write the logs. See [Output modules](#output-modules) below. Default: `stderr`
 - **format** describes how to encode, or format, the logs. See [Format modules](#format-modules) below. Default: `console` if `stdout` is detected to be a terminal, `json` otherwise.
 - **level** is the minimum entry level to log. Default: `INFO`
 
