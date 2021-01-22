@@ -1,12 +1,13 @@
 // download package list as soon as possible
 $.get("/api/packages").done(function(json) {
 	var packageList = json.result;
+	const preselectedPackage = new URL(window.location.href).searchParams.getAll("package") ;
 	
 	// wait until the DOM has finished loading before rendering the results
 	$(function() {
 		const optpkgTemplate =
 			'<tr class="optpkg">'+
-			'	<td><label><input type="checkbox"><span class="optpkg-name"></span></label></td>'+
+			'	<td><label><input type="checkbox" class="optpkg-check"><span class="optpkg-name"></span></label></td>'+
 			'	<td class="text-center"><input type="text" name="version" placeholder="latest" title="Package version" size="5"></td>'+
 			'	<td class="optpkg-modules"></td>'+
 			'</tr>';
@@ -27,6 +28,30 @@ $.get("/api/packages").done(function(json) {
 			
 			var $optpkg = $(optpkgTemplate);
 			$('.optpkg-name', $optpkg).text(pkg.path);
+			if (preselectedPackage.includes(pkg.path)) {
+				$('.optpkg-check', $optpkg).prop("checked", true);
+				$('.optpkg-check', $optpkg).closest('.optpkg').toggleClass("selected");
+			}
+
+			$('.optpkg-check', $optpkg).change({pkg: pkg}, (event) => {
+				const element = $(event.currentTarget);
+				let newUrl = new URL(window.location.href);
+				let currentSelected = newUrl.searchParams.getAll("package") ;
+				newUrl.searchParams.delete("package");
+				const pkgPath = event.data.pkg.path;
+				if (element.is(':checked')) {
+					if (!currentSelected.includes(pkgPath)) {
+						currentSelected = [...currentSelected, pkgPath];
+					}
+				} else {
+					const position = currentSelected.indexOf(pkgPath);
+					if (position >= 0) {
+						currentSelected.splice(position, 1);
+					}
+				}
+				currentSelected.forEach( (selected) => newUrl.searchParams.append("package", selected));
+				history.replaceState({}, "Download Caddy", newUrl.toString());
+			});
 
 			if (pkg.modules && pkg.modules.length > 0) {
 				for (var j = 0; j < pkg.modules.length; j++) {
@@ -43,6 +68,7 @@ $.get("/api/packages").done(function(json) {
 			}
 			$('#optional-packages').append($optpkg);
 		}
+		updatePage();
 	});
 }).fail(function(jqxhr, status, error) {
 	swal({
