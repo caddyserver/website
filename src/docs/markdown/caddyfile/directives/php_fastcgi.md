@@ -53,26 +53,20 @@ The `php_fastcgi` directive is the same as the following configuration:
 route {
 	# Add trailing slash for directory requests
 	@canonicalPath {
-		file {
-			try_files {path}/index.php
-		}
+		file {path}/index.php
 		not path */
 	}
 	redir @canonicalPath {path}/ 308
 
 	# If the requested file does not exist, try index files
-	@indexFiles {
-		file {
-			try_files {path} {path}/index.php index.php
-			split_path .php
-		}
+	@indexFiles file {
+		try_files {path} {path}/index.php index.php
+		split_path .php
 	}
 	rewrite @indexFiles {http.matchers.file.relative}
 
 	# Proxy PHP files to the FastCGI responder
-	@phpFiles {
-		path *.php
-	}
+	@phpFiles path *.php
 	reverse_proxy @phpFiles <php-fpm_gateway> {
 		transport fastcgi {
 			split .php
