@@ -21,15 +21,13 @@ try_files <files...>
 The `try_files` directive is basically a shortcut for:
 
 ```caddy-d
-@try_files {
-	file {
-		try_files <files...>
-	}
-}
+@try_files file <files...>
 rewrite @try_files {http.matchers.file.relative}
 ```
 
 Note that this directive does not accept a matcher token. If you need more complex matching logic, then use the expanded form above as a basis.
+
+See the [`file` matcher](/docs/caddyfile/matchers#file) for more details.
 
 
 ## Examples
