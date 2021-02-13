@@ -186,6 +186,8 @@ If multiple sites share the same definition, you can list all of them together:
 localhost:8080, example.com, www.example.com
 ```
 
+Notice when addresses are listed on the same line, the comma is optional, however the space between addresses is not, 
+
 or
 
 ```caddy
