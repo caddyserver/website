@@ -107,6 +107,7 @@ Obtains certificates using the ACME protocol.
 	test_dir <test_directory_url>
 	email    <email>
 	timeout  <duration>
+	key_type ed25519|p256|p384|rsa2048|rsa4096
 	disable_http_challenge
 	disable_tlsalpn_challenge
 	alt_http_port    <port>
@@ -122,6 +123,7 @@ Obtains certificates using the ACME protocol.
 - **test_dir** is an optional fallback directory to use when retrying challenges; if all challenges fail, this endpoint will be used during retries; useful if a CA has a staging endpoint where you want to avoid rate limits on their production endpoint. Default: `https://acme-staging-v02.api.letsencrypt.org/directory`
 - **email** is the ACME account contact email address.
 - **timeout** is how long to wait before timing out an ACME operation.
+- **key_type** is the type of key to use when generating CSRs. Only set this if you have a specific requirement.
 - **disable_http_challenge** will disable the HTTP challenge.
 - **disable_tlsalpn_challenge** will disable the TLS-ALPN challenge.
 - **alt_http_port** is an alternate port on which to serve the HTTP challenge; it has to happen on port 80 so you must forward packets to this alternate port.

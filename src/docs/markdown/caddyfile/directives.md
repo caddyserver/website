@@ -8,6 +8,7 @@ The following directives come standard with Caddy, and can be used in the HTTP C
 
 Directive | Description
 ----------|------------
+**[abort](/docs/caddyfile/directives/abort)** | Aborts the HTTP request
 **[acme_server](/docs/caddyfile/directives/acme_server)** | An embedded ACME server
 **[basicauth](/docs/caddyfile/directives/basicauth)** | Enforces HTTP Basic Authentication
 **[bind](/docs/caddyfile/directives/bind)** | Customize the server's socket address

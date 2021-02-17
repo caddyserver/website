@@ -119,6 +119,13 @@ To adapt a Caddyfile to JSON that you can easily read and tweak manually:
 
 
 
+### `caddy build-info`
+
+<pre><code class="cmd bash">caddy build-info</code></pre>
+
+Prints information provided by Go about the build (main module path, package versions, replacements).
+
+
 
 ### `caddy environ`
 
@@ -201,6 +208,7 @@ Prints CLI help text, optionally for a specific subcommand, then exits.
 ### `caddy list-modules`
 
 <pre><code class="cmd bash">caddy list-modules
+	[--packages]
 	[--versions]</code></pre>
 
 Prints the Caddy modules that are installed, optionally with package and/or version information from their associated Go modules, then exits.
@@ -337,6 +345,17 @@ Untrusts a root certificate from the local trust store(s). Intended for developm
 
 
 
+### `caddy upgrade`
+
+<pre><code class="cmd bash">caddy upgrade</code></pre>
+
+Replaces the current Caddy binary with the latest version from [our download page](https://caddyserver.com/download) with the same modules installed, including all third-party plugins that are registered on the Caddy website.
+
+Upgrades do not interrupt running servers; currently, the command only replaces the binary on disk. This might change in the future if we can figure out a good way to do it.
+
+The upgrade process is fault tolerant; the current binary is backed up first and automatically restored if anything goes wrong.
+
+This command may require elevated privileges if your user does not have permission to write to the executable file.
 
 
 ### `caddy validate`

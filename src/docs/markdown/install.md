@@ -25,6 +25,7 @@ This page describes various methods for installing Caddy on your system.
 - [Homebrew](#homebrew)
 - [Webi](#webi)
 - [Chocolatey](#chocolatey)
+- [Ansible](#ansible)
 
 
 ## Static binaries
@@ -183,3 +184,12 @@ _Note: This is a community-maintained installation method._
 <pre><code class="cmd">choco install caddy</code></pre>
 
 [**View the Chocolatey package**](https://chocolatey.org/packages/caddy)
+
+
+## Ansible
+
+_Note: This is a community-maintained installation method._
+
+<pre><code class="cmd bash">ansible-galaxy install nvjacobo.caddy</code></pre>
+
+[**View the Ansible role repository**](https://github.com/nvjacobo/caddy)

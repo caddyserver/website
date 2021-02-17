@@ -41,7 +41,7 @@ Possible options are:
 	acme_ca <directory_url>
 	acme_ca_root <pem_file>
 	acme_eab <key_id> <mac_key>
-	acme_dns <provider>
+	acme_dns <provider> ...
 	on_demand_tls {
 		ask      <endpoint>
 		interval <duration>
@@ -121,7 +121,7 @@ Specifies a PEM file that contains a trusted root certificate for ACME CA endpoi
 Specifies an External Account Binding to use for all ACME transactions.
 
 ##### `acme_dns`
-Configures the DNS challenge to use for all ACME transactions.
+Configures the ACME DNS challenge provider to use for all ACME transactions. The tokens following the name of the provider set up the provider the same as if specified in the [`tls` directive's `acme` issuer](/docs/caddyfile/directives/tls#acme).
 
 ##### `on_demand_tls`
 Configures [On-Demand TLS](/docs/automatic-https#on-demand-tls) where it is enabled, but does not enable it (to enable it, use the [on_demand `tls` subdirective](/docs/caddyfile/directives/tls#syntax)). Highly recommended if using in production environments, to prevent abuse.
@@ -134,7 +134,7 @@ Configures [On-Demand TLS](/docs/automatic-https#on-demand-tls) where it is enab
 Specifies the type of key to generate for TLS certificates; only change this if you have a specific need to customize it.
 
 ##### `cert_issuer`
-Defines the issuer (or source) of TLS certificates.
+Defines the issuer (or source) of TLS certificates. The tokens following the name of the issuer set up the issuer the same as if specified in the [`tls` directive](/docs/caddyfile/directives/tls#issuer).
 
 
 
