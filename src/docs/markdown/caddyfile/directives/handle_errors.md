@@ -26,7 +26,7 @@ handle_errors {
 
 Custom error pages based on the status code (i.e. a page called `404.html` for 404 errors):
 
-```caddy
+```caddy-d
 handle_errors {
 	rewrite * /{http.error.status_code}.html
 	file_server
@@ -35,7 +35,7 @@ handle_errors {
 
 A single error page that uses [`templates`](/docs/caddyfile/directives/templates) to write a custom error message:
 
-```caddy
+```caddy-d
 handle_errors {
 	rewrite * /error.html
 	templates
@@ -43,9 +43,9 @@ handle_errors {
 }
 ```
 
-Reverse proxy to a professional server that is highly qualified for handling HTTP errors and improving your day:
+Reverse proxy to a professional server that is highly qualified for handling HTTP errors and improving your day 😸:
 
-```caddy
+```caddy-d
 handle_errors {
 	rewrite * /{http.error.status_code}
 	reverse_proxy https://http.cat {
@@ -56,8 +56,19 @@ handle_errors {
 
 Simply use [`respond`](/docs/caddyfile/directives/respond) to return the error code and name
 
-```caddy
+```caddy-d
 handle_errors {
 	respond "{http.error.status_code} {http.error.status_text}"
+}
+```
+
+To handle specific error codes differently, use an [`expression`](/docs/caddyfile/matchers#expression) matcher:
+
+```caddy-d
+handle_errors {
+	@4xx expression `{http.error.status_code} >= 400 && {http.error.status_code} < 500`
+	respond @4xx "It's a 4xx error!"
+
+	respond "It's not a 4xx error."
 }
 ```

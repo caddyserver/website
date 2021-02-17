@@ -6,6 +6,17 @@ title: reverse_proxy (Caddyfile directive)
 
 Proxies requests to one or more backends with configurable transport, load balancing, health checking, header manipulation, and buffering options.
 
+- [Syntax](#syntax)
+- [Upstreams](#upstreams)
+- [Load balancing](#load-balancing)
+  - [Active health checks](#active-health-checks)
+  - [Passive health checks](#passive-health-checks)
+- [Streaming](#streaming)
+- [Headers](#headers)
+- [Transports](#transports)
+  - [The `http` transport](#the-http-transport)
+  - [The `fastcgi` tranport](#the-fastcgi-transport)
+- [Examples](#examples)
 
 ## Syntax
 
@@ -67,7 +78,11 @@ Upstream addresses can take the form of a conventional [Caddy network address](/
 - `srv+http://internal.service.consul`
 - `srv+https://internal.service.consul`
 
-Note: Schemes cannot be mixed, since they modify the common transport configuration (a TLS-enabled transport cannot carry both HTTPS and plaintext HTTP). Specifying ports 80 and 443 are the same as specifying the HTTP and HTTPS schemes, respectively. Any explicit transport configuration will not be overwritten, and omitting schemes or using other ports will not assume a particular transport. Additionally, schemes cannot contain paths or query strings, as that would imply simultaneous rewriting the request while proxying, which behavior is not defined or supported. If the address is not a URL (i.e. does not have a scheme), then placeholders can be used, but this makes the upstream dynamic.
+Note: Schemes cannot be mixed, since they modify the common transport configuration (a TLS-enabled transport cannot carry both HTTPS and plaintext HTTP). Specifying ports 80 and 443 are the same as specifying the HTTP and HTTPS schemes, respectively. Any explicit transport configuration will not be overwritten, and omitting schemes or using other ports will not assume a particular transport.
+
+Additionally, upstream addresses cannot contain paths or query strings, as that would imply simultaneous rewriting the request while proxying, which behavior is not defined or supported. You may use the [`rewrite`](/docs/caddyfile/directives/rewrite) directive should you need this.
+
+If the address is not a URL (i.e. does not have a scheme), then placeholders can be used, but this makes the upstream dynamic.
 
 ### Load balancing
 

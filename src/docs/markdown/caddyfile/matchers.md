@@ -283,13 +283,13 @@ Match requests that do not have the `Foo` header field at all:
 header_regexp [<name>] <field> <regexp>
 ```
 
-Like `header`, but supports regular expressions. Capture groups can be accessed via placeholder like `{http.regexp.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
+Like `header`, but supports regular expressions. Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) like `{re.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
 
 Only one regular expression is supported per header field. Multiple different fields will be AND'ed.
 
 #### Example:
 
-Match requests where the Cookie header contains `login_` followed by a hex string, with a capture group that can be accessed with `{http.regexp.login.1}`.
+Match requests where the Cookie header contains `login_` followed by a hex string, with a capture group that can be accessed with `{re.login.1}`.
 
 ```caddy-d
 header_regexp login Cookie login_([a-f0-9]+)
@@ -414,13 +414,13 @@ Multiple `path` matchers will be OR'ed together.
 path_regexp [<name>] <regexp>
 ```
 
-Like `path`, but supports regular expressions. Capture groups can be accessed via placeholder like `{http.regexp.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
+Like `path`, but supports regular expressions. Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) like `{re.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
 
 There can only be one `path_regexp` matcher per named matcher.
 
 #### Example:
 
-Match requests where the path ends a 6 character hex string followed by `.css` or `.js` as the file extension, with capture groups that can be accessed with `{http.regexp.static.1}` and `{http.regexp.static.2}` for each part enclosed in `( )`, respectively.
+Match requests where the path ends a 6 character hex string followed by `.css` or `.js` as the file extension, with capture groups that can be accessed with `{re.static.1}` and `{re.static.2}` for each part enclosed in `( )`, respectively.
 
 ```caddy-d
 path_regexp static \.([a-f0-9]{6})\.(css|js)$

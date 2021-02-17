@@ -103,6 +103,7 @@ reverse_proxy
 php_fastcgi
 file_server
 acme_server
+abort
 ```
 
 You can override/customize this ordering by using the [`order` global option](/docs/caddyfile/options) or the [`route` directive](/docs/caddyfile/directives/route).

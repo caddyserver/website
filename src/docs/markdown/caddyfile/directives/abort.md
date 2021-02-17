@@ -15,8 +15,18 @@ abort [<matcher>]
 
 ## Examples
 
-Abort all requests for paths starting with `/foo`:
+Forcefully close a connection received for unknown domains when using a wildcard certificate:
 
-```caddy-d
-abort /foo*
+```caddy
+*.example.com {
+    @foo host foo.example.com
+    handle @foo {
+        respond "This is foo!" 200
+    }
+
+    # Unhandled domains fall through to here, but we don't want to accept their requests
+    handle {
+        abort
+    }
+}
 ```

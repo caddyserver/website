@@ -8,6 +8,10 @@ Evaluates a group of directives mutually exclusively from other `handle` blocks 
 
 The `handle` directive is kind of similar to the `location` directive from nginx config: the first matching `handle` block will be evaluated. Handle blocks can be nested if needed. Only HTTP handler directives can be used inside handle blocks.
 
+<aside class="tip">
+	See also the [`handle_path`](/docs/caddyfile/directives/handle_path) directive if you need to strip the matched path prefix.
+</aside>
+
 ## Syntax
 
 ```caddy-d
