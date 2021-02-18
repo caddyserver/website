@@ -18,6 +18,8 @@ Proxies requests to one or more backends with configurable transport, load balan
   - [The `fastcgi` tranport](#the-fastcgi-transport)
 - [Examples](#examples)
 
+
+
 ## Syntax
 
 ```caddy-d
@@ -38,6 +40,9 @@ reverse_proxy [<matcher>] [<upstreams...>] {
     health_timeout  <duration>
     health_status   <status>
     health_body     <regexp>
+	health_headers {
+		<field> [<values...>]
+	}
 
     # passive health checking
     fail_duration     <duration>
@@ -49,6 +54,8 @@ reverse_proxy [<matcher>] [<upstreams...>] {
     # streaming
     flush_interval <duration>
     buffer_requests
+	buffer_responses
+	max_buffer_size <size>
 
     # header manipulation
     header_up   [+|-]<field> [<value|regexp> [<replacement>]]
@@ -60,6 +67,8 @@ reverse_proxy [<matcher>] [<upstreams...>] {
     }
 }
 ```
+
+
 
 ### Upstreams
 
@@ -84,6 +93,8 @@ Additionally, upstream addresses cannot contain paths or query strings, as that 
 
 If the address is not a URL (i.e. does not have a scheme), then placeholders can be used, but this makes the upstream dynamic.
 
+
+
 ### Load balancing
 
 Load balancing is used whenever more than one upstream is defined.
@@ -102,6 +113,8 @@ Load balancing is used whenever more than one upstream is defined.
 - **lb_try_duration** is a [duration value](/docs/conventions#durations) that defines how long to try selecting available backends for each request if the next available host is down. By default, this retry is disabled. Clients will wait for up to this long while the load balancer tries to find an available upstream host.
 - **lb_try_interval** is a [duration value](/docs/conventions#durations) that defines how long to wait between selecting the next host from the pool. Default is `250ms`. Only relevant when a request to an upstream host fails. Be aware that setting this to 0 with a non-zero `lb_try_duration` can cause the CPU to spin if all backends are down and latency is very low.
 
+
+
 #### Active health checks
 
 Active health checks perform health checking in the background on a timer:
@@ -112,6 +125,9 @@ Active health checks perform health checking in the background on a timer:
 - **health_timeout** is a [duration value](/docs/conventions#durations) that defines how long to wait for a reply before marking the backend as down.
 - **health_status** is the HTTP status code to expect from a healthy backend. Can be a 3-digit status code or a status code class ending in `xx`, for example: `200` (default) or `2xx`.
 - **health_body** is a substring or regular expression to match on the response body of an active health check. If the backend does not return a matching body, it will be marked as down.
+- **health_headers** allows specifying headers to set on the active health check requests. This is useful if you need to change the `Host` header, or if you need to provide some authentication to your backend as part of your health checks.
+
+
 
 #### Passive health checks
 
@@ -123,12 +139,18 @@ Passive health checks happen inline with actual proxied requests:
 - **unhealthy_latency** is a [duration value](/docs/conventions#durations) that counts a request as failed if it takes this long to get a response.
 - **unhealthy_request_count** is the permissible number of simultaneous requests to a backend before marking it as down.
 
+
+
 ### Streaming
 
 The proxy **buffers responses** by default for wire efficiency:
 
 - **flush_interval** is a [duration value](/docs/conventions#durations) that defines how often Caddy should flush the buffered response body to the client. Set to -1 to disable buffering. It is set to -1 automatically for requests that have a `text/event-stream` response or for HTTP/2 requests where the Content-Length is unspecified.
 - **buffer_requests** will cause the proxy to read the entire request body into a buffer before sending it upstream. This is very inefficient and should only be done if the upstream requires reading request bodies without delay (which is something the upstream application should fix).
+- **buffer_responses** will cause the entire response body to be read and buffered in memory before being proxied to the client. This should be avoided if at all possible for performance reasons, but could be useful if the backend has tighter memory constraints.
+- **max_buffer_size** if body buffering is enabled, this sets the maximum size of the buffers used for the requests and responses. This accepts all size formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
+
+
 
 ### Headers
 
@@ -143,6 +165,8 @@ By default, Caddy passes thru incoming headers to the backend&mdash;including th
 - It sets the [X-Forwarded-Proto](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Proto) header field.
 
 Since these header fields are only de-facto standards, Caddy may stop setting them implicitly in the future if the standardized [Forwarded](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Forwarded) header field becomes more widely adopted.
+
+
 
 ### Transports
 
@@ -220,6 +244,7 @@ transport fastcgi {
 - **dial_timeout** is how long to wait when connecting to the upstream socket. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
 - **read_timeout** is how long to wait when reading from the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
 - **write_timeout** is how long to wait when sending to the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
+
 
 
 ## Examples
