@@ -91,7 +91,7 @@ Note: Schemes cannot be mixed, since they modify the common transport configurat
 
 Additionally, upstream addresses cannot contain paths or query strings, as that would imply simultaneous rewriting the request while proxying, which behavior is not defined or supported. You may use the [`rewrite`](/docs/caddyfile/directives/rewrite) directive should you need this.
 
-If the address is not a URL (i.e. does not have a scheme), then placeholders can be used, but this makes the upstream dynamic.
+If the address is not a URL (i.e. does not have a scheme), then placeholders can be used, but this makes the upstream dynamic, meaning that the potentially many different backends act as one upstream in terms of health checks and load balancing.
 
 
 

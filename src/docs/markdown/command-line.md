@@ -235,7 +235,7 @@ Because this command uses the API, the admin endpoint must not be disabled.
 
 `--address` needs to be used if the admin endpoint is not listening on the default address and if it is different from the address in the provided config file. Note that only TCP addresses are supported at this time.
 
-`--force` will cause a reload to happen even if the specified config is the same as the one the running Caddy instance is already using. Can be useful to force Caddy to reload TLS certificate files specified to load in the config, if they've become stale.
+`--force` will cause a reload to happen even if the specified config is the same as what Caddy is already running. Can be useful to force Caddy to reprovision its modules, which can have side-effects, for example: reloading manually-loaded TLS certificates.
 
 
 
