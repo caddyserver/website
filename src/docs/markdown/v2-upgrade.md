@@ -390,7 +390,7 @@ If you want to write a plugin for Caddy 2, [learn how to write a Caddy module](/
 
 ### Building Caddy 2 with plugins
 
-Caddy 2 can be downloaded with plugins at the [interactive download page](https://caddyserver.com/download). Alternatively, you can use our [builder tool](https://github.com/caddyserver/xcaddy) to compile Caddy 2 with plugins yourself. It simply automates the instructions in Caddy's [main.go](https://github.com/caddyserver/caddy/blob/master/cmd/caddy/main.go) file.
+Caddy 2 can be downloaded with plugins at the [interactive download page](https://caddyserver.com/download). Alternatively, you can [build Caddy yourself](https://caddyserver.com/docs/build) using `xcaddy` and choose which plugins to include. `xcaddy` automates the instructions in Caddy's [main.go](https://github.com/caddyserver/caddy/blob/master/cmd/caddy/main.go) file.
 
 
 ## Getting help
