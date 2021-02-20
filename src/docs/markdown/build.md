@@ -84,7 +84,7 @@ Procedure:
 </code></pre>
 
 
-`dpkg-divert` will move `/usr/bin/caddy` binary to `/usr/bin/caddy.default` and put a divertion in place in case any package want to install a file to this location.
+`dpkg-divert` will move `/usr/bin/caddy` binary to `/usr/bin/caddy.default` and put a diversion in place in case any package want to install a file to this location.
 
 `update-alternatives` will create a symlink from the desired caddy binary to `/usr/bin/caddy`
 
