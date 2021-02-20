@@ -20,7 +20,7 @@ This guide won't delve into the new features available -- which are really cool,
 	- [Primary changes](#primary-changes)
 	- [basicauth](#basicauth)
 	- [browse](#browse)
-	- [errors](#errors)	
+	- [errors](#errors)
 	- [ext](#ext)
 	- [fastcgi](#fastcgi)
 	- [gzip](#gzip)
@@ -76,6 +76,7 @@ IP addresses and localhost domains will be issued certificates from a [locally-t
 The storage structure of certificates and ACME resources has changed. Caddy 2 will probably obtain new certificates for your sites; but if you have a lot of certificates you can migrate them manually if it does not do it for you. See issues [#2955](https://github.com/caddyserver/caddy/issues/2955) and [#3124](https://github.com/caddyserver/caddy/issues/3124) for details.
 
 
+
 ## Command line
 
 The `caddy` command is now `caddy run`.
@@ -99,6 +100,7 @@ Environment variables are no longer relevant, except for `HOME` (and, optionally
 The [v2 Caddyfile](/docs/caddyfile/concepts) is very similar to what you're already familiar with. The main thing you'll need to do is change your directives.
 
 ⚠️ **Be sure to read into the new directives!** Especially if your config is more advanced, there are many nuances to consider. These tips will get you mostly switched over pretty quickly, but please read the full documentation for each directive so you can understand the implications of the upgrade. And of course, always test your configs thoroughly before putting them into production.
+
 
 ### Primary changes
 
@@ -142,10 +144,11 @@ File browsing is now enabled through the [`file_server`](/docs/caddyfile/directi
 ```
 browse /subfolder/
 ```
-- **v2:** 
+- **v2:**
 ```caddy-d
 file_server /subfolder/* browse
 ```
+
 
 ### errors
 
@@ -161,7 +164,7 @@ errors {
 }
 ```
 
-- **v2:**: 
+- **v2:**:
 
 ```
 handle_errors {
@@ -186,7 +189,7 @@ Assuming you're serving PHP, the v2 equivalent is [`php_fastcgi`](/docs/caddyfil
 ```
 fastcgi / localhost:9005 php
 ```
-- **v2:** 
+- **v2:**
 ```caddy-d
 php_fastcgi localhost:9005
 ```
@@ -206,7 +209,7 @@ A single directive [`encode`](/docs/caddyfile/directives/encode) is now used for
 ```
 gzip
 ```
-- **v2:** 
+- **v2:**
 ```caddy-d
 encode gzip
 ```
@@ -214,7 +217,7 @@ encode gzip
 Fun fact: Caddy 2 also supports `zstd` (but no browsers do yet).
 
 
-### header 
+### header
 
 [Mostly unchanged](/docs/caddyfile/directives/header), but now way more powerful since it can do substring replacements in v2.
 
@@ -332,14 +335,15 @@ Remember to add a [`file_server` directive](https://caddyserver.com/docs/caddyfi
 
 The v2 equivalent is [`respond`](/docs/caddyfile/directives/respond), which can also write a response body.
 
-- **v1:** 
+- **v1:**
 ```
 status 404 /secrets/
 ```
-- **v2:** 
+- **v2:**
 ```caddy-d
 respond /secrets/* 404
 ```
+
 
 ### templates
 
@@ -376,17 +380,17 @@ If you need a custom service file, base it off of ours. It has been carefully tu
 See [install instructions](/docs/install#linux-service) for details.
 
 
+
 ## Plugins
 
 Plugins written for v1 are not automatically compatible with v2. Many v1 plugins are not even needed in v2. On the other hand, v2 is way more easily extensible and flexible than v1!
 
 If you want to write a plugin for Caddy 2, [learn how to write a Caddy module](/docs/extending-caddy).
 
+
 ### Building Caddy 2 with plugins
 
-Caddy 2 does not (yet) have a public build server and interactive download page like v1 did. We're working on it. In the meantime, our [builder tool](https://github.com/caddyserver/xcaddy) may be helpful. It simply automates the instructions in Caddy's [main.go](https://github.com/caddyserver/caddy/blob/v2/cmd/caddy/main.go) file.
-
-We'll also be working on the new website some more so that plugins can be registered and indexed and easily found.
+Caddy 2 can be downloaded with plugins at the [interactive download page](https://caddyserver.com/download). Alternatively, you can use our [builder tool](https://github.com/caddyserver/xcaddy) to compile Caddy 2 with plugins yourself. It simply automates the instructions in Caddy's [main.go](https://github.com/caddyserver/caddy/blob/v2/cmd/caddy/main.go) file.
 
 
 ## Getting help
