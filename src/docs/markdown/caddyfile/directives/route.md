@@ -63,6 +63,13 @@ route {
 
 And now `file_server` will be chained in before `redir` because the order is taken literally.
 
+## Similar directives
+
+There are other directives that can wrap HTTP handler directives, but each has its use depending on the behavior you want to convey:
+
+- [`handle`](route) wraps other directives like `route` does, but with two distinctions: 1) handle blocks are mutually exclusive to each other, and 2) directives with a handle are [re-ordered]([directive order](/docs/caddyfile/directives#directive-order) normally.
+- [`handle_path`](handle_path) does the same as `handle`, but it strips a prefix from the request before running its handlers.
+- [`handle_errors`](handle_errors) is like `handle`, but is only invoked when Caddy encounters an error during request handling.
 
 ## Examples
 

@@ -222,7 +222,8 @@ NOTE: Due to [a bug in Go](https://github.com/golang/go/issues/29228), version i
 <pre><code class="cmd bash">caddy reload
 	[--config &lt;path&gt;]
 	[--adapter &lt;name&gt;]
-	[--address &lt;interface&gt;]</code></pre>
+	[--address &lt;interface&gt;]
+	[--force]</code></pre>
 
 Gives the running Caddy instance a new configuration. This has the same effect as POSTing a document to the [/load endpoint](/docs/api#post-load), but this command is convenient for simple workflows revolving around config files. Compared to the `stop`, `start`, and `run` commands, this single command is the correct, semantic way to change/reload the running configuration.
 
@@ -233,6 +234,8 @@ Because this command uses the API, the admin endpoint must not be disabled.
 `--adapter` specifies a config adapter to use, if any.
 
 `--address` needs to be used if the admin endpoint is not listening on the default address and if it is different from the address in the provided config file. Note that only TCP addresses are supported at this time.
+
+`--force` will cause a reload to happen even if the specified config is the same as what Caddy is already running. Can be useful to force Caddy to reprovision its modules, which can have side-effects, for example: reloading manually-loaded TLS certificates.
 
 
 

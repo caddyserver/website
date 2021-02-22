@@ -49,6 +49,7 @@ Possible options are:
 	}
 	key_type ed25519|p256|p384|rsa2048|rsa4096
 	cert_issuer <name> ...
+	ocsp_stapling off
 
 	# Server Options
 	servers [<listener_address>] {
@@ -134,7 +135,10 @@ Configures [On-Demand TLS](/docs/automatic-https#on-demand-tls) where it is enab
 Specifies the type of key to generate for TLS certificates; only change this if you have a specific need to customize it.
 
 ##### `cert_issuer`
-Defines the issuer (or source) of TLS certificates. The tokens following the name of the issuer set up the issuer the same as if specified in the [`tls` directive](/docs/caddyfile/directives/tls#issuer).
+Defines the issuer (or source) of TLS certificates. The tokens following the name of the issuer set up the issuer the same as if specified in the [`tls` directive](/docs/caddyfile/directives/tls#issuer). May be repeated if you wish to configure more than one issuer to try. They will be tried in the order they are defined.
+
+##### `ocsp_stapling`
+Can be set to `off` to disable OCSP stapling. Useful in environments where responders are not reachable due to firewalls.
 
 
 

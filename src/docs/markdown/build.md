@@ -6,7 +6,7 @@ title: "Build from source"
 
 Requirements:
 
-- [Go](https://golang.org/dl) 1.14 or newer
+- [Go](https://golang.org/doc/install) 1.15 or newer
 
 Clone the repository:
 
