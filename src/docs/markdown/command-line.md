@@ -282,7 +282,7 @@ Runs Caddy and blocks indefinitely; i.e. "daemon" mode.
 
 `--envfile` loads environment variables from the specified file.
 
-`--resume` uses the last loaded configuration, overriding the `--config` flag (if present) if a previous config was saved. Using this flag guarantees config durability through machine reboots or process restarts. It is most useful in [API](/docs/api)-heavy deployments.
+`--resume` uses the last loaded configuration that was autosaved, overriding the `--config` flag (if present). Using this flag guarantees config durability through machine reboots or process restarts. It is most useful in [API](/docs/api)-centric deployments.
 
 `--watch` will watch the config file and automatically reload it after it changes. ⚠️ This feature is intended for use only in local development environments!
 

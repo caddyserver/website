@@ -44,6 +44,10 @@ This blocks forever, but what is it doing? At the moment... nothing. By default,
 
 <pre><code class="cmd bash">curl localhost:2019/config/</code></pre>
 
+<aside class="tip">
+	This is <b>not</b> your website: the administration endpoint at localhost:2019 is used for controlling Caddy and is restricted to localhost by default.
+</aside>
+
 <aside class="complete">Try the API</aside>
 
 We can make Caddy useful by giving it a config. This can be done many ways, but we'll start by making a POST request to the [/load](/docs/api#post-load) endpoint using `curl` in the next section.
@@ -54,7 +58,7 @@ We can make Caddy useful by giving it a config. This can be done many ways, but 
 
 To prepare our request, we need to make a config. At its core, Caddy's configuration is simply a [JSON document](/docs/json/).
 
-Save this to a JSON file:
+Save this to a JSON file (e.g. `caddy.json`):
 
 ```json
 {
@@ -79,7 +83,7 @@ Save this to a JSON file:
 ```
 
 <aside class="tip">
-	You do not have to use files for configuration. The <a href="/docs/api">admin API</a> can always be used without files, which is handy when automating.
+	You do not have to use config files, but we are for this tutorial. Caddy's <a href="/docs/api">admin API</a> is designed for use by other programs or scripts.
 </aside>
 
 Then upload it:
