@@ -15,6 +15,7 @@ These are not drop-in solutions; you will have to customize your domain name, po
 - [PHP](#php)
 - [Redirect `www.` subdomain](#redirect-www-subdomain)
 - [Trailing slashes](#trailing-slashes)
+- [Wildcard certificates](#wildcard-certificates)
 
 
 ## Static file server
@@ -125,3 +126,33 @@ redir /remove/ /remove
 ```
 
 Using a redirect, the client will have to re-issue the request, enforcing a single acceptable URI for a resource.
+
+
+### Wildcard certificates
+
+If you need to serve multiple subdomains with the same wildcard certificate, the best way to handle them is with a Caddyfile like this, making use of the [`handle`](/docs/caddyfile/directives/handle) directive and [`host`](/docs/caddyfile/matchers#host) matchers:
+
+```caddy
+*.example.com {
+	tls {
+		dns <provider_name> [<params...>]
+	}
+
+	@foo host foo.example.com
+	handle @foo {
+		respond "Foo!"
+	}
+
+	@bar host bar.example.com
+	handle @bar {
+		respond "Bar!"
+	}
+
+	# Fallback for otherwise unhandled domains
+	handle {
+		abort
+	}
+}
+```
+
+Note that you must enable the [ACME DNS challenge](/docs/automatic-https#dns-challenge) to have Caddy automatically manage wildcard certificates.
