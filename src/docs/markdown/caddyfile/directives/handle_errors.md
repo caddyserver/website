@@ -8,7 +8,12 @@ Sets up error handlers.
 
 When the normal HTTP request handlers return an error, normal processing stops and the error handlers are invoked. Error handlers form a route which is just like normal routes, and they can do anything that normal routes can do. This enables great control and flexibility when handling errors during HTTP requests. For example, you can serve static error pages, templated error pages, or reverse proxy to another backend to handle errors.
 
-A request's context is carried into error routes, so any values set on the request context such as [site root](/docs/caddyfile/directives/root) will be preserved in error handlers, too. Additionally, new placeholders are available when handling errors. [The JSON docs for an HTTP server's error routes](/docs/json/apps/http/servers/errors/#routes) describe these placeholders. The `handle_errors` directive simply adds error routes, so you can use those placeholders within a `handle_errors` block.
+A request's context is carried into error routes, so any values set on the request context such as [site root](root) will be preserved in error handlers, too. Additionally, new placeholders are available when handling errors. [The JSON docs for an HTTP server's error routes](/docs/json/apps/http/servers/errors/#routes) describe these placeholders. The `handle_errors` directive simply adds error routes, so you can use those placeholders within a `handle_errors` block.
+
+Note that certain directives, for example [`reverse_proxy`](reverse_proxy) which may write a response with an HTTP status which is classified as an error, will _not_ trigger the error routes.
+
+You may use the [`error`](error) directive to explicitly trigger an error based on your own routing decisions.
+
 
 ## Syntax
 
