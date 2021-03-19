@@ -32,6 +32,13 @@ Possible options are:
 		origins <origins...>
 		enforce_origin
 	}
+	log [name] {
+		output  <writer_module> ...
+		format  <encoder_module> ...
+		level   <level>
+		include <namespaces...>
+		exclude <namespaces...>
+	}
 
 	# TLS Options
 	auto_https off|disable_redirects
@@ -96,6 +103,14 @@ Customizes the [admin API endpoint](/docs/api). If `off`, then the admin endpoin
 
 - **enforce_origin** enables enforcement of the Origin header. (This is different from enforcing origins generally, which is always done.)
 
+##### `log`
+Customizes the named logger. The name can be passed to indicate a specific logger to customize the behavior for. If no name is specified, the behavior of the default logger is modified. This option can be specified multiple times to configure different loggers. You can read more about the default logger and other logging behaviors in the [logging documentation](/docs/logging/).
+
+- **output** configures where to write the logs. See the [log directive](/docs/caddyfile/directives/log#output-modules) documentation for more information, which has the same structure.
+- **format** describes how to encode, or format, the logs. See the [log directive](/docs/caddyfile/directives/log#format-modules) documentation for more information, which has the same structure.
+- **level** is the minimum entry level to log. Default: `INFO`
+- **include** identifies the loggers that are included in this log configuration. See the [JSON documentation](/docs/json/logging/logs/include/) for more information.
+- **exclude** identifies the loggers that are excluded from this log configuration. See the [JSON documentation](/docs/json/logging/logs/exclude/) for more information.
 
 
 ## TLS Options
