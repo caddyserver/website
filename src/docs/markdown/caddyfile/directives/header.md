@@ -21,7 +21,7 @@ header [<matcher>] [[+|-|?]<field> [<value>|<find>] [<replace>]] {
 }
 ```
 
-- **&lt;field&gt;** is the name of the header field. By default, will overwrite any existing field of the same name. Prefix with `+` to add the field instead of replace, or prefix with `-` to remove the field.
+- **&lt;field&gt;** is the name of the header field. By default, will add a new field. If `defer` is enabled, it will overwrite any existing field with the same name. Prefix with `+` to always add the field, or prefix with `-` to remove the field.
 - **&lt;value&gt;** is the header field value, if adding or setting a field.
 - **&lt;default_value&gt;** is the header field value that will be set only if the header does not already exist.
 - **&lt;find&gt;** is the substring or regular expression to search for.
