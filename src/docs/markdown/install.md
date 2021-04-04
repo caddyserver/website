@@ -11,6 +11,7 @@ This page describes various methods for installing Caddy on your system.
 - [Static binaries](#static-binaries)
 - [Debian, Ubuntu, Raspbian](#debian-ubuntu-raspbian)
 - [Fedora, RedHat, CentOS](#fedora-redhat-centos)
+- [Arch Linux, Manjaro, Parabola](#arch-linux-manjaro-parabola)
 - [Docker](#docker)
 - [DigitalOcean](#digitalocean)
 - [Linux service](#linux-service)
@@ -75,6 +76,12 @@ RHEL/CentOS 7:
 <span class="bash">yum install caddy</span></code></pre>
 
 [**View the Caddy COPR**](https://copr.fedorainfracloud.org/coprs/g/caddy/caddy/)
+
+## Arch Linux, Manjaro, Parabola
+
+<pre><code class="cmd"><span class="bash">pacman -Syu caddy</span></code></pre>
+
+[**View Caddy in the Arch Linux repositories**](https://archlinux.org/packages/community/x86_64/caddy/)
 
 
 ## Docker
