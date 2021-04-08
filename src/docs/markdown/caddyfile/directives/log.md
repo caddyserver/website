@@ -165,6 +165,14 @@ Marks a field to be skipped from being encoded.
 <field> delete
 ```
 
+##### replace
+
+Marks a field to be replaced with the provided string at encoding time.
+
+```caddy-d
+<field> replace <replacement>
+```
+
 ##### ip_mask
 
 Masks IP addresses in the field using a CIDR mask, i.e. the number of bytes from the IP to retain, starting from the left side. There is separate configuration for IPv4 and IPv6 addresses.
