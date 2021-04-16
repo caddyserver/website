@@ -13,6 +13,7 @@ Directive | Description
 **[basicauth](/docs/caddyfile/directives/basicauth)** | Enforces HTTP Basic Authentication
 **[bind](/docs/caddyfile/directives/bind)** | Customize the server's socket address
 **[encode](/docs/caddyfile/directives/encode)** | Encodes (usually compresses) responses
+**[error](/docs/caddyfile/directives/error)** | Trigger an error
 **[file_server](/docs/caddyfile/directives/file_server)** | Serve files from disk
 **[handle](/docs/caddyfile/directives/handle)** | A mutually-exclusive group of directives
 **[handle_errors](/docs/caddyfile/directives/handle_errors)** | Defines routes for handling errors
@@ -104,6 +105,7 @@ php_fastcgi
 file_server
 acme_server
 abort
+error
 ```
 
 You can override/customize this ordering by using the [`order` global option](/docs/caddyfile/options) or the [`route` directive](/docs/caddyfile/directives/route).
