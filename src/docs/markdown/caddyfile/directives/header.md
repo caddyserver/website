@@ -51,10 +51,13 @@ Replace `http://` with `https://` in any Location header:
 header Location http:// https://
 ```
 
-Set security headers on all pages: (**WARNING:** only use if you understand the implications!)
+Set security and privacy headers on all pages: (**WARNING:** only use if you understand the implications!)
 
 ```caddy-d
 header {
+	# disable FLoC tracking
+	Permissions-Policy interest-cohort=()
+
 	# enable HSTS
 	Strict-Transport-Security max-age=31536000;
 
