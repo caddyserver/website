@@ -42,6 +42,8 @@ To get started with the API, try our [API tutorial](/docs/api-tutorial) or, if y
 - **[Using `@id` in JSON](#using-id-in-json)**
   Easily traverse into the config structure
 
+- **[GET /reverse_proxy/upstreams](#get-reverse-proxyupstreams)**
+  Returns the current status of the configured proxy upstreams
 
 
 ## POST /load
@@ -228,3 +230,26 @@ but with an ID, the path becomes
 ```
 
 which is much easier to remember and write by hand.
+
+
+## GET /reverse_proxy/upstreams
+
+Returns the current status of the configured reverse proxy upstreams. Returns a JSON body.
+
+<pre><code class="cmd"><span class="bash">curl "http://localhost:2019/reverse_proxy/upstreams" | jq</span>
+[
+	{"address": "10.0.1.1:80", "healthy": true, "num_requests": 4, "fails": 2},
+	{"address": "10.0.1.2:80", "healthy": true, "num_requests": 5, "fails": 4},
+	{"address": "10.0.1.3:80", "healthy": true, "num_requests": 3, "fails": 3}
+]</code></pre>
+
+Each entry in the JSON array is a configured [upstream](/docs/json/apps/http/servers/routes/handle/reverse_proxy/upstreams/) stored in the global upstream pool.
+
+- **address** is the dial address of the upstream. For SRV upstreams, this is the `lookup_srv` DNS name.
+- **healthy** is the status of whether Caddy knows the upstream to be healthy or not, based on the result of active health checks.
+- **num_requests** is the amount of active requests currently being handled by the upstream.
+- **fails** the amount of failed requests that are remembered from passive health checks.
+
+The `healthy` status only reflects the result of [active health checks](/docs/json/apps/http/servers/routes/handle/reverse_proxy/health_checks/active/) that have been performed against the backend.
+
+If you've enabled [passive health checks](/docs/json/apps/http/servers/routes/handle/reverse_proxy/health_checks/passive/) for your proxies, then you need to also take into consideration the `fails` and `num_requests` amounts to determine if an upstream is considered available. For accuracy, you should check that the `fails` amount is less than your configured maximum amount of failures for your proxy (i.e. [`max_fails`](/docs/json/apps/http/servers/routes/handle/reverse_proxy/health_checks/passive/max_fails/)), and that `num_requests` is less than or equal to your configured amount of maximum requests per upsteam (i.e. [`unhealthy_request_count`](/docs/json/apps/http/servers/routes/handle/reverse_proxy/health_checks/passive/unhealthy_request_count/) for the whole proxy, or [`max_requests`](/docs/json/apps/http/servers/routes/handle/reverse_proxy/upstreams/max_requests/) for individual upstreams).
