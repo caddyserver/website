@@ -41,3 +41,19 @@ basicauth /secret/* {
 }
 ```
 
+If you're also using [`handle_errors`](handle_errors) (for example to change how a `502` error from [`reverse_proxy`](reverse_proxy) is displayed), then make sure to use [`respond`](respond) to write the HTTP status, since the HTTP status is not written automatically when using error handlers.
+
+```caddy-d
+handle_errors {
+	# The reverse_proxy handler had no upstream to proxy to,
+	# and we want to display a custom 502 page in that case
+	@out-of-order expression `{http.error.status_code} == 502`
+	handle @out-of-order {
+		rewrite * /502.html
+		file_server
+	}
+
+	# Write the HTTP status code from basicauth (i.e. 401)
+	respond {http.error.status_code}
+}
+```
