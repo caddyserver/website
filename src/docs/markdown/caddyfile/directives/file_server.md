@@ -12,11 +12,12 @@ Most often, the `file_server` directive is paired with the [`root`](/docs/caddyf
 
 ```caddy-d
 file_server [<matcher>] [browse] {
-	root   <path>
-	hide   <files...>
-	index  <filenames...>
-	browse [<template_file>]
+	root          <path>
+	hide          <files...>
+	index         <filenames...>
+	browse        [<template_file>]
 	precompressed <formats...>
+	status        <status>
 }
 ```
 
@@ -27,6 +28,7 @@ file_server [<matcher>] [browse] {
 - **<template_file>** is an optional custom template file to use for directory listings. Defaults to the template that can be found [here in the source code ![external link](/resources/images/external-link.svg)](https://github.com/caddyserver/caddy/blob/master/modules/caddyhttp/fileserver/browsetpl.go).
 - **precompressed** is the list of encoding formats to search for precompressed sidecar files.
 - **&lt;formats...&gt;** is the ordered list of encoding formats to search for precompressed sidecar files. Supported formats are `gzip`, `zstd` and `br`.
+- **status** is an optional status code override to be used when writing the response. Particularly useful when responding to a request with a custom error page. Can be a 3-digit status code, For example: `404`. Placeholders are supported. By default, the written status code will typically be `200`, or `206` for partial content.
 
 ## Examples
 
