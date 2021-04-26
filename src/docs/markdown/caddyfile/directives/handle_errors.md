@@ -29,7 +29,7 @@ handle_errors {
 
 ## Examples
 
-Custom error pages based on the status code (i.e. a page called `404.html` for 404 errors):
+Custom error pages based on the status code (i.e. a page called `404.html` for 404 errors). Note that [`file_server`](file_server) preserves the error's HTTP status code when run in `handle_errors`:
 
 ```caddy-d
 handle_errors {
