@@ -205,13 +205,13 @@ listener_wrappers {
 
 ##### `timeouts`
 
-- **read_timeout** is a [duration value](/docs/conventions#durations) that sets how long to allow a read from a client's upload. Setting this to a short, non-zero value can mitigate slowloris attacks, but may also affect legitimately slow clients. Defaults to no timeout.
+- **read_body** is a [duration value](/docs/conventions#durations) that sets how long to allow a read from a client's upload. Setting this to a short, non-zero value can mitigate slowloris attacks, but may also affect legitimately slow clients. Defaults to no timeout.
 
-- **read_header_timeout** is a [duration value](/docs/conventions#durations) that sets how long to allow a read from a client's request headers. Defaults to no timeout.
+- **read_header** is a [duration value](/docs/conventions#durations) that sets how long to allow a read from a client's request headers. Defaults to no timeout.
 
-- **write_timeout** is a [duration value](/docs/conventions#durations) that sets how long to allow a write to a client. Note that setting this to a small value when serving large files may negatively affect legitimately slow clients. Defaults to no timeout.
+- **write** is a [duration value](/docs/conventions#durations) that sets how long to allow a write to a client. Note that setting this to a small value when serving large files may negatively affect legitimately slow clients. Defaults to no timeout.
 
-- **idle_timeout** is a [duration value](/docs/conventions#durations) that sets the maximum time to wait for the next request when keep-alives are enabled. Defaults to 5 minutes to help avoid resource exhaustion.
+- **idle** is a [duration value](/docs/conventions#durations) that sets the maximum time to wait for the next request when keep-alives are enabled. Defaults to 5 minutes to help avoid resource exhaustion.
 
 ##### `max_header_size`
 
