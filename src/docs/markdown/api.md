@@ -234,7 +234,7 @@ which is much easier to remember and write by hand.
 
 ## GET /reverse_proxy/upstreams
 
-Returns the current status of the configured reverse proxy upstreams. Returns a JSON body.
+Returns the current status of the configured reverse proxy upstreams in a JSON document.
 
 <pre><code class="cmd"><span class="bash">curl "http://localhost:2019/reverse_proxy/upstreams" | jq</span>
 [
