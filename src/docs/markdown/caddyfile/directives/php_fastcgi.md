@@ -21,7 +21,7 @@ php_fastcgi [<matcher>] <php-fpm_gateways...> {
 	root <path>
 	split <substrings...>
 	env [<key> <value>]
-	index <filename>
+	index <filename>|off
 	resolve_root_symlink
 	dial_timeout  <duration>
 	read_timeout  <duration>
@@ -35,7 +35,7 @@ php_fastcgi [<matcher>] <php-fpm_gateways...> {
 - **root** sets the root folder to the site. Default: [`root` directive](/docs/caddyfile/directives/root).
 - **split** sets the substrings for splitting the URI into two parts. The first matching substring will be used to split the "path info" from the path. The first piece is suffixed with the matching substring and will be assumed as the actual resource (CGI script) name. The second piece will be set to PATH_INFO for the CGI script to use. Default: `.php`
 - **env** sets an extra environment variable to the given value. Can be specified more than once for multiple environment variables.
-- **index** specifies the filename to treat as the directory index file. This affects the file matcher in the [expanded form](#expanded-form). Default: `index.php`
+- **index** specifies the filename to treat as the directory index file. This affects the file matcher in the [expanded form](#expanded-form). Default: `index.php`. Can be set to `off` to disable rewriting to `index.php` when a matching file is not found.
 - **resolve_root_symlink** enables resolving the `root` directory to its actual value by evaluating a symbolic link, if one exists.
 - **dial_timeout** is how long to wait when connecting to the upstream socket. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
 - **read_timeout** is how long to wait when reading from the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
