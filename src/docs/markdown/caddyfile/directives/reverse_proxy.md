@@ -34,7 +34,7 @@ reverse_proxy [<matcher>] [<upstreams...>] {
     lb_try_interval <interval>
 
     # active health checking
-    health_path     <path>
+    health_uri      <uri>
     health_port     <port>
     health_interval <interval>
     health_timeout  <duration>
@@ -119,11 +119,11 @@ Load balancing is used whenever more than one upstream is defined.
 
 Active health checks perform health checking in the background on a timer:
 
-- **health_path** is the URI path for active health checks.
+- **health_uri** is the URI path (and optional query) for active health checks.
 - **health_port** is the port to use for active health checks, if different from the upstream's port.
 - **health_interval** is a [duration value](/docs/conventions#durations) that defines how often to perform active health checks.
 - **health_timeout** is a [duration value](/docs/conventions#durations) that defines how long to wait for a reply before marking the backend as down.
-- **health_status** is the HTTP status code to expect from a healthy backend. Can be a 3-digit status code or a status code class ending in `xx`, for example: `200` (default) or `2xx`.
+- **health_status** is the HTTP status code to expect from a healthy backend. Can be a 3-digit status code, or a status code class ending in `xx`. For example: `200` (which is the default), or `2xx`.
 - **health_body** is a substring or regular expression to match on the response body of an active health check. If the backend does not return a matching body, it will be marked as down.
 - **health_headers** allows specifying headers to set on the active health check requests. This is useful if you need to change the `Host` header, or if you need to provide some authentication to your backend as part of your health checks.
 
