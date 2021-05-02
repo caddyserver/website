@@ -42,6 +42,8 @@ To get started with the API, try our [API tutorial](/docs/api-tutorial) or, if y
 - **[Using `@id` in JSON](#using-id-in-json)**
   Easily traverse into the config structure
 
+- **[GET /reverse_proxy/upstreams](#get-reverse-proxyupstreams)**
+  Returns the current status of the configured proxy upstreams
 
 
 ## POST /load
@@ -228,3 +230,24 @@ but with an ID, the path becomes
 ```
 
 which is much easier to remember and write by hand.
+
+
+## GET /reverse_proxy/upstreams
+
+Returns the current status of the configured reverse proxy upstreams (backends) as a JSON document.
+
+<pre><code class="cmd"><span class="bash">curl "http://localhost:2019/reverse_proxy/upstreams" | jq</span>
+[
+	{"address": "10.0.1.1:80", "healthy": true, "num_requests": 4, "fails": 2},
+	{"address": "10.0.1.2:80", "healthy": true, "num_requests": 5, "fails": 4},
+	{"address": "10.0.1.3:80", "healthy": true, "num_requests": 3, "fails": 3}
+]</code></pre>
+
+Each entry in the JSON array is a configured [upstream](/docs/json/apps/http/servers/routes/handle/reverse_proxy/upstreams/) stored in the global upstream pool.
+
+- **address** is the dial address of the upstream. For SRV upstreams, this is the `lookup_srv` DNS name.
+- **healthy** reflects whether Caddy believes the upstream to be healthy or not. Note that "health" is a distinct concept from "availability". A healthy backend might not be available to proxy to, but an unhealthy backend will always be unavailable. Health is a global characteristic regardless of specific reverse proxy handler configuration, whereas availability is determined by the configuration of the specific reverse proxy handler. For example, a healthy backend would be unavailable if the handler is configured to only allow N requests at a time and it currently has N active requests. The "healthy" property does not reflect availability.
+- **num_requests** is the amount of active requests currently being handled by the upstream.
+- **fails** the current number of failed requests remembered, as configured by passive health checks.
+
+If your goal is to determine a backend's _availability_, you will need to cross-check relevant properties of the upstream against the handler configuration you are utilizing. For example, if you've enabled [passive health checks](/docs/json/apps/http/servers/routes/handle/reverse_proxy/health_checks/passive/) for your proxies, then you need to also take into consideration the `fails` and `num_requests` values to determine if an upstream is considered available: check that the `fails` amount is less than your configured maximum amount of failures for your proxy (i.e. [`max_fails`](/docs/json/apps/http/servers/routes/handle/reverse_proxy/health_checks/passive/max_fails/)), and that `num_requests` is less than or equal to your configured amount of maximum requests per upstream (i.e. [`unhealthy_request_count`](/docs/json/apps/http/servers/routes/handle/reverse_proxy/health_checks/passive/unhealthy_request_count/) for the whole proxy, or [`max_requests`](/docs/json/apps/http/servers/routes/handle/reverse_proxy/upstreams/max_requests/) for individual upstreams).
