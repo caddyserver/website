@@ -28,6 +28,7 @@ Possible options are:
 	storage <module_name> {
 		<options...>
 	}
+	storage_clean_interval <duration>
 	admin   off|<addr> {
 		origins <origins...>
 		enforce_origin
@@ -95,6 +96,11 @@ Sets or changes the standard order of HTTP handler directive(s). Can set directi
 
 ##### `storage`
 Configures Caddy's storage mechanism. The default is [`file_system`](/docs/json/storage/file_system/). There are many other available [storage modules](/docs/json/storage/) provided as plugins.
+
+##### `storage_clean_interval`
+How often to scan storage units for old or expired assets and remove them. These scans exert lots of reads (and list operations) on the storage module, so choose a longer interval for large deployments. The value is a [duration value](/docs/conventions#durations). Default: 24h.
+
+Storage will always be cleaned when the process first starts. Then, a new cleaning will be started this duration after the previous cleaning started if the previous cleaning finished in less than half the time of this interval (otherwise next start will be skipped).
 
 ##### `admin`
 Customizes the [admin API endpoint](/docs/api). If `off`, then the admin endpoint will be disabled. If disabled, config changes will be impossible without stopping and starting the server.
