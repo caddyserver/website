@@ -276,6 +276,27 @@ import redirect
 
 The [`import`](/docs/caddyfile/directives/import) directive can also be used to include other files in its place. As a special case, it can appear almost anywhere within the Caddyfile.
 
+The [`import`](/docs/caddyfile/directives/import) directive supports the arguments :
+
+```caddy
+(log_common) {
+  log {
+    output file /var/log/caddy/{args.0}.access.log
+  }
+}
+```
+
+And then you can reuse it anywhere with parameters: 
+
+```caddy-d
+a.example.com {
+  import log_common a.example.com
+}
+
+b.example.com {
+  import log_common b.example.com
+}
+```
 
 
 ## Comments
