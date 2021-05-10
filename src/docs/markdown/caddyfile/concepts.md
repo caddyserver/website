@@ -276,7 +276,7 @@ import redirect
 
 The [`import`](/docs/caddyfile/directives/import) directive can also be used to include other files in its place. As a special case, it can appear almost anywhere within the Caddyfile.
 
-The [`import`](/docs/caddyfile/directives/import) directive supports the arguments :
+You can pass arguments to imported configuration and use them like so:
 
 ```caddy
 (log_common) {
