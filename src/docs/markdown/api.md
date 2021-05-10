@@ -7,7 +7,7 @@ title: "API"
 Caddy is configured through an administration endpoint which can be accessed via HTTP using a [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) API. You can [configure this endpoint](/docs/json/admin/) in your Caddy config.
 
 **Default address: `localhost:2019`**
-`
+
 <aside class="tip">
 	If you are running untrusted code on your server (yikes 😬), make sure you protect your admin endpoint by isolating processes, patching vulnerable programs, and configuring the endpoint to bind to a permissioned unix socket instead.
 </aside>
