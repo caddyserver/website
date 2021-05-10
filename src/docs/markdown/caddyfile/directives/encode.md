@@ -10,14 +10,15 @@ Encodes responses using the configured encoding(s). A typical use for encoding i
 
 ```caddy-d
 encode [<matcher>] <formats...> {
+	# encoding formats
 	gzip [<level>]
 	zstd
+	
 	minimum_length <length>
-	prefer <formats...>
 
 	# response matcher single line syntax
 	match [header <field> [<value>]] | [status <code...>]
-	# or response matcher block
+	# or response matcher block for multiple conditions
 	match {
 		status <code...>
 		header <field> [<value>]
@@ -25,12 +26,10 @@ encode [<matcher>] <formats...> {
 }
 ```
 
-- **&lt;formats...&gt;** is the list of encoding formats to enable.
+- **&lt;formats...&gt;** is the list of encoding formats to enable. If multiple encodings are enabled, the encoding is chosen based the request's Accept-Encoding header; if the client has no strong preference (q-factor), then the first supported encoding is used.
 - **gzip** enables Gzip compression, optionally at the specified level.
 - **zstd** enables Zstandard compression.
-- **minimum_length** the minimum number of bytes a response should have to be encoded. (Default is 512)
-- **prefer** is the ordered list of enabled encoding formats to determine, which encoding to choose if the client has no strong preference (via q-factors in the `Accept-Encoding` header).  
-  If **prefer** is not specified the first supported encoding from the `Accept-Encoding` header is used.
+- **minimum_length** the minimum number of bytes a response should have to be encoded (default: 512).
 - **match** is a [Response matcher](#responsematcher). Only matching Responses are encoded. The default looks like this:
 
   ```caddy-d
@@ -71,18 +70,8 @@ Enable Gzip compression:
 encode gzip
 ```
 
-Enable Zstandard and Gzip compression:
+Enable Zstandard and Gzip compression (with Zstandard implicitly preferred, since it is first):
 
 ```caddy-d
 encode zstd gzip
 ```
-
-Enable Zstandard and Gzip compression and prefer Zstandard over Gzip:
-
-```caddy-d
-encode zstd gzip {
-	prefer zstd gzip
-}
-```
-
-Without the **prefer** setting, a `--compressed` HTTP request via [curl](https://curl.se/) (meaning `Accept-Encoding: deflate, gzip, br, zstd` in curl >=7.72.0) would be served with Gzip encoding, because it is the first accepted encoding that both client and server support. With the **prefer** setting Zstandard encoding is served, because the client has no preference but the server (caddy) has.

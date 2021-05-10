@@ -7,7 +7,7 @@ title: "API"
 Caddy is configured through an administration endpoint which can be accessed via HTTP using a [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) API. You can [configure this endpoint](/docs/json/admin/) in your Caddy config.
 
 **Default address: `localhost:2019`**
-
+`
 <aside class="tip">
 	If you are running untrusted code on your server (yikes 😬), make sure you protect your admin endpoint by isolating processes, patching vulnerable programs, and configuring the endpoint to bind to a permissioned unix socket instead.
 </aside>
@@ -246,7 +246,7 @@ Returns the current status of the configured reverse proxy upstreams (backends) 
 Each entry in the JSON array is a configured [upstream](/docs/json/apps/http/servers/routes/handle/reverse_proxy/upstreams/) stored in the global upstream pool.
 
 - **address** is the dial address of the upstream. For SRV upstreams, this is the `lookup_srv` DNS name.
-- **healthy** reflects whether Caddy believes the upstream to be healthy or not. Note that "health" is a distinct concept from "availability". A healthy backend might not be available to proxy to, but an unhealthy backend will always be unavailable. Health is a global characteristic regardless of specific reverse proxy handler configuration, whereas availability is determined by the configuration of the specific reverse proxy handler. For example, a healthy backend would be unavailable if the handler is configured to only allow N requests at a time and it currently has N active requests. The "healthy" property does not reflect availability.
+- **healthy** reflects whether Caddy believes the upstream to be healthy or not. Note that "health" is a distinct concept from "availability". An unhealthy backend will always be unavailable, but a healthy backend might not be available. Health is a global characteristic regardless of specific reverse proxy handler configuration, whereas availability is determined by the configuration of the specific reverse proxy handler. For example, a healthy backend would be unavailable if the handler is configured to only allow N requests at a time and it currently has N active requests. The "healthy" property does not reflect availability.
 - **num_requests** is the amount of active requests currently being handled by the upstream.
 - **fails** the current number of failed requests remembered, as configured by passive health checks.
 

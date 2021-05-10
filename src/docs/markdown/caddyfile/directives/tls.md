@@ -41,7 +41,7 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 - **&lt;email&gt;** is the email address to use for the ACME account managing the site's certificates.
 - **&lt;cert_file&gt;** and **&lt;key_file&gt;** are the paths to the certificate and private key PEM files. Specifying just one is invalid.
 - **protocols** specifies the minimum and maximum protocol versions. Default min: `tls1.2`. Default max: `tls1.3`
-- **ciphers** specifies the list of cipher suite names in descending preference order. Note that cipher suites are not customizable with TLS 1.3. The supported names are (in no particular order here):
+- **ciphers** specifies the list of cipher suite names in descending preference order. It is recommended to not change these unless you know what you're doing. Note that cipher suites are not customizable for TLS 1.3; and not all TLS 1.2 ciphers are enabled by default. The supported names are (in no particular order here):
 	- TLS_RSA_WITH_3DES_EDE_CBC_SHA
 	- TLS_RSA_WITH_AES_128_CBC_SHA
 	- TLS_RSA_WITH_AES_256_CBC_SHA
@@ -61,7 +61,7 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 	- TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	- TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
 	- TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256
-- **curves** specifies the list of EC curves to support. Supported values are:
+- **curves** specifies the list of EC curves to support. It is recommended to not change these. Supported values are:
 	- x25519
 	- secp256r1
 	- secp384r1
@@ -73,7 +73,7 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 - **dns** enables the [DNS challenge](/docs/automatic-https#dns-challenge) using the specified provider plugin, which must be plugged in from one of the [caddy-dns](https://github.com/caddy-dns) repositories. Each provider plugin may have their own syntax following their name; refer to their docs for details. Maintaining support for each DNS provider is a community effort. [Learn how to enable the DNS challenge for your provider at our wiki.](https://caddy.community/t/how-to-use-dns-provider-modules-in-caddy-2/8148)
 - **resolvers** customizes the DNS resolvers used when performing the DNS challenge; these take precedence over system resolvers or any default ones. If set here, the resolvers will propagate to all configured certificate issuers.
 - **eab** configures ACME external account binding (EAB) for this site, using the key ID and MAC key provided by your CA.
-- **on_demand** enables [on-demand TLS](/docs/automatic-https#on-demand-tls) for the hostnames given in the site block's address(es).
+- **on_demand** enables [on-demand TLS](/docs/automatic-https#on-demand-tls) for the hostnames given in the site block's address(es). **Security warning:** Doing so in production is insecure unless you also configure the [`on_demand_tls` global option](https://caddyserver.com/docs/caddyfile/options#on-demand-tls) to mitigate abuse.
 - **client_auth** enables and configures TLS client authentication:
 	- **mode** is the mode for authenticating the client. Allowed values are:
 

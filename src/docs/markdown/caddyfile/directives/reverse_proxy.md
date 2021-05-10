@@ -65,6 +65,15 @@ reverse_proxy [<matcher>] [<upstreams...>] {
     transport <name> {
         ...
     }
+
+	# optionally intercept responses from upstream
+	@name {
+		status <code...>
+		header <field> [<value>]
+	}
+	handle_response [<matcher>] [status_code] {
+		<directives...>
+	}
 }
 ```
 
@@ -246,6 +255,15 @@ transport fastcgi {
 - **write_timeout** is how long to wait when sending to the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
 
 
+### Intercepting responses
+
+The reverse proxy can be configured to intercept responses from the backend. To facilitate this, response matchers can be defined (similar to the syntax for request matchers) and the first matching `handle_response` route will be invoked. When this happens, the response from the backend is not written to the client, and the configured `handle_response` route will be executed instead, and it is up to that route to write a response.
+
+- **@name** is the name of a response matcher. As long as each response matcher has a unique name, multiple matchers can be defined. A response can be matched on the status code and presence or value of a response header.
+- **handle_response** defines the route to execute when matched by the given matcher (or, if a matcher is omitted, all responses). The first matching block will be applied. Inside a `handle_response` block, any other [directives](/docs/caddyfile/directives) can be used.
+
+
+
 
 ## Examples
 
@@ -300,5 +318,18 @@ Replace a path prefix before proxying:
 handle_path /old-prefix/* {
 	rewrite * /new-prefix{path}
 	reverse_proxy localhost:9000
+}
+```
+
+X-Accel-Redirect support:
+
+```caddy-d
+reverse_proxy localhost:8080 {
+	@accel header X-Accel-Redirect *
+	handle_response @accel {
+		root    * /path/to/private/files
+		rewrite   {http.response.header.X-Accel-Redirect}
+		file_server
+	}
 }
 ```

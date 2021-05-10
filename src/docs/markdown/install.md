@@ -200,3 +200,12 @@ _Note: This is a community-maintained installation method._
 <pre><code class="cmd bash">ansible-galaxy install nvjacobo.caddy</code></pre>
 
 [**View the Ansible role repository**](https://github.com/nvjacobo/caddy)
+
+
+## Scoop
+
+_Note: This is a community-maintained installation method._
+
+<pre><code class="cmd">scoop install caddy</code></pre>
+
+[**View the Scoop manifest**](https://github.com/ScoopInstaller/Main/blob/master/bucket/caddy.json)

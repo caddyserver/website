@@ -40,9 +40,10 @@ Possible options are:
 		include <namespaces...>
 		exclude <namespaces...>
 	}
+	grace_period <duration>
 
 	# TLS Options
-	auto_https off|disable_redirects
+	auto_https off|disable_redirects|ignore_loaded_certs
 	email <yours>
 	default_sni <name>
 	local_certs
@@ -119,10 +120,14 @@ Customizes the named logger. The name can be passed to indicate a specific logge
 - **exclude** identifies the loggers that are excluded from this log configuration. See the [JSON documentation](/docs/json/logging/logs/exclude/) for more information.
 
 
+##### `grace_period`
+Defines the grace period for shutting down HTTP servers during config reloads. If clients do not finish their requests within the grace period, the server will be forcefully terminated to allow the reload to complete and free up resources.
+
+
 ## TLS Options
 
 ##### `auto_https`
-Configure automatic HTTPS. It can either disable it entirely (`off`) or disable only HTTP-to-HTTPS redirects (`disable_redirects`). See the [Automatic HTTPS](/docs/automatic-https) page for more details.
+Configure automatic HTTPS. It can be disabled entirely (`off`), disable only HTTP-to-HTTPS redirects (`disable_redirects`), or be configured to automate certificates even for names which appear on manually-loaded certificates (`ignore_loaded_certs`). See the [Automatic HTTPS](/docs/automatic-https) page for more details.
 
 ##### `email`
 Your email address. Mainly used when creating an ACME account with your CA, and is highly recommended in case there are problems with your certificates.

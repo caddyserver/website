@@ -123,7 +123,7 @@ To adapt a Caddyfile to JSON that you can easily read and tweak manually:
 
 <pre><code class="cmd bash">caddy build-info</code></pre>
 
-Prints information provided by Go about the build (main module path, package versions, replacements).
+Prints information provided by Go about the build (main module path, package versions, module replacements).
 
 
 
@@ -297,6 +297,7 @@ Runs Caddy and blocks indefinitely; i.e. "daemon" mode.
 <pre><code class="cmd bash">caddy start
 	[--config &lt;path&gt;]
 	[--adapter &lt;name&gt;]
+	[--envfile &lt;file&gt;]
 	[--pidfile &lt;file&gt;]
 	[--watch]</code></code></pre>
 
