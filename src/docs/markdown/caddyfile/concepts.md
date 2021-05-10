@@ -284,11 +284,6 @@ You can pass arguments to imported configuration and use them like so:
     output file /var/log/caddy/{args.0}.access.log
   }
 }
-```
-
-And then you can reuse it anywhere with parameters: 
-
-```caddy-d
 a.example.com {
   import log_common a.example.com
 }
