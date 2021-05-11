@@ -276,6 +276,21 @@ import redirect
 
 The [`import`](/docs/caddyfile/directives/import) directive can also be used to include other files in its place. As a special case, it can appear almost anywhere within the Caddyfile.
 
+You can pass arguments to imported configuration and use them like so:
+
+```caddy
+(snippet) {
+  respond "Yahaha! You found {args.0}!"
+}
+
+a.example.com {
+	import snippet "Example A"
+}
+
+b.example.com {
+	import snippet "Example B"
+}
+```
 
 
 ## Comments
