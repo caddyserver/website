@@ -279,17 +279,16 @@ The [`import`](/docs/caddyfile/directives/import) directive can also be used to 
 You can pass arguments to imported configuration and use them like so:
 
 ```caddy
-(log_common) {
-  log {
-    output file /var/log/caddy/{args.0}.access.log
-  }
+(snippet) {
+  respond "Yahaha! You found {args.0}!"
 }
+
 a.example.com {
-  import log_common a.example.com
+	import snippet "Example A"
 }
 
 b.example.com {
-  import log_common b.example.com
+	import snippet "Example B"
 }
 ```
 
