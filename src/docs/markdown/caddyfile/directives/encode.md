@@ -30,7 +30,7 @@ encode [<matcher>] <formats...> {
 - **gzip** enables Gzip compression, optionally at the specified level.
 - **zstd** enables Zstandard compression.
 - **minimum_length** the minimum number of bytes a response should have to be encoded (default: 512).
-- **match** is a [Response matcher](#responsematcher). Only matching Responses are encoded. The default looks like this:
+- **match** is a [response matcher](#response-matcher). Only matching responses are encoded. The default looks like this:
 
   ```caddy-d
   match {
@@ -60,7 +60,7 @@ By HTTP status code.
 
 ### header
 
-See Request matcher [header](/docs/caddyfile/matchers#header).
+See the [header](/docs/caddyfile/matchers#header) request matcher for the supported syntax.
 
 ## Examples
 
