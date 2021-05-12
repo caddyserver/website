@@ -128,7 +128,7 @@ redir /remove/ /remove
 Using a redirect, the client will have to re-issue the request, enforcing a single acceptable URI for a resource.
 
 
-### Wildcard certificates
+## Wildcard certificates
 
 If you need to serve multiple subdomains with the same wildcard certificate, the best way to handle them is with a Caddyfile like this, making use of the [`handle`](/docs/caddyfile/directives/handle) directive and [`host`](/docs/caddyfile/matchers#host) matchers:
 

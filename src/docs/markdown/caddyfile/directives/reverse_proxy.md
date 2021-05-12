@@ -16,6 +16,7 @@ Proxies requests to one or more backends with configurable transport, load balan
 - [Transports](#transports)
   - [The `http` transport](#the-http-transport)
   - [The `fastcgi` tranport](#the-fastcgi-transport)
+- [Intercepting responses](#intercepting-responses)
 - [Examples](#examples)
 
 
@@ -259,11 +260,26 @@ transport fastcgi {
 
 The reverse proxy can be configured to intercept responses from the backend. To facilitate this, response matchers can be defined (similar to the syntax for request matchers) and the first matching `handle_response` route will be invoked. When this happens, the response from the backend is not written to the client, and the configured `handle_response` route will be executed instead, and it is up to that route to write a response.
 
-- **@name** is the name of a response matcher. As long as each response matcher has a unique name, multiple matchers can be defined. A response can be matched on the status code and presence or value of a response header.
+- **@name** is the name of a [response matcher](#response-matcher). As long as each response matcher has a unique name, multiple matchers can be defined. A response can be matched on the status code and presence or value of a response header.
 - **handle_response** defines the route to execute when matched by the given matcher (or, if a matcher is omitted, all responses). The first matching block will be applied. Inside a `handle_response` block, any other [directives](/docs/caddyfile/directives) can be used.
 
+#### Response matcher
 
+**Response matchers** can be used to filter (or classify) responses by specific criteria.
 
+##### status
+
+```caddy-d
+status <code...>
+```
+
+By HTTP status code.
+
+- **&lt;code...&gt;** is a list of HTTP status codes. Special cases are `2xx`, `3xx`, ... which match against all status codes in the range of 200-299, 300-399, ... respectively
+
+##### header
+
+See the [header](/docs/caddyfile/matchers#header) request matcher for the supported syntax.
 
 ## Examples
 
@@ -329,6 +345,19 @@ reverse_proxy localhost:8080 {
 	handle_response @accel {
 		root    * /path/to/private/files
 		rewrite   {http.response.header.X-Accel-Redirect}
+		file_server
+	}
+}
+```
+
+Custom error page for errors from upstream:
+
+```
+reverse_proxy localhost:8080 {
+	@error status 500 503
+	handle_response @error {
+		root    * /path/to/error/pages
+		rewrite   /{http.reverse_proxy.status_code}.html
 		file_server
 	}
 }
