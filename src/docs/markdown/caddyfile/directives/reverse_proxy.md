@@ -263,6 +263,12 @@ The reverse proxy can be configured to intercept responses from the backend. To 
 - **@name** is the name of a [response matcher](#response-matcher). As long as each response matcher has a unique name, multiple matchers can be defined. A response can be matched on the status code and presence or value of a response header.
 - **handle_response** defines the route to execute when matched by the given matcher (or, if a matcher is omitted, all responses). The first matching block will be applied. Inside a `handle_response` block, any other [directives](/docs/caddyfile/directives) can be used.
 
+Three placeholders will be made available to the `handle_response` routes:
+
+- `{http.reverse_proxy.status_code}` The status code from the backend's response.
+- `{http.reverse_proxy.status_text}` The status text from the backend's response.
+- `{http.reverse_proxy.header.*}` The headers from the backend's response.
+
 #### Response matcher
 
 **Response matchers** can be used to filter (or classify) responses by specific criteria.
@@ -344,7 +350,7 @@ reverse_proxy localhost:8080 {
 	@accel header X-Accel-Redirect *
 	handle_response @accel {
 		root    * /path/to/private/files
-		rewrite   {http.response.header.X-Accel-Redirect}
+		rewrite   {http.reverse_proxy.header.X-Accel-Redirect}
 		file_server
 	}
 }
