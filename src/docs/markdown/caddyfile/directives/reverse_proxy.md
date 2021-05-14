@@ -363,7 +363,7 @@ reverse_proxy localhost:8080 {
 	@error status 500 503
 	handle_response @error {
 		root    * /path/to/error/pages
-		rewrite   /{http.reverse_proxy.status_code}.html
+		rewrite * /{http.reverse_proxy.status_code}.html
 		file_server
 	}
 }
