@@ -64,3 +64,30 @@ Or similarly for Linux ARMv6 when you're not on Linux or on ARMv6:
 The same works for `xcaddy`. To cross-compile for macOS:
 
 <pre><code class="cmd bash">GOOS=darwin xcaddy build</code></pre>
+
+## Package support files for custom builds for Debian/Ubuntu/Raspbian
+
+This procedure aims to simplify running custom `caddy` binaries while keeping support files from the `caddy` package.
+
+This procedure allows users to take advantage of the default configuration, systemd service files and bash-completion from the official package.
+
+Requirements:
+- Install `caddy` package according to these [instructions](https://caddyserver.com/docs/install#debian-ubuntu-raspbian)
+- Build your custom `caddy` binary according to the procedure listed in this document. (see above)
+- Your custom `caddy` binary should be located in the current directory.
+
+Procedure:
+<pre><code class="cmd"><span class="bash">dpkg-divert --divert /usr/bin/caddy.default --rename /usr/bin/caddy</span>
+<span class="bash">mv ./caddy /usr/bin/caddy.custom</span>
+<span class="bash">update-alternatives --install /usr/bin/caddy caddy /usr/bin/caddy.default 10</span>
+<span class="bash">update-alternatives --install /usr/bin/caddy caddy /usr/bin/caddy.custom 50</span>
+</code></pre>
+
+
+`dpkg-divert` will move `/usr/bin/caddy` binary to `/usr/bin/caddy.default` and put a diversion in place in case any package want to install a file to this location.
+
+`update-alternatives` will create a symlink from the desired caddy binary to `/usr/bin/caddy`
+
+You can change between the custom and default `caddy` binaries by executing
+<pre><code class="cmd bash">update-alternatives --config caddy</code></pre>
+and following the on screen information.
