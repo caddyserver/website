@@ -72,13 +72,16 @@ output file <filename> {
 
 #### net
 
-A network socket.
+A network socket. If the socket goes down, it will dump logs to stderr while it attempts to reconnect.
 
 ```caddy-d
-output net <address>
+output net <address> {
+	dial_timeout <duration>
+}
 ```
 
 - **&lt;address&gt;** is the [address](/docs/conventions#network-addresses) to write logs to.
+- **&lt;dial_timeout&gt;** is how long to wait for a successful connection to the log socket. Log emissions may be blocked for up to this long if the socket goes down.
 
 
 

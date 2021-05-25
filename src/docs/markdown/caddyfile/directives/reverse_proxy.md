@@ -358,7 +358,7 @@ reverse_proxy localhost:8080 {
 
 Custom error page for errors from upstream:
 
-```
+```caddy-d
 reverse_proxy localhost:8080 {
 	@error status 500 503
 	handle_response @error {
