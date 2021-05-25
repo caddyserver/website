@@ -1,72 +1,68 @@
 // download package list as soon as possible
 $.get("/api/packages").done(function(json) {
+	// sort package list by most popular, seems to make sense for convenience
 	var packageList = json.result;
-	const preselectedPackage = new URL(window.location.href).searchParams.getAll("package") ;
+	packageList.sort((a, b) => {
+		return b.downloads > a.downloads ? 1 : -1;
+	});
+
+	const preselectedPackage = new URL(window.location.href).searchParams.getAll("package");
 	
 	// wait until the DOM has finished loading before rendering the results
 	$(function() {
-		const optpkgTemplate =
-			'<tr class="optpkg">'+
-			'	<td><label><input type="checkbox" class="optpkg-check"><span class="optpkg-name"></span></label></td>'+
-			'	<td class="text-center"><input type="text" name="version" placeholder="latest" title="Package version" size="5"></td>'+
-			'	<td class="optpkg-modules"></td>'+
-			'</tr>';
+		const packageTemplate =
+			'<div class="package">\n'+
+			'	<div class="package-icon">&#128230;</div>\n'+
+			'   <div class="package-data">\n'+
+			'		<div class="package-meta">\n'+
+			'			<b>downloads:</b> <span class="package-downloads"></span>\n'+
+			'			<b>version:</b> <input type="text" class="package-version-input" name="version" placeholder="latest" title="Any version string recognized by `go get` can be used">\n'+
+			'		</div>\n'+
+			'		<a target="_blank" title="View package repo" class="package-link"></a>\n'+
+			'		<div class="package-modules"></div>\n'+
+			'	</div>\n'+
+			'</div>\n'
 
-		const optpkgModuleTemplate =
-			'<div class="optpkg-module">'+
-			'	<a class="module-name" title="View docs"></a>'+
-			'	<span class="module-description"></span>'+
-			'</div>';		
+		const moduleTemplate =
+			'<div class="module">\n'+
+			'	&#128268;<a target="_blank" title="View module docs" class="module-link"></a>\n'+
+			'	<span class="module-desc"></span>\n'+
+			'</div>\n';
+
 
 		for (var i = 0; i < packageList.length; i++) {
 			var pkg = packageList[i];
-			if (isStandard(pkg.path)) {
-				// not necessary to show, since these packages
-				// come with standard distribution
-				continue;
-			}
-			
-			var $optpkg = $(optpkgTemplate);
-			$('.optpkg-name', $optpkg).text(pkg.path);
-			if (preselectedPackage.includes(pkg.path)) {
-				$('.optpkg-check', $optpkg).prop("checked", true);
-				$('.optpkg-check', $optpkg).closest('.optpkg').toggleClass("selected");
-			}
 
-			$('.optpkg-check', $optpkg).change({pkg: pkg}, (event) => {
-				const element = $(event.currentTarget);
-				let newUrl = new URL(window.location.href);
-				let currentSelected = newUrl.searchParams.getAll("package") ;
-				newUrl.searchParams.delete("package");
-				const pkgPath = event.data.pkg.path;
-				if (element.is(':checked')) {
-					if (!currentSelected.includes(pkgPath)) {
-						currentSelected = [...currentSelected, pkgPath];
-					}
-				} else {
-					const position = currentSelected.indexOf(pkgPath);
-					if (position >= 0) {
-						currentSelected.splice(position, 1);
-					}
-				}
-				currentSelected.forEach( (selected) => newUrl.searchParams.append("package", selected));
-				history.replaceState({}, "Download Caddy", newUrl.toString());
-			});
+			var $pkg = $(packageTemplate);
+			
+			let { provider, path } = splitVCSProvider(pkg.path);
+			if (provider) {
+				var $pkgHost = $('<span class="package-host"/>').text(provider);
+				$('.package-link', $pkg).html($pkgHost).append('<br/>');
+			}
+			$pkgName = $('<span class="package-name"/>').text(path);
+			
+			$('.package-link', $pkg).append($pkgName);
+			$('.package-link', $pkg).prop('href', pkg.repo);
+			$('.package-downloads', $pkg).text(pkg.downloads);
+			if (preselectedPackage.includes(pkg.path)) {
+				$($pkg).addClass("selected");
+			}
 
 			if (pkg.modules && pkg.modules.length > 0) {
 				for (var j = 0; j < pkg.modules.length; j++) {
 					var mod = pkg.modules[j];
-					var $mod = $(optpkgModuleTemplate);
-					$('.module-name', $mod).attr('href', '/docs/modules/'+mod.name).text(mod.name);
-					$('.module-description', $mod).text(truncate(mod.docs, 120));
-					$('.optpkg-modules', $optpkg).append($mod);
+					var $mod = $(moduleTemplate);
+					$('.module-link', $mod).attr('href', '/docs/modules/'+mod.name).text(mod.name).attr('title', "View module details");
+					$('.module-desc', $mod).text(moduleDocsPreview(mod, 120));
+					$('.package-modules', $pkg).append($mod);
 				}
 			} else {
-				$('.optpkg-modules', $optpkg)
-					.addClass("optpkg-no-modules")
-					.text('This package does not add any modules. Either it is another kind of plugin (such as a config adapter) or this listing is in error.');
+				$('.package-modules', $pkg)
+					.addClass("package-no-modules")
+					.text('This package does not add any modules to the JSON config structure. Either it is another kind of plugin (such as a config adapter) or this listing is in error.');
 			}
-			$('#optional-packages').append($optpkg);
+			$('#optional-packages').append($pkg);
 		}
 		updatePage();
 	});
@@ -86,19 +82,71 @@ $(function() {
 
 	downloadButtonHtml = $('#download').html();
 
-	// update the page, including the download link, when form fields change
-	$('#optional-packages').on('change', 'input[type=checkbox]', function() {
-		$(this).closest('.optpkg').toggleClass('selected');
-		updatePage();
+	$('#filter').on('search keyup', function(event) {
+		var count = 0;
+		var q = $(this).val().trim().toLowerCase();
+
+		$('.package').each(function() {
+			if (!q) {
+				// filter is cleared; show all
+				this.style.display = '';
+				return;
+			}
+			
+			var corpus = $(this).find('.package-link, .module-link, .module-desc').text().trim().toLowerCase();
+
+			if (corpus.indexOf(q) === -1) {
+				this.style.display = 'none'; 
+				return;
+			}
+			this.style.display = '';
+			count++;
+		});
+
+		// update color of search input based on results
+		if (q) {
+			if (count > 0) {
+				$('#filter').addClass('found').removeClass('not-found');
+			} else {
+				$('#filter').addClass('not-found').removeClass('found');
+			}
+		} else {
+			$('#filter').removeClass('found not-found');
+		}
 	});
-	$('#optional-packages').on('change keyup', 'input[name=version]', function() {
-		updatePage();
-	});
+
 	$('#platform').change(function() {
 		updatePage();
 	});
 
-	$('#download').click(function(event) {
+	$('#optional-packages').on('click', '.package', function() {
+		$(this).toggleClass('selected');
+		updatePage();
+
+		let newUrl = new URL(window.location.href);
+		let currentSelected = newUrl.searchParams.getAll("package") ;
+		newUrl.searchParams.delete("package");
+		const pkgPath = $('.package-link', $(this)).text().trim(); 
+		if ($(this).hasClass('selected')) {
+			if (!currentSelected.includes(pkgPath)) {
+				currentSelected = [...currentSelected, pkgPath];
+			}
+		} else {
+			const position = currentSelected.indexOf(pkgPath);
+			if (position >= 0) {
+				currentSelected.splice(position, 1);
+			}
+		}
+		currentSelected.forEach( (selected) => newUrl.searchParams.append("package", selected));
+		history.replaceState({}, document.title, newUrl.toString());
+	});
+
+	// when a link within a package listing is clicked, only operate the link (don't select the package)
+	$('#optional-packages').on('click', '.package-link, .module-link, .package-version-input', function(event) {
+		event.stopPropagation();
+	});
+
+	$('#download').click(function() {
 		if ($(this).hasClass('disabled')) {
 			return false;
 		}
@@ -180,7 +228,7 @@ function getDownloadLink() {
 	// get plugins and their versions
 	$('#optional-packages .selected').each(function() {
 		// get package path
-		var p = $('.optpkg-name', this).text().trim();
+		var p = $('.package-link', this).text().trim();
 
 		// get package version, if user specified one
 		var ver = $('input[name=version]', this).val().trim();
@@ -216,7 +264,7 @@ function handleBuildError(jqxhr, status, error) {
 }
 
 function updatePage() {
-	$('#package-count').text($('.optpkg.selected').length);
+	$('#package-count').text($('.package.selected').length);
 	$('#download').attr('href', getDownloadLink());
 }
 
@@ -242,6 +290,19 @@ function enableFields() {
 
 	// allow user to leave page easily
 	window.onbeforeunload = null;
+}
+
+function splitVCSProvider(pkgPath) {
+	var providers = ["github.com/", "bitbucket.org/"];
+	for (var i = 0; i < providers.length; i++) {
+		if (pkgPath.toLowerCase().indexOf(providers[i]) == 0) {
+			return {
+				provider: providers[i],
+				path:     pkgPath.slice(providers[i].length)
+			};
+		}
+	}
+	return {provider: "", path: pkgPath};
 }
 
 var downloadButtonHtml; // to restore button to its original contents

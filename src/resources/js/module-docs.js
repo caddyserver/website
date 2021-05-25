@@ -9,7 +9,7 @@ if (moduleID) {
 		$(function() {
 			$('#module-docs-container').show();
 			$('h1').text("Module "+moduleID);
-			beginRendering(json.result);
+			beginRendering(json.result, moduleID);
 		});
 	});
 } else {
@@ -23,10 +23,17 @@ if (moduleID) {
 			$table = $('#module-list');
 			for (modID in moduleList) {
 				var val = moduleList[modID];
+				
+				// refine a short preview of the module's docs
+				let shortDoc = truncate(val.doc, 200);
+				if (shortDoc && shortDoc.indexOf(modID) === 0) {
+					shortDoc = shortDoc.substr(modID.length).trim();
+				}
+				
 				var standard = isStandard(val.type_name);
 				var $tr = $('<tr/>');
 				$tr.append('<td><a href="./'+modID+'" class="module-link">'+modID+'</a>'+(standard ? '' : ' '+nonStandardFlag)+'</td>');
-				$tr.append('<td>'+markdown(truncate(val.doc, 200))+'</td>');
+				$tr.append($('<td/>').text(shortDoc));
 				$table.append($tr);
 			}
 		});

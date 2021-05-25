@@ -155,29 +155,23 @@ $(function() {
 });
 
 
-function beginRendering(json) {
+function beginRendering(json, moduleID) {
 	pageData = json;
-	console.log("DATA:", pageData);
+	console.log("PAGE DATA:", pageData);
 	
 	// show notice if module is non-standard
-	if (pageData.structure.type_name && !isStandard(pageData.structure.type_name)) {
-		var projectHref = 'https://'+pageData.structure.type_name;
-		projectHref = substrBeforeLastDot(projectHref);
-		$('.nonstandard-project-link').attr('href', projectHref).text(projectHref);
+	if (pageData.repo && !isStandard(pageData.structure.type_name)) {
+		$('.nonstandard-project-link').attr('href', pageData.repo).text(pageData.repo);
 		$('.nonstandard-notice').prepend(nonStandardFlag).show();
 	}
 
-	if (pageData.structure.doc) {
-		// for most types, just render their docs
-		$('#top-doc').html(markdown(pageData.structure.doc));
-	} else if (pageData.structure.elems) {
-		// for maps or arrays, fall through to the underlying type
-		$('#top-doc').html(markdown(pageData.structure.elems.doc));
-	}
+	// for most types, just render their docs; but for maps or arrays, fall through to underlying type for docs
+	let rawDocs = pageData.structure.doc ?? pageData.structure.elems;
+
+	$('#top-doc').html(markdown(replaceGoTypeNameWithCaddyModuleName(rawDocs, moduleID)));
 	$('#top-doc').append(makeSubmoduleList("", pageData.structure));
 
 	renderData(pageData.structure, 0, "", $('<div class="group"/>'));
-	console.log("DOCS:", pageDocs);
 
 	if ($('#field-list-contents').text().trim()) {
 		$('#field-list-header').show();
@@ -357,6 +351,23 @@ function makeSubmoduleList(path, value) {
 // only render part of it in isolation.
 function canTraverse() {
 	return pageData.breadcrumb != null;
+}
+
+function replaceGoTypeNameWithCaddyModuleName(docs, moduleID) {
+	if (!docs || !moduleID) return docs;
+
+	// fully qualified type name
+	let fqtn = pageData.structure.type_name;
+
+	// extract just the local type name
+	let typeName = fqtn.substr(fqtn.lastIndexOf('.')+1)
+
+	// replace the type name with the Caddy module ID if it starts the docs.
+	if (docs.indexOf(typeName) === 0) {
+		docs = moduleID + docs.substr(typeName.length);
+	}
+
+	return docs;
 }
 
 function markdown(input) {

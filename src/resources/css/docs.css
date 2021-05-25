@@ -720,7 +720,7 @@ td code {
 
 #module-list td:first-child {
 	word-wrap: break-word;
-	max-width: 300px;
+	max-width: 400px;
 }
 
 #module-list .module-link {

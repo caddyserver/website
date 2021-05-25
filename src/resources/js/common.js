@@ -14,20 +14,23 @@ function isStandard(packagePath) {
 	return packagePath.startsWith(caddyImportPath);
 }
 
-function substrBeforeLastDot(s) { 
-	return s.substr(0, s.lastIndexOf('.'))
-}
-
-function substrAfterLastDot(s) { 
-	return s.substr(s.lastIndexOf('.'))
-}
-
-function truncate(str, len) {
+function truncate(str, maxLen) {
 	if (!str) return "";
-	var startLen = str.length;
-	str = str.substring(0, len);
-	if (startLen > len) {
-		str += "...";
+	str = str.trim();
+	let firstPeriod = str.match(/\.(\s|$)/); // first dot not in the middle of a word, or at end of string
+	let terminate = firstPeriod ? firstPeriod.index+1 : str.length;
+	str = str.substring(0, terminate);
+	if (str.length <= maxLen) {
+		return str;
 	}
-	return str;
+	return str+"...";
+}
+
+function moduleDocsPreview(mod, maxLen) {
+	if (!mod || !mod.docs) return "";
+	let short = truncate(mod.docs, maxLen);
+	if (short.indexOf(mod.name) === 0) {
+		short = short.substr(mod.name.length).trim();
+	}
+	return short;
 }

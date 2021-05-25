@@ -51,12 +51,18 @@
 							<option value="windows-amd64">Windows amd64</option>
 							<option value="windows-arm-6">Windows arm 6</option>
 							<option value="windows-arm-7">Windows arm 7</option>
+							<!-- <option value="windows-arm64">Windows arm64</option> TODO: Go 1.17 - https://github.com/golang/go/issues/36439 -->
 						</select>
 					</div>
 				</div>
 				<div>
 					<div>
-						<b>Additional packages:</b> <span id="package-count">0</span>
+						<b>Standard features:</b> &#9745;&#65039;
+					</div>
+				</div>
+				<div>
+					<div>
+						<b>Extra features:</b> <span id="package-count">0</span>
 					</div>
 				</div>
 				<div>
@@ -64,24 +70,17 @@
 				</div>
 			</div>
 
-			<div class="packages-explanation">
-				Always comes with all standard <a href="/docs/modules">Caddy modules</a>.
-				<br><br>
-				Optionally select additional packages to include in your build: <span class="warning">⚠️ Only choose plugins you need and trust</span>
+			<input type="search" id="filter" placeholder="Filter packages and modules...">
+
+			<div class="text-center">
+				<span class="warning">⚠️ Only choose plugins you need and trust</span>
 			</div>
 
-			<div class="table-container">
-				<table id="optional-packages">
-					<tr>
-						<th>Package</th>
-						<th class="text-center">Version</th>
-						<th>Modules</th>
-					</tr>
-					<!-- Populated by JS -->
-				</table>
+			<div id="optional-packages">
+				<!-- Populated by JavaScript -->
 			</div>
-			
 		</div>
+
 		{{include "/includes/footer.html"}}
 	</body>
 </html>

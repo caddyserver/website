@@ -28,27 +28,43 @@ body {
 
 #download {
 	margin: 0;
-	font-size: 16px;
+	padding-left: 30px;
+	padding-right: 30px;
 	font-weight: bold;
 }
 
-.packages-explanation {
-	margin: 20px auto;
+#filter {
+	margin-top: 1em;
+	width: 100%;
+	padding: 15px;
+	font-size: 24px;
+	text-align: center;
+	border: 0;
+	border-bottom: 1px solid #ccc;
+	outline: none;
+}
+
+#filter.found {
+	color: green;
+}
+#filter.not-found {
+	color: #cc0000;
 }
 
 .warning {
-	margin-left: 1em;
-	font-size: 12px;
+	margin-top: 20px;
+	display: inline-block;
+	font-size: 14px;
 	font-weight: bold;
-	padding: 2px 15px;
+	padding: 5px 15px;
 	border-radius: 1em;
-	border: 2px solid rgb(255, 201, 0);
-	color: rgb(206, 151, 0);
+	color: rgb(255, 208, 0);
+	background: #333;
 }
 
 input:disabled,
 select:disabled,
-#optional-packages.disabled .optpkg label {
+#optional-packages.disabled {
 	cursor: not-allowed !important;
 }
 
@@ -129,134 +145,97 @@ select:disabled,
 
 
 
-
-.table-container {
-	overflow-x: auto;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
-	border-top-left-radius: 8px;
-	border-top-right-radius: 8px;
-}
-
 #optional-packages {
-	width: 100%;
-	border-spacing: 0;
-	border-collapse: collapse;
+	margin-top: 2em;
 }
 
-/* #optional-packages tr {
-	height: 1px;
-} */
-
-#optional-packages th,
-#optional-packages td {
-	border-bottom: 1px solid #dfeaf0;
-}
-
-#optional-packages th:first-child { border-top-left-radius: 8px; }
-#optional-packages th:last-child  { border-top-right-radius: 8px; }
-
-#optional-packages th {
-	background: #dfe8ec;
-	text-align: left;
-	text-transform: uppercase;
-	letter-spacing: 2px;
-	color: #54676f;
-	font-weight: bold;
-	font-size: 12px;
-	margin-bottom: 1em;
-	border-color: #90a2ac;
-}
-
-#optional-packages th:first-child {
-	padding-left: 4.25em;
-}
-
-#optional-packages td {
-	background: #fff;
-	height: 1px; /* TODO: works on Chrome, but not Firefox */
-	/* height: 100%; TODO: works on Firefox, but not Chrome */
-	/* TODO:
-		see https://stackoverflow.com/a/34781198/1048862
-		(could also do tr with height: 1px which gets ignored,
-		then td with height: inherit; but this effectively the
-		same as just doing a td with height: 1px.)
-		I don't like how either Firefox or Chrome handle this
-		styling (setting the height of the parent shouldn't be
-		required at all, the browser is rendering a height
-		regardless!) but I think I lean toward Firefox's as
-		being more correct; the hack in Firefox is setting a
-		flexible 100% height on the parent, rather than the hack
-		in Chrome which is setting a height that is too small
-		and stretched or ignored anyway.
-	*/
-}
-
-#optional-packages th,
-#optional-packages .optpkg td:first-child label,
-#optional-packages td:not(:first-child) {
-	padding: 15px;
-}
-
-#optional-packages .optpkg-name {
-	font-weight: bold;
-}
-
-#optional-packages .optpkg input[type=checkbox] {
-	transform: scale(1.5);
-	cursor: pointer;
-	margin-right: 2em;
-}
-
-#optional-packages .optpkg label {
+.package {
 	display: flex;
-	align-items: center;
-	height: 100%;
-	line-height: 1em;
+	padding: 2em;
+	background: rgba(255, 255, 255, .4);
+	border: 10px solid transparent;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
 	cursor: pointer;
+	transition: all 200ms ease-out;
 }
 
-#optional-packages:not(.disabled) .optpkg label:hover {
-	background: linear-gradient(90deg, rgba(242,248,253,1) 75%, rgba(242,248,253,0) 100%);
+.package:hover {
+	transform: scale(1.02);
+	background: #fff;
+	box-shadow: 0 2px 20px -2px rgba(0, 0, 0, .05);
 }
 
-#optional-packages .optpkg.selected td {
-	background-color: #f2f8fd;
+.package.selected {
+	border-color: rgb(25, 97, 192);
+	background: #fff;
 }
 
-#optional-packages .optpkg input[type=text] {
-	font-size: 12px;
-	padding: 6px;
-	outline: none;
+.package-icon {
+	font-size: 48px;
+	margin-right: 20px;
+}
+
+.package-data {
+	flex-grow: 1;
+}
+
+.package-meta {
+	float: right;
+	font-size: 14px;
+}
+
+.package-downloads {
+	margin-right: 1em;
+}
+
+.package-version-input {
 	text-align: center;
-	border: 1px solid #ccc;
-	border-radius: 4px;
+	max-width: 75px;
+	padding: 4px;
+	margin-left: 5px;
+	border-radius: 5px;
+	border: 1px solid #aaa;
+	outline: none;
 }
 
-#optional-packages .optpkg input[type=text]::placeholder {
-	font-style: italic;
+.package-link {
+	font-size: 20px;
+	font-weight: bold;
+	color: inherit;
+	word-break: break-all;
 }
 
-#optional-packages .optpkg-no-modules {
-	font-size: 12px;
+.package-host {
+	font-size: 14px;
+}
+
+.package-modules {
+	margin-top: 1em;
+}
+
+.package-no-modules {
 	font-style: italic;
 	color: #555;
+	font-size: 14px;
 }
 
-#optional-packages .optpkg-module {
-	margin-top: .5em;
-	margin-bottom: .5em;
+.module {
+	margin: 10px 0;
+	word-wrap: break-word;
 }
 
-#optional-packages .optpkg-module .module-name {
+.module-link {
 	font-weight: bold;
 	font-family: 'PT Mono', monospace;
 }
 
-#optional-packages .optpkg-module .module-description {
-	color: #444;
-	margin-left: 1em;
+.module-desc {
 	font-size: 14px;
+	margin-left: 1em;
 }
+
+
+
 
 
 
