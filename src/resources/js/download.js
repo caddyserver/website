@@ -25,7 +25,7 @@ $.get("/api/packages").done(function(json) {
 
 		const moduleTemplate =
 			'<div class="module">\n'+
-			'	&#128268;<a target="_blank" title="View module docs" class="module-link"></a>\n'+
+			'	&#128268; <a target="_blank" title="View module docs" class="module-link"></a>\n'+
 			'	<span class="module-desc"></span>\n'+
 			'</div>\n';
 
