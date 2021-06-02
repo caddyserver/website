@@ -6,7 +6,7 @@ article h1 {
 	padding-top: 8%;
 }
 
-#renderbox {
+.renderbox {
 	border-radius: 0;
 	font-size: 20px;
 	line-height: 1.6em;

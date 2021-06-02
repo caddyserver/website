@@ -80,3 +80,17 @@ $(function() {
 			});
 	}
 });
+
+function stripScheme(url) {
+	return url.substring(url.indexOf("://")+3);
+}
+
+// splitTypeName splits a fully qualified type name into
+// its package path and type name components, for example:
+// "github.com/foo/bar.Type" => "github.com/foo/bar" and "Type".
+function splitTypeName(fqtn) {
+	let lastDotPos = fqtn.lastIndexOf('.');
+	let pkg = fqtn.substr(0, lastDotPos);
+	let typeName = fqtn.substr(lastDotPos+1);
+	return {pkg: pkg, typeName: typeName};
+}

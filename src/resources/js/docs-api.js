@@ -1,13 +1,14 @@
 // TODO: sanitize all HTML renderings, especially markdown: https://github.com/cure53/DOMPurify
 
-var pageData = {}, pageDocs = {};
-
-var $renderbox, $hovercard;
+var pageDocs = {};
+var pageData = {};
+var $hovercard;
 
 const nonStandardFlag = '<span class="nonstandard-flag" title="This module does not come with official Caddy distributions by default; it needs to be added to custom Caddy builds.">Non-standard</span>';
+const standardFlag = '<span class="standard-flag" title="This module comes with official Caddy distributions by default.">Standard</span>';
+
 
 $(function() {
-	$renderbox = $('#renderbox');
 	$hovercard = $('#hovercard');
 
 	var hoverTimeout;
@@ -19,7 +20,7 @@ $(function() {
 	});
 
 	// toggle an object as expanded or collapsed
-	$('#renderbox').on('click', '.toggle-obj', function() {
+	$('body').on('click', '.renderbox .toggle-obj', function() {
 		if ($(this).hasClass('expanded')) {
 			// collapse
 			$(this).html('&#9656;');
@@ -37,7 +38,9 @@ $(function() {
 			clearTimeout(hoverTimeout);
 
 			var pos = $(this).offset();
-
+			var moduleID = $(this).closest('.module-repo-container').data('module-id') || '';
+			var moduleData = pageData[moduleID];
+ 
 			// there is a gap between the hoverbox and the link that originated it;
 			// there may be a different link in this gap; if the hover box is visible,
 			// then we should ignore the hover on this link to allow cursor to visit
@@ -59,10 +62,10 @@ $(function() {
 			if ($(this).hasClass('module')) {
 				// module
 				var $list =$('<div/>');
-				if (pageData.namespaces && pageData.namespaces[modNamespace]) {
-					for (var i = 0; i < pageData.namespaces[modNamespace].length; i++) {
-						var modInfo = pageData.namespaces[modNamespace][i];
-						var href = canTraverse() ? '.'+elemPath+'/'+modInfo.name+'/' : './'+modNamespace+'.'+modInfo.name;
+				if (moduleData.namespaces && moduleData.namespaces[modNamespace]) {
+					for (var i = 0; i < moduleData.namespaces[modNamespace].length; i++) {
+						var modInfo = moduleData.namespaces[modNamespace][i];
+						var href = canTraverse(moduleData) ? '.'+elemPath+'/'+modInfo.name+'/' : './'+modNamespace+'.'+modInfo.name;
 						var content = '<a href="'+href+'" class="module-link"> '+modInfo.name;
 						if (!isStandard(modInfo.package)) {
 							content += nonStandardFlag;
@@ -83,7 +86,7 @@ $(function() {
 				// breadcrumb siblings
 				
 				var siblingPath = $(this).data('sibling-path');
-				var bcVal = pageData.breadcrumb[siblingPath];
+				var bcVal = moduleData.breadcrumb[siblingPath];
 				var bcSiblings = [];
 
 				// drill down to the true underlying type
@@ -101,8 +104,8 @@ $(function() {
 
 				case "module":
 				case "module_map":
-					for (var j = 0; j < pageData.namespaces[bcVal.module_namespace].length; j++) {
-						var mod = pageData.namespaces[bcVal.module_namespace][j];
+					for (var j = 0; j < moduleData.namespaces[bcVal.module_namespace].length; j++) {
+						var mod = moduleData.namespaces[bcVal.module_namespace][j];
 						bcSiblings.push({name: mod.name, path: siblingPath, isStandard: isStandard(mod.package)})
 					}
 				}
@@ -154,46 +157,58 @@ $(function() {
 	}, '.has-popup');
 });
 
+function beginRenderingInto($tpl, moduleID, module) {
+	console.log("RENDERING:", moduleID, module);
+	$tpl.data('module-id', moduleID);
+	pageData[moduleID] = module;
 
-function beginRendering(json, moduleID) {
-	pageData = json;
-	console.log("PAGE DATA:", pageData);
-	
 	// show notice if module is non-standard
-	if (pageData.repo && !isStandard(pageData.structure.type_name)) {
-		$('.nonstandard-project-link').attr('href', pageData.repo).text(pageData.repo);
-		$('.nonstandard-notice').prepend(nonStandardFlag).show();
+	if (module.repo) {
+		if (isStandard(module.structure.type_name)) {
+			$('.nonstandard-notice', $tpl).remove();
+		} else {
+			let { pkg, _ } = splitTypeName(module.structure.type_name);
+			$('.nonstandard-project-link', $tpl).attr('href', module.repo).text(module.repo);
+			$('.nonstandard-package-path', $tpl).text(pkg);
+			$('.nonstandard-notice', $tpl).prepend(nonStandardFlag);
+		}
+
+		var $repoName = $('<span/>').text(stripScheme(module.repo));
+		$('.module-repo-selector', $tpl).html('<span class="module-repo-selector-arrow">&#9656;</span>').append($repoName);
 	}
 
 	// for most types, just render their docs; but for maps or arrays, fall through to underlying type for docs
-	let rawDocs = pageData.structure.doc ?? pageData.structure.elems;
+	let rawDocs = module.structure.doc ?? module.structure.elems;
 
-	$('#top-doc').html(markdown(replaceGoTypeNameWithCaddyModuleName(rawDocs, moduleID)));
-	$('#top-doc').append(makeSubmoduleList("", pageData.structure));
+	$('.top-doc', $tpl).html(markdown(replaceGoTypeNameWithCaddyModuleName(rawDocs, module, moduleID)));
+	$('.top-doc', $tpl).append(makeSubmoduleList(module, "", module.structure));
 
-	renderData(pageData.structure, 0, "", $('<div class="group"/>'));
+	let $group = newGroup();
+	renderData($tpl, module, module.structure, 0, "", $group);
+	$('.renderbox', $tpl).append($group);
 
-	if ($('#field-list-contents').text().trim()) {
-		$('#field-list-header').show();
+	if ($('.field-list-contents', $tpl).text().trim()) {
+		$('.field-list-header', $tpl).show();
 	}
 
-	// if the browser tried to navigate directly to an element
-	// on the page when it loaded, it would have failed since
-	// we hadn't rendered it yet; but now we can scroll to it
-	// directly since rendering has finished
-	if (window.location.hash) {
-		window.location.hash = window.location.hash;
-	}
+	// TODO: see about fixing this for module and JSON docs pages
+	// // if the browser tried to navigate directly to an element
+	// // on the page when it loaded, it would have failed since
+	// // we hadn't rendered it yet; but now we can scroll to it
+	// // directly since rendering has finished
+	// if (window.location.hash.length > 1) {
+	// 	document.getElementById(window.location.hash.substr(1)).scrollIntoView();
+	// }
 }
 
-function renderData(data, nesting, path, $group) {
+function renderData($tpl, module, data, nesting, path, $group) {
 	switch (data.type) {
 	case "struct":
 		$group.append('{<a href="javascript:" class="toggle-obj expanded" title="Collapse/expand">&#9662;</a>');
 		nesting++;
 
-		var $fieldGroup = $('<div class="group"/>');
-		renderModuleInlineKey(data, nesting, $fieldGroup);
+		var $fieldGroup = newGroup();
+		renderModuleInlineKey($tpl, module, data, nesting, $fieldGroup);
 		$group.append($fieldGroup);
 		if (data.struct_fields) {
 			// TODO: Not sure if sorting the struct fields is a good idea...
@@ -216,19 +231,19 @@ function renderData(data, nesting, path, $group) {
 
 				// render the docs to the page
 				var fieldDoc = markdown(field.doc) || '<p class="explain">There are no docs for this property.</p>';
-				fieldDoc += makeSubmoduleList(fieldPath, field.value);
-				appendToFieldDocs(cleanFieldPath, fieldDoc);
+				fieldDoc += makeSubmoduleList(module, fieldPath, field.value);
+				appendToFieldDocs($tpl, module, cleanFieldPath, fieldDoc);
 
 				// render the field to the JSON box
-				var $fieldGroup = $('<div class="group"/>');
+				var $fieldGroup = newGroup();
 				indent(nesting, $fieldGroup);
 				var keyATag = '<a ';
-				if (canTraverse()) {
+				if (canTraverse(module)) {
 					keyATag += 'href=".'+fieldPath+'/" ';
 				}
 				keyATag += 'data-path="'+fieldPath+'" class="'+linkClass+'">'+field.key+'</a>';
 				$fieldGroup.append('<span class="qu">"</span><span class="key">'+keyATag+'</span><span class="qu">"</span>: ');
-				renderData(field.value, nesting, fieldPath, $fieldGroup);
+				renderData($tpl, module, field.value, nesting, fieldPath, $fieldGroup);
 				if (i < data.struct_fields.length-1) {
 					$fieldGroup.append(',');
 				}
@@ -260,7 +275,7 @@ function renderData(data, nesting, path, $group) {
 		if (data.elems.type == "module_map") {
 			$group.append('{<a href=".'+path+'/" class="module has-popup" data-namespace="'+(data.elems.module_namespace || '')+'" data-path="'+path+'">&bull;&bull;&bull;</a>}');
 		} else {
-			renderData(data.elems, nesting, path, $group);
+			renderData($tpl, module, data.elems, nesting, path, $group);
 		}
 		$group.append(']');
 		break;
@@ -268,11 +283,11 @@ function renderData(data, nesting, path, $group) {
 	case "map":
 		$group.append('{\n')
 		nesting++;
-		renderModuleInlineKey(data, nesting, $group);
+		renderModuleInlineKey($tpl, module, data, nesting, $group);
 		indent(nesting, $group);
-		renderData(data.map_keys, nesting, path, $group);
+		renderData($tpl, module, data.map_keys, nesting, path, $group);
 		$group.append(': ');
-		renderData(data.elems, nesting, path, $group);
+		renderData($tpl, module, data.elems, nesting, path, $group);
 		$group.append('\n');
 		nesting--;
 		indent(nesting, $group);
@@ -282,18 +297,16 @@ function renderData(data, nesting, path, $group) {
 	case "module":
 	case "module_map":
 		var aTag = '<a';
-		if (canTraverse()) {
+		if (canTraverse(module)) {
 			aTag += ' href=".'+path+'/"';
 		}
 		aTag += ' class="module has-popup" data-namespace="'+(data.module_namespace || '')+'" data-path="'+path+'">&bull;&bull;&bull;</a>';
 		$group.append('{'+aTag+'}');
 		break;
 	}
-
-	$renderbox.append($group);
 }
 
-function renderModuleInlineKey(data, nesting, $group) {
+function renderModuleInlineKey($tpl, module, data, nesting, $group) {
 	if (!data.module_inline_key) {
 		return
 	}
@@ -305,15 +318,15 @@ function renderModuleInlineKey(data, nesting, $group) {
 	}
 	$group.append('\n');
 
-	appendToFieldDocs(data.module_inline_key, $('#hovercard-inline-key').html());
+	appendToFieldDocs($tpl, module, data.module_inline_key, $('#hovercard-inline-key').html());
 }
 
-function appendToFieldDocs(cleanFieldPath, fieldDoc) {
+function appendToFieldDocs($tpl, module, cleanFieldPath, fieldDoc) {
 	var dt = cleanFieldPath;
-	if (canTraverse()) {
+	if (canTraverse(module)) {
 		dt = '<a href="./'+cleanFieldPath+'/">'+dt+'</a>';
 	}
-	$('#field-list-contents').append('<dt class="field-name" id="'+cleanFieldPath+'"><a href="#'+cleanFieldPath+'" class="inline-link">&#128279;</a>'+dt+'</dt> <dd>'+fieldDoc+'</dd>');
+	$('.field-list-contents', $tpl).append('<dt class="field-name" id="'+cleanFieldPath+'"><a href="#'+cleanFieldPath+'" class="inline-link">&#128279;</a>'+dt+'</dt> <dd>'+fieldDoc+'</dd>');
 }
 
 function indent(nesting, $group) {
@@ -322,7 +335,7 @@ function indent(nesting, $group) {
 	$group.append($span);
 }
 
-function makeSubmoduleList(path, value) {
+function makeSubmoduleList(module, path, value) {
 	while (value.elems) {
 		value = value.elems;
 	}
@@ -330,10 +343,10 @@ function makeSubmoduleList(path, value) {
 		return '';
 	}
 	var submodList = '<ul>';
-	if (pageData.namespaces && pageData.namespaces[value.module_namespace]) {
-		for (var j = 0; j < pageData.namespaces[value.module_namespace].length; j++) {
-			var submod = pageData.namespaces[value.module_namespace][j];
-			var href = canTraverse() ? '.'+path+'/'+submod.name+'/' : './'+value.module_namespace+'.'+submod.name;
+	if (module.namespaces && module.namespaces[value.module_namespace]) {
+		for (var j = 0; j < module.namespaces[value.module_namespace].length; j++) {
+			var submod = module.namespaces[value.module_namespace][j];
+			var href = canTraverse(module) ? '.'+path+'/'+submod.name+'/' : './'+value.module_namespace+'.'+submod.name;
 			var submodLink = '<a href="'+href+'">'+submod.name+'</a>';
 			if (!isStandard(submod.package)) {
 				submodLink += ' '+nonStandardFlag;
@@ -349,18 +362,22 @@ function makeSubmoduleList(path, value) {
 // includes breadcrumbs; i.e. we are on a page
 // that can traverse the JSON structure, not
 // only render part of it in isolation.
-function canTraverse() {
-	return pageData.breadcrumb != null;
+function canTraverse(data) {
+	return data.breadcrumb != null;
 }
 
-function replaceGoTypeNameWithCaddyModuleName(docs, moduleID) {
+function newGroup() {
+	return $('<div class="group"/>');
+}
+
+function replaceGoTypeNameWithCaddyModuleName(docs, module, moduleID) {
 	if (!docs || !moduleID) return docs;
 
 	// fully qualified type name
-	let fqtn = pageData.structure.type_name;
+	let fqtn = module.structure.type_name;
 
 	// extract just the local type name
-	let typeName = fqtn.substr(fqtn.lastIndexOf('.')+1)
+	let {_, typeName} = splitTypeName(fqtn);
 
 	// replace the type name with the Caddy module ID if it starts the docs.
 	if (docs.indexOf(typeName) === 0) {

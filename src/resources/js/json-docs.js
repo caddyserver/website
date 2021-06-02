@@ -9,7 +9,7 @@ setPageTitle();
 $.get("/api/docs/config"+configPath, function(json) {
 	// wait until the DOM has finished loading before rendering the results
 	$(function() {
-		beginRendering(json.result);
+		beginRenderingInto($('#json-docs-container'), '', json.result);
 
 		// establish the breadcrumb
 		var $bc = $('.breadcrumbs');
@@ -17,9 +17,9 @@ $.get("/api/docs/config"+configPath, function(json) {
 		for (var i = 1; i < pathComponents.length-1; i++) {
 			var bcPath = pathComponents.slice(0, i+1).join('/');
 			var bcSiblingPath = pathComponents.slice(1, i).join('/');
-
-			// prefixing with <span/> is a hack so jQuery treats this as a HTML DOM object
-			$('<span/> &rsaquo; <a href="'+jsonDocsPathPrefix+bcPath.substr(1)+'/" class="breadcrumb has-popup" data-sibling-path="'+bcSiblingPath+'">'+pathComponents[i]+'</a>').appendTo($bc);
+			
+			// enclosing with span is a hack so jQuery treats this as a HTML DOM object
+			$('<span> &rsaquo; <a href="'+jsonDocsPathPrefix+bcPath.substr(1)+'/" class="breadcrumb has-popup" data-sibling-path="'+bcSiblingPath+'">'+pathComponents[i]+'</a></span>').appendTo($bc);
 		}
 
 	});

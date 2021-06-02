@@ -25,7 +25,7 @@ $.get("/api/packages").done(function(json) {
 
 		const moduleTemplate =
 			'<div class="module">\n'+
-			'	&#128268;<a target="_blank" title="View module docs" class="module-link"></a>\n'+
+			'	&#128268; <a target="_blank" title="View module docs" class="module-link"></a>\n'+
 			'	<span class="module-desc"></span>\n'+
 			'</div>\n';
 
@@ -53,6 +53,7 @@ $.get("/api/packages").done(function(json) {
 				for (var j = 0; j < pkg.modules.length; j++) {
 					var mod = pkg.modules[j];
 					var $mod = $(moduleTemplate);
+					// TODO: if this module name collides with that from another package, add a #hash to the URL to expand the right module's docs automatically
 					$('.module-link', $mod).attr('href', '/docs/modules/'+mod.name).text(mod.name).attr('title', "View module details");
 					$('.module-desc', $mod).text(moduleDocsPreview(mod, 120));
 					$('.package-modules', $pkg).append($mod);

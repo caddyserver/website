@@ -18,9 +18,9 @@
 			<div class="article-container">
 				<div class="paper" id="paper1"></div>
 				<div class="paper" id="paper2"></div>
-				<article class="paper paper3">
-					{{markdown $markdownFile.Body}}
-				</article>
+				<div class="paper paper3">
+					<article>{{markdown $markdownFile.Body}}</article>
+				</div>
 			</div>
 			<div class="sidebar"></div>
 		</main>

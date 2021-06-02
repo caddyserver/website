@@ -224,6 +224,10 @@ main nav li li a {
 	max-width: 1100px;
 }
 
+.pad {
+	padding-top: 8%;
+}
+
 article {
 	padding-top: 8%;
 	padding-bottom: 8%;
@@ -238,7 +242,8 @@ width, a few elements should be allowed to
 extend to the borders of the page
 */
 article > :not(.fullwidth),
-article > .fullwidth > * {
+article > .fullwidth > *,
+.pad {
 	padding-left: 8%;
 	padding-right: 8%;
 }
@@ -448,13 +453,13 @@ iframe {
 	padding: 10px;
 	color: #886c00;
 	line-height: 1.4em;
-	display: none;
 }
 
 .nonstandard {
 	color: rgb(214, 145, 16);
 }
 
+.standard-flag,
 .nonstandard-flag {
 	cursor: help;
 	font-size: 8px;
@@ -462,10 +467,25 @@ iframe {
 	padding: 4px 8px;
 	text-transform: uppercase;
 	font-weight: bold;
-	background-color: rgb(238, 167, 34);
 	color: white;
 	border-radius: 4px;
 	white-space: nowrap;
+	vertical-align: middle;
+}
+
+.standard-flag {
+	background-color: rgb(34, 163, 23);
+}
+
+.nonstandard-flag {
+	background-color: rgb(238, 167, 34);
+}
+
+.module-repo-differentiator {
+	font-size: 11px;
+	font-weight: bold;
+	color: #555;
+	line-height: 1em;
 }
 
 
@@ -706,7 +726,8 @@ td code {
 
 
 #module-docs-container,
-#module-list-container {
+#module-list-container,
+#module-template {
 	display: none;
 }
 
@@ -729,7 +750,27 @@ td code {
 }
 
 
+#module-multiple-repos {
+	display: none;
+	margin: 25px;
+}
 
+.module-repo-selector {
+	font-size: 26px;
+	padding: 25px;
+	font-weight: bold;
+	border-bottom: 1px solid #888;
+	cursor: pointer;
+}
+
+.module-repo-selector:hover {
+	color: #009cda;
+	background: rgb(246, 250, 252);
+}
+
+.module-repo-selector-arrow {
+	margin: 10px;
+}
 
 
 
