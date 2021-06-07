@@ -86,12 +86,12 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 
 	Default: `require_and_verify` if any `trusted_ca_cert` or `trusted_leaf_cert` are provided; otherwise, `require`.
 	
-	- **trusted_ca_cert** is a base64 DER-encoded CA certificate against which to validate client certificates. Client certificates which are not signed by any of these CAs will be rejected.
-	- **trusted_ca_cert_file** is a base64 DER-encoded CA certificate file against which to validate client certificates. Client certificates which are not signed by any of these CAs will be rejected.
-	- **trusted_leaf_cert** is a base64 DER-encoded client leaf certificate to accept. Client certificates which are not signed by any of these CAs will be rejected.
-	- **trusted_leaf_cert_file** is a base64 DER-encoded CA certificate file against which to validate client certificates. Client certificates which are not signed by any of these CAs will be rejected.
+	- **trusted_ca_cert** is a base64 DER-encoded CA certificate against which to validate client certificates.
+	- **trusted_ca_cert_file** is a path to a PEM CA certificate file against which to validate client certificates.
+	- **trusted_leaf_cert** is a base64 DER-encoded client leaf certificate to accept.
+	- **trusted_leaf_cert_file** is a path to a PEM CA certificate file against which to validate client certificates.
 
-	Multiple `trusted_*` directives may be specified as a way to chain multiple CA or leaf certificates.
+	Multiple `trusted_*` directives may be used to specify multiple CA or leaf certificates. Client certificates which are not listed as one of the leaf certificates or signed by any of the specified CAs will be rejected according to the **mode**.
 
 - **issuer** configures a custom certificate issuer, or a source from which to obtain certificates. Which issuer is used and the options that follow in this segment depend on the issuer modules that are available (see below for the standard issuers; plugins may add others). Some of the other subdirectives such as `ca` and `dns` are actually shortcuts for configuring the `acme` issuer (and this subdirective was added later), so specifying this directive and some of the others is confusing and thus prohibited. This subdirective can be specified multiple times to configure multiple, redundant issuers; if one fails to issue a cert, the next one will be tried.
 
