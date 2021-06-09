@@ -118,6 +118,10 @@ Obtains certificates using the ACME protocol.
 	trusted_roots <pem_files...>
 	dns <provider_name> [<options>]
 	resolvers <dns_servers...>
+	preferred_chains [smallest] {
+		root_common_name <common_names...>
+		any_common_name  <common_names...>
+	}
 }
 ```
 
@@ -134,6 +138,10 @@ Obtains certificates using the ACME protocol.
 - **trusted_roots** is one or more root certificates (as PEM filenames) to trust when connecting to the ACME CA server.
 - **dns** configures the DNS challenge.
 - **resolvers** customizes the DNS resolvers used when performing the DNS challenge; these take precedence over system resolvers or any default ones.
+- **preferred_chains** specifies which certificate chains Caddy should prefer; useful if your CA provides multiple chains. Use one of the following options:
+	- **smallest** will tell Caddy to prefer chains with the fewest amount of bytes.
+	- **root_common_name** is a list of one or more common names; Caddy will choose the first chain that has a root that matches with at least one of the specified common names.
+	- **any_common_name** is a list of one or more common names; Caddy will choose the first chain that has an issuer that matches with at least one of the specified common names.
 
 
 #### zerossl
