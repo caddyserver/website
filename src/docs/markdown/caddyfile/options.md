@@ -59,6 +59,10 @@ Possible options are:
 	key_type ed25519|p256|p384|rsa2048|rsa4096
 	cert_issuer <name> ...
 	ocsp_stapling off
+	preferred_chains [smallest] {
+		root_common_name <common_names...>
+		any_common_name  <common_names...>
+	}
 
 	# Server Options
 	servers [<listener_address>] {
@@ -166,6 +170,14 @@ Defines the issuer (or source) of TLS certificates. The tokens following the nam
 ##### `ocsp_stapling`
 Can be set to `off` to disable OCSP stapling. Useful in environments where responders are not reachable due to firewalls.
 
+##### `preferred_chains`
+If your CA provides multiple certificate chains, you can use this option to specify which chain Caddy should prefer. Set one of the following options:
+
+- **smallest** will tell Caddy to prefer chains with the fewest amount of bytes.
+- **root_common_name** is a list of one or more common names; Caddy will choose the first chain that has a root that matches with at least one of the specified common names.
+- **any_common_name** is a list of one or more common names; Caddy will choose the first chain that has an issuer that matches with at least one of the specified common names.
+
+Note! Specifying `preferred_chains` as a global option will affect all issuers if there isn't any [overriding issuer level config](/docs/caddyfile/directives/tls#acme).
 
 
 ## Server Options
