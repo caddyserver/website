@@ -27,6 +27,7 @@ This page describes various methods for installing Caddy on your system.
 - [Webi](#webi)
 - [Chocolatey](#chocolatey)
 - [Ansible](#ansible)
+- [Termux](#termux)
 
 
 ## Static binaries
@@ -211,3 +212,10 @@ _Note: This is a community-maintained installation method._
 <pre><code class="cmd">scoop install caddy</code></pre>
 
 [**View the Scoop manifest**](https://github.com/ScoopInstaller/Main/blob/master/bucket/caddy.json)
+
+
+## Termux
+
+_Note: This is a community-maintained installation method._
+
+<pre><code class="cmd">pkg install caddy</code></pre>
