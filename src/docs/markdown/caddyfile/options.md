@@ -47,6 +47,7 @@ Possible options are:
 	email <yours>
 	default_sni <name>
 	local_certs
+	skip_install_trust
 	acme_ca <directory_url>
 	acme_ca_root <pem_file>
 	acme_eab <key_id> <mac_key>
@@ -141,6 +142,9 @@ Sets a default TLS ServerName for when clients do not use SNI in their ClientHel
 
 ##### `local_certs`
 Causes all certificates to be issued internally by default, rather than through a (public) ACME CA such as Let's Encrypt. This is useful in development environments.
+
+##### `skip_install_trust`
+Skips the attempts to install the local CA's root into the system trust store, as well as into Java and Mozilla Firefox trust stores.
 
 ##### `acme_ca`
 Specifies the URL to the ACME CA's directory. It is strongly recommended to set this to Let's Encrypt's [staging endpoint](https://letsencrypt.org/docs/staging-environment/) for testing or development. Default: ZeroSSL and Let's Encrypt's production endpoints.
