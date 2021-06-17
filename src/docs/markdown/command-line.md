@@ -45,7 +45,7 @@ The ellipses `...` indicates a continuation, i.e. one or more parameters.
   Changes the config of the running Caddy process
 
 - **[caddy reverse-proxy](#caddy-reverse-proxy)**
-  A simple but production-ready reverse proxy
+  A simple but production-ready HTTP(S) reverse proxy
 
 - **[caddy run](#caddy-run)**
   Starts the Caddy process in the foreground
@@ -246,7 +246,7 @@ Because this command uses the API, the admin endpoint must not be disabled.
 	--to &lt;addr&gt;
 	[--change-host-header]</code></pre>
 
-Spins up a simple but production-ready reverse proxy.
+Spins up a simple but production-ready HTTP(S) reverse proxy.
 
 `--from` is the address to proxy from.
 

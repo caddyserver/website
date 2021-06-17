@@ -4,7 +4,9 @@ title: file_server (Caddyfile directive)
 
 # file_server
 
-A static file server. It works by appending the request's URI path to the [site's root path](/docs/caddyfile/directives/root). By default, it enforces canonical URIs; if necessary, requests to directories will be redirected to have a trailing forward slash, and requests to files will be redirected to strip the trailing slash.
+A static file server. It works by appending the request's URI path to the [site's root path](/docs/caddyfile/directives/root).
+
+By default, it enforces canonical URIs; meaning HTTP redirects will be issued for requests to directories that do not end with a trailing slash (to add it) or requests to files that have a trailing slash (to remove it). Redirects are not issued, however, if an internal rewrite modifies the last element of the path (the filename).
 
 Most often, the `file_server` directive is paired with the [`root`](/docs/caddyfile/directives/root) directive to set file root for the whole site.
 
@@ -26,8 +28,7 @@ file_server [<matcher>] [browse] {
 - **hide** is a list of files or folders to hide; if requested, the file server will pretend they do not exist. Accepts placeholders and glob patterns. Note that these are _file system_ paths, NOT request paths. In other words, relative paths use the current working directory as a base, NOT the site root; and all paths are transformed to their absolute form before comparisons (if possible). Specifying a file name or pattern without a path separator will hide all files with a matching name regardless of its location; otherwise, a path prefix match will be attempted, and then a globular match. Since this is a Caddyfile config, the active configuration file(s) will be added by default.
 - **index** is a list of filenames to look for as index files. Default: `index.html index.txt`
 - **<template_file>** is an optional custom template file to use for directory listings. Defaults to the template that can be found [here in the source code ![external link](/resources/images/external-link.svg)](https://github.com/caddyserver/caddy/blob/master/modules/caddyhttp/fileserver/browsetpl.go). Browse templates can use actions from [the standard templates module](/docs/modules/http.handlers.templates#docs) as well.
-- **precompressed** is the list of encoding formats to search for precompressed sidecar files.
-- **&lt;formats...&gt;** is the ordered list of encoding formats to search for precompressed sidecar files. Supported formats are `gzip`, `zstd` and `br`.
+- **precompressed** is the list of encoding formats to search for precompressed sidecar files. Arguments are an ordered list of encoding formats to search for precompressed sidecar files. Supported formats are `gzip`, `zstd` and `br`.
 - **status** is an optional status code override to be used when writing the response. Particularly useful when responding to a request with a custom error page. Can be a 3-digit status code, For example: `404`. Placeholders are supported. By default, the written status code will typically be `200`, or `206` for partial content.
 
 ## Examples
