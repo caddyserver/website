@@ -23,6 +23,9 @@ The ellipses `...` indicates a continuation, i.e. one or more parameters.
 - **[caddy adapt](#caddy-adapt)**
   Adapts a config document to native JSON
 
+- **[caddy build-info](#caddy-build-info)**
+  Prints build information
+  
 - **[caddy environ](#caddy-environ)**
   Prints the environment
 
@@ -62,6 +65,9 @@ The ellipses `...` indicates a continuation, i.e. one or more parameters.
 - **[caddy untrust](#caddy-untrust)**
   Untrusts a certificate from local trust store(s)
 
+- **[caddy unpgrade](#caddy-upgrade)**
+  Upgrades Caddy to the latest release
+  
 - **[caddy validate](#caddy-validate)**
   Tests whether a config file is valid
 
