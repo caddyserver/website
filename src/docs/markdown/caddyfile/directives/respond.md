@@ -49,3 +49,8 @@ respond /secret/* "Access denied" 403 {
 	close
 }
 ```
+
+To respond with a body containing double quotes, which would need escaping, you can make use of [backticks](/docs/caddyfile/concepts#tokens-and-quotes) to avoid escaping:
+```caddy-d
+respond `{"key": "value"}`
+```
