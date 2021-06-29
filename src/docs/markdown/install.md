@@ -46,7 +46,7 @@ This package also comes with a `caddy-api` systemd service using our official [`
 Stable releases:
 
 <pre><code class="cmd"><span class="bash">sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https</span>
-<span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo apt-key add -</span>
+<span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo tee /etc/apt/trusted.gpg.d/caddy-stable.asc</span>
 <span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list</span>
 <span class="bash">sudo apt update</span>
 <span class="bash">sudo apt install caddy</span></code></pre>
@@ -54,7 +54,7 @@ Stable releases:
 Testing releases (includes betas and release candidates):
 
 <pre><code class="cmd"><span class="bash">sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https</span>
-<span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/testing/gpg.key' | sudo apt-key add -</span>
+<span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/testing/gpg.key' | sudo tee /etc/apt/trusted.gpg.d/caddy-testing.asc</span>
 <span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/testing/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-testing.list</span>
 <span class="bash">sudo apt update</span>
 <span class="bash">sudo apt install caddy</span></code></pre>
