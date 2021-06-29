@@ -27,6 +27,7 @@ This page describes various methods for installing Caddy on your system.
 - [Webi](#webi)
 - [Chocolatey](#chocolatey)
 - [Ansible](#ansible)
+- [Windows service](#windows-service)
 
 
 ## Static binaries
@@ -211,3 +212,50 @@ _Note: This is a community-maintained installation method._
 <pre><code class="cmd">scoop install caddy</code></pre>
 
 [**View the Scoop manifest**](https://github.com/ScoopInstaller/Main/blob/master/bucket/caddy.json)
+
+
+## Windows service
+
+_Note: This is a community-maintained installation method._
+
+Install Caddy as a service on Windows with these instructions.
+
+**Requirements:**
+
+- `caddy.exe` binary that you [downloaded](/download) or [built from source](/docs/build)
+- Any exe from the latest release of the
+  [WinSW](https://github.com/winsw/winsw/releases/latest) service wrapper (Stay
+  on a v2.x release for now)
+
+Put all files into a service directory. In the following examples, we use `c:\caddy`.
+
+Rename the WinSW exe file to `caddy-service.exe`.
+
+Add a `caddy-service.xml` in the directory:
+
+<pre><code class="cmd">&lt;service>
+  &lt;id>caddy&lt;/id>
+  &lt;!-- Display name of the service -->
+  &lt;name>Caddy Web Server (powered by WinSW)&lt;/name>
+  &lt;!-- Service description -->
+  &lt;description>Caddy Web Server (https://caddyserver.com/)&lt;/description>
+  &lt;executable>%BASE%\caddy.exe&lt;/executable>
+  &lt;arguments>run&lt;/arguments>
+  &lt;log mode="roll-by-time">
+    &lt;pattern>yyyy-MM-dd&lt;/pattern>
+  &lt;/log>
+&lt;/service>
+</code></pre>
+
+You can now install the service using:
+<pre><code class="cmd">caddy-service install</code></pre>
+
+You might want to start the Windows Services Console to see if the service is runnnig correctly:
+<pre><code class="cmd">services.msc</code></pre>
+
+Be aware that Windows services cannot be reloaded, so you have to tell caddy directly to relaod:
+<pre><code class="cmd">caddy reload</code></pre>
+
+Restarting is possible via the normal Windows services commands.
+
+For customizing the service wrapper, see the [WinSW documentation](https://github.com/winsw/winsw/tree/master#usage)
