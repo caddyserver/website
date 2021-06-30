@@ -27,6 +27,7 @@ This page describes various methods for installing Caddy on your system.
 - [Webi](#webi)
 - [Chocolatey](#chocolatey)
 - [Ansible](#ansible)
+- [Scoop](#scoop)
 - [Termux](#termux)
 
 
