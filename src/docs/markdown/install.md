@@ -219,3 +219,6 @@ _Note: This is a community-maintained installation method._
 _Note: This is a community-maintained installation method._
 
 <pre><code class="cmd">pkg install caddy</code></pre>
+
+[**View the Termux build.sh file**](https://github.com/termux/termux-packages/blob/master/packages/caddy/build.sh)
+
