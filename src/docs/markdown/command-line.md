@@ -65,7 +65,7 @@ The ellipses `...` indicates a continuation, i.e. one or more parameters.
 - **[caddy untrust](#caddy-untrust)**
   Untrusts a certificate from local trust store(s)
 
-- **[caddy unpgrade](#caddy-upgrade)**
+- **[caddy upgrade](#caddy-upgrade)**
   Upgrades Caddy to the latest release
   
 - **[caddy validate](#caddy-validate)**
