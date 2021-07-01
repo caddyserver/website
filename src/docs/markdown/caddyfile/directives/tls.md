@@ -22,6 +22,7 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 	load      <paths...>
 	ca        <ca_dir_url>
 	ca_root   <pem_file>
+	key_type  ed25519|p256|p384|rsa2048|rsa4096
 	dns       <provider_name> [<params...>]
 	resolvers <dns_servers...>
 	eab       <key_id> <mac_key>
@@ -70,6 +71,7 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 - **load** specifies a list of folders from which to load PEM files that are certificate+key bundles.
 - **ca** changes the ACME CA endpoint. This is most often used to set [Let's Encrypt's staging endpoint](https://letsencrypt.org/docs/staging-environment/) when testing, or an internal ACME server. (To change this value for the whole Caddyfile, use the `acme_ca` [global option](/docs/caddyfile/options) instead.)
 - **ca_root** specifies a PEM file that contains a trusted root certificate for the ACME CA endpoint, if not in the system trust store.
+- **key_type** is the type of key to use when generating CSRs. Only set this if you have a specific requirement.
 - **dns** enables the [DNS challenge](/docs/automatic-https#dns-challenge) using the specified provider plugin, which must be plugged in from one of the [caddy-dns](https://github.com/caddy-dns) repositories. Each provider plugin may have their own syntax following their name; refer to their docs for details. Maintaining support for each DNS provider is a community effort. [Learn how to enable the DNS challenge for your provider at our wiki.](https://caddy.community/t/how-to-use-dns-provider-modules-in-caddy-2/8148)
 - **resolvers** customizes the DNS resolvers used when performing the DNS challenge; these take precedence over system resolvers or any default ones. If set here, the resolvers will propagate to all configured certificate issuers.
 - **eab** configures ACME external account binding (EAB) for this site, using the key ID and MAC key provided by your CA.
@@ -109,7 +111,6 @@ Obtains certificates using the ACME protocol.
 	test_dir <test_directory_url>
 	email    <email>
 	timeout  <duration>
-	key_type ed25519|p256|p384|rsa2048|rsa4096
 	disable_http_challenge
 	disable_tlsalpn_challenge
 	alt_http_port    <port>
@@ -129,8 +130,7 @@ Obtains certificates using the ACME protocol.
 - **dir** is the URL to the ACME CA's directory. Default: `https://acme-v02.api.letsencrypt.org/directory`
 - **test_dir** is an optional fallback directory to use when retrying challenges; if all challenges fail, this endpoint will be used during retries; useful if a CA has a staging endpoint where you want to avoid rate limits on their production endpoint. Default: `https://acme-staging-v02.api.letsencrypt.org/directory`
 - **email** is the ACME account contact email address.
-- **timeout** is how long to wait before timing out an ACME operation.
-- **key_type** is the type of key to use when generating CSRs. Only set this if you have a specific requirement.
+- **timeout** is a [duration value](/docs/conventions#durations) that sets how long to wait before timing out an ACME operation.
 - **disable_http_challenge** will disable the HTTP challenge.
 - **disable_tlsalpn_challenge** will disable the TLS-ALPN challenge.
 - **alt_http_port** is an alternate port on which to serve the HTTP challenge; it has to happen on port 80 so you must forward packets to this alternate port.
@@ -138,7 +138,7 @@ Obtains certificates using the ACME protocol.
 - **eab** specifies an External Account Binding which may be required with some ACME CAs.
 - **trusted_roots** is one or more root certificates (as PEM filenames) to trust when connecting to the ACME CA server.
 - **dns** configures the DNS challenge.
-- **propagation_timeout** is a [duration value](/docs/conventions#durations) that sets how long to wait for DNS TXT records to propagate. Default 2 minutes.
+- **propagation_timeout** is a [duration value](/docs/conventions#durations) that sets how long to wait for DNS TXT records to propagate when using the DNS challenge. Default 2 minutes.
 - **resolvers** customizes the DNS resolvers used when performing the DNS challenge; these take precedence over system resolvers or any default ones.
 - **preferred_chains** specifies which certificate chains Caddy should prefer; useful if your CA provides multiple chains. Use one of the following options:
 	- **smallest** will tell Caddy to prefer chains with the fewest amount of bytes.
