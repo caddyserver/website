@@ -6,7 +6,7 @@ title: header (Caddyfile directive)
 
 Manipulates HTTP header fields on the response. It can set, add, and delete header values, or perform replacements using regular expressions.
 
-By default, header operations are performed immediately unless any of the headers are being deleted (`-` prefix) or setting a defualt value (`?` prefix). In those cases, the header operations are automatically deferred until the time they are being written to the client.
+By default, header operations are performed immediately unless any of the headers are being deleted (`-` prefix) or setting a default value (`?` prefix). In those cases, the header operations are automatically deferred until the time they are being written to the client.
 
 
 ## Syntax
