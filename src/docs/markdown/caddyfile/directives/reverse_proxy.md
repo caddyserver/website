@@ -15,7 +15,7 @@ Proxies requests to one or more backends with configurable transport, load balan
 - [Headers](#headers)
 - [Transports](#transports)
   - [The `http` transport](#the-http-transport)
-  - [The `fastcgi` tranport](#the-fastcgi-transport)
+  - [The `fastcgi` transport](#the-fastcgi-transport)
 - [Intercepting responses](#intercepting-responses)
 - [Examples](#examples)
 
