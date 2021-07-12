@@ -373,12 +373,9 @@ Most sites will not need this directive at all.
 
 ## Service files
 
-We recommend using [one of our official service files](https://github.com/caddyserver/dist/blob/master/init) for Caddy deployments.
+We recommend using [one of our official systemd service files](/docs/service) for Caddy deployments.
 
-If you need a custom service file, base it off of ours. It has been carefully tuned to what it is for good reasons! Be sure to customize yours if needed.
-
-See [install instructions](/docs/install#linux-service) for details.
-
+If you need a custom service file, base it off of ours. They've been carefully tuned to what it is for good reasons! Be sure to customize yours if needed.
 
 
 ## Plugins
