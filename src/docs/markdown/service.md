@@ -23,10 +23,9 @@ We provide two different systemd unit files that you can choose between, dependi
 
 They are very similar, but differ in the `ExecStart` and `ExecReload` commands to accommodate the workflows.
 
-If you need to switch between the services, you should disable the previous one before enabling the other. For example, to switch from the `caddy` service to the `caddy-api` service:
-<pre><code class="cmd"><span class="bash">sudo systemctl disable caddy</span>
-<span class="bash">sudo systemctl enable caddy-api</span>
-<span class="bash">sudo systemctl start caddy-api</span></code></pre>
+If you need to switch between the services, you should disable and stop the previous one before enabling and starting the other. For example, to switch from the `caddy` service to the `caddy-api` service:
+<pre><code class="cmd"><span class="bash">sudo systemctl disable --now caddy</span>
+<span class="bash">sudo systemctl enable --now caddy-api</span></code></pre>
 
 
 ## Using the Service
@@ -88,8 +87,7 @@ The usual place to save the service file is: `/etc/systemd/system/caddy.service`
 After saving your service file, you can start the service for the first time with the usual systemctl dance:
 
 <pre><code class="cmd"><span class="bash">sudo systemctl daemon-reload</span>
-<span class="bash">sudo systemctl enable caddy</span>
-<span class="bash">sudo systemctl start caddy</span></code></pre>
+<span class="bash">sudo systemctl enable --now caddy</span></code></pre>
 
 Verify that it is running:
 <pre><code class="cmd bash">systemctl status caddy</code></pre>
@@ -113,7 +111,9 @@ Environment="CF_API_TOKEN=super-secret-cloudflare-tokenvalue"
 Or, for example if you need to change the config file from the default of the Caddyfile, to instead using a JSON file:
 ```systemd
 [Service]
+ExecStart=
 ExecStart=/usr/bin/caddy run --environ --config /etc/caddy/caddy.json
+ExecReload=
 ExecReload=/usr/bin/caddy reload --config /etc/caddy/caddy.json
 ```
 
