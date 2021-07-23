@@ -373,7 +373,7 @@ Most sites will not need this directive at all.
 
 ## Service files
 
-We recommend using [one of our official systemd service files](/docs/service) for Caddy deployments.
+We recommend using [one of our official systemd service files](/docs/running#linux-service) for Caddy deployments.
 
 If you need a custom service file, base it off of ours. They've been carefully tuned to what it is for good reasons! Be sure to customize yours if needed.
 

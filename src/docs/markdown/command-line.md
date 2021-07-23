@@ -311,7 +311,7 @@ Same as [`caddy run`](#caddy-run), but in the background. This command only bloc
 
 Note: the flag `--config` doesn't support `-` to read the config from stdin.
 
-Use of this command is discouraged with system services or on Windows. On Windows, the child process will remain attached to the terminal, so closing the window will forcefully stop Caddy, which is not obvious.
+Use of this command is discouraged with system services or on Windows. On Windows, the child process will remain attached to the terminal, so closing the window will forcefully stop Caddy, which is not obvious. Consider running Caddy [as a service](/docs/running) instead.
 
 Once started, you can use [`caddy stop`](#caddy-stop) or [the /stop API endpoint](/docs/api#post-stop) to exit the background process.
 

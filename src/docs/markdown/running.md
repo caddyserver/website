@@ -1,19 +1,27 @@
 ---
-title: Linux Service
+title: Keep Caddy Running
 ---
 
-Linux Service
-=============
+# Keep Caddy Running
+
+While Caddy can be run successfully by directly using its [Command Line Interface](/docs/command-line), there are numerous advantages to using a service manager to keep it running, such as ensuring it starts back up when the system boots, and to capture stdout/stderr logging.
+
+
+- [Linux Service](#linux-service)
+  - [Unit Files](#unit-files)
+  - [Using the Service](#using-the-service)
+  - [Manual Installation](#manual-installation)
+  - [Overrides](#overrides)
+- [Windows Service](#windows-service)
+- [Docker Compose](#docker-compose)
+
+
+## Linux Service
 
 The recommended way to run Caddy on Linux distributions with systemd is with our official systemd unit files.
 
-- [Unit Files](#unit-files)
-- [Using the Service](#using-the-service)
-- [Manual Installation](#manual-installation)
-- [Overrides](#overrides)
 
-
-## Unit Files
+### Unit Files
 
 We provide two different systemd unit files that you can choose between, depending on your usecase:
 
@@ -28,7 +36,7 @@ If you need to switch between the services, you should disable and stop the prev
 <span class="bash">sudo systemctl enable --now caddy-api</span></code></pre>
 
 
-## Using the Service
+### Using the Service
 
 To verify that the service is running:
 <pre><code class="cmd bash">systemctl status caddy</code></pre>
@@ -48,7 +56,7 @@ You can stop the service with:
 </aside>
 
 
-## Manual Installation
+### Manual Installation
 
 Some [installation methods](/docs/install) automatically set up Caddy to run as a service. If you chose a method that did not, you may follow these instructions to do so:
 
@@ -95,7 +103,7 @@ Verify that it is running:
 Now you're ready to [use the service](#using-the-service)!
 
 
-## Overrides
+### Overrides
 
 The best way to override aspects of the service files is with this command:
 <pre><code class="cmd bash">sudo systemctl edit caddy</code></pre>
@@ -119,3 +127,88 @@ ExecReload=/usr/bin/caddy reload --config /etc/caddy/caddy.json
 
 Then, save the file and exit the text editor, and restart the service for it to take effect:
 <pre><code class="cmd bash">sudo systemctl restart caddy</code></pre>
+
+
+## Windows service
+
+Install Caddy as a service on Windows with these instructions.
+
+**Requirements:**
+
+- `caddy.exe` binary that you [downloaded](/download) or [built from source](/docs/build)
+- Any exe from the latest release of the
+  [WinSW](https://github.com/winsw/winsw/releases/latest) service wrapper (Stay
+  on a v2.x release for now)
+
+Put all files into a service directory. In the following examples, we use `c:\caddy`.
+
+Rename the WinSW exe file to `caddy-service.exe`.
+
+Add a `caddy-service.xml` in the directory:
+
+<pre><code class="cmd">&lt;service>
+  &lt;id>caddy&lt;/id>
+  &lt;!-- Display name of the service -->
+  &lt;name>Caddy Web Server (powered by WinSW)&lt;/name>
+  &lt;!-- Service description -->
+  &lt;description>Caddy Web Server (https://caddyserver.com/)&lt;/description>
+  &lt;executable>%BASE%\caddy.exe&lt;/executable>
+  &lt;arguments>run&lt;/arguments>
+  &lt;log mode="roll-by-time">
+    &lt;pattern>yyyy-MM-dd&lt;/pattern>
+  &lt;/log>
+&lt;/service>
+</code></pre>
+
+You can now install the service using:
+<pre><code class="cmd">caddy-service install</code></pre>
+
+You might want to start the Windows Services Console to see if the service is runnnig correctly:
+<pre><code class="cmd">services.msc</code></pre>
+
+Be aware that Windows services cannot be reloaded, so you have to tell caddy directly to relaod:
+<pre><code class="cmd">caddy reload</code></pre>
+
+Restarting is possible via the normal Windows services commands.
+
+For customizing the service wrapper, see the [WinSW documentation](https://github.com/winsw/winsw/tree/master#usage)
+
+
+## Docker Compose
+
+The simplest way to get up and running with Docker is to use Docker Compose. _The below is only an excerpt, see the docs on [Docker Hub](https://hub.docker.com/_/caddy) for more details_.
+
+First, create a file `docker-compose.yml` (or add this service to your existing file):
+
+```yaml
+version: "3.7"
+
+services:
+  caddy:
+    image: caddy:<version>
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - $PWD/Caddyfile:/etc/caddy/Caddyfile
+      - $PWD/site:/srv
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
+```
+
+Make sure to fill in `<version>` with the latest version number, which you can find listed on [Docker Hub](https://hub.docker.com/_/caddy) under the "Tags" section.
+
+Then, you can start the container:
+<pre><code class="cmd bash">docker-compose up -d</code></pre>
+
+To reload Caddy after making changes to your Caddyfile:
+<pre><code class="cmd bash">docker-compose exec -w /etc/caddy caddy caddy reload</code></pre>
+
+To see Caddy's logs:
+<pre><code class="cmd bash">docker-compose logs caddy</code></pre>
+
