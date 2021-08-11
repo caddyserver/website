@@ -14,7 +14,6 @@ This page describes various methods for installing Caddy on your system.
 - [Arch Linux, Manjaro, Parabola](#arch-linux-manjaro-parabola)
 - [Docker](#docker)
 - [DigitalOcean](#digitalocean)
-- [Linux service](#linux-service)
 
 <aside class="tip">
     Our <a href="https://github.com/caddyserver/dist">official packages</a> come only with the standard modules. If you need third-party plugins, <a href="/docs/build#xcaddy">build from source with <code>xcaddy</code></a> or use <a href="/download">our download page</a>.
@@ -29,12 +28,11 @@ This page describes various methods for installing Caddy on your system.
 - [Ansible](#ansible)
 - [Scoop](#scoop)
 - [Termux](#termux)
-- [Windows service](#windows-service)
 
 
 ## Static binaries
 
-Simply downloading a Caddy binary does not <a href="#linux-service">install it as a service</a>, but can be useful in dev or when upgrading an existing installation.
+Simply downloading a Caddy binary does not [install it as a service](/docs/running#manual-installation), but can be useful in dev or when upgrading an existing installation.
 
 - [**View releases on GitHub**](https://github.com/caddyserver/caddy/releases) (expand "Assets")
 - [**Use our download page**](/download)
@@ -42,9 +40,7 @@ Simply downloading a Caddy binary does not <a href="#linux-service">install it a
 
 ## Debian, Ubuntu, Raspbian
 
-Installing this package automatically starts and runs Caddy for you as a systemd service named `caddy` using our official [`caddy.service`](https://github.com/caddyserver/dist/blob/master/init/caddy.service) unit file.
-
-This package also comes with a `caddy-api` systemd service using our official [`caddy-api.service`](https://github.com/caddyserver/dist/blob/master/init/caddy-api.service) unit file, which is disabled by default. If you plan to configure Caddy solely through its [API](/docs/api), then you should disable the `caddy` service, and enable the `caddy-api` service.
+Installing this package automatically starts and runs Caddy as a [systemd service](/docs/running#linux-service) named `caddy`, and also comes with a `caddy-api` service which is _not_ enabled by default, should you need it.
 
 Stable releases:
 
@@ -64,9 +60,12 @@ Testing releases (includes betas and release candidates):
 
 [**View the Cloudsmith repos**](https://cloudsmith.io/~caddy/repos/)
 
-If you wish to use the packaged support files (systemd services, bash completion and default configuration) with a custom Caddy build, instructions can be found [here](https://caddyserver.com/docs/build#package-support-files-for-custom-builds-for-debian-ubuntu-raspbian).
+If you wish to use the packaged support files (systemd services, bash completion and default configuration) with a custom Caddy build, instructions can be [found here](https://caddyserver.com/docs/build#package-support-files-for-custom-builds-for-debianubunturaspbian).
+
 
 ## Fedora, RedHat, CentOS
+
+This package comes with both of Caddy's [systemd service](/docs/running#linux-service) unit files, but does not enable them by default.
 
 Fedora or RHEL/CentOS 8:
 
@@ -82,7 +81,10 @@ RHEL/CentOS 7:
 
 [**View the Caddy COPR**](https://copr.fedorainfracloud.org/coprs/g/caddy/caddy/)
 
+
 ## Arch Linux, Manjaro, Parabola
+
+This package comes with both of Caddy's [systemd service](/docs/running#linux-service) unit files, but does not enable them by default.
 
 <pre><code class="cmd"><span class="bash">pacman -Syu caddy</span></code></pre>
 
@@ -95,72 +97,12 @@ RHEL/CentOS 7:
 
 [**View on Docker Hub**](https://hub.docker.com/_/caddy)
 
+
 ## DigitalOcean
 
 [**Deploy a Caddy droplet on DigitalOcean**](https://marketplace.digitalocean.com/apps/caddy)
 
-## Linux service
-
-Manually install Caddy as a service on Linux with these instructions.
-
-**Requirements:**
-
-- `caddy` binary that you [downloaded](/download) or [built from source](/docs/build)
-- `systemctl --version` 232 or newer
-- `sudo` privileges
-
-Move the caddy binary into your `$PATH`, for example:
-<pre><code class="cmd bash">sudo mv caddy /usr/bin/</code></pre>
-
-Test that it worked:
-<pre><code class="cmd bash">caddy version</code></pre>
-
-Create a group named `caddy`:
-<pre><code class="cmd bash">sudo groupadd --system caddy</code></pre>
-
-Create a user named `caddy`, with a writeable home folder:
-<pre><code class="cmd bash">sudo useradd --system \
-    --gid caddy \
-    --create-home \
-    --home-dir /var/lib/caddy \
-    --shell /usr/sbin/nologin \
-    --comment "Caddy web server" \
-    caddy</code></pre>
-
-If using a config file, be sure it is readable by the `caddy` user you just created.
-
-Next, [choose a systemd service file](https://github.com/caddyserver/dist/blob/master/init) based on your use case:
-
-- [**`caddy.service`**](https://github.com/caddyserver/dist/blob/master/init/caddy.service) if you configure Caddy with a file.
-- [**`caddy-api.service`**](https://github.com/caddyserver/dist/blob/master/init/caddy-api.service) if you configure Caddy solely through its API.
-
-They are very similar but have minor differences in the ExecStart and ExecReload commands to accommodate your workflow. Customize the file accordingly.
-
-**Double-check the `ExecStart` and `ExecReload` directives.** Make sure the binary's location and command line arguments are correct for your installation! For example: if using a config file, change your `--config` path if it is different from our example.
-
-The usual place to save the service file is: `/etc/systemd/system/caddy.service`
-
-After saving your service file, you can start the service for the first time with the usual systemctl dance:
-
-<pre><code class="cmd"><span class="bash">sudo systemctl daemon-reload</span>
-<span class="bash">sudo systemctl enable caddy</span>
-<span class="bash">sudo systemctl start caddy</span></code></pre>
-
-Verify that it is running:
-<pre><code class="cmd bash">systemctl status caddy</code></pre>
-
-When running with our official service file, Caddy's output will be redirected to `journalctl`:
-<pre><code class="cmd bash">journalctl -u caddy --no-pager | less</code></pre>
-
-If using a config file, you can gracefully apply any changes:
-<pre><code class="cmd bash">sudo systemctl reload caddy</code></pre>
-
-You can stop the service with:
-<pre><code class="cmd bash">sudo systemctl stop caddy</code></pre>
-
-<aside class="advice">
-	Do not stop the service to change Caddy's configuration. Stopping the server will incur downtime. Use the reload command instead.
-</aside>
+The droplet is preconfigured to run Caddy as a [systemd service](/docs/running#linux-service) via being installed with the [`apt` repo](#debian-ubuntu-raspbian).
 
 
 ## Homebrew
@@ -223,52 +165,4 @@ _Note: This is a community-maintained installation method._
 <pre><code class="cmd">pkg install caddy</code></pre>
 
 [**View the Termux build.sh file**](https://github.com/termux/termux-packages/blob/master/packages/caddy/build.sh)
-
-
-## Windows service
-
-_Note: This is a community-maintained installation method._
-
-Install Caddy as a service on Windows with these instructions.
-
-**Requirements:**
-
-- `caddy.exe` binary that you [downloaded](/download) or [built from source](/docs/build)
-- Any exe from the latest release of the
-  [WinSW](https://github.com/winsw/winsw/releases/latest) service wrapper (Stay
-  on a v2.x release for now)
-
-Put all files into a service directory. In the following examples, we use `c:\caddy`.
-
-Rename the WinSW exe file to `caddy-service.exe`.
-
-Add a `caddy-service.xml` in the directory:
-
-<pre><code class="cmd">&lt;service>
-  &lt;id>caddy&lt;/id>
-  &lt;!-- Display name of the service -->
-  &lt;name>Caddy Web Server (powered by WinSW)&lt;/name>
-  &lt;!-- Service description -->
-  &lt;description>Caddy Web Server (https://caddyserver.com/)&lt;/description>
-  &lt;executable>%BASE%\caddy.exe&lt;/executable>
-  &lt;arguments>run&lt;/arguments>
-  &lt;log mode="roll-by-time">
-    &lt;pattern>yyyy-MM-dd&lt;/pattern>
-  &lt;/log>
-&lt;/service>
-</code></pre>
-
-You can now install the service using:
-<pre><code class="cmd">caddy-service install</code></pre>
-
-You might want to start the Windows Services Console to see if the service is runnnig correctly:
-<pre><code class="cmd">services.msc</code></pre>
-
-Be aware that Windows services cannot be reloaded, so you have to tell caddy directly to relaod:
-<pre><code class="cmd">caddy reload</code></pre>
-
-Restarting is possible via the normal Windows services commands.
-
-For customizing the service wrapper, see the [WinSW documentation](https://github.com/winsw/winsw/tree/master#usage)
-
 
