@@ -173,8 +173,7 @@ This command disables the admin API, making it easier to run multiple instances 
 
 ### `caddy fmt`
 
-<pre><code class="cmd bash">caddy fmt [&lt;path&gt;]
-	[--overwrite]</code></pre>
+<pre><code class="cmd bash">caddy fmt [--overwrite] [&lt;path&gt;]</code></pre>
 
 Formats or prettifies a Caddyfile, then exits. The result is printed to stdout unless `--overwrite` is used.
 
