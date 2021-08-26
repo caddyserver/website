@@ -103,6 +103,8 @@ Additionally, upstream addresses cannot contain paths or query strings, as that 
 
 If the address is not a URL (i.e. does not have a scheme), then placeholders can be used, but this makes the upstream dynamic, meaning that the potentially many different backends act as one upstream in terms of health checks and load balancing.
 
+When proxying over HTTPS, you may need to override the `Host` header (which by default, retains the value from the original request) such that the `Host` header matches the TLS SNI value, which is used by servers for routing and certificate selection. See the [Headers](#headers) section below for more details.
+
 
 
 ### Load balancing
@@ -110,14 +112,14 @@ If the address is not a URL (i.e. does not have a scheme), then placeholders can
 Load balancing is used whenever more than one upstream is defined.
 
 - **lb_policy** is the name of the load balancing policy, along with any options. Default: `random`. Can be:
-	- `first` - choose first available upstream
-	- `header` - map request header to sticky upstream
-	- `ip_hash` - map client IP to sticky upstream
-	- `least_conn` - choose upstream with fewest number of current requests
 	- `random` - randomly choose an upstream
 	- `random_choose <n>` - selects two or more upstreams randomly, then chooses one with least load (`n` is usually 2)
+	- `first` - choose first available upstream, from the order they are defined in the config
 	- `round_robin` - iterate each upstream in turn
+	- `least_conn` - choose upstream with fewest number of current requests
+	- `ip_hash` - map client IP to sticky upstream
 	- `uri_hash` - map URI to sticky upstream
+	- `header [field]` - map request header to sticky upstream
 	- `cookie [<name> [<secret>]]` - based on the given cookie (default name is `lb` if not specified), which value is hashed; optionally with a secret for HMAC-SHA256
 
 - **lb_try_duration** is a [duration value](/docs/conventions#durations) that defines how long to try selecting available backends for each request if the next available host is down. By default, this retry is disabled. Clients will wait for up to this long while the load balancer tries to find an available upstream host.
@@ -164,15 +166,31 @@ The proxy **buffers responses** by default for wire efficiency:
 
 ### Headers
 
-It can also **manipulate headers** between itself and the backend:
+The proxy can **manipulate headers** between itself and the backend:
 
 - **header_up** Sets, adds, removes, or performs a replacement in a request header going upstream to the backend.
 - **header_down** Sets, adds, removes, or performs a replacement in a response header coming downstream from the backend.
+
+
+#### Defaults
 
 By default, Caddy passes thru incoming headers to the backend&mdash;including the `Host` header&mdash;without modifications, with two exceptions:
 
 - It adds or augments the [X-Forwarded-For](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For) header field.
 - It sets the [X-Forwarded-Proto](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Proto) header field.
+
+
+#### HTTPS
+
+For HTTPS upstreams, since the `Host` header retains its original value, it is typically necessary to override the header with the configured upstream address, such that the `Host` header matches the TLS SNI value. A `X-Forwarded-Host` header may also be added to inform the upstream of the original `Host` header's value. For example:
+
+```caddy-d
+reverse_proxy https://example.com {
+	header_up Host {upstream_hostport}
+	header_up X-Forwarded-Host {host}
+}
+```
+
 
 
 
@@ -322,9 +340,7 @@ reverse_proxy localhost:8080 {
 ```
 
 
-Reverse proxy to an HTTPS endpoint, and set the `Host` header to the configured upstream host and port.
-
-Note that by default, the `Host` header will retain its original, incoming value from the request. For HTTPS to work correctly, usually, the Host header needs to match the certificate being served served by the upstream. A `X-Forwarded-Host` header can be added to inform the upstream of the original `Host` header's value.
+Reverse proxy to an HTTPS endpoint:
 
 ```caddy-d
 reverse_proxy https://example.com {
