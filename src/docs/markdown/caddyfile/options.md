@@ -2,6 +2,26 @@
 title: Global options (Caddyfile)
 ---
 
+<script>
+$(function() {
+	// We'll add links on the options in the code block at the top
+	// to their associated anchor tags.
+	let headers = $('article h5').map((i, el) => el.id.replace(/-/g, "_")).toArray();
+	$('pre.chroma .k')
+		.filter((k, item) => headers.includes(item.innerText))
+		.map(function(k, item) {
+			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+			let url = '#' + item.innerText.replace(/_/g, "-");
+			$(item).html('<a href="' + url + '" style="color: inherit;" title="' + text + '">' + text + '</a>');
+		});
+	$('pre.chroma .k:contains("servers")')
+		.map(function(k, item) {
+			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+			$(item).html('<a href="#server-options" style="color: inherit;" title="Server Options">' + text + '</a>');
+		});
+});
+</script>
+
 # Global options
 
 The Caddyfile has a way for you to specify options that apply globally. Some options act as default values, while others customize the behavior of the Caddyfile [adapter](/docs/config-adapters).
