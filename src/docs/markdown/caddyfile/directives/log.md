@@ -8,6 +8,24 @@ Enables and configures HTTP request logging (also known as access logs).
 
 The `log` directive applies to the host/port of the site block it appears in, not any other part of the site address (e.g. path).
 
+- [Syntax](#syntax)
+- [Output modules](#output-modules)
+  - [stderr](#stderr)
+  - [stdout](#stdout)
+  - [discard](#discard)
+  - [file](#file)
+  - [net](#net)
+- [Format modules](#format-modules)
+  - [console](#console)
+  - [json](#json)
+  - [single_field](#single-field)
+  - [filter](#filter)
+    - [delete](#delete)
+	- [replace](#replace)
+	- [ip_mask](#ip-mask)
+- [Examples](#examples)
+
+
 ## Syntax
 
 ```caddy-d
@@ -20,7 +38,9 @@ log {
 
 - **output** configures where to write the logs. See [Output modules](#output-modules) below. Default: `stderr`
 - **format** describes how to encode, or format, the logs. See [Format modules](#format-modules) below. Default: `console` if `stdout` is detected to be a terminal, `json` otherwise.
-- **level** is the minimum entry level to log. Default: `INFO`
+- **level** is the minimum entry level to log. Default: `INFO`. Note that access logs currently only emit `INFO` and `ERROR` level logs.
+
+
 
 ### Output modules
 
@@ -133,6 +153,8 @@ format json
 
 #### single_field
 
+<span class="warning">⚠️ This format is deprecated, and will be removed in a future version.</span>
+
 Writes only a single field from the structure log entry. Useful if one of the fields has all the information you need.
 
 ```caddy-d
@@ -199,6 +221,7 @@ Enable access logging (to the console):
 log
 ```
 
+
 Write logs to a file (with log rolling, which is enabled by default):
 
 ```caddy-d
@@ -206,6 +229,7 @@ log {
 	output file /var/log/access.log
 }
 ```
+
 
 Customize log rolling:
 
@@ -219,13 +243,17 @@ log {
 }
 ```
 
-Use common log format (deprecated, but can be useful for older setups):
+
+Use Common Log Format (CLF):
+
+<span class="warning">⚠️ The `single_field` format is deprecated and will be removed in a future version. To encode logs in common log format, please use the [`format-encoder`](https://github.com/caddyserver/format-encoder) plugin.</span>
 
 ```caddy-d
 log {
 	format single_field common_log
 }
 ```
+
 
 Delete the Authorization request header from the logs:
 
@@ -239,6 +267,7 @@ log {
 	}
 }
 ```
+
 
 Mask the remote address from the request, keeping the first 16 bytes (i.e. 255.255.0.0) for IPv4 addresses, and the first 64 bytes from IPv6 addresses, and also deletes the `common_log` field which would normally contain an unmasked IP address:
 

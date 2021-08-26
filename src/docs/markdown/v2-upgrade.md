@@ -241,24 +241,9 @@ The recommended way to enable access logging is simply:
 log
 ```
 
-which emits structured logs to stderr. (You can also emit to a file or network socket; see docs.)
+which emits structured logs to stderr. (You can also emit to a file or network socket; see the [`log`](/docs/caddyfile/directives/log) directive docs.)
 
-Although we recommend everyone use [structured logging](/docs/logging), you can still write Common Log Format (CLF) to a file, if you must:
-
-- **v1:**
-```
-log access.log
-```
-
-- **v2:**
-```caddy-d
-log {
-	output file         access.log
-	format single_field common_log
-}
-```
-
-But we recommend this only for transitioning while your legacy systems still require CLF.
+By default, logs will be in [structured](/docs/logging) JSON format. If you still need logs in Common Log Format (CLF) for legacy reasons, you may use the [`format-encoder`](https://github.com/caddyserver/format-encoder) plugin.
 
 
 ### proxy

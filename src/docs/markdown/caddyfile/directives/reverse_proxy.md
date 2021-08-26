@@ -155,7 +155,7 @@ Passive health checks happen inline with actual proxied requests:
 
 The proxy **buffers responses** by default for wire efficiency:
 
-- **flush_interval** is a [duration value](/docs/conventions#durations) that defines how often Caddy should flush the buffered response body to the client. Set to -1 to disable buffering. It is set to -1 automatically for requests that have a `text/event-stream` response or for HTTP/2 requests where the Content-Length is unspecified.
+- **flush_interval** is a [duration value](/docs/conventions#durations) that adjusts how often Caddy should flush the response buffer to the client. By default, no periodic flushing is done. A negative value disables response buffering, and flushes immediately after each write to the client. This option is ignored when the upstream's response is recognized as a streaming response, or if its content length is `-1`; for such responses, writes are flushed to the client immediately.
 - **buffer_requests** will cause the proxy to read the entire request body into a buffer before sending it upstream. This is very inefficient and should only be done if the upstream requires reading request bodies without delay (which is something the upstream application should fix).
 - **buffer_responses** will cause the entire response body to be read and buffered in memory before being proxied to the client. This should be avoided if at all possible for performance reasons, but could be useful if the backend has tighter memory constraints.
 - **max_buffer_size** if body buffering is enabled, this sets the maximum size of the buffers used for the requests and responses. This accepts all size formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
@@ -173,8 +173,6 @@ By default, Caddy passes thru incoming headers to the backend&mdash;including th
 
 - It adds or augments the [X-Forwarded-For](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For) header field.
 - It sets the [X-Forwarded-Proto](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Proto) header field.
-
-Since these header fields are only de-facto standards, Caddy may stop setting them implicitly in the future if the standardized [Forwarded](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Forwarded) header field becomes more widely adopted.
 
 
 
@@ -295,11 +293,13 @@ Reverse proxy all requests to a local backend:
 reverse_proxy localhost:9005
 ```
 
+
 Load-balance all requests between 3 backends:
 
 ```caddy-d
 reverse_proxy node1:80 node2:80 node3:80
 ```
+
 
 Same, but only requests within `/api`, and with header affinity:
 
@@ -309,30 +309,30 @@ reverse_proxy /api/* node1:80 node2:80 node3:80 {
 }
 ```
 
-Set the upstream Host header to the address of the upstream (by default, it will retain its original, incoming value):
-
-```caddy-d
-reverse_proxy localhost:9000 {
-	header_up Host {http.reverse_proxy.upstream.hostport}
-}
-```
-
-Reverse proxy to an HTTPS endpoint:
-
-```caddy-d
-reverse_proxy https://example.com
-```
 
 Configure some transport options:
 
 ```caddy-d
-reverse_proxy https://example.com {
+reverse_proxy localhost:8080 {
 	transport http {
 		dial_timeout 2s
 		tls_timeout  2s
 	}
 }
 ```
+
+
+Reverse proxy to an HTTPS endpoint, and set the `Host` header to the configured upstream host and port.
+
+Note that by default, the `Host` header will retain its original, incoming value from the request. For HTTPS to work correctly, usually, the Host header needs to match the certificate being served served by the upstream. A `X-Forwarded-Host` header can be added to inform the upstream of the original `Host` header's value.
+
+```caddy-d
+reverse_proxy https://example.com {
+	header_up Host {upstream_hostport}
+	header_up X-Forwarded-Host {host}
+}
+```
+
 
 Replace a path prefix before proxying:
 
@@ -342,6 +342,7 @@ handle_path /old-prefix/* {
 	reverse_proxy localhost:9000
 }
 ```
+
 
 X-Accel-Redirect support:
 
@@ -355,6 +356,7 @@ reverse_proxy localhost:8080 {
 	}
 }
 ```
+
 
 Custom error page for errors from upstream:
 

@@ -69,8 +69,10 @@ Placeholder | Description
 `{system.slash}` | The system's filepath separator
 `{system.os}` | The system's OS
 `{system.arch}` | The system's architecture
-`{time.now}` | The current timestamp
-`{time.now.common_log}` | The current timestamp in Common Log Format
+`{time.now}` | The current time as a Go Time struct
+`{time.now.unix}` | The current time as a unix timestamp in seconds
+`{time.now.unix_ms}` | The current time as a unix timestamp in milliseconds
+`{time.now.common_log}` | The current time in Common Log Format
 `{time.now.year}` | The current year in YYYY format
 
 Not all config fields support placeholders, but most do where you would expect it.
