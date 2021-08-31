@@ -83,29 +83,33 @@ header
 request_body
 
 redir
-rewrite
 
+# URI manipulation
+rewrite
 uri
 try_files
 
+# middleware handlers; some wrap responses
 basicauth
 request_header
 encode
+push
 templates
 
+# special routing & dispatching directives
 handle
 handle_path
 route
-push
 
+# handlers that typically respond to requests
+abort
+error
 respond
 metrics
 reverse_proxy
 php_fastcgi
 file_server
 acme_server
-abort
-error
 ```
 
 You can override/customize this ordering by using the [`order` global option](/docs/caddyfile/options) or the [`route` directive](/docs/caddyfile/directives/route).

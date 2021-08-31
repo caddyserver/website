@@ -67,7 +67,13 @@ The ellipses `...` indicates a continuation, i.e. one or more parameters.
 
 - **[caddy upgrade](#caddy-upgrade)**
   Upgrades Caddy to the latest release
-  
+
+- **[caddy add-package](#caddy-add-package)**
+  Upgrades Caddy to the latest release, with additional plugins added
+
+- **[caddy remove-package](#caddy-remove-package)**
+  Upgrades Caddy to the latest release, with some plugins removed
+
 - **[caddy validate](#caddy-validate)**
   Tests whether a config file is valid
 
@@ -365,6 +371,27 @@ Upgrades do not interrupt running servers; currently, the command only replaces 
 The upgrade process is fault tolerant; the current binary is backed up first and automatically restored if anything goes wrong.
 
 This command may require elevated privileges if your user does not have permission to write to the executable file.
+
+
+
+### `caddy add-package`
+
+<pre><code class="cmd bash">caddy add-package &lt;packages...&gt;</code></pre>
+
+Similarly to `caddy upgrade`, replaces the current Caddy binary with the latest version with the same modules installed, _plus_ the packages listed as arguments included in the new binary. Find the list of packages you can install from [our download page](https://caddyserver.com/download). Each argument should be the full package name.
+
+For example:
+
+<pre><code class="cmd bash">caddy add-package github.com/caddy-dns/cloudflare</code></pre>
+
+
+
+### `caddy remove-package`
+
+<pre><code class="cmd bash">caddy remove-package &lt;packages...&gt;</code></pre>
+
+Similarly to `caddy upgrade`, replaces the current Caddy binary with the latest version with the same modules installed, but _without_ the packages listed as arguments, if they existed in the current binary. Run `caddy list-modules --packages` to see the list of package names of non-standard modules included in the current binary.
+
 
 
 ### `caddy validate`

@@ -76,7 +76,8 @@ Now compare an equivalent structured log message from Caddy, encoded as JSON and
 			"server_name": "example.com"
 		}
 	},
-	"latency": 0.000014711,
+	"user_id": "",
+	"duration": 0.000014711,
 	"size": 2326,
 	"status": 200,
 	"resp_headers": {
