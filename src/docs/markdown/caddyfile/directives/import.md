@@ -32,7 +32,7 @@ Import a snippet that sets CORS headers using an import argument:
 (cors) {
 	@origin header Origin {args.0}
 	header @origin Access-Control-Allow-Origin "{args.0}"
-	header @origin Access-Control-Request-Method GET
+	header @origin Access-Control-Allow-Methods "OPTIONS,HEAD,GET,POST,PUT,PATCH,DELETE"
 }
 
 example.com {
