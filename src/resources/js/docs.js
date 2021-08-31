@@ -34,19 +34,17 @@ $(function() {
 	// Add links to Caddyfile directive tokens in code blocks.
 	// See include/docs-head.html for the whitelist bootstrapping logic
 	$('pre.chroma .k')
-		.filter(function (k, item) {
-			return window.CaddyfileDirectives.includes(item.innerText)
-				|| item.innerText === '<directives...>';
-		})
+		.filter((k, item) =>
+			window.CaddyfileDirectives.includes(item.innerText)
+				|| item.innerText === '<directives...>'
+		)
 		.map(function(k, item) {
 			let text = item.innerText;
 			let url = text === '<directives...>'
 				? '/docs/caddyfile/directives'
 				: '/docs/caddyfile/directives/' + text;
-			$(item)
-				.html('<a href="' + url + '" style="color: inherit;" title="Directive"></a>')
-				.find('a')
-				.text(text);
+			text = text.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+			$(item).html('<a href="' + url + '" style="color: inherit;" title="Directive">' + text + '</a>');
 		});
 
 	// Add links to [<matcher>] or named matcher tokens in code blocks.
@@ -54,32 +52,25 @@ $(function() {
 	// so we must use text() to change the link text.
 	$('pre.chroma .nd')
 		.map(function(k, item) {
-			let text = item.innerText;
-			$(item)
-				.html('<a href="/docs/caddyfile/matchers" style="color: inherit;" title="Matcher token"></a>')
-				.find('a')
-				.text(text);
+			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+			$(item).html('<a href="/docs/caddyfile/matchers#syntax" style="color: inherit;" title="Matcher token">' + text + '</a>');
 		});
-
-	// On the global options page only, we'll add links to the options to the anchor tags
-	if (window.location.pathname === '/docs/caddyfile/options') {
-		let headers = $('article h5').map(function (i, el) {
-			return el.id.replace(/-/g, "_");
-		}).toArray();
-		$('pre.chroma .k')
-			.filter(function (k, item) {
-				return headers.includes(item.innerText);
-			})
-			.map(function(k, item) {
-				let text = item.innerText;
-				let url = '#' + item.innerText.replace(/_/g, "-");
-				$(item)
-					.html('<a href="' + url + '" style="color: inherit;" title="Global option"></a>')
-					.find('a')
-					.text(text);
-			});
-	}
 });
+
+// addLinkaddLinksToSubdirectivessToAnchors finds all the ID anchors
+// in the article, and turns any directive or subdirective span into
+// links that have an ID on the page. This is opt-in for each page,
+// because it's not necessary to run everywhere.
+function addLinksToSubdirectives() {
+	let anchors = $('article *[id]').map((i, el) => el.id).toArray();
+	$('pre.chroma .k')
+		.filter((k, item) => anchors.includes(item.innerText))
+		.map(function(k, item) {
+			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+			let url = '#' + item.innerText;
+			$(item).html('<a href="' + url + '" style="color: inherit;" title="' + text + '">' + text + '</a>');
+		});
+}
 
 function stripScheme(url) {
 	return url.substring(url.indexOf("://")+3);

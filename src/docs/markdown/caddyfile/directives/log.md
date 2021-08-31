@@ -2,6 +2,13 @@
 title: log (Caddyfile directive)
 ---
 
+<script>
+$(function() {
+	// We'll add links to all the subdirectives if a matching anchor tag is found on the page.
+	addLinksToSubdirectives();
+});
+</script>
+
 # log
 
 Enables and configures HTTP request logging (also known as access logs).
@@ -101,7 +108,7 @@ output net <address> {
 ```
 
 - **&lt;address&gt;** is the [address](/docs/conventions#network-addresses) to write logs to.
-- **&lt;dial_timeout&gt;** is how long to wait for a successful connection to the log socket. Log emissions may be blocked for up to this long if the socket goes down.
+- **dial_timeout** is how long to wait for a successful connection to the log socket. Log emissions may be blocked for up to this long if the socket goes down.
 
 
 

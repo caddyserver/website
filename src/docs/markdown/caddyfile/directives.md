@@ -2,9 +2,36 @@
 title: Caddyfile Directives
 ---
 
+<style>
+#directive-table table {
+	margin: 0 auto;
+	overflow: hidden;
+}
+
+#directive-table tr:hover {
+	background: rgba(0, 0, 0, 10%);
+}
+
+#directive-table tr td:first-child {
+	position: relative;
+}
+
+#directive-table a:before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	display: block;
+	width: 100vw;
+}
+</style>
+
 # Caddyfile Directives
 
 The following directives come standard with Caddy, and can be used in the HTTP Caddyfile:
+
+<div id="directive-table">
 
 Directive | Description
 ----------|------------
@@ -38,6 +65,7 @@ Directive | Description
 **[try_files](/docs/caddyfile/directives/try_files)** | Rewrite that depends on file existence
 **[uri](/docs/caddyfile/directives/uri)** | Manipulate the URI
 
+</div>
 
 ## Syntax
 
