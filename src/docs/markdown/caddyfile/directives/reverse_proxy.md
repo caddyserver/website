@@ -201,6 +201,7 @@ By default, Caddy passes thru incoming headers to the backend&mdash;including th
 - It adds or augments the [X-Forwarded-For](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For) header field.
 - It sets the [X-Forwarded-Proto](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Proto) header field.
 
+Additionally, Caddy will also set `Accept-Encoding: gzip` if that header is missing in the request from the client. This behavior can be disabled by setting `compression off` in the `http` transport.
 
 #### HTTPS
 
