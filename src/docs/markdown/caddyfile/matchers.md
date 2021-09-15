@@ -2,6 +2,31 @@
 title: Request matchers (Caddyfile)
 ---
 
+<script>
+$(function() {
+	// We'll add links on the matchers in the code blocks
+	// to their associated anchor tags.
+	let headers = $('article h3').map((i, el) => el.id.replace(/-/g, "_")).toArray();
+	$('pre.chroma .k')
+		.filter((k, item) => headers.includes(item.innerText))
+		.map(function(k, item) {
+			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+			let url = '#' + item.innerText.replace(/_/g, "-");
+			$(item).html('<a href="' + url + '" style="color: inherit;" title="' + text + '">' + text + '</a>');
+		});
+
+	// Link matcher tokens based on their contents to the syntax section
+	$('pre.chroma .nd')
+		.map(function(k, item) {
+			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+			let anchor = "named-matchers"
+			if (text == "*") anchor = "wildcard-matchers"
+			if (text.startsWith('/')) anchor = "path-matchers"
+			$(item).html('<a href="#' + anchor + '" style="color: inherit;" title="Matcher token">' + text + '</a>');
+		});
+});
+</script>
+
 # Request Matchers
 
 **Request matchers** can be used to filter (or classify) requests by specific criteria.

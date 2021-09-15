@@ -2,6 +2,26 @@
 title: Global options (Caddyfile)
 ---
 
+<script>
+$(function() {
+	// We'll add links on the options in the code block at the top
+	// to their associated anchor tags.
+	let headers = $('article h5').map((i, el) => el.id.replace(/-/g, "_")).toArray();
+	$('pre.chroma .k')
+		.filter((k, item) => headers.includes(item.innerText))
+		.map(function(k, item) {
+			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+			let url = '#' + item.innerText.replace(/_/g, "-");
+			$(item).html('<a href="' + url + '" style="color: inherit;" title="' + text + '">' + text + '</a>');
+		});
+	$('pre.chroma .k:contains("servers")')
+		.map(function(k, item) {
+			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+			$(item).html('<a href="#server-options" style="color: inherit;" title="Server Options">' + text + '</a>');
+		});
+});
+</script>
+
 # Global options
 
 The Caddyfile has a way for you to specify options that apply globally. Some options act as default values, while others customize the behavior of the Caddyfile [adapter](/docs/config-adapters).
@@ -116,7 +136,7 @@ Customizes the [admin API endpoint](/docs/api). If `off`, then the admin endpoin
 - **enforce_origin** enables enforcement of the Origin header. (This is different from enforcing origins generally, which is always done.)
 
 ##### `log`
-Customizes the named logger. The name can be passed to indicate a specific logger to customize the behavior for. If no name is specified, the behavior of the default logger is modified. This option can be specified multiple times to configure different loggers. You can read more about the default logger and other logging behaviors in the [logging documentation](/docs/logging/).
+Customizes the named logger. The name can be passed to indicate a specific logger to customize the behavior for. If no name is specified, the behavior of the default logger is modified. This option can be specified multiple times to configure different loggers. You can read more about the default logger and other logging behaviors in the [logging documentation](/docs/logging).
 
 - **output** configures where to write the logs. See the [log directive](/docs/caddyfile/directives/log#output-modules) documentation for more information, which has the same structure.
 - **format** describes how to encode, or format, the logs. See the [log directive](/docs/caddyfile/directives/log#format-modules) documentation for more information, which has the same structure.

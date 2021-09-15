@@ -85,7 +85,7 @@ automatically by the Prometheus Go Client. They are prefixed with `go_*` and
 Note that the `process_*` metrics are only collected on Linux and Windows.
 
 See the documentation for the [Go Collector](https://pkg.go.dev/github.com/prometheus/client_golang/prometheus#NewGoCollector),
-[Process Colletor](https://pkg.go.dev/github.com/prometheus/client_golang/prometheus#NewProcessCollector),
+[Process Collector](https://pkg.go.dev/github.com/prometheus/client_golang/prometheus#NewProcessCollector),
 and [BuildInfo Collector](https://pkg.go.dev/github.com/prometheus/client_golang/prometheus#NewBuildInfoCollector).
 
 ### Admin API metrics

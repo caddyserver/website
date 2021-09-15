@@ -128,6 +128,8 @@ The first time a root key is used, Caddy will try to install it into the system'
 
 After Caddy's root CA is installed, you will see it in your local trust store as "Caddy Local Authority" (unless you've configured a different name). You can uninstall it any time if you wish (the [`caddy untrust`](/docs/command-line#caddy-untrust) command makes this easy).
 
+Note that automatically installing the certificate into the local trust stores is for convenience only and isn't guaranteed to work, especially if containers are being used or if Caddy is being run as an unprivileged system service. Ultimately, if you are relying on internal PKI, it is the system administrator's responsibility to ensure Caddy's root CA is properly added to the necessary trust stores (this is outside the scope of the web server).
+
 
 ### CA Intermediates
 
@@ -182,21 +184,33 @@ DNS provider support is a community effort. [Learn how to enable the DNS challen
 
 ## On-Demand TLS
 
-Caddy pioneered a new technology we call **On-Demand TLS**. Many businesses rely on this feature to scale their TLS deployments at lower cost and without operational headaches when serving tens of thousands of sites.
+Caddy pioneered a new technology we call **On-Demand TLS**, which dynamically obtains a new certificate during the first TLS handshake that requires it, rather than at config load. Crucially, this does not require specifying the domain names in your configuration ahead of time.
 
-This unique feature obtains the certificate for a name during the first TLS handshake that requires it, rather than at config load. This is useful if:
+Many businesses rely on this unique feature to scale their TLS deployments at lower cost and without operational headaches when serving tens of thousands of sites.
 
-- you do not know all the domain names up front,
-- domain names might not be properly configured right away (e.g. DNS records not yet set),
-- or you are not in control of the domain names (e.g. they are customer domains).
+On-demand TLS is useful if:
 
-When on-demand TLS is enabled, a TLS handshake may trigger maintenance for the relevant certificate. If no existing certificate is available, this process slows down only the initial TLS handshake while a certificate is obtained in the foreground; all other handshakes will not be affected (except those waiting on the same certificate). If an existing certificate can be used, the handshake will complete immediately, and maintenance (i.e. renewal) will happen in the background.
+- you do not know all the domain names when you start or reload your server,
+- domain names might not be properly configured right away (DNS records not yet set),
+- you are not in control of the domain names (e.g. they are customer domains).
 
-You can enable it using the [on_demand](/docs/json/apps/tls/automation/on_demand/) property in your TLS automation config, or the [on_demand Caddyfile subdirective](/docs/caddyfile/directives/tls#syntax). Note that enabling on-demand TLS is separate from configuring how it works. **Important:** To prevent abuse, you should specify rate limits and/or an endpoint that Caddy can query to ask if a certificate is allowed to be obtained for a hostname.
+When on-demand TLS is enabled, you do not need to specify the domain names in your config in order to get certificates for them. Instead, when a TLS handshake is received for a server name (SNI) that Caddy does not yet have a certificate for, the handshake is held while Caddy obtains a certificate to use to complete the handshake. The delay is usually only a few seconds, and only that initial handshake is slow. All future handshakes are fast because certificates are cached and reused, and renewals happen in the background. Future handshakes may trigger maintenance for the certificate to keep it renewed, but this maintenance happens in the background if the certificate hasn't expired yet.
+
+### Using On-Demand TLS
+
+**In production environments, on-demand TLS must be both enabled and restricted. Enabling without restricting opens your server to attack.**
+
+Enabling on-demand TLS happens in [TLS automation policies](/docs/json/apps/tls/automation/policies/) if using the JSON config, or [in site blocks with the `tls` directive](/docs/caddyfile/directives/tls) if using the Caddyfile.
+
+To prevent abuse of this feature, you must configure restrictions. This is done in the [`automation` object of the JSON config](/docs/json/apps/tls/automation/on_demand/), or the [`on_demand_tls` global option](/docs/caddyfile/options#on-demand-tls) of the Caddyfile. Restrictions are "global" and aren't configurable per-site or per-domain. The primary restriction is an "ask" endpoint to which Caddy will send an HTTP request to ask if it has permission to obtain and manage a certificate for the domain in the handshake. This means you will need some internal backend that can, for example, query the accounts table of your database and see if a customer has signed up with that domain name.
+
+You can also configure rate limits as restrictions, though rate limits alone are not a sufficient protection.
 
 Be mindful of how quickly your CA is able to issue certificates. If it takes more than a few seconds, this will negatively impact the user experience (for the first client only).
 
 Due to its deferred nature and potential for abuse (if not mitigated through proper configuration), we recommend enabling on-demand TLS only when your actual use case is described above.
+
+[See our wiki article for more information about using on-demand TLS effectively.](https://caddy.community/t/serving-tens-of-thousands-of-domains-over-https-with-caddy/11179)
 
 ## Errors
 
@@ -243,7 +257,7 @@ Before attempting any ACME transactions, Caddy will test the configured storage 
 
 Caddy can obtain and manage wildcard certificates when it is configured to serve a site with a qualifying wildcard name. A site name qualifies for a wildcard if only its left-most domain label is a wildcard. For example, `*.example.com` qualifies, but these do not: `sub.*.example.com`, `foo*.example.com`, `*bar.example.com`, and `*.*.example.com`.
 
-If using the Caddyfile, Caddy takes site names literally with regards to the certificate subject names. In other words, a site defined as `sub.example.com` will cause Caddy to manage a certificate for `sub.example.com`, and a site defined as `*.example.com` will cause Caddy to manage a wildcard certificate for `*.example.com`. If you need different behavior, the [JSON config](/docs/json/) gives you precise control over certificate subjects and site names ("host matchers").
+If using the Caddyfile, Caddy takes site names literally with regards to the certificate subject names. In other words, a site defined as `sub.example.com` will cause Caddy to manage a certificate for `sub.example.com`, and a site defined as `*.example.com` will cause Caddy to manage a wildcard certificate for `*.example.com`. You can see this demonstrated on our [Common Caddyfile Patterns](/docs/caddyfile/patterns#wildcard-certificates) page. If you need different behavior, the [JSON config](/docs/json/) gives you more precise control over certificate subjects and site names ("host matchers").
 
 Wildcard certificates represent a wide degree of authority and should only be used when you have so many subdomains that managing individual certificates for them would strain the PKI or cause you to hit CA-enforced rate limits.
 

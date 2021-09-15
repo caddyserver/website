@@ -23,6 +23,9 @@ The ellipses `...` indicates a continuation, i.e. one or more parameters.
 - **[caddy adapt](#caddy-adapt)**
   Adapts a config document to native JSON
 
+- **[caddy build-info](#caddy-build-info)**
+  Prints build information
+  
 - **[caddy environ](#caddy-environ)**
   Prints the environment
 
@@ -61,6 +64,15 @@ The ellipses `...` indicates a continuation, i.e. one or more parameters.
 
 - **[caddy untrust](#caddy-untrust)**
   Untrusts a certificate from local trust store(s)
+
+- **[caddy upgrade](#caddy-upgrade)**
+  Upgrades Caddy to the latest release
+
+- **[caddy add-package](#caddy-add-package)**
+  Upgrades Caddy to the latest release, with additional plugins added
+
+- **[caddy remove-package](#caddy-remove-package)**
+  Upgrades Caddy to the latest release, with some plugins removed
 
 - **[caddy validate](#caddy-validate)**
   Tests whether a config file is valid
@@ -167,8 +179,7 @@ This command disables the admin API, making it easier to run multiple instances 
 
 ### `caddy fmt`
 
-<pre><code class="cmd bash">caddy fmt [&lt;path&gt;]
-	[--overwrite]</code></pre>
+<pre><code class="cmd bash">caddy fmt [--overwrite] [&lt;path&gt;]</code></pre>
 
 Formats or prettifies a Caddyfile, then exits. The result is printed to stdout unless `--overwrite` is used.
 
@@ -305,7 +316,7 @@ Same as [`caddy run`](#caddy-run), but in the background. This command only bloc
 
 Note: the flag `--config` doesn't support `-` to read the config from stdin.
 
-Use of this command is discouraged with system services or on Windows. On Windows, the child process will remain attached to the terminal, so closing the window will forcefully stop Caddy, which is not obvious.
+Use of this command is discouraged with system services or on Windows. On Windows, the child process will remain attached to the terminal, so closing the window will forcefully stop Caddy, which is not obvious. Consider running Caddy [as a service](/docs/running) instead.
 
 Once started, you can use [`caddy stop`](#caddy-stop) or [the /stop API endpoint](/docs/api#post-stop) to exit the background process.
 
@@ -360,6 +371,27 @@ Upgrades do not interrupt running servers; currently, the command only replaces 
 The upgrade process is fault tolerant; the current binary is backed up first and automatically restored if anything goes wrong.
 
 This command may require elevated privileges if your user does not have permission to write to the executable file.
+
+
+
+### `caddy add-package`
+
+<pre><code class="cmd bash">caddy add-package &lt;packages...&gt;</code></pre>
+
+Similarly to `caddy upgrade`, replaces the current Caddy binary with the latest version with the same modules installed, _plus_ the packages listed as arguments included in the new binary. Find the list of packages you can install from [our download page](https://caddyserver.com/download). Each argument should be the full package name.
+
+For example:
+
+<pre><code class="cmd bash">caddy add-package github.com/caddy-dns/cloudflare</code></pre>
+
+
+
+### `caddy remove-package`
+
+<pre><code class="cmd bash">caddy remove-package &lt;packages...&gt;</code></pre>
+
+Similarly to `caddy upgrade`, replaces the current Caddy binary with the latest version with the same modules installed, but _without_ the packages listed as arguments, if they existed in the current binary. Run `caddy list-modules --packages` to see the list of package names of non-standard modules included in the current binary.
+
 
 
 ### `caddy validate`

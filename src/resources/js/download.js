@@ -169,11 +169,11 @@ $(function() {
 	});
 })
 
-// autoPlatform choooses the platform in the list that best
+// autoPlatform chooses the platform in the list that best
 // matches the user's browser, if it's available.
 function autoPlatform() {
 	// assume 32-bit linux, then change OS and architecture if justified
-	var os = "linux", arch = "386", arm = "";
+	var os = "linux", arch = "amd64", arm = "";
 
 	// change os
 	if (/Macintosh/i.test(navigator.userAgent)) {
@@ -215,11 +215,15 @@ function autoPlatform() {
 }
 
 function getDownloadLink() {
+	// make sure we at least have a default,
+	// in the case that autoPlatform() failed
+	var platformString = $('#platform').val();
+	if (!platformString) {
+		platformString = "linux-amd64"
+	}
+
 	// get platform components
-	var platformParts = $('#platform').val().split("-");
-	var os = platformParts[0];
-	var arch = platformParts[1];
-	var arm = platformParts.length > 2 ? platformParts[2] : "";
+	var [os, arch, arm = ""] = platformString.split("-");
 
 	var qs = new URLSearchParams();
 	if (os)   qs.set("os", os);

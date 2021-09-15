@@ -20,6 +20,7 @@ file_server [<matcher>] [browse] {
 	browse        [<template_file>]
 	precompressed <formats...>
 	status        <status>
+	disable_canonical_uris
 }
 ```
 
@@ -30,6 +31,7 @@ file_server [<matcher>] [browse] {
 - **<template_file>** is an optional custom template file to use for directory listings. Defaults to the template that can be found [here in the source code ![external link](/resources/images/external-link.svg)](https://github.com/caddyserver/caddy/blob/master/modules/caddyhttp/fileserver/browsetpl.go). Browse templates can use actions from [the standard templates module](/docs/modules/http.handlers.templates#docs) as well.
 - **precompressed** is the list of encoding formats to search for precompressed sidecar files. Arguments are an ordered list of encoding formats to search for precompressed sidecar files. Supported formats are `gzip`, `zstd` and `br`.
 - **status** is an optional status code override to be used when writing the response. Particularly useful when responding to a request with a custom error page. Can be a 3-digit status code, For example: `404`. Placeholders are supported. By default, the written status code will typically be `200`, or `206` for partial content.
+- **disable_canonical_uris** disables the default behaviour of redirecting to add a trailing slash if the request path is a directory, or remove the trailing slash if the request path is a file. Note that by default, canonicalization will not happen if the last element of the request's path (the filename) underwent an internal rewrite, to avoid clobbering an explicit rewrite with implicit behaviour.
 
 ## Examples
 
