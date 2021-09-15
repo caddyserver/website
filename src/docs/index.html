@@ -1,6 +1,7 @@
 {{$pathParts := splitList "/" .OriginalReq.URL.Path}}
 {{$markdownFilename := default "index" (slice $pathParts 2 | join "/")}}
 {{$markdownFilePath := printf "/docs/markdown/%s.md" $markdownFilename}}
+{{if not (fileExists $markdownFilePath)}}{{httpError 404}}{{end}}
 {{$markdownFile := (include $markdownFilePath | splitFrontMatter)}}
 {{$title := default $markdownFilename $markdownFile.Meta.title}}
 <!DOCTYPE html>
