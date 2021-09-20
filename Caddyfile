@@ -15,3 +15,4 @@ rewrite /docs/modules/* /docs/modules/index.html
 rewrite /docs/*         /docs/index.html
 
 reverse_proxy /api/* localhost:4444
+reverse_proxy /acme/* localhost:4444
