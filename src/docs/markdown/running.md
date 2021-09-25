@@ -38,12 +38,17 @@ If you need to switch between the services, you should disable and stop the prev
 
 ### Using the Service
 
+If using a Caddyfile, you can edit your configuration with `nano`, `vi`, or your preferred editor:
+<pre><code class="cmd bash">sudo nano /etc/caddy/Caddyfile</code></pre>
+
+You can place your static site files in either `/var/www/html` or `/srv`. Make sure the `caddy` user has permission to read the files.
+
 To verify that the service is running:
 <pre><code class="cmd bash">systemctl status caddy</code></pre>
 The status command will also show the location of the currently running service file.
 
 When running with our official service file, Caddy's output will be redirected to `journalctl`. To read your full logs and to avoid lines being truncated:
-<pre><code class="cmd bash">journalctl -u caddy --no-pager | less</code></pre>
+<pre><code class="cmd bash">journalctl -u caddy --no-pager | less +G</code></pre>
 
 If using a config file, you can gracefully reload Caddy after making any changes:
 <pre><code class="cmd bash">sudo systemctl reload caddy</code></pre>
@@ -108,7 +113,7 @@ Now you're ready to [use the service](#using-the-service)!
 The best way to override aspects of the service files is with this command:
 <pre><code class="cmd bash">sudo systemctl edit caddy</code></pre>
 
-This will open a blank file with your default terminal text editor in which you can override or add directives to the unit definition.
+This will open a blank file with your default terminal text editor in which you can override or add directives to the unit definition. This is called a "drop-in" file.
 
 For example, if you need to define environment variables for use in your config, you may do so like this:
 ```systemd
@@ -202,6 +207,10 @@ volumes:
 ```
 
 Make sure to fill in `<version>` with the latest version number, which you can find listed on [Docker Hub](https://hub.docker.com/_/caddy) under the "Tags" section.
+
+Then, create a file named `Caddyfile` beside the `docker-compose.yml`, and write your [Caddyfile](/docs/caddyfile/concepts) configuration.
+
+If you have static files to serve, you may place them in a `site/` directory beside the configs, then set the [`root` directive](/docs/caddyfile/directives/root) to `/srv/`. If you don't, then you may remove the `/srv` volume mount.
 
 Then, you can start the container:
 <pre><code class="cmd bash">docker-compose up -d</code></pre>
