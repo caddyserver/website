@@ -164,13 +164,11 @@ function beginRenderingInto($tpl, moduleID, module) {
 
 	// show notice if module is non-standard
 	if (module.repo) {
-		if (isStandard(module.structure.type_name)) {
-			$('.nonstandard-notice', $tpl).remove();
-		} else {
+		if (!isStandard(module.structure.type_name)) {
 			let { pkg, _ } = splitTypeName(module.structure.type_name);
 			$('.nonstandard-project-link', $tpl).attr('href', module.repo).text(module.repo);
 			$('.nonstandard-package-path', $tpl).text(pkg);
-			$('.nonstandard-notice', $tpl).prepend(nonStandardFlag);
+			$('.nonstandard-notice', $tpl).prepend(nonStandardFlag).show();
 		}
 
 		var $repoName = $('<span/>').text(stripScheme(module.repo));

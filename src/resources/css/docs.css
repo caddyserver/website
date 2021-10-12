@@ -453,6 +453,7 @@ iframe {
 	padding: 10px;
 	color: #886c00;
 	line-height: 1.4em;
+	display: none;
 }
 
 .nonstandard {
@@ -519,6 +520,8 @@ article .json a {
 	position: absolute;
 	font-size: 16px;
 	transition: transform .25s ease-in-out, opacity .25s ease-in-out;
+	max-height: 50%;
+	overflow-y: auto;
 }
 
 #hovercard:not(.popup) {
