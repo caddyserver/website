@@ -30,6 +30,10 @@ If you don't have permission to bind to low ports, you can proxy from a higher p
 
 Then make a request to [localhost](https://localhost) (or whatever address you specified in `--from`) to see it working!
 
+You can also automatically bind `caddy` reverse proxy to a public IP address and have a Let's Encrypt certificate issued for.
+This command will automatically issue a TLS certificate for `mywebsite.example.com` and start reverse proxy.
+
+<pre><code class="cmd bash">caddy reverse-proxy --from https://mywebsite.example.com --to 127.0.0.1:9000</code></pre>
 
 
 ## Caddyfile
