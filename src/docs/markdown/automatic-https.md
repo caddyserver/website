@@ -231,7 +231,7 @@ Here's what happens if there's an error obtaining or renewing a certificate:
 
 During retries with Let's Encrypt, Caddy switches to their [staging environment](https://letsencrypt.org/docs/staging-environment/) to avoid rate limit concerns. This isn't a perfect strategy, but in general it's helpful.
 
-ACME challenges take at least a few seconds, and internal rate limiting helps mitigate accidental abuse. Caddy uses internal rate limiting in addition to what you or the CA configure so that you can hand Caddy a platter with a million domain names and it will gradually -- but as fast as it can -- obtain certificates for all of them. Caddy's internal rate limit is currently 10 attempts per ACME account per minute.
+ACME challenges take at least a few seconds, and internal rate limiting helps mitigate accidental abuse. Caddy uses internal rate limiting in addition to what you or the CA configure so that you can hand Caddy a platter with a million domain names and it will gradually -- but as fast as it can -- obtain certificates for all of them. Caddy's internal rate limit is currently 10 attempts per ACME account per 10 seconds.
 
 To avoid leaking resources, Caddy aborts in-flight tasks (including ACME transactions) when config is changed. While Caddy is capable of handling frequent config reloads, be mindful of operational considerations such as this, and consider batching config changes to reduce reloads and give Caddy a chance to actually finish obtaining certificates in the background.
 

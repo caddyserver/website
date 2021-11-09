@@ -8,7 +8,7 @@ An opinionated directive that proxies requests to a PHP FastCGI server such as p
 
 Caddy's [reverse_proxy](/docs/caddyfile/directives/reverse_proxy) is capable of serving any FastCGI application, but this directive is tailored specifically for PHP apps. This directive is actually just a convenient way to use a longer, more common configuration (below).
 
-It expects that any `index.php` at the site root acts as a router. If that is not desirable, either perform your own URI rewrite or use something like the [expanded form](#expanded-form) below and customize it to your needs.
+It expects that any `index.php` at the site root acts as a router. If that is not desirable, either reconfigure the `try_files` option to modify the default rewrite behaviour, or take the [expanded form](#expanded-form) below as a basis and customize it to your needs.
 
 It supports all the subdirectives of [reverse_proxy](/docs/caddyfile/directives/reverse_proxy) and passes them through to the underlying reverse_proxy handler, plus a few subdirectives that customize the FastCGI transport specifically.
 
@@ -22,6 +22,7 @@ php_fastcgi [<matcher>] <php-fpm_gateways...> {
 	split <substrings...>
 	env [<key> <value>]
 	index <filename>|off
+	try_files <files...>
 	resolve_root_symlink
 	dial_timeout  <duration>
 	read_timeout  <duration>
@@ -36,6 +37,7 @@ php_fastcgi [<matcher>] <php-fpm_gateways...> {
 - **split** sets the substrings for splitting the URI into two parts. The first matching substring will be used to split the "path info" from the path. The first piece is suffixed with the matching substring and will be assumed as the actual resource (CGI script) name. The second piece will be set to PATH_INFO for the CGI script to use. Default: `.php`
 - **env** sets an extra environment variable to the given value. Can be specified more than once for multiple environment variables.
 - **index** specifies the filename to treat as the directory index file. This affects the file matcher in the [expanded form](#expanded-form). Default: `index.php`. Can be set to `off` to disable rewriting to `index.php` when a matching file is not found.
+- **try_files** specifies an override for the default try-files rewrite. See the [`try_files` directive](/docs/caddyfile/directives/try_files) for details. Default: `{path} {path}/index.php index.php`.
 - **resolve_root_symlink** enables resolving the `root` directory to its actual value by evaluating a symbolic link, if one exists.
 - **dial_timeout** is how long to wait when connecting to the upstream socket. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
 - **read_timeout** is how long to wait when reading from the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
@@ -103,4 +105,12 @@ The [`root` directive](/docs/caddyfile/directives/root) is often used to specify
 root * /var/www/html
 php_fastcgi 127.0.0.1:9000
 file_server
+```
+
+For a PHP site which does not use `index.php` as an entrypoint, you may fallback to emitting a `404` error instead. The error may be handled with the [`handle_errors` directive](/docs/caddyfile/directives/handle_errors):
+
+```caddy-d
+php_fastcgi localhost:9000 {
+	try_files {path} {path}/index.php =404
+}
 ```

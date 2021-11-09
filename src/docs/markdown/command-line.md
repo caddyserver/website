@@ -220,9 +220,12 @@ Prints CLI help text, optionally for a specific subcommand, then exits.
 
 <pre><code class="cmd bash">caddy list-modules
 	[--packages]
-	[--versions]</code></pre>
+	[--versions]
+	[--skip-standard]</code></pre>
 
 Prints the Caddy modules that are installed, optionally with package and/or version information from their associated Go modules, then exits.
+
+In some scripted situations, it may be redundant to print all of the standard modules as well, so you may use `--skip-standard` to omit those from the output.
 
 NOTE: Due to [a bug in Go](https://github.com/golang/go/issues/29228), version information is only available if Caddy is built as a dependency and not as the main module. Use [xcaddy](/docs/build#xcaddy) to make this easier.
 
@@ -362,13 +365,14 @@ Untrusts a root certificate from the local trust store(s). Intended for developm
 
 ### `caddy upgrade`
 
-<pre><code class="cmd bash">caddy upgrade</code></pre>
+<pre><code class="cmd bash">caddy upgrade
+	[--keep-backup]</code></pre>
 
 Replaces the current Caddy binary with the latest version from [our download page](https://caddyserver.com/download) with the same modules installed, including all third-party plugins that are registered on the Caddy website.
 
 Upgrades do not interrupt running servers; currently, the command only replaces the binary on disk. This might change in the future if we can figure out a good way to do it.
 
-The upgrade process is fault tolerant; the current binary is backed up first and automatically restored if anything goes wrong.
+The upgrade process is fault tolerant; the current binary is backed up first (copied beside the current one) and automatically restored if anything goes wrong. If you wish to keep the backup after the upgrade process is complete, you may use the `--keep-backup` option.
 
 This command may require elevated privileges if your user does not have permission to write to the executable file.
 
@@ -376,7 +380,8 @@ This command may require elevated privileges if your user does not have permissi
 
 ### `caddy add-package`
 
-<pre><code class="cmd bash">caddy add-package &lt;packages...&gt;</code></pre>
+<pre><code class="cmd bash">caddy add-package &lt;packages...&gt;
+	[--keep-backup]</code></pre>
 
 Similarly to `caddy upgrade`, replaces the current Caddy binary with the latest version with the same modules installed, _plus_ the packages listed as arguments included in the new binary. Find the list of packages you can install from [our download page](https://caddyserver.com/download). Each argument should be the full package name.
 
@@ -388,7 +393,8 @@ For example:
 
 ### `caddy remove-package`
 
-<pre><code class="cmd bash">caddy remove-package &lt;packages...&gt;</code></pre>
+<pre><code class="cmd bash">caddy remove-package &lt;packages...&gt;
+	[--keep-backup]</code></pre>
 
 Similarly to `caddy upgrade`, replaces the current Caddy binary with the latest version with the same modules installed, but _without_ the packages listed as arguments, if they existed in the current binary. Run `caddy list-modules --packages` to see the list of package names of non-standard modules included in the current binary.
 

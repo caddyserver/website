@@ -13,7 +13,7 @@ Rewrites the request URI path to the first of the listed files which exists in t
 try_files <files...>
 ```
 
-- **<files...>** is the list of files to try. The URI will be rewritten to the first one that exists. To match directories, append a trailing forward slash `/` to the path. All file paths are relative to the site [root](/docs/caddyfile/directives/root). Each argument may also contain a query string, in which case the query string will also be changed if it matches that particular file.
+- **<files...>** is the list of files to try. The URI will be rewritten to the first one that exists. To match directories, append a trailing forward slash `/` to the path. All file paths are relative to the site [root](/docs/caddyfile/directives/root). Each argument may also contain a query string, in which case the query string will also be changed if it matches that particular file. The last item in the list may be a number prefixed by `=` (e.g. `=404`), which as a fallback, will emit an error with that code; the error can be caught and handled with [`handle_errors`](/docs/caddyfile/directives/handle_errors).
 
 
 ## Expanded form
@@ -48,4 +48,10 @@ Same, but also match directories:
 
 ```caddy-d
 try_files {path} {path}/ /index.php?{query}&p={path}
+```
+
+Attempt to rewrite to a file or directory if it exists, otherwise emit a 404 error (which can be caught and handled with [`handle_errors`](/docs/caddyfile/directives/handle_errors)):
+
+```caddy-d
+try_files {path} {path}/ =404
 ```

@@ -203,6 +203,7 @@ expression {http.error.status_code} == 404
 ```
 
 
+
 ---
 ### file
 
@@ -218,7 +219,7 @@ file {
 By files.
 
 - `root` defines the directory in which to look for files. Default is the current working directory, or the `root` [variable](/docs/modules/http.handlers.vars) (`{http.vars.root}`) if set (can be set via the [`root` directive](/docs/caddyfile/directives/root)).
-- `try_files` checks files in its list that match the try_policy.
+- `try_files` checks files in its list that match the try_policy. If the `try_policy` is `first_exist`, then the last item in the list may be a number prefixed by `=` (e.g. `=404`), which as a fallback, will emit an error with that code; the error can be caught and handled with [`handle_errors`](/docs/caddyfile/directives/handle_errors).
 - `try_policy` specifies how to choose a file. Default is `first_exist`.
 	- `first_exist` checks for file existence. The first file that exists is selected.
 	- `smallest_size` chooses the file with the smallest size.
@@ -256,6 +257,13 @@ file {
 	try_files {path}.html {path} 
 }
 ```
+
+Same as above, except using the one-line shortcut, and falling back to emitting a 404 error if a file is not found.
+
+```caddy-d
+file {path}.html {path} =404
+```
+
 
 
 ---
@@ -301,6 +309,7 @@ Match requests that do not have the `Foo` header field at all:
 ```
 
 
+
 ---
 ### header_regexp
 
@@ -309,6 +318,8 @@ header_regexp [<name>] <field> <regexp>
 ```
 
 Like `header`, but supports regular expressions. Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) like `{re.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
+
+The regular expression language used is RE2, included in Go. See the [RE2 syntax reference](https://github.com/google/re2/wiki/Syntax) and the [Go regexp syntax overview](https://pkg.go.dev/regexp/syntax).
 
 Only one regular expression is supported per header field. Multiple different fields will be AND'ed.
 
@@ -319,6 +330,7 @@ Match requests where the Cookie header contains `login_` followed by a hex strin
 ```caddy-d
 header_regexp login Cookie login_([a-f0-9]+)
 ```
+
 
 
 ---
@@ -337,6 +349,7 @@ Multiple `host` matchers will be OR'ed together.
 ```caddy-d
 host sub.example.com
 ```
+
 
 
 ---
@@ -363,6 +376,7 @@ Match requests with the `PUT` or `DELETE` methods.
 ```caddy-d
 method PUT DELETE
 ```
+
 
 
 ---
@@ -415,6 +429,7 @@ not {
 ```
 
 
+
 ---
 ### path
 
@@ -429,7 +444,10 @@ By request path, meaning the path component of the request's URI. Path matches a
 - On both sides, for a substring match (`*/contains/*`)
 - In the middle, for a globular match (`/accounts/*/info`)
 
+The request path is URL-decoded, lowercased (to be case insensitive), and cleaned (to collapse doubled-up slashes and directory traversal dots) before matching. For example `/foo*` will also match `/FOO`, `//foo` and `/%2F/foo`.
+
 Multiple `path` matchers will be OR'ed together.
+
 
 
 ---
@@ -440,6 +458,10 @@ path_regexp [<name>] <regexp>
 ```
 
 Like `path`, but supports regular expressions. Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) like `{re.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
+
+The request path is URL-decoded, and cleaned (to collapse doubled-up slashes and directory traversal dots) before matching. For example `/foo*` will also match `//foo` and `/%2F/foo`.
+
+The regular expression language used is RE2, included in Go. See the [RE2 syntax reference](https://github.com/google/re2/wiki/Syntax) and the [Go regexp syntax overview](https://pkg.go.dev/regexp/syntax).
 
 There can only be one `path_regexp` matcher per named matcher.
 
@@ -452,6 +474,7 @@ path_regexp static \.([a-f0-9]{6})\.(css|js)$
 ```
 
 
+
 ---
 ### protocol
 
@@ -462,6 +485,7 @@ protocol http|https|grpc
 By request protocol.
 
 There can only be one `protocol` matcher per named matcher.
+
 
 
 ---
@@ -482,6 +506,7 @@ Match requests with a `sort` query parameter with the value `asc`
 ```caddy-d
 query sort=asc
 ```
+
 
 
 ---

@@ -252,6 +252,7 @@ You can use any [Caddy placeholders](/docs/conventions#placeholders) in the Cadd
 | `{tls_client_serial}`      | `{http.request.tls.client.serial}`      |
 | `{tls_client_subject}`     | `{http.request.tls.client.subject}`     |
 | `{tls_client_certificate_pem}` | `{http.request.tls.client.certificate_pem}` |
+| `{tls_client_certificate_der_base64}` | `{http.request.tls.client.certificate_der_base64}` |
 | `{upstream_hostport}` | `{http.reverse_proxy.upstream.hostport}` |
 
 
