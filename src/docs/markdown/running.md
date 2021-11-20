@@ -60,6 +60,10 @@ You can stop the service with:
 	Do not stop the service to change Caddy's configuration. Stopping the server will incur downtime. Use the reload command instead.
 </aside>
 
+The Caddy process will run as the `caddy` user, which has its `$HOME` set to `/var/lib/caddy`. This means that:
+- The default [data storage location](/docs/conventions#data-directory) (for certificates and other state information) will be in `/var/lib/caddy/.local/share/caddy`.
+- The default [config storage location](/docs/conventions#configuration-directory) (for the auto-saved JSON config, primarily useful for the `caddy-api` service) will be in `/var/lib/caddy/.config/caddy`.
+
 
 ### Manual Installation
 
