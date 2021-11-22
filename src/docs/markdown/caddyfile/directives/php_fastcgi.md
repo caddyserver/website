@@ -54,7 +54,7 @@ Since this directive is an opinionated wrapper over a reverse proxy, you can use
 
 ## Expanded form
 
-The `php_fastcgi` directive (with none of the subdirectives configured) is the same as the following configuration. Most modern PHP apps work well with this preset. If yours does not, feel free to borrow from this and customize it as needed instead of using the `php_fastcgi` shortcut.
+The `php_fastcgi` directive (without subdirectives) is the same as the following configuration. Most modern PHP apps work well with this preset. If yours does not, feel free to borrow from this and customize it as needed instead of using the `php_fastcgi` shortcut.
 
 ```caddy-d
 route {
@@ -84,7 +84,6 @@ route {
 
 ### Explanation
 
-Since the above expanded form may be hard to follow, here's an in-depth explanation of what it directive does, and why it works this way.
 
 - The first section deals with canonicalizing the request path. The goal is to ensure that requests that target a directory on disk actually have the trailing slash `/` added to the request path, so that only a single URL is valid for requests to that directory.
 
