@@ -110,7 +110,7 @@ Possible options are:
 ## General Options
 
 ##### `debug`
-Enables debug mode, which sets the log level to `DEBUG` for the default logger. This may reveal more information about Caddy's internals. Enable this before asking for help on the [community forums](https://caddy.community)!
+Enables debug mode, which sets the log level to `DEBUG` for the default logger. This reveals more details that can be useful when troubleshooting (and is very verbose in production). We ask that you enable this before asking for help on the [community forums](https://caddy.community).
 
 
 ##### `http_port`
@@ -122,9 +122,9 @@ The port for the server to use for HTTPS. For internal use only; does not change
 
 
 ##### `order`
-Sets or changes the [standard order](/docs/caddyfile/directives#directive-order) of HTTP handler directive(s). Can set directives to be ordered `first` or `last`, or inserted `before` or `after` another directive.
+Assigns an order to HTTP handler directive(s). As HTTP handlers execute in a sequential chain, it is necessary for the handlers to be executed in the right order. Standard directives have [a pre-defined order](/docs/caddyfile/directives#directive-order), but if using third-party HTTP handler modules, you'll need to define the order explicitly by either using this option or placing the directive in a [`route` block](/docs/caddyfile/directives/route). Ordering can be described absolutely (`first` or `last`), or relatively (`before` or `after`) to another directive.
 
-For example, to make sure the [`replace-response` plugin's](https://github.com/caddyserver/replace-response) directive is ordered after `encode`, to make sure it manipulates the response body before compression:
+For example, to use the [`replace-response` plugin](https://github.com/caddyserver/replace-response), you'd want to make sure its directive is ordered after `encode` so that it can perform replacements before the response is encoded (because responses flow up the handler chain, not down):
 
 ```caddy-d
 order replace after encode
@@ -140,7 +140,7 @@ For example, to change the file system's storage location:
 storage file_system /path/to/custom/location
 ```
 
-Changing the storage location is typically done when needing to sync Caddy's storage across multiple instances of Caddy, to make sure they all use the same certificates and keys. See the [Automatic HTTPS section on storage](/docs/automatic-https#storage) for more details.
+Customizing the storage module is typically needed when syncing Caddy's storage across multiple instances of Caddy to make sure they all use the same certificates and keys. See the [Automatic HTTPS section on storage](/docs/automatic-https#storage) for more details.
 
 
 ##### `storage_clean_interval`
@@ -150,7 +150,7 @@ Storage will always be cleaned when the process first starts. Then, a new cleani
 
 
 ##### `admin`
-Customizes the [admin API endpoint](/docs/api). If `off`, then the admin endpoint will be disabled. If disabled, config changes will be impossible without stopping and starting the server. Default: `localhost:2019`.
+Customizes the [admin API endpoint](/docs/api). If `off`, then the admin endpoint will be disabled. If disabled, config changes will be impossible without stopping and starting the server.
 
 - **origins** configures the list of remotes/origins that are allowed to connect to the endpoint.
 
