@@ -84,7 +84,6 @@ route {
 
 ### Explanation
 
-
 - The first section deals with canonicalizing the request path. The goal is to ensure that requests that target a directory on disk actually have the trailing slash `/` added to the request path, so that only a single URL is valid for requests to that directory.
 
   This is performed by using a request matcher that matches only requests that _don't_ end in a slash, and which map to a directory on disk which contains an `index.php` file, and if it matches, performs a HTTP 308 redirect with the trailing slash appended. So, for example it would redirect the request to path `/foo` to `/foo/` (appending a `/`, to canonicalize the path to the directory), if `/foo/index.php` exists on disk.
