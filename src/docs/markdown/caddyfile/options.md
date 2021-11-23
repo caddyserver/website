@@ -106,27 +106,48 @@ Possible options are:
 }
 ```
 
+
 ## General Options
 
 ##### `debug`
-Enables debug mode, which sets all log levels to debug (unless otherwise specified).
+Enables debug mode, which sets the log level to `DEBUG` for the default logger. This reveals more details that can be useful when troubleshooting (and is very verbose in production). We ask that you enable this before asking for help on the [community forums](https://caddy.community).
+
 
 ##### `http_port`
 The port for the server to use for HTTP. For internal use only; does not change the HTTP port for clients. Default: `80`
 
+
 ##### `https_port`
 The port for the server to use for HTTPS. For internal use only; does not change the HTTPS port for clients. Default: `443`
 
+
 ##### `order`
-Sets or changes the standard order of HTTP handler directive(s). Can set directives to be `first` or `last`, or `before` or `after` another directive.
+Assigns an order to HTTP handler directive(s). As HTTP handlers execute in a sequential chain, it is necessary for the handlers to be executed in the right order. Standard directives have [a pre-defined order](/docs/caddyfile/directives#directive-order), but if using third-party HTTP handler modules, you'll need to define the order explicitly by either using this option or placing the directive in a [`route` block](/docs/caddyfile/directives/route). Ordering can be described absolutely (`first` or `last`), or relatively (`before` or `after`) to another directive.
+
+For example, to use the [`replace-response` plugin](https://github.com/caddyserver/replace-response), you'd want to make sure its directive is ordered after `encode` so that it can perform replacements before the response is encoded (because responses flow up the handler chain, not down):
+
+```caddy-d
+order replace after encode
+```
+
 
 ##### `storage`
 Configures Caddy's storage mechanism. The default is [`file_system`](/docs/json/storage/file_system/). There are many other available [storage modules](/docs/json/storage/) provided as plugins.
+
+For example, to change the file system's storage location:
+
+```caddy-d
+storage file_system /path/to/custom/location
+```
+
+Customizing the storage module is typically needed when syncing Caddy's storage across multiple instances of Caddy to make sure they all use the same certificates and keys. See the [Automatic HTTPS section on storage](/docs/automatic-https#storage) for more details.
+
 
 ##### `storage_clean_interval`
 How often to scan storage units for old or expired assets and remove them. These scans exert lots of reads (and list operations) on the storage module, so choose a longer interval for large deployments. The value is a [duration value](/docs/conventions#durations). Default: 24h.
 
 Storage will always be cleaned when the process first starts. Then, a new cleaning will be started this duration after the previous cleaning started if the previous cleaning finished in less than half the time of this interval (otherwise next start will be skipped).
+
 
 ##### `admin`
 Customizes the [admin API endpoint](/docs/api). If `off`, then the admin endpoint will be disabled. If disabled, config changes will be impossible without stopping and starting the server.
@@ -134,6 +155,7 @@ Customizes the [admin API endpoint](/docs/api). If `off`, then the admin endpoin
 - **origins** configures the list of remotes/origins that are allowed to connect to the endpoint.
 
 - **enforce_origin** enables enforcement of the Origin header. (This is different from enforcing origins generally, which is always done.)
+
 
 ##### `log`
 Customizes the named logger. The name can be passed to indicate a specific logger to customize the behavior for. If no name is specified, the behavior of the default logger is modified. This option can be specified multiple times to configure different loggers. You can read more about the default logger and other logging behaviors in the [logging documentation](/docs/logging).
@@ -146,7 +168,8 @@ Customizes the named logger. The name can be passed to indicate a specific logge
 
 
 ##### `grace_period`
-Defines the grace period for shutting down HTTP servers during config reloads. If clients do not finish their requests within the grace period, the server will be forcefully terminated to allow the reload to complete and free up resources.
+Defines the grace period for shutting down HTTP servers during config reloads. If clients do not finish their requests within the grace period, the server will be forcefully terminated to allow the reload to complete and free up resources. By default, no grace period is set.
+
 
 
 ## TLS Options
@@ -154,29 +177,38 @@ Defines the grace period for shutting down HTTP servers during config reloads. I
 ##### `auto_https`
 Configure automatic HTTPS. It can be disabled entirely (`off`), disable only HTTP-to-HTTPS redirects (`disable_redirects`), or be configured to automate certificates even for names which appear on manually-loaded certificates (`ignore_loaded_certs`). See the [Automatic HTTPS](/docs/automatic-https) page for more details.
 
+
 ##### `email`
 Your email address. Mainly used when creating an ACME account with your CA, and is highly recommended in case there are problems with your certificates.
+
 
 ##### `default_sni`
 Sets a default TLS ServerName for when clients do not use SNI in their ClientHello.
 
+
 ##### `local_certs`
 Causes all certificates to be issued internally by default, rather than through a (public) ACME CA such as Let's Encrypt. This is useful in development environments.
+
 
 ##### `skip_install_trust`
 Skips the attempts to install the local CA's root into the system trust store, as well as into Java and Mozilla Firefox trust stores.
 
+
 ##### `acme_ca`
 Specifies the URL to the ACME CA's directory. It is strongly recommended to set this to Let's Encrypt's [staging endpoint](https://letsencrypt.org/docs/staging-environment/) for testing or development. Default: ZeroSSL and Let's Encrypt's production endpoints.
+
 
 ##### `acme_ca_root`
 Specifies a PEM file that contains a trusted root certificate for ACME CA endpoints, if not in the system trust store.
 
+
 ##### `acme_eab`
 Specifies an External Account Binding to use for all ACME transactions.
 
+
 ##### `acme_dns`
 Configures the ACME DNS challenge provider to use for all ACME transactions. The tokens following the name of the provider set up the provider the same as if specified in the [`tls` directive's `acme` issuer](/docs/caddyfile/directives/tls#acme).
+
 
 ##### `on_demand_tls`
 Configures [On-Demand TLS](/docs/automatic-https#on-demand-tls) where it is enabled, but does not enable it (to enable it, use the [on_demand `tls` subdirective](/docs/caddyfile/directives/tls#syntax)). Highly recommended if using in production environments, to prevent abuse.
@@ -185,14 +217,18 @@ Configures [On-Demand TLS](/docs/automatic-https#on-demand-tls) where it is enab
 
 - **interval** and **burst** allows `<n>` certificate operations within `<duration>` interval.
 
+
 ##### `key_type`
-Specifies the type of key to generate for TLS certificates; only change this if you have a specific need to customize it.
+Specifies the type of key to generate for TLS certificates; only change this if you have a specific need to customize it. The possible values are: `ed25519`, `p256`, `p384`, `rsa2048`, `rsa4096`.
+
 
 ##### `cert_issuer`
 Defines the issuer (or source) of TLS certificates. The tokens following the name of the issuer set up the issuer the same as if specified in the [`tls` directive](/docs/caddyfile/directives/tls#issuer). May be repeated if you wish to configure more than one issuer to try. They will be tried in the order they are defined.
 
+
 ##### `ocsp_stapling`
 Can be set to `off` to disable OCSP stapling. Useful in environments where responders are not reachable due to firewalls.
+
 
 ##### `preferred_chains`
 If your CA provides multiple certificate chains, you can use this option to specify which chain Caddy should prefer. Set one of the following options:
@@ -201,7 +237,8 @@ If your CA provides multiple certificate chains, you can use this option to spec
 - **root_common_name** is a list of one or more common names; Caddy will choose the first chain that has a root that matches with at least one of the specified common names.
 - **any_common_name** is a list of one or more common names; Caddy will choose the first chain that has an issuer that matches with at least one of the specified common names.
 
-Note! Specifying `preferred_chains` as a global option will affect all issuers if there isn't any [overriding issuer level config](/docs/caddyfile/directives/tls#acme).
+Note that specifying `preferred_chains` as a global option will affect all issuers if there isn't any [overriding issuer level config](/docs/caddyfile/directives/tls#acme).
+
 
 
 ## Server Options
@@ -250,6 +287,7 @@ listener_wrappers {
 }
 ```
 
+
 ##### `timeouts`
 
 - **read_body** is a [duration value](/docs/conventions#durations) that sets how long to allow a read from a client's upload. Setting this to a short, non-zero value can mitigate slowloris attacks, but may also affect legitimately slow clients. Defaults to no timeout.
@@ -260,9 +298,11 @@ listener_wrappers {
 
 - **idle** is a [duration value](/docs/conventions#durations) that sets the maximum time to wait for the next request when keep-alives are enabled. Defaults to 5 minutes to help avoid resource exhaustion.
 
+
 ##### `max_header_size`
 
 The maximum size to parse from a client's HTTP request headers. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
+
 
 ##### `protocol`
 
