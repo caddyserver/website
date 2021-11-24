@@ -44,7 +44,7 @@ php_fastcgi [<matcher>] <php-fpm_gateways...> {
 - **index** specifies the filename to treat as the directory index file. This affects the file matcher in the [expanded form](#expanded-form). Default: `index.php`. Can be set to `off` to disable rewriting to `index.php` when a matching file is not found.
 - **try_files** specifies an override for the default try-files rewrite. See the [`try_files` directive](/docs/caddyfile/directives/try_files) for details. Default: `{path} {path}/index.php index.php`.
 - **resolve_root_symlink** enables resolving the `root` directory to its actual value by evaluating a symbolic link, if one exists.
-- **dial_timeout** is how long to wait when connecting to the upstream socket. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
+- **dial_timeout** is how long to wait when connecting to the upstream socket. Accepts [duration values](/docs/conventions#durations). Default: `3s`.
 - **read_timeout** is how long to wait when reading from the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
 - **write_timeout** is how long to wait when sending to the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
 

@@ -242,6 +242,7 @@ transport http {
 	tls_trusted_ca_certs <pem_files...>
     tls_server_name <sni>
 	keepalive [off|<duration>]
+	keepalive_interval <interval>
 	keepalive_idle_conns <max_count>
     keepalive_idle_conns_per_host <count>
     versions <versions...>
@@ -250,25 +251,26 @@ transport http {
 }
 ```
 
-- **read_buffer** <span id="read_buffer"/> is the size of the read buffer in bytes.
-- **write_buffer** <span id="write_buffer"/> is the size of the write buffer in bytes.
-- **max_response_header** <span id="max_response_header"/> is the maximum amount of bytes to read from response headers.
-- **dial_timeout** <span id="dial_timeout"/> is how long to wait when connecting to the upstream socket. Accepts [duration values](/docs/conventions#durations).
-- **dial_fallback_delay** <span id="dial_fallback_delay"/> is how long to wait before spawning an RFC 6555 Fast Fallback connection. A negative value disables this. Accepts [duration values](/docs/conventions#durations).
-- **response_header_timeout** <span id="response_header_timeout"/> is how long to wait for reading response headers from the upstream. Accepts [duration values](/docs/conventions#durations).
-- **expect_continue_timeout** <span id="expect_continue_timeout"/> is how long to wait for the upstreams's first response headers after fully writing the request headers if the request has the header `Expect: 100-continue`. Accepts [duration values](/docs/conventions#durations).
+- **read_buffer** <span id="read_buffer"/> is the size of the read buffer in bytes. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). Default: `4KiB`.
+- **write_buffer** <span id="write_buffer"/> is the size of the write buffer in bytes. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). Default: `4KiB`.
+- **max_response_header** <span id="max_response_header"/> is the maximum amount of bytes to read from response headers. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). Default: `10MiB`.
+- **dial_timeout** <span id="dial_timeout"/> is how long to wait when connecting to the upstream socket. Accepts [duration values](/docs/conventions#durations). Default: No timeout.
+- **dial_fallback_delay** <span id="dial_fallback_delay"/> is how long to wait before spawning an RFC 6555 Fast Fallback connection. A negative value disables this. Accepts [duration values](/docs/conventions#durations). Default: `300ms`.
+- **response_header_timeout** <span id="response_header_timeout"/> is how long to wait for reading response headers from the upstream. Accepts [duration values](/docs/conventions#durations). Default: No timeout.
+- **expect_continue_timeout** <span id="expect_continue_timeout"/> is how long to wait for the upstreams's first response headers after fully writing the request headers if the request has the header `Expect: 100-continue`. Accepts [duration values](/docs/conventions#durations). Default: No timeout.
 - **tls** <span id="tls"/> uses HTTPS with the backend. This will be enabled automatically if you specify backends using the `https://` scheme or port `:443`.
 - **tls_client_auth** <span id="tls_client_auth"/> enables TLS client authentication one of two ways: (1) by specifying a domain name for which Caddy should obtain a certificate and keep it renewed, or (2) by specifying a certificate and key file to present for TLS client authentication with the backend.
 - **tls_insecure_skip_verify** <span id="tls_insecure_skip_verify"/> turns off security. _Do not use in production._
-- **tls_timeout** <span id="tls_timeout"/> is a [duration value](/docs/conventions#durations) that specifies how long to wait for the TLS handshake to complete.
+- **tls_timeout** <span id="tls_timeout"/> is a [duration value](/docs/conventions#durations) that specifies how long to wait for the TLS handshake to complete. Default: No timeout.
 - **tls_trusted_ca_certs** <span id="tls_trusted_ca_certs"/> is a list of PEM files that specify CA public keys to trust when connecting to the backend.
 - **tls_server_name** <span id="tls_server_name"/> sets the ServerName (SNI) to put in the ClientHello; only needed if the remote server requires it.
-- **keepalive** <span id="keepalive"/> is either `off` or a [duration value](/docs/conventions#durations) that specifies how long to keep connections open.
-- **keepalive_idle_conns** <span id="keepalive_idle_conns"/> defines the maximum number of connections to keep alive.
-- **keepalive_idle_conns_per_host** <span id="keepalive_idle_conns_per_host"/> if non-zero, controls the maximum idle (keep-alive) connections to keep per-host. Default: `32`
+- **keepalive** <span id="keepalive"/> is either `off` or a [duration value](/docs/conventions#durations) that specifies how long to keep connections open (timeout). Default: `2m`.
+- **keepalive_interval** <span id="keepalive"/> is a [duration value](/docs/conventions#durations) that specifies how often to probe for liveness. Default: `30s`.
+- **keepalive_idle_conns** <span id="keepalive_idle_conns"/> defines the maximum number of connections to keep alive. Default: No limit.
+- **keepalive_idle_conns_per_host** <span id="keepalive_idle_conns_per_host"/> if non-zero, controls the maximum idle (keep-alive) connections to keep per-host. Default: `32`.
 - **versions** <span id="versions"/> allows customizing which versions of HTTP to support. As a special case, "h2c" is a valid value which will enable cleartext HTTP/2 connections to the upstream (however, this is a non-standard feature that does not use Go's default HTTP transport, so it is exclusive of other features; subject to change or removal). Default: `1.1 2`, or if scheme is `h2c://`, `h2c 2`
 - **compression** <span id="compression"/> can be used to disable compression to the backend by setting it to `off`.
-- **max_conns_per_host** <span id="max_conns_per_host"/> optionally limits the total number of connections per host, including connections in the dialing, active, and idle states. Has no limit by default.
+- **max_conns_per_host** <span id="max_conns_per_host"/> optionally limits the total number of connections per host, including connections in the dialing, active, and idle states. Default: No limit.
 
 
 
@@ -290,7 +292,7 @@ transport fastcgi {
 - **split** <span id="split"/> is where to split the path to get PATH_INFO at the end of the URI.
 - **env** <span id="env"/> sets an extra environment variable to the given value. Can be specified more than once for multiple environment variables.
 - **resolve_root_symlink** <span id="resolve_root_symlink"/> enables resolving the `root` directory to its actual value by evaluating a symbolic link, if one exists.
-- **dial_timeout** <span id="dial_timeout"/> is how long to wait when connecting to the upstream socket. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
+- **dial_timeout** <span id="dial_timeout"/> is how long to wait when connecting to the upstream socket. Accepts [duration values](/docs/conventions#durations). Default: `3s`.
 - **read_timeout** <span id="read_timeout"/> is how long to wait when reading from the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
 - **write_timeout** <span id="write_timeout"/> is how long to wait when sending to the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
 
