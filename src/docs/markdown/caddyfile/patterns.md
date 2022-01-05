@@ -16,6 +16,7 @@ These are not drop-in solutions; you will have to customize your domain name, po
 - [Redirect `www.` subdomain](#redirect-www-subdomain)
 - [Trailing slashes](#trailing-slashes)
 - [Wildcard certificates](#wildcard-certificates)
+- [Single-page apps (SPAs)](#single-page-apps-spas)
 
 
 ## Static file server
@@ -156,3 +157,36 @@ If you need to serve multiple subdomains with the same wildcard certificate, the
 ```
 
 Note that you must enable the [ACME DNS challenge](/docs/automatic-https#dns-challenge) to have Caddy automatically manage wildcard certificates.
+
+
+## Single-page apps (SPAs)
+
+When a web page does its own routing, servers may receive lots of requests for pages that don't exist server-side, but which are renderable client-side as long as the singular index file is served instead. Web applications architected like this are known as SPAs, or single-page apps.
+
+The main idea is to have the server "try files" to see if the requested file exists server-side, and if not, fall back to an index file where the client does the routing (usually with client-side JavaScript): `try_files {path} /index.html`
+
+The most basic SPA config usually looks something like this:
+
+```caddy
+example.com
+
+root * /path/to/site
+try_files {path} /index.html
+file_server
+```
+
+If your SPA is coupled with an API or other server-side-only endpoints, you will want to use `handle` blocks to treat them exclusively:
+
+```caddy
+example.com
+
+handle /api/* {
+	reverse_proxy backend:8000
+}
+
+handle {
+	root * /path/to/site
+	try_files {path} /index.html
+	file_server
+}
+```
