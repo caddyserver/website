@@ -375,6 +375,15 @@ reverse_proxy https://example.com {
 ```
 
 
+Strip a path prefix before proxying:
+
+```caddy-d
+handle_path /prefix/* {
+	reverse_proxy localhost:9000
+}
+```
+
+
 Replace a path prefix before proxying:
 
 ```caddy-d
