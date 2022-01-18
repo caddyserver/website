@@ -29,7 +29,7 @@ There are other directives that can wrap HTTP handler directives, but each has i
 
 - [`handle_path`](handle_path) does the same as `handle`, but it strips a prefix from the request before running its handlers.
 - [`handle_errors`](handle_errors) is like `handle`, but is only invoked when Caddy encounters an error during request handling.
-- [`route`](route) wraps other directives like `handle` does, but with two distinctions: 1) route blocks are not mutually exclusive to each other, and 2) directives within a route are not [re-ordered]([directive order](/docs/caddyfile/directives#directive-order), giving you more control if needed.
+- [`route`](route) wraps other directives like `handle` does, but with two distinctions: 1) route blocks are not mutually exclusive to each other, and 2) directives within a route are not [re-ordered](/docs/caddyfile/directives#directive-order), giving you more control if needed.
 
 ## Examples
 
