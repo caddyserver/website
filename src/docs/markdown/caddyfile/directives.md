@@ -62,6 +62,7 @@ Directive | Description
 **[route](/docs/caddyfile/directives/route)** | A group of directives treated literally as single unit
 **[templates](/docs/caddyfile/directives/templates)** | Execute templates on the response
 **[tls](/docs/caddyfile/directives/tls)** | Customize TLS settings
+**[tracing](/docs/caddyfile/directives/tracing)** | Integration with OpenTelemetry tracing
 **[try_files](/docs/caddyfile/directives/try_files)** | Rewrite that depends on file existence
 **[uri](/docs/caddyfile/directives/uri)** | Manipulate the URI
 
@@ -104,6 +105,8 @@ Because matcher tokens all work the same, the various possibilities for the matc
 Many directives manipulate the HTTP handler chain. The order in which those directives are evaluated matters, so a default ordering is hard-coded into Caddy:
 
 ```caddy-d
+tracing
+
 map
 root
 
