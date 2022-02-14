@@ -32,7 +32,7 @@ by the [OpenTelemetry Environment Variable Specification](https://github.com/ope
 For the exporter configuration details, please
 see [spec](https://github.com/open-telemetry/opentelemetry-specification/blob/v1.7.0/specification/protocol/exporter.md).
 
-### Example
+For example:
 
 ```bash
 export OTEL_EXPORTER_OTLP_HEADERS="myAuthHeader=myToken,anotherHeader=value"
