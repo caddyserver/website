@@ -39,7 +39,7 @@ export OTEL_EXPORTER_OTLP_HEADERS="myAuthHeader=myToken,anotherHeader=value"
 export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://my-otlp-endpoint:55680
 ```
 
-### Caddyfile configuration example
+## Examples
 
 Here is a **Caddyfile** example:
 
