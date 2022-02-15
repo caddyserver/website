@@ -8,7 +8,7 @@ It provides integration with OpenTelemetry tracing facilities.
 
 When enabled, it will propagate an existing trace context or initialize a new one.
 
-It is based on `https://github.com/open-telemetry/opentelemetry-go`.
+It is based on [github.com/open-telemetry/opentelemetry-go](https://github.com/open-telemetry/opentelemetry-go).
 
 It uses `gRPC` as an exporter protocol and  W3C `tracecontext` and `baggage` as propagators.
 
