@@ -168,7 +168,7 @@ function beginRenderingInto($tpl, moduleID, module) {
 			let { pkg, _ } = splitTypeName(module.structure.type_name);
 			$('.nonstandard-project-link', $tpl).attr('href', module.repo).text(module.repo);
 			$('.nonstandard-package-path', $tpl).text(pkg);
-			$('.nonstandard-notice', $tpl).prepend(nonStandardFlag).show();
+			$('.nonstandard-notice', $tpl).css('display', 'block').prepend(nonStandardFlag); // for some reason show() dosen't work
 		}
 
 		var $repoName = $('<span/>').text(stripScheme(module.repo));
