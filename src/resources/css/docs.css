@@ -520,8 +520,9 @@ article .json a {
 	position: absolute;
 	font-size: 16px;
 	transition: transform .25s ease-in-out, opacity .25s ease-in-out;
-	max-height: 50%;
-	overflow-y: auto;
+	/* TODO: This would be nice, but it breaks the arrow-box... */
+	/* max-height: 50%;
+	overflow-y: auto; */
 }
 
 #hovercard:not(.popup) {
