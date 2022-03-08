@@ -23,12 +23,19 @@ The basic idea is that you first type the address of your site, then the feature
 ## Menu
 
 - #### [Quick start guide](/docs/quick-starts/caddyfile)
+  A good place to begin getting familiar with the Caddyfile.
 - #### [Full Caddyfile tutorial](/docs/caddyfile-tutorial)
+  Learn to do a variety of common things with the Caddyfile.
 - #### [Caddyfile concepts](/docs/caddyfile/concepts)
+  Required reading! Structure, site addresses, matchers, placeholders, and more.
 - #### [Directives](/docs/caddyfile/directives)
+  Keywords at the beginning of lines that enable features for your sites.
 - #### [Request matchers](/docs/caddyfile/matchers)
+  Filter requests by using matchers with your directives.
 - #### [Global options](/docs/caddyfile/options)
+  Settings that apply to the whole server rather than individual sites.
 - #### [Common patterns](/docs/caddyfile/patterns)
+  Simple ways to do common things.
 <!-- - #### [Caddyfile specification](/docs/caddyfile/spec) TODO: Finish this -->
 
 
