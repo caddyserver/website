@@ -105,6 +105,25 @@ Possible options are:
 			strict_sni_host
 		}
 	}
+
+	# PKI Options
+	pki {
+		ca [<id>] {
+			name            <name>
+			root_cn         <name>
+			intermediate_cn <name>
+			root {
+				format <format>
+				cert   <path>
+				key    <path>
+			}
+			intermediate {
+				format <format>
+				cert   <path>
+				key    <path>
+			}
+		}
+	}
 }
 ```
 
@@ -333,3 +352,34 @@ If you wish to _not_ have these headers redacted, you may enable the `log_creden
 - **experimental_http3** enables experimental draft HTTP/3 support. Note that HTTP/3 is not a finished spec and client support is extremely limited. This option will go away in the future. _This option is not subject to compatibility promises._
 
 - **strict_sni_host** require that a request's `Host` header matches the value of the ServerName sent by the client's TLS ClientHello; often a necessary safeguard when using TLS client authentication.
+
+
+
+## PKI Options
+
+The PKI (Public Key Infrastructure) app is the foundation for Caddy's [Local HTTPS](/docs/automatic-https#local-https) and [ACME server](/docs/caddyfile/directives/acme_server) features. The app defines certificate authorities (CAs) which are capable of signing certificates.
+
+The default CA ID is `local`. If the ID is omitted when configuring the `ca`, then `local` is assumed.
+
+##### `name`
+The user-facing name of the certificate authority. Default: `Caddy Local Authority`
+
+##### `root_cn`
+The name to put in the CommonName field of the root certificate. Default: `{pki.ca.name} - {time.now.year} ECC Root`
+
+##### `intermediate_cn`
+The name to put in the CommonName field of the intermediate certificates. Default: `{pki.ca.name} - ECC Intermediate`
+
+##### `root`
+A key pair (certificate and private key) to use as the root for the CA. If not specified, one will be generated and managed automatically.
+
+- **format** is the format in which the certificate and private key are provided. Currently, only `pem_file` is supported, which is the default, so this field is optional.
+- **cert** is the certificate. This should be the path to a PEM file, when using `pem_file` format.
+- **key** is the private key. This should be the path to a PEM file, when using `pem_file` format.
+
+##### `intermediate`
+A key pair (certificate and private key) to use as the intermediate for the CA. If not specified, one will be generated and managed automatically.
+
+- **format** is the format in which the certificate and private key are provided. Currently, only `pem_file` is supported, which is the default, so this field is optional.
+- **cert** is the certificate. This should be the path to a PEM file, when using `pem_file` format.
+- **key** is the private key. This should be the path to a PEM file, when using `pem_file` format.

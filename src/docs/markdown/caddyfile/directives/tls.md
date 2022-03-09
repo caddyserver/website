@@ -173,7 +173,7 @@ Note that ZeroSSL is a default issuer, so configuring it explicitly is usually u
 
 #### internal
 
-Obtains certificates from an internal certificate authority.
+Obtains certificates from an internal certificate authority. 
 
 ```caddy
 ... internal {
@@ -181,7 +181,7 @@ Obtains certificates from an internal certificate authority.
 }
 ```
 
-- **ca** is the name of the internal CA to use. Default: `local`
+- **ca** is the name of the internal CA to use. Default: `local`. See the [PKI app global options](/docs/caddyfile/options#pki-options) to configure alternate CAs.
 
 
 
