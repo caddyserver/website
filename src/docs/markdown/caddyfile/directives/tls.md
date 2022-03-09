@@ -104,7 +104,7 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 	Multiple `trusted_*` directives may be used to specify multiple CA or leaf certificates. Client certificates which are not listed as one of the leaf certificates or signed by any of the specified CAs will be rejected according to the **mode**.
 
 - **issuer** <span id="issuer"/> configures a custom certificate issuer, or a source from which to obtain certificates. Which issuer is used and the options that follow in this segment depend on the issuer modules that are available (see below for the standard issuers; plugins may add others). Some of the other subdirectives such as `ca` and `dns` are actually shortcuts for configuring the `acme` issuer (and this subdirective was added later), so specifying this directive and some of the others is confusing and thus prohibited. This subdirective can be specified multiple times to configure multiple, redundant issuers; if one fails to issue a cert, the next one will be tried.
-- **get_certificate** <span id="mode"/> configures a module that can get a certificate at handshake-time. Specifying this implicitly enables on-demand TLS as if you had specified the `on_demand` subdirective. See below for standard "certificate getter" modules.
+- **get_certificate** <span id="mode"/> enables getting certificates from a _manager module_ at handshake-time. [See below for standard _certificate manager_ modules.](#certificate-managers)
 
 ### Issuers
 
@@ -188,34 +188,30 @@ Obtains certificates from an internal certificate authority.
 
 
 
-### Certificate Getters
+### Certificate Managers
 
-Certificate getter modules are distinct from issuer modules in that use of these modules imply that an external tool or service is managing the certificate, whereas an issuer module implies that Caddy is managing the certificate. Issuer modules take a Certificate Signing Request (CSR) as input, but certificate getter modules take a TLS ClientHello as input.
+Certificate manager modules are distinct from issuer modules in that use of manager modules implies that an external tool or service is managing the certificate, whereas an issuer module implies that Caddy itself is managing the certificate. (Issuer modules take a Certificate Signing Request (CSR) as input, but certificate manager modules take a TLS ClientHello as input.)
 
-These getter modules come standard with the `tls` directive:
+These manager modules come standard with the `tls` directive:
 
 #### tailscale
 
-Gets certificates from a locally-running Tailscale (or open source [Headscale](https://github.com/juanfont/headscale)) instance. [HTTPS must be enabled in your Tailscale account](https://tailscale.com/kb/1153/enabling-https/), and Caddy must have [permission to access the Tailscale socket](https://github.com/caddyserver/caddy/pull/4541#issuecomment-1021568348).
+Get certificates from a locally-running [Tailscale](https://tailscale.com) instance. [HTTPS must be enabled in your Tailscale account](https://tailscale.com/kb/1153/enabling-https/) (or your open source [Headscale server](https://github.com/juanfont/headscale)); and the Caddy process must either be running as root, or you must configure `tailscaled` to give your Caddy user [permission to fetch certificates](https://github.com/caddyserver/caddy/pull/4541#issuecomment-1021568348).
 
 ```caddy
-... tailscale {
-	cache
-}
+... tailscale
 ```
-
-- **cache** <span id="cache"/> enables caching, which causes Caddy to store the certificate in its in-memory cache and reuse it until it is close to expiring or expired. If cached, Tailscale will only be accessed if the certificate needs renewal.
 
 
 #### http
 
-Gets certificates by making an HTTP(S) request. The response must have a 200 status code and the body must contain a PEM chain including the full certificate (with intermediates) as well as the private key. By default, responses will be cached within Caddy until renewal is needed unless `Cache-Control: no-cache` is set in the response header.
+Get certificates by making an HTTP(S) request. The response must have a 200 status code and the body must contain a PEM chain including the full certificate (with intermediates) as well as the private key.
 
 ```caddy
 ... http <url>
 ```
 
-- **url** <span id="url"/> is the fully-qualified URL to which to make the request. It is strongly advised that this be a localhost endpoint for performance reasons.
+- **url** <span id="url"/> is the fully-qualified URL to which to make the request. It is strongly advised that this be a loopback endpoint for performance reasons.
 
 
 
