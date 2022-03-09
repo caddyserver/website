@@ -41,8 +41,8 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 		trusted_leaf_cert      <base64_der>
 		trusted_leaf_cert_file <filename>
 	}
-	issuer <issuer_name> [<params...>]
-	get_certificate <getter_name> [<params...>]
+	issuer          <issuer_name>  [<params...>]
+	get_certificate <manager_name> [<params...>]
 }
 ```
 
@@ -104,7 +104,7 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 	Multiple `trusted_*` directives may be used to specify multiple CA or leaf certificates. Client certificates which are not listed as one of the leaf certificates or signed by any of the specified CAs will be rejected according to the **mode**.
 
 - **issuer** <span id="issuer"/> configures a custom certificate issuer, or a source from which to obtain certificates. Which issuer is used and the options that follow in this segment depend on the issuer modules that are available (see below for the standard issuers; plugins may add others). Some of the other subdirectives such as `ca` and `dns` are actually shortcuts for configuring the `acme` issuer (and this subdirective was added later), so specifying this directive and some of the others is confusing and thus prohibited. This subdirective can be specified multiple times to configure multiple, redundant issuers; if one fails to issue a cert, the next one will be tried.
-- **get_certificate** <span id="get_certificate"/> enables getting certificates from a _manager module_ at handshake-time. [See below for standard _certificate manager_ modules.](#certificate-managers)
+- **get_certificate** <span id="get_certificate"/> enables getting certificates from a _manager module_ at handshake-time. [See below for standard certificate manager modules.](#certificate-managers)
 
 ### Issuers
 
@@ -190,7 +190,7 @@ Obtains certificates from an internal certificate authority.
 
 ### Certificate Managers
 
-Certificate manager modules are distinct from issuer modules in that use of manager modules implies that an external tool or service is managing the certificate, whereas an issuer module implies that Caddy itself is managing the certificate. (Issuer modules take a Certificate Signing Request (CSR) as input, but certificate manager modules take a TLS ClientHello as input.)
+Certificate manager modules are distinct from issuer modules in that use of manager modules implies that an external tool or service is keeping the certificate renewed, whereas an issuer module implies that Caddy itself is managing the certificate. (Issuer modules take a Certificate Signing Request (CSR) as input, but certificate manager modules take a TLS ClientHello as input.)
 
 These manager modules come standard with the `tls` directive:
 
@@ -198,8 +198,8 @@ These manager modules come standard with the `tls` directive:
 
 Get certificates from a locally-running [Tailscale](https://tailscale.com) instance. [HTTPS must be enabled in your Tailscale account](https://tailscale.com/kb/1153/enabling-https/) (or your open source [Headscale server](https://github.com/juanfont/headscale)); and the Caddy process must either be running as root, or you must configure `tailscaled` to give your Caddy user [permission to fetch certificates](https://github.com/caddyserver/caddy/pull/4541#issuecomment-1021568348).
 
-```caddy
-... tailscale
+```caddy-d
+get_certificate tailscale
 ```
 
 
@@ -207,8 +207,8 @@ Get certificates from a locally-running [Tailscale](https://tailscale.com) insta
 
 Get certificates by making an HTTP(S) request. The response must have a 200 status code and the body must contain a PEM chain including the full certificate (with intermediates) as well as the private key.
 
-```caddy
-... http <url>
+```caddy-d
+get_certificate http <url>
 ```
 
 - **url** <span id="url"/> is the fully-qualified URL to which to make the request. It is strongly advised that this be a local endpoint for performance reasons.
