@@ -48,8 +48,8 @@ Proxies requests to one or more backends with configurable transport, load balan
 ```caddy-d
 reverse_proxy [<matcher>] [<upstreams...>] {
     # backends
-    to <upstreams...>
-	...
+    to      <upstreams...>
+	dynamic <module> ...
 
     # load balancing
     lb_policy       <name> [<options...>]
@@ -106,6 +106,10 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 
 - **&lt;upstreams...&gt;** is a list of upstreams (backends) to which to proxy.
 - **to** <span id="to"/> is an alternate way to specify the list of upstreams, one (or more) per line.
+- **dynamic** <span id="dynamic"/> configures a _dynamic upstreams_ module. This allows getting the list of upstreams dynamically for every request. See [dynamic upstreams](#dynamic-upstreams) below for a description of standard dynamic upstream modules. Dynamic upstreams are retrieved at every proxy loop iteration (i.e. potentially multiple times per request if load balancing retries are enabled) and will be preferred over static upstreams. If an error occurs, the proxy will fall back to using any statically-configured upstreams.
+
+
+### Upstream addresses 
 
 Upstream addresses can take the form of a conventional [Caddy network address](/docs/conventions#network-addresses) or a URL that contains only scheme and host/port, with a special exception that the scheme may be prefixed by `srv+` to enable SRV DNS record lookups for load balancing. Valid examples:
 
@@ -126,6 +130,61 @@ Additionally, upstream addresses cannot contain paths or query strings, as that 
 If the address is not a URL (i.e. does not have a scheme), then placeholders can be used, but this makes the upstream dynamic, meaning that the potentially many different backends act as one upstream in terms of health checks and load balancing.
 
 When proxying over HTTPS, you may need to override the `Host` header (which by default, retains the value from the original request) such that the `Host` header matches the TLS SNI value, which is used by servers for routing and certificate selection. See the [Headers](#headers) section below for more details.
+
+
+#### Dynamic upstreams
+
+Caddy's reverse proxy comes standard with some dynamic upstream modules. Note that using dynamic upstreams has implications for load balancing and health checks, depending on specific policy configuration: active health checks do not run for dynamic upstreams; and load balancing and passive health checks are best served if the list of upstreams is relatively stable and consistent (especially with round-robin).
+
+
+##### SRV
+
+Retrieves upstreams from SRV DNS records.
+
+```caddy-d
+	dynamic srv [<name>] {
+		service   <service>
+		proto     <proto>
+		name      <name>
+		refresh   <interval>
+		resolvers <ip...>
+		dial_timeout        <duration>
+		dial_fallback_delay <duration>
+	}
+```
+
+- **&lt;name&gt;** - The full domain name of the record to look up (i.e. `_service._proto.name`).
+- **service** - The service component of the full name.
+- **proto** - The protocol component of the full name. Either `tcp` or `udp`.
+- **name** - The name component. Or, if `service` and `proto` are empty, the full domain name to query.
+- **refresh** - How often to refresh cached results. Default: `1m`
+- **resolvers** - List of resolvers to override system resolvers.
+- **dial_timeout** - Timeout for dialing the query.
+- **dial_fallback_delay** - Timeout for falling back from IPv6 to IPv6 via RFC 6555. Default: `300ms`
+
+
+
+##### A/AAAA
+
+Retrieves upstreams from A/AAAA DNS records.
+
+```caddy-d
+	dynamic a [<name> <port>] {
+		name      <name>
+		port      <port>
+		refresh   <interval>
+		resolvers <ip...>
+		dial_timeout        <duration>
+		dial_fallback_delay <duration>
+	}
+```
+
+- **&lt;name&gt;, name** - The domain name to query.
+- **&lt;port&gt;, port** - The port to use for the backend.
+- **refresh** - How often to refresh cached results. Default: `1m`
+- **resolvers** - List of resolvers to override system resolvers.
+- **dial_timeout** - Timeout for dialing the query.
+- **dial_fallback_delay** - Timeout for falling back from IPv6 to IPv6 via RFC 6555. Default: `300ms`
 
 
 
@@ -418,5 +477,21 @@ reverse_proxy localhost:8080 {
 		rewrite * /{http.reverse_proxy.status_code}.html
 		file_server
 	}
+}
+```
+
+Get backends dynamically from A/AAAA record DNS queries:
+
+```caddy-d
+reverse_proxy {
+	dynamic a example.com 9000
+}
+```
+
+Get backends dynamically from SRV record DNS queries:
+
+```caddy-d
+reverse_proxy {
+	dynamic srv _api._tcp.example.com
 }
 ```

@@ -518,7 +518,7 @@ query sort=asc
 remote_ip [forwarded] <ranges...>
 ```
 
-By remote (client) IP address. Accepts exact IPs or CIDR ranges. If the first argument is `forwarded`, then the first IP in the `X-Forwarded-For` request header, if present, will be preferred as the reference IP, rather than the immediate peer's IP, which is the default.
+By remote (client) IP address. Accepts exact IPs or CIDR ranges. If the first argument is `forwarded`, then the first IP in the `X-Forwarded-For` request header, if present, will be preferred as the reference IP, rather than the immediate peer's IP, which is the default. IPv6 zones are supported.
 
 Multiple `remote_ip` matchers will be OR'ed together.
 

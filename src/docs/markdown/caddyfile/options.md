@@ -65,7 +65,7 @@ Possible options are:
 	grace_period <duration>
 
 	# TLS Options
-	auto_https off|disable_redirects|ignore_loaded_certs
+	auto_https off|disable_redirects|ignore_loaded_certs|disable_certs
 	email <yours>
 	default_sni <name>
 	local_certs
@@ -205,7 +205,14 @@ Defines the grace period for shutting down HTTP servers during config reloads. I
 ## TLS Options
 
 ##### `auto_https`
-Configure automatic HTTPS. It can be disabled entirely (`off`), disable only HTTP-to-HTTPS redirects (`disable_redirects`), or be configured to automate certificates even for names which appear on manually-loaded certificates (`ignore_loaded_certs`). See the [Automatic HTTPS](/docs/automatic-https) page for more details.
+Configure automatic HTTPS. There are a few modes to choose from:
+
+- `off`: Disabled entirely. No certificate management or redirects.
+- `disable_redirects`: Disable only HTTP-to-HTTPS redirects.
+- `disable_certs`: Disable only certificate automation.
+- `ignore_loaded_certs`: Automate certificates even for names which appear on manually-loaded certificates
+
+See the [Automatic HTTPS](/docs/automatic-https) page for more details.
 
 
 ##### `email`
