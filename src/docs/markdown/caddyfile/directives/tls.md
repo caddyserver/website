@@ -177,12 +177,15 @@ Obtains certificates from an internal certificate authority.
 
 ```caddy
 ... internal {
-	ca <name>
+	ca       <name>
+	lifetime <duration>
+	sign_with_root
 }
 ```
 
-- **ca** is the name of the internal CA to use. Default: `local`. See the [PKI app global options](/docs/caddyfile/options#pki-options) to configure alternate CAs.
-
+- **ca** <span id="ca"/> is the name of the internal CA to use. Default: `local`. See the [PKI app global options](/docs/caddyfile/options#pki-options) to configure alternate CAs.
+- **lifetime** <span id="lifetime"/> is a [duration value](/docs/conventions#durations) that sets the validity period for interally issued leaf certificates. Default: 12h. It is NOT recommended to not change this, unless absolutely necessary.
+- **sign_with_root** <span id="sign_with_root"/> forces the root to be the issuer instead of the intermediate. This is NOT recommended and should only be used when devices/clients do not properly validate certificate chains (very uncommon).
 
 
 ## Examples
@@ -204,6 +207,16 @@ Use locally-trusted certificates, but managed on-demand intead of in the backgro
 ```caddy-d
 tls internal {
 	on_demand
+}
+```
+
+Use custom options for the internal CA (cannot use the `tls internal` shortcut):
+
+```caddy-d
+tls {
+	issuer internal {
+		ca foo
+	}
 }
 ```
 
