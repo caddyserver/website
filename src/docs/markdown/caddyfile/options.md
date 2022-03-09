@@ -49,6 +49,7 @@ Possible options are:
 		<options...>
 	}
 	storage_clean_interval <duration>
+	renew_interval <duration>
 	admin   off|<addr> {
 		origins <origins...>
 		enforce_origin
@@ -144,9 +145,13 @@ Customizing the storage module is typically needed when syncing Caddy's storage 
 
 
 ##### `storage_clean_interval`
-How often to scan storage units for old or expired assets and remove them. These scans exert lots of reads (and list operations) on the storage module, so choose a longer interval for large deployments. The value is a [duration value](/docs/conventions#durations). Default: 24h.
+How often to scan storage units for old or expired assets and remove them. These scans exert lots of reads (and list operations) on the storage module, so choose a longer interval for large deployments. The value is a [duration value](/docs/conventions#durations). Default: `24h`.
 
 Storage will always be cleaned when the process first starts. Then, a new cleaning will be started this duration after the previous cleaning started if the previous cleaning finished in less than half the time of this interval (otherwise next start will be skipped).
+
+
+##### `renew_interval`
+How often to scan all loaded, managed certificates for expiration, and trigger renewal if expired. Default: `10m`.
 
 
 ##### `admin`
