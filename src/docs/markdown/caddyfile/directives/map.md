@@ -31,7 +31,7 @@ map [<matcher>] <source> <destinations...> {
 
   The number of outputs for each mapping must not exceed the number of destinations; however, for convenience, there may be fewer outputs than destinations, and any missing outputs will be filled in implicitly.
   
-  If a regular expression was used as the input, then the capture groups can be referenced with `${capture_group}` where `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
+  If a regular expression was used as the input, then the capture groups can be referenced with `${group}` where `group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
 
 - **&lt;default&gt;** specifies the output values to store if no inputs are matched.
 

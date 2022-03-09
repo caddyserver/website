@@ -25,11 +25,14 @@ The `log` directive applies to the host/port of the site block it appears in, no
 - [Format modules](#format-modules)
   - [console](#console)
   - [json](#json)
-  - [single_field](#single-field)
   - [filter](#filter)
     - [delete](#delete)
 	- [replace](#replace)
 	- [ip_mask](#ip-mask)
+	- [query](#query)
+	- [cookie](#cookie)
+	- [regexp](#regexp)
+	- [hash](#hash)
 - [Examples](#examples)
 
 
@@ -160,9 +163,9 @@ format json
 
 #### single_field
 
-<span class="warning">⚠️ This format is deprecated, and will be removed in a future version.</span>
+<span class="warning">⚠️ This format is deprecated, and is removed in Caddy v2.5. To encode logs in common log format, please use the [`format-encoder`](https://github.com/caddyserver/format-encoder) plugin.</span>
 
-Writes only a single field from the structure log entry. Useful if one of the fields has all the information you need.
+Writes only a single field from the structure log entry.
 
 ```caddy-d
 format single_field <field_name>
@@ -207,8 +210,7 @@ Marks a field to be replaced with the provided string at encoding time.
 
 ##### ip_mask
 
-Masks IP addresses in the field using a CIDR mask, i.e. the number of bytes from the IP to retain, starting from the left side. There is separate configuration for IPv4 and IPv6 addresses.
-
+Masks IP addresses in the field using a CIDR mask, i.e. the number of bytes from the IP to retain, starting from the left side. There is separate configuration for IPv4 and IPv6 addresses. Most commonly, the field to filter would be `request>remote_ip`.
 
 ```caddy-d
 <field> ip_mask {
@@ -217,6 +219,59 @@ Masks IP addresses in the field using a CIDR mask, i.e. the number of bytes from
 }
 ```
 
+##### query
+
+Marks a field to have one or more actions performed, to manipulate the query part of a URL field. Most commonly, the field to filter would be `uri`. The available actions are:
+
+```caddy-d
+<field> query {
+	delete  <key>
+	replace <key> <replacement>
+	hash    <key>
+}
+```
+
+- **delete** removes the given key from the query.
+- **replace** replaces the value of the given query key with **replacement**. Useful to insert a redaction placeholder; you'll see that the query key was in the URL, but the value is hidden.
+- **hash** replaces the value of the given query key with the first 4 bytes of the SHA-256 hash of the value, lowercase hexadecimal. Useful to obscure the value if it's sensitive, while being able to notice whether each request had a different value.
+
+##### cookie
+
+Marks a field to have one or more actions performed, to manipulate a `Cookie` HTTP header's value. Most commonly, the field to filter would be `request>headers>Cookie`. The available actions are:
+
+```caddy-d
+<field> cookie {
+	delete  <name>
+	replace <name> <replacement>
+	hash    <name>
+}
+```
+
+- **delete** removes the given cookie by name from the header.
+- **replace** replaces the value of the given cookie with **replacement**. Useful to insert a redaction placeholder; you'll see that the cookie was in the header, but the value is hidden.
+- **hash** replaces the value of the given cookie with the first 4 bytes of the SHA-256 hash of the value, lowercase hexadecimal. Useful to obscure the value if it's sensitive, while being able to notice whether each request had a different value.
+
+If many actions are defined for the same cookie name, only the first action will be applied.
+
+##### regexp
+
+Marks a field to have a regular expression replacement applied at encoding time.
+
+```caddy-d
+<field> regexp <pattern> <replacement>
+```
+
+The regular expression language used is RE2, included in Go. See the [RE2 syntax reference](https://github.com/google/re2/wiki/Syntax) and the [Go regexp syntax overview](https://pkg.go.dev/regexp/syntax).
+
+In the replacement string, capture groups can be referenced with `${group}` where `group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
+
+##### hash
+
+Marks a field to be replaced with the first 4 bytes of the SHA-256 hash of the value at encoding time. Useful to obscure the value if it's sensitive, while being able to notice whether each request had a different value.
+
+```caddy-d
+<field> hash
+```
 
 
 
@@ -253,7 +308,7 @@ log {
 
 Use Common Log Format (CLF):
 
-<span class="warning">⚠️ The `single_field` format is deprecated and will be removed in a future version. To encode logs in common log format, please use the [`format-encoder`](https://github.com/caddyserver/format-encoder) plugin.</span>
+<span class="warning">⚠️ The `single_field` format is deprecated and removed in Caddy v2.5. To encode logs in common log format, please use the [`format-encoder`](https://github.com/caddyserver/format-encoder) plugin.</span>
 
 ```caddy-d
 log {
@@ -276,15 +331,31 @@ log {
 ```
 
 
-Mask the remote address from the request, keeping the first 16 bits (i.e. 255.255.0.0) for IPv4 addresses, and the first 32 bits from IPv6 addresses, and also deletes the `common_log` field which would normally contain an unmasked IP address:
+Redact multiple sensitive cookies:
 
 ```caddy-d
 log {
 	format filter {
 		wrap console
 		fields {
-			common_log delete
-			request>remote_addr ip_mask {
+			request>headers>Cookie cookie {
+				replace session REDACTED
+				delete secret
+			}
+		}
+	}
+}
+```
+
+
+Mask the remote address from the request, keeping the first 16 bits (i.e. 255.255.0.0) for IPv4 addresses, and the first 32 bits from IPv6 addresses. (Note that prior to Caddy v2.5, the field was named `remote_addr`, but is now `remote_ip`):
+
+```caddy-d
+log {
+	format filter {
+		wrap console
+		fields {
+			request>remote_ip ip_mask {
 				ipv4 16
 				ipv6 32
 			}
