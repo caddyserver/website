@@ -98,6 +98,7 @@ Possible options are:
 			idle        <duration>
 		}
 		max_header_size <size>
+		log_credentials
 		protocol {
 			allow_h2c
 			experimental_http3
@@ -307,6 +308,13 @@ listener_wrappers {
 ##### `max_header_size`
 
 The maximum size to parse from a client's HTTP request headers. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
+
+
+##### `log_credentials`
+
+Since Caddy v2.5, by default, headers with potentially sensitive information (`Cookie`, `Set-Cookie`, `Authorization` and `Proxy-Authorization`) will be logged with empty values in access logs (see the [`log` directive](/docs/caddyfile/directives/log)).
+
+If you wish to _not_ have these headers redacted, you may enable the `log_credentials` option.
 
 
 ##### `protocol`

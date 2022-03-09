@@ -35,6 +35,8 @@ The `log` directive applies to the host/port of the site block it appears in, no
 	- [hash](#hash)
 - [Examples](#examples)
 
+Since Caddy v2.5, by default, headers with potentially sensitive information (`Cookie`, `Set-Cookie`, `Authorization` and `Proxy-Authorization`) will be logged with empty values. This behaviour can be disabled with the [`log_credentials`](/docs/caddyfile/options#log-credentials) global server option.
+
 
 ## Syntax
 
