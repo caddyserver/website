@@ -211,7 +211,7 @@ Get certificates by making an HTTP(S) request. The response must have a 200 stat
 ... http <url>
 ```
 
-- **url** <span id="url"/> is the fully-qualified URL to which to make the request. It is strongly advised that this be a loopback endpoint for performance reasons.
+- **url** <span id="url"/> is the fully-qualified URL to which to make the request. It is strongly advised that this be a local endpoint for performance reasons.
 
 
 
