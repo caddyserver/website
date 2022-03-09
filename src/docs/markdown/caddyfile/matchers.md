@@ -51,6 +51,8 @@ $(function() {
 	- [protocol](#protocol)
 	- [query](#query)
 	- [remote_ip](#remote-ip)
+	- [vars](#vars)
+	- [vars_regexp](#vars-regexp)
 
 
 ## Syntax
@@ -317,7 +319,7 @@ Match requests that do not have the `Foo` header field at all:
 header_regexp [<name>] <field> <regexp>
 ```
 
-Like `header`, but supports regular expressions. Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) like `{re.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
+Like [`header`](#header), but supports regular expressions. Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) like `{re.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
 
 The regular expression language used is RE2, included in Go. See the [RE2 syntax reference](https://github.com/google/re2/wiki/Syntax) and the [Go regexp syntax overview](https://pkg.go.dev/regexp/syntax).
 
@@ -457,7 +459,7 @@ Multiple `path` matchers will be OR'ed together.
 path_regexp [<name>] <regexp>
 ```
 
-Like `path`, but supports regular expressions. Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) like `{re.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
+Like [`path`](#path), but supports regular expressions. Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) like `{re.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
 
 The request path is URL-decoded, and cleaned (to collapse doubled-up slashes and directory traversal dots) before matching. For example `/foo*` will also match `//foo` and `/%2F/foo`.
 
@@ -526,4 +528,48 @@ Match requests from private IPv4 addresses.
 
 ```caddy-d
 remote_ip 192.168.0.0/16 172.16.0.0/12 10.0.0.0/8
+```
+
+
+
+---
+### vars
+
+```caddy-d
+vars <variable> <values...>
+```
+
+By the value of a variable in the request context, or the value of a placeholder. Multiple values may be specified to match any of those possible values (OR'ed).
+
+This matcher is most useful when paired with the [`map` directive](/docs/caddyfile/directives/map) which sets outputs, or with plugins which set some information in the request context.
+
+#### Example:
+
+Match an output of the [`map` directive](/docs/caddyfile/directives/map) named `magic_number` for the values `3`, or `5`.
+
+```caddy-d
+vars {magic_number} 3 5
+```
+
+
+
+---
+### vars_regexp
+
+```caddy-d
+vars_regexp [<name>] <variable> <regexp>
+```
+
+Like [`vars`](#vars), but supports regular expressions. Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) like `{re.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
+
+The regular expression language used is RE2, included in Go. See the [RE2 syntax reference](https://github.com/google/re2/wiki/Syntax) and the [Go regexp syntax overview](https://pkg.go.dev/regexp/syntax).
+
+There can only be one `vars_regexp` matcher per named matcher.
+
+#### Example:
+
+Match an output of the [`map` directive](/docs/caddyfile/directives/map) named `magic_number` for a value starting with `4`, capturing the value in a capture group.
+
+```caddy-d
+vars_regexp magic {magic_number} ^(4.*)
 ```
