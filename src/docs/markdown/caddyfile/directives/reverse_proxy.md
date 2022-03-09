@@ -33,7 +33,7 @@ Proxies requests to one or more backends with configurable transport, load balan
   - [Upstream addresses](#upstream-addresses)
   - [Dynamic upstreams](#dynamic-upstreams)
     - [SRV](#srv)
-	- [A/AAAA](#aaaaa)
+    - [A/AAAA](#aaaaa)
 - [Load balancing](#load-balancing)
   - [Active health checks](#active-health-checks)
   - [Passive health checks](#passive-health-checks)
