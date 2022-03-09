@@ -162,7 +162,7 @@ Retrieves upstreams from SRV DNS records.
 - **refresh** - How often to refresh cached results. Default: `1m`
 - **resolvers** - List of DNS resolvers to override system resolvers.
 - **dial_timeout** - Timeout for dialing the query.
-- **dial_fallback_delay** - Timeout for falling back from IPv6 to IPv6 via RFC 6555. Default: `300ms`
+- **dial_fallback_delay** - Timeout for falling back from IPv6 to IPv4 via RFC 6555. Default: `300ms`
 
 
 
