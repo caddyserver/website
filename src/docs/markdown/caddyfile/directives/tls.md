@@ -173,7 +173,7 @@ Note that ZeroSSL is a default issuer, so configuring it explicitly is usually u
 
 #### internal
 
-Obtains certificates from an internal certificate authority. 
+Obtains certificates from an internal certificate authority.
 
 ```caddy
 ... internal {

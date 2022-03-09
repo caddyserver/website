@@ -169,7 +169,7 @@ format json
 
 #### single_field
 
-<span class="warning">⚠️ This format is deprecated, and is removed in Caddy v2.5. To encode logs in common log format, please use the [`format-encoder`](https://github.com/caddyserver/format-encoder) plugin.</span>
+<span class="warning">⚠️ This format was deprecated, and has been removed in Caddy v2.5. To encode logs in common log format, please use the [`format-encoder`](https://github.com/caddyserver/format-encoder) plugin.</span>
 
 Writes only a single field from the structure log entry.
 

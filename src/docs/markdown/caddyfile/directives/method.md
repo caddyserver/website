@@ -4,7 +4,7 @@ title: method (Caddyfile directive)
 
 # method
 
-Rewrites the request to change the HTTP method.
+Changes the HTTP method on the request.
 
 
 ## Syntax
