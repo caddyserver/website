@@ -281,7 +281,16 @@ Allows configuring [listener wrappers](/docs/json/apps/http/servers/listener_wra
 
 There is a special no-op [`tls`](/docs/json/apps/http/servers/listener_wrappers/tls/) listener wrapper provided as a standard module which marks where TLS should be handled in the chain of listener wrappers. It should only be used if another listener wrapper must be placed in front of the TLS handshake.
 
-For example, assuming you have the [`proxy_protocol`](/docs/json/apps/http/servers/listener_wrappers/proxy_protocol/) plugin installed:
+The standard distribution of Caddy includes an [`http_redirect`](/docs/json/apps/http/servers/listener_wrappers/http_redirect/) listener wrapper, which can look at the first few bytes of an incoming request to determine if it's HTTP (instead of TLS), and trigger an HTTP->HTTPS redirect on the same port with the `https://` scheme. It must be placed _before_ the `tls` listener wrapper. For example:
+
+```caddy-d
+listener_wrappers {
+	http_redirect
+	tls
+}
+```
+
+Another example, assuming you have the [`proxy_protocol`](/docs/json/apps/http/servers/listener_wrappers/proxy_protocol/) plugin installed, which must be used _before_ the `tls` listener wrapper:
 
 ```caddy-d
 listener_wrappers {
