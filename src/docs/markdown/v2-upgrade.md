@@ -243,7 +243,7 @@ log
 
 which emits structured logs to stderr. (You can also emit to a file or network socket; see the [`log`](/docs/caddyfile/directives/log) directive docs.)
 
-By default, logs will be in [structured](/docs/logging) JSON format. If you still need logs in Common Log Format (CLF) for legacy reasons, you may use the [`format-encoder`](https://github.com/caddyserver/format-encoder) plugin.
+By default, logs will be in [structured](/docs/logging) JSON format. If you still need logs in Common Log Format (CLF) for legacy reasons, you may use the [`transform-encoder`](https://github.com/caddyserver/transform-encoder) plugin.
 
 
 ### proxy

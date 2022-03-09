@@ -50,54 +50,47 @@ Now compare an equivalent structured log message from Caddy, encoded as JSON and
 ```json
 {
 	"level": "info",
-	"ts": 1585597114.7687502,
+	"ts": 1646861401.5241024,
 	"logger": "http.log.access",
 	"msg": "handled request",
 	"request": {
-		"method": "GET",
-		"uri": "/",
-		"proto": "HTTP/2.0",
 		"remote_ip": "127.0.0.1",
-		"remote_port": "50876",
-		"host": "example.com",
+		"remote_port": "41342",
+		"proto": "HTTP/2.0",
+		"method": "GET",
+		"host": "localhost",
+		"uri": "/",
 		"headers": {
-			"User-Agent": [
-				"curl/7.64.1"
-			],
-			"Accept": [
-				"*/*"
-			]
+			"User-Agent": ["curl/7.82.0"],
+			"Accept": ["*/*"],
+			"Accept-Encoding": ["gzip, deflate, br"],
 		},
 		"tls": {
 			"resumed": false,
-			"version": 771,
-			"ciphersuite": 49196,
+			"version": 772,
+			"cipher_suite": 4865,
 			"proto": "h2",
 			"server_name": "example.com"
 		}
 	},
 	"user_id": "",
-	"duration": 0.000014711,
-	"size": 2326,
+	"duration": 0.000929675,
+	"size": 10900,
 	"status": 200,
 	"resp_headers": {
-		"Server": [
-			"Caddy"
-		],
-		"Content-Type": ["text/html"]
+		"Server": ["Caddy"],
+		"Content-Encoding": ["gzip"],
+		"Content-Type": ["text/html; charset=utf-8"],
+		"Vary": ["Accept-Encoding"]
 	}
 }
 ```
-
-<aside class="tip">
-	In actual access logs emitted from Caddy, another field called "common_log" is also present. The purpose of this field is just to help people transition from legacy systems to more modern ones.
-</aside>
 
 You can see how the structured log is much more useful and contains much more information. The abundance of information in this log message is not only useful, but it comes at virtually no performance overhead: Caddy's logs are zero-allocation. Structured logs have no restrictions on data types or context: they can be used in any code path and include any kind of information.
 
 Because the logs are structured and strongly-typed, they can be encoded into any format. So if you don't want to work with JSON, logs can be encoded into any other representation. Caddy supports others through [log encoder modules](/docs/json/logging/logs/encoder/), and even more can be added.
 
-**Most importantly** in the distinction between structured logs and legacy formats, a structured log can be encoded as Common Log Format (or anything else!), but not the other way around. It is non-trivial (or at least inefficient) to go from CLF to structured formats, and impossible considering the lack of information.
+**Most importantly** in the distinction between structured logs and legacy formats, with a performance penalty a structured log [can be transformed into the legacy Common Log Format](https://github.com/caddyserver/transform-encoder), but not the other way around. It is non-trivial (or at least inefficient) to go from CLF to structured formats, and impossible considering the lack of information.
 
 In essence, efficient, structured logging generally promotes these philosophies:
 
