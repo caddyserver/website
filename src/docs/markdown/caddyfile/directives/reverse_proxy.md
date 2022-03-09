@@ -136,7 +136,7 @@ When proxying over HTTPS, you may need to override the `Host` header such that i
 
 #### Dynamic upstreams
 
-Caddy's reverse proxy comes standard with some dynamic upstream modules. Note that using dynamic upstreams has implications for load balancing and health checks, depending on specific policy configuration: active health checks do not run for dynamic upstreams; and load balancing and passive health checks are best served if the list of upstreams is relatively stable and consistent (especially with round-robin).
+Caddy's reverse proxy comes standard with some dynamic upstream modules. Note that using dynamic upstreams has implications for load balancing and health checks, depending on specific policy configuration: active health checks do not run for dynamic upstreams; and load balancing and passive health checks are best served if the list of upstreams is relatively stable and consistent (especially with round-robin). Ideally, dynamic upstream modules only return healthy, usable backends.
 
 
 ##### SRV
