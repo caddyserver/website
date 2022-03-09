@@ -49,6 +49,7 @@ Directive | Description
 **[import](/docs/caddyfile/directives/import)** | Include snippets or files
 **[log](/docs/caddyfile/directives/log)** | Enables access/request logging
 **[map](/docs/caddyfile/directives/map)** | Maps an input value to one or more outputs
+**[method](/docs/caddyfile/directives/method)** | Rewrite the HTTP method
 **[metrics](/docs/caddyfile/directives/metrics)** | Configures the Prometheus metrics exposition endpoint
 **[php_fastcgi](/docs/caddyfile/directives/php_fastcgi)** | Serve PHP sites over FastCGI
 **[push](/docs/caddyfile/directives/push)** | Push content to the client using HTTP/2 server push
@@ -115,7 +116,8 @@ request_body
 
 redir
 
-# URI manipulation
+# incoming request manipulation
+method
 rewrite
 uri
 try_files
