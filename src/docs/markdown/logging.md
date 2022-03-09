@@ -57,7 +57,8 @@ Now compare an equivalent structured log message from Caddy, encoded as JSON and
 		"method": "GET",
 		"uri": "/",
 		"proto": "HTTP/2.0",
-		"remote_addr": "127.0.0.1:50876",
+		"remote_ip": "127.0.0.1",
+		"remote_port": "50876",
 		"host": "example.com",
 		"headers": {
 			"User-Agent": [
@@ -72,7 +73,6 @@ Now compare an equivalent structured log message from Caddy, encoded as JSON and
 			"version": 771,
 			"ciphersuite": 49196,
 			"proto": "h2",
-			"proto_mutual": true,
 			"server_name": "example.com"
 		}
 	},
