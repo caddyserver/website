@@ -104,7 +104,7 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 	Multiple `trusted_*` directives may be used to specify multiple CA or leaf certificates. Client certificates which are not listed as one of the leaf certificates or signed by any of the specified CAs will be rejected according to the **mode**.
 
 - **issuer** <span id="issuer"/> configures a custom certificate issuer, or a source from which to obtain certificates. Which issuer is used and the options that follow in this segment depend on the issuer modules that are available (see below for the standard issuers; plugins may add others). Some of the other subdirectives such as `ca` and `dns` are actually shortcuts for configuring the `acme` issuer (and this subdirective was added later), so specifying this directive and some of the others is confusing and thus prohibited. This subdirective can be specified multiple times to configure multiple, redundant issuers; if one fails to issue a cert, the next one will be tried.
-- **get_certificate** <span id="mode"/> enables getting certificates from a _manager module_ at handshake-time. [See below for standard _certificate manager_ modules.](#certificate-managers)
+- **get_certificate** <span id="get_certificate"/> enables getting certificates from a _manager module_ at handshake-time. [See below for standard _certificate manager_ modules.](#certificate-managers)
 
 ### Issuers
 
