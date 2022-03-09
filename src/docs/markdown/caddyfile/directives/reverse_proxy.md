@@ -109,9 +109,9 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 - **dynamic** <span id="dynamic"/> configures a _dynamic upstreams_ module. This allows getting the list of upstreams dynamically for every request. See [dynamic upstreams](#dynamic-upstreams) below for a description of standard dynamic upstream modules. Dynamic upstreams are retrieved at every proxy loop iteration (i.e. potentially multiple times per request if load balancing retries are enabled) and will be preferred over static upstreams. If an error occurs, the proxy will fall back to using any statically-configured upstreams.
 
 
-### Upstream addresses 
+#### Upstream addresses
 
-Upstream addresses can take the form of a conventional [Caddy network address](/docs/conventions#network-addresses) or a URL that contains only scheme and host/port, with a special exception that the scheme may be prefixed by `srv+` to enable SRV DNS record lookups for load balancing. Valid examples:
+Static upstream addresses can take the form of a conventional [Caddy network address](/docs/conventions#network-addresses) or a URL that contains only scheme and host/port. Valid examples:
 
 - `localhost:4000`
 - `127.0.0.1:4000`
@@ -120,16 +120,14 @@ Upstream addresses can take the form of a conventional [Caddy network address](/
 - `h2c://127.0.0.1`
 - `example.com`
 - `unix//var/php.sock`
-- `srv+http://internal.service.consul`
-- `srv+https://internal.service.consul`
 
-Note: Schemes cannot be mixed, since they modify the common transport configuration (a TLS-enabled transport cannot carry both HTTPS and plaintext HTTP). Specifying ports 80 and 443 are the same as specifying the HTTP and HTTPS schemes, respectively. Any explicit transport configuration will not be overwritten, and omitting schemes or using other ports will not assume a particular transport.
+Note: Schemes cannot be mixed, since they modify the common transport configuration (a TLS-enabled transport cannot carry both HTTPS and plaintext HTTP). Any explicit transport configuration will not be overwritten, and omitting schemes or using other ports will not assume a particular transport.
 
 Additionally, upstream addresses cannot contain paths or query strings, as that would imply simultaneous rewriting the request while proxying, which behavior is not defined or supported. You may use the [`rewrite`](/docs/caddyfile/directives/rewrite) directive should you need this.
 
-If the address is not a URL (i.e. does not have a scheme), then placeholders can be used, but this makes the upstream dynamic, meaning that the potentially many different backends act as one upstream in terms of health checks and load balancing.
+If the address is not a URL (i.e. does not have a scheme), then placeholders can be used, but this makes the upstream _dynamically static_, meaning that potentially many different backends act as a single, static upstream in terms of health checks and load balancing.
 
-When proxying over HTTPS, you may need to override the `Host` header (which by default, retains the value from the original request) such that the `Host` header matches the TLS SNI value, which is used by servers for routing and certificate selection. See the [Headers](#headers) section below for more details.
+When proxying over HTTPS, you may need to override the `Host` header such that it matches the TLS SNI value, which is used by servers for routing and certificate selection. See the [Headers](#headers) section below for more details.
 
 
 #### Dynamic upstreams
@@ -255,21 +253,21 @@ The proxy can **manipulate headers** between itself and the backend:
 
 #### Defaults
 
-By default, Caddy passes thru incoming headers to the backend&mdash;including the `Host` header&mdash;without modifications, with two exceptions:
+By default, Caddy passes thru incoming headers&mdash;including `Host`&mdash;to the backend without modifications, with three exceptions:
 
 - It adds or augments the [X-Forwarded-For](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For) header field.
 - It sets the [X-Forwarded-Proto](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Proto) header field.
+- It sets the [X-Forwarded-Host](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Host) header field.
 
 Additionally, when using the [`http` transport](#the-http-transport), the `Accept-Encoding: gzip` header will be set, if it is missing in the request from the client. This behavior can be disabled with [`compression off`](#compression) on the transport.
 
 #### HTTPS
 
-For HTTPS upstreams, since the `Host` header retains its original value, it is typically necessary to override the header with the configured upstream address, such that the `Host` header matches the TLS SNI value. A `X-Forwarded-Host` header may also be added to inform the upstream of the original `Host` header's value. For example:
+Since (most) headers retain their original value when being proxied, it is often necessary to override the `Host` header with the configured upstream address when proxying to HTTPS, such that the `Host` header matches the TLS ServerName value. For example:
 
 ```caddy-d
 reverse_proxy https://example.com {
 	header_up Host {upstream_hostport}
-	header_up X-Forwarded-Host {host}
 }
 ```
 

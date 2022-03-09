@@ -125,6 +125,10 @@ output net <address> {
 
 The **format** subdirective lets you customize how logs get encoded (formatted). It appears within a `log` block.
 
+<aside class="tip">
+	<b>A note about Common Log Format (CLF):</b> CLF clashes with modern structured logs. To transform your access logs into the deprecated Common Log Format, please use the <a href="https://github.com/caddyserver/transform-encoder"><code>transform-encoder</code> plugin</a>.
+</aside>
+
 In addition to the syntax for each individual encoder, these common properties can be set on most encoders:
 
 ```caddy-d
@@ -167,17 +171,6 @@ Formats each log entry as a JSON object.
 format json
 ```
 
-#### single_field
-
-<span class="warning">⚠️ This format was deprecated, and has been removed in Caddy v2.5. To encode logs in common log format, please use the [`format-encoder`](https://github.com/caddyserver/format-encoder) plugin.</span>
-
-Writes only a single field from the structure log entry.
-
-```caddy-d
-format single_field <field_name>
-```
-
-- **&lt;field_name&gt;** is the name of the field whose value to use as the log entry.
 
 #### filter
 
@@ -310,18 +303,6 @@ log {
 	}
 }
 ```
-
-
-Use Common Log Format (CLF):
-
-<span class="warning">⚠️ The `single_field` format is deprecated and removed in Caddy v2.5. To encode logs in common log format, please use the [`format-encoder`](https://github.com/caddyserver/format-encoder) plugin.</span>
-
-```caddy-d
-log {
-	format single_field common_log
-}
-```
-
 
 Delete the Authorization request header from the logs:
 
