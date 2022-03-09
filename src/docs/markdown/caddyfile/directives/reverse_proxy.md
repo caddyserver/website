@@ -30,6 +30,10 @@ Proxies requests to one or more backends with configurable transport, load balan
 
 - [Syntax](#syntax)
 - [Upstreams](#upstreams)
+  - [Upstream addresses](#upstream-addresses)
+  - [Dynamic upstreams](#dynamic-upstreams)
+    - [SRV](#srv)
+	- [A/AAAA](#aaaaa)
 - [Load balancing](#load-balancing)
   - [Active health checks](#active-health-checks)
   - [Passive health checks](#passive-health-checks)
@@ -49,7 +53,7 @@ Proxies requests to one or more backends with configurable transport, load balan
 reverse_proxy [<matcher>] [<upstreams...>] {
     # backends
     to      <upstreams...>
-	dynamic <module> ...
+    dynamic <module> ...
 
     # load balancing
     lb_policy       <name> [<options...>]
@@ -156,7 +160,7 @@ Retrieves upstreams from SRV DNS records.
 - **proto** - The protocol component of the full name. Either `tcp` or `udp`.
 - **name** - The name component. Or, if `service` and `proto` are empty, the full domain name to query.
 - **refresh** - How often to refresh cached results. Default: `1m`
-- **resolvers** - List of resolvers to override system resolvers.
+- **resolvers** - List of DNS resolvers to override system resolvers.
 - **dial_timeout** - Timeout for dialing the query.
 - **dial_fallback_delay** - Timeout for falling back from IPv6 to IPv6 via RFC 6555. Default: `300ms`
 
@@ -180,9 +184,9 @@ Retrieves upstreams from A/AAAA DNS records.
 - **&lt;name&gt;, name** - The domain name to query.
 - **&lt;port&gt;, port** - The port to use for the backend.
 - **refresh** - How often to refresh cached results. Default: `1m`
-- **resolvers** - List of resolvers to override system resolvers.
+- **resolvers** - List of DNS resolvers to override system resolvers.
 - **dial_timeout** - Timeout for dialing the query.
-- **dial_fallback_delay** - Timeout for falling back from IPv6 to IPv6 via RFC 6555. Default: `300ms`
+- **dial_fallback_delay** - Timeout for falling back from IPv6 to IPv4 via RFC 6555. Default: `300ms`
 
 
 
