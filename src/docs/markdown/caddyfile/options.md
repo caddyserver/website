@@ -42,8 +42,9 @@ Possible options are:
 {
 	# General Options
 	debug
-	http_port  <port>
-	https_port <port>
+	http_port    <port>
+	https_port   <port>
+	default_bind <host>
 	order <dir1> first|last|[before|after <dir2>]
 	storage <module_name> {
 		<options...>
@@ -140,6 +141,10 @@ The port for the server to use for HTTP. For internal use only; does not change 
 
 ##### `https_port`
 The port for the server to use for HTTPS. For internal use only; does not change the HTTPS port for clients. Default: `443`
+
+
+##### `default_bind`
+The default bind address to be used for all sites, if the [`bind` directive](/docs/caddyfile/directives/bind) is not used in the site. Default: empty, which binds to all interfaces.
 
 
 ##### `order`
