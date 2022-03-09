@@ -90,6 +90,8 @@ A file. By default, log files are rotated ("rolled") to prevent disk space exhau
 output file <filename> {
 	roll_disabled
 	roll_size     <size>
+	roll_uncompressed
+	roll_local_time
 	roll_keep     <num>
 	roll_keep_for <days>
 }
@@ -98,6 +100,8 @@ output file <filename> {
 - **&lt;filename&gt;** is the path to the log file.
 - **roll_disabled** disables log rolling. This can lead to disk space depletion, so only use this if your log files are maintained some other way.
 - **roll_size** is the size at which to roll the log file. The current implementation supports megabyte resolution; fractional values are rounded up to the next whole megabyte. For example, `1.1MiB` is rounded up to `2MiB`. Default: `100MiB`
+- **roll_uncompressed** turns off gzip log compression. Default: gzip compression is enabled.
+- **roll_local_time** sets the rolling to use local timestamps in filenames. Default: uses UTC time.
 - **roll_keep** is how many log files to keep before deleting the oldest ones. Default: `10`
 - **roll_keep_for** is how long to keep rolled files as a [duration string](/docs/conventions#durations). The current implementation supports day resolution; fractional values are rounded up to the next whole day. For example, `36h` (1.5 days) is rounded up to `48h` (2 days). Default: `2160h` (90 days)
 
