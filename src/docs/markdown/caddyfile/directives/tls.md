@@ -198,6 +198,8 @@ These manager modules come standard with the `tls` directive:
 
 Get certificates from a locally-running [Tailscale](https://tailscale.com) instance. [HTTPS must be enabled in your Tailscale account](https://tailscale.com/kb/1153/enabling-https/) (or your open source [Headscale server](https://github.com/juanfont/headscale)); and the Caddy process must either be running as root, or you must configure `tailscaled` to give your Caddy user [permission to fetch certificates](https://github.com/caddyserver/caddy/pull/4541#issuecomment-1021568348).
 
+**NOTE: This is usually unnecessary! Caddy automatically uses Tailscale for all *.ts.net domains without any configuration.**
+
 ```caddy-d
 get_certificate tailscale
 ```
