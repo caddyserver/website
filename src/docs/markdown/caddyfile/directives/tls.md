@@ -198,10 +198,10 @@ These manager modules come standard with the `tls` directive:
 
 Get certificates from a locally-running [Tailscale](https://tailscale.com) instance. [HTTPS must be enabled in your Tailscale account](https://tailscale.com/kb/1153/enabling-https/) (or your open source [Headscale server](https://github.com/juanfont/headscale)); and the Caddy process must either be running as root, or you must configure `tailscaled` to give your Caddy user [permission to fetch certificates](https://github.com/caddyserver/caddy/pull/4541#issuecomment-1021568348).
 
-**NOTE: This is usually unnecessary! Caddy automatically uses Tailscale for all *.ts.net domains without any configuration.**
+_**NOTE: This is usually unnecessary!** Caddy automatically uses Tailscale for all `*.ts.net` domains without any extra configuration._
 
 ```caddy-d
-get_certificate tailscale
+get_certificate tailscale  # often unnecessary!
 ```
 
 
@@ -213,7 +213,7 @@ Get certificates by making an HTTP(S) request. The response must have a 200 stat
 get_certificate http <url>
 ```
 
-- **url** <span id="url"/> is the fully-qualified URL to which to make the request. It is strongly advised that this be a local endpoint for performance reasons.
+- **url** <span id="url"/> is the fully-qualified URL to which to make the request. It is strongly advised that this be a local endpoint for performance reasons. The URL will be augmented with the following query string parameters: `server_name` = SNI value, `signature_schemes` = comma-separated list of hex IDs of signature algorithms, and `cipher_suites` = comma-separated list of hex IDS of cipher suites.
 
 
 
@@ -253,11 +253,11 @@ tls {
 }
 ```
 
-Get the certificate from Tailscale, instead of having Caddy manage it:
+Get the certificate chain via HTTP, instead of having Caddy manage it:
 
 ```caddy-d
 tls {
-	get_certificate tailscale
+	get_certificate http http://localhost:9007/certs
 }
 ```
 
