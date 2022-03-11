@@ -179,6 +179,8 @@ The DNS challenge performs an authoritative DNS lookup for the candidate hostnam
 
 This challenge does not require any open ports, and the server requesting a certificate does not need to be externally accessible. However, the DNS challenge requires configuration. Caddy needs to know the credentials to access your domain's DNS provider so it can set (and clear) the special TXT records. If the DNS challenge is enabled, other challenges are disabled by default.
 
+Since ACME CAs follow DNS standard when looking up TXT records for challenge verification, you can use CNAME records to delegate answering the challenge to other DNS zones. This can be used to delegate the `_acme-challenge` subdomain to another zone. This is particularly useful if your DNS provider doesn't provide an API, or isn't supported by one of the DNS plugins for Caddy.
+
 DNS provider support is a community effort. [Learn how to enable the DNS challenge for your provider at our wiki.](https://caddy.community/t/how-to-use-dns-provider-modules-in-caddy-2/8148)
 
 
