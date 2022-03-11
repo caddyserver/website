@@ -42,6 +42,12 @@ To get started with the API, try our [API tutorial](/docs/api-tutorial) or, if y
 - **[Using `@id` in JSON](#using-id-in-json)**
   Easily traverse into the config structure
 
+- **[GET /pki/ca/&lt;id&gt;](#get-pkicaid)**
+  Returns information about a particular [PKI app](/docs/json/apps/pki/) CA
+
+- **[GET /pki/ca/&lt;id&gt;/certificates](#get-pkicaidcertificates)**
+  Returns the certificate chain of a particular [PKI app](/docs/json/apps/pki/) CA
+
 - **[GET /reverse_proxy/upstreams](#get-reverse-proxyupstreams)**
   Returns the current status of the configured proxy upstreams
 
@@ -230,6 +236,40 @@ but with an ID, the path becomes
 ```
 
 which is much easier to remember and write by hand.
+
+
+## GET /pki/ca/&lt;id&gt;
+
+Returns information about a particular [PKI app](/docs/json/apps/pki/) CA by its ID. If the requested CA ID is the default (`local`), then the CA will be provisioned if it has not already been. Other CA IDs will return an error if they have not been previously provisioned.
+
+<pre><code class="cmd"><span class="bash">curl "http://localhost:2019/pki/ca/local" | jq</span>
+{
+	"id": "local",
+	"name": "Caddy Local Authority",
+	"root_common_name": "Caddy Local Authority - 2022 ECC Root",
+	"intermediate_common_name": "Caddy Local Authority - ECC Intermediate",
+	"root_certificate": "-----BEGIN CERTIFICATE-----\nMIIB ... gRw==\n-----END CERTIFICATE-----\n",
+	"intermediate_certificate": "-----BEGIN CERTIFICATE-----\nMIIB ... FzQ==\n-----END CERTIFICATE-----\n"
+}</code></pre>
+
+
+## GET /pki/ca/&lt;id&gt;/certificates
+
+Returns the certificate chain of a particular [PKI app](/docs/json/apps/pki/) CA by its ID. If the requested CA ID is the default (`local`), then the CA will be provisioned if it has not already been. Other CA IDs will return an error if they have not been previously provisioned.
+
+This endpoint is used internally by the [`caddy trust`](/docs/command-line#caddy-trust) command to allow installing the CA's root certificate to your system's trust store.
+
+<pre><code class="cmd"><span class="bash">curl "http://localhost:2019/pki/ca/local/certificates"</span>
+-----BEGIN CERTIFICATE-----
+MIIByDCCAW2gAwIBAgIQViS12trTXBS/nyxy7Zg9JDAKBggqhkjOPQQDAjAwMS4w
+...
+By75JkP6C14OfU733oElfDUMa5ctbMY53rWFzQ==
+-----END CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
+MIIBpDCCAUmgAwIBAgIQTS5a+3LUKNxC6qN3ZDR8bDAKBggqhkjOPQQDAjAwMS4w
+...
+9M9t0FwCIQCAlUr4ZlFzHE/3K6dARYKusR1ck4A3MtucSSyar6lgRw==
+-----END CERTIFICATE-----</code></pre>
 
 
 ## GET /reverse_proxy/upstreams

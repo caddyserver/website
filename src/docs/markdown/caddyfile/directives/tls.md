@@ -31,6 +31,7 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 	ca_root   <pem_file>
 	key_type  ed25519|p256|p384|rsa2048|rsa4096
 	dns       <provider_name> [<params...>]
+	dns_challenge_domain_override <domain>
 	resolvers <dns_servers...>
 	eab       <key_id> <mac_key>
 	on_demand
@@ -79,7 +80,8 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 - **ca** <span id="ca"/> changes the ACME CA endpoint. This is most often used to set [Let's Encrypt's staging endpoint](https://letsencrypt.org/docs/staging-environment/) when testing, or an internal ACME server. (To change this value for the whole Caddyfile, use the `acme_ca` [global option](/docs/caddyfile/options) instead.)
 - **ca_root** <span id="ca_root"/> specifies a PEM file that contains a trusted root certificate for the ACME CA endpoint, if not in the system trust store.
 - **key_type** <span id="key_type"/> is the type of key to use when generating CSRs. Only set this if you have a specific requirement.
-- **dns** <span id="dns"/> enables the [DNS challenge](/docs/automatic-https#dns-challenge) using the specified provider plugin, which must be plugged in from one of the [caddy-dns](https://github.com/caddy-dns) repositories. Each provider plugin may have their own syntax following their name; refer to their docs for details. Maintaining support for each DNS provider is a community effort. [Learn how to enable the DNS challenge for your provider at our wiki.](https://caddy.community/t/how-to-use-dns-provider-modules-in-caddy-2/8148)
+- **dns** <span id="dns"/> enables the [DNS challenge](/docs/automatic-https#dns-challenge) using the specified provider plugin, which must be plugged in from one of the [`caddy-dns`](https://github.com/caddy-dns) repositories. Each provider plugin may have their own syntax following their name; refer to their docs for details. Maintaining support for each DNS provider is a community effort. [Learn how to enable the DNS challenge for your provider at our wiki.](https://caddy.community/t/how-to-use-dns-provider-modules-in-caddy-2/8148)
+- **dns_challenge_domain_override** <span id="dns_challenge_domain_override"/> overrides the domain to use for the DNS challenge. This is to delegate the challenge to a different domain, e.g. one whose DNS provider has a [`caddy-dns`](https://github.com/caddy-dns) plugin.
 - **resolvers** <span id="resolvers"/> customizes the DNS resolvers used when performing the DNS challenge; these take precedence over system resolvers or any default ones. If set here, the resolvers will propagate to all configured certificate issuers.
 - **eab** <span id="eab"/> configures ACME external account binding (EAB) for this site, using the key ID and MAC key provided by your CA.
 - **on_demand** <span id="on_demand"/> enables [on-demand TLS](/docs/automatic-https#on-demand-tls) for the hostnames given in the site block's address(es). **Security warning:** Doing so in production is insecure unless you also configure the [`on_demand_tls` global option](https://caddyserver.com/docs/caddyfile/options#on-demand-tls) to mitigate abuse.
@@ -177,12 +179,15 @@ Obtains certificates from an internal certificate authority.
 
 ```caddy
 ... internal {
-	ca <name>
+	ca       <name>
+	lifetime <duration>
+	sign_with_root
 }
 ```
 
-- **ca** is the name of the internal CA to use. Default: `local`
-
+- **ca** <span id="ca"/> is the name of the internal CA to use. Default: `local`. See the [PKI app global options](/docs/caddyfile/options#pki-options) to configure alternate CAs.
+- **lifetime** <span id="lifetime"/> is a [duration value](/docs/conventions#durations) that sets the validity period for interally issued leaf certificates. Default: 12h. It is NOT recommended to not change this, unless absolutely necessary.
+- **sign_with_root** <span id="sign_with_root"/> forces the root to be the issuer instead of the intermediate. This is NOT recommended and should only be used when devices/clients do not properly validate certificate chains (very uncommon).
 
 
 ## Examples
@@ -204,6 +209,16 @@ Use locally-trusted certificates, but managed on-demand intead of in the backgro
 ```caddy-d
 tls internal {
 	on_demand
+}
+```
+
+Use custom options for the internal CA (cannot use the `tls internal` shortcut):
+
+```caddy-d
+tls {
+	issuer internal {
+		ca foo
+	}
 }
 ```
 

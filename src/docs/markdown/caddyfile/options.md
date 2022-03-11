@@ -42,13 +42,15 @@ Possible options are:
 {
 	# General Options
 	debug
-	http_port  <port>
-	https_port <port>
+	http_port    <port>
+	https_port   <port>
+	default_bind <host>
 	order <dir1> first|last|[before|after <dir2>]
 	storage <module_name> {
 		<options...>
 	}
 	storage_clean_interval <duration>
+	renew_interval <duration>
 	admin   off|<addr> {
 		origins <origins...>
 		enforce_origin
@@ -63,7 +65,7 @@ Possible options are:
 	grace_period <duration>
 
 	# TLS Options
-	auto_https off|disable_redirects|ignore_loaded_certs
+	auto_https off|disable_redirects|ignore_loaded_certs|disable_certs
 	email <yours>
 	default_sni <name>
 	local_certs
@@ -97,10 +99,30 @@ Possible options are:
 			idle        <duration>
 		}
 		max_header_size <size>
+		log_credentials
 		protocol {
 			allow_h2c
 			experimental_http3
-			strict_sni_host
+			strict_sni_host [on|insecure_off]
+		}
+	}
+
+	# PKI Options
+	pki {
+		ca [<id>] {
+			name            <name>
+			root_cn         <name>
+			intermediate_cn <name>
+			root {
+				format <format>
+				cert   <path>
+				key    <path>
+			}
+			intermediate {
+				format <format>
+				cert   <path>
+				key    <path>
+			}
 		}
 	}
 }
@@ -110,7 +132,13 @@ Possible options are:
 ## General Options
 
 ##### `debug`
-Enables debug mode, which sets the log level to `DEBUG` for the default logger. This reveals more details that can be useful when troubleshooting (and is very verbose in production). We ask that you enable this before asking for help on the [community forums](https://caddy.community).
+Enables debug mode, which sets the log level to `DEBUG` for the [default logger](#log). This reveals more details that can be useful when troubleshooting (and is very verbose in production). We ask that you enable this before asking for help on the [community forums](https://caddy.community). For example, at the top of your Caddyfile, if you have no other global options:
+
+```caddy
+{
+	debug
+}
+```
 
 
 ##### `http_port`
@@ -119,6 +147,10 @@ The port for the server to use for HTTP. For internal use only; does not change 
 
 ##### `https_port`
 The port for the server to use for HTTPS. For internal use only; does not change the HTTPS port for clients. Default: `443`
+
+
+##### `default_bind`
+The default bind address to be used for all sites, if the [`bind` directive](/docs/caddyfile/directives/bind) is not used in the site. Default: empty, which binds to all interfaces.
 
 
 ##### `order`
@@ -144,9 +176,13 @@ Customizing the storage module is typically needed when syncing Caddy's storage 
 
 
 ##### `storage_clean_interval`
-How often to scan storage units for old or expired assets and remove them. These scans exert lots of reads (and list operations) on the storage module, so choose a longer interval for large deployments. The value is a [duration value](/docs/conventions#durations). Default: 24h.
+How often to scan storage units for old or expired assets and remove them. These scans exert lots of reads (and list operations) on the storage module, so choose a longer interval for large deployments. The value is a [duration value](/docs/conventions#durations). Default: `24h`.
 
 Storage will always be cleaned when the process first starts. Then, a new cleaning will be started this duration after the previous cleaning started if the previous cleaning finished in less than half the time of this interval (otherwise next start will be skipped).
+
+
+##### `renew_interval`
+How often to scan all loaded, managed certificates for expiration, and trigger renewal if expired. Default: `10m`.
 
 
 ##### `admin`
@@ -158,13 +194,15 @@ Customizes the [admin API endpoint](/docs/api). If `off`, then the admin endpoin
 
 
 ##### `log`
-Customizes the named logger. The name can be passed to indicate a specific logger to customize the behavior for. If no name is specified, the behavior of the default logger is modified. This option can be specified multiple times to configure different loggers. You can read more about the default logger and other logging behaviors in the [logging documentation](/docs/logging).
+Configures named loggers. The name can be passed to indicate a specific logger for which to customize the behavior. If no name is specified, the behavior of the `default` logger is modified. Multiple loggers with different names can be configured by using the `log` multiple times. You can read more about the `default` logger and an explanation of [how logging works in Caddy](/docs/logging).
 
-- **output** configures where to write the logs. See the [log directive](/docs/caddyfile/directives/log#output-modules) documentation for more information, which has the same structure.
-- **format** describes how to encode, or format, the logs. See the [log directive](/docs/caddyfile/directives/log#format-modules) documentation for more information, which has the same structure.
-- **level** is the minimum entry level to log. Default: `INFO`
-- **include** identifies the loggers that are included in this log configuration. See the [JSON documentation](/docs/json/logging/logs/include/) for more information.
-- **exclude** identifies the loggers that are excluded from this log configuration. See the [JSON documentation](/docs/json/logging/logs/exclude/) for more information.
+The differs from the [`log` directive](/docs/caddyfile/directives/log), which only configures HTTP request logging (also known as access logs). The `log` global option shares its configuration structure with the directive (except for `include` and `exclude`), and complete documentation can be found on the directive's page.
+
+- **output** configures where to write the logs. See the [`log` directive](/docs/caddyfile/directives/log#output-modules) for complete documentation.
+- **format** describes how to encode, or format, the logs. See the [`log` directive](/docs/caddyfile/directives/log#format-modules) for complete documentation.
+- **level** is the minimum entry level to log. Default: `INFO`.
+- **include** specifies the log names to be included in this logger. For example, to include only logs emitted by the admin API, you would include `admin.api`.
+- **exclude** specifies the log names to be excluded from this logger. For example, to exclude only HTTP access logs, you would exclude `http.log.access`.
 
 
 ##### `grace_period`
@@ -175,7 +213,14 @@ Defines the grace period for shutting down HTTP servers during config reloads. I
 ## TLS Options
 
 ##### `auto_https`
-Configure automatic HTTPS. It can be disabled entirely (`off`), disable only HTTP-to-HTTPS redirects (`disable_redirects`), or be configured to automate certificates even for names which appear on manually-loaded certificates (`ignore_loaded_certs`). See the [Automatic HTTPS](/docs/automatic-https) page for more details.
+Configure automatic HTTPS. There are a few modes to choose from:
+
+- `off`: Disabled entirely. No certificate management or redirects.
+- `disable_redirects`: Disable only HTTP-to-HTTPS redirects.
+- `disable_certs`: Disable only certificate automation.
+- `ignore_loaded_certs`: Automate certificates even for names which appear on manually-loaded certificates
+
+See the [Automatic HTTPS](/docs/automatic-https) page for more details.
 
 
 ##### `email`
@@ -275,7 +320,16 @@ Allows configuring [listener wrappers](/docs/json/apps/http/servers/listener_wra
 
 There is a special no-op [`tls`](/docs/json/apps/http/servers/listener_wrappers/tls/) listener wrapper provided as a standard module which marks where TLS should be handled in the chain of listener wrappers. It should only be used if another listener wrapper must be placed in front of the TLS handshake.
 
-For example, assuming you have the [`proxy_protocol`](/docs/json/apps/http/servers/listener_wrappers/proxy_protocol/) plugin installed:
+The standard distribution of Caddy includes an [`http_redirect`](/docs/json/apps/http/servers/listener_wrappers/http_redirect/) listener wrapper, which can look at the first few bytes of an incoming request to determine if it's HTTP (instead of TLS), and trigger an HTTP->HTTPS redirect on the same port with the `https://` scheme. It must be placed _before_ the `tls` listener wrapper. For example:
+
+```caddy-d
+listener_wrappers {
+	http_redirect
+	tls
+}
+```
+
+Another example, assuming you have the [`proxy_protocol`](/docs/json/apps/http/servers/listener_wrappers/proxy_protocol/) plugin installed, which must be used _before_ the `tls` listener wrapper:
 
 ```caddy-d
 listener_wrappers {
@@ -304,10 +358,50 @@ listener_wrappers {
 The maximum size to parse from a client's HTTP request headers. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
 
 
+##### `log_credentials`
+
+Since Caddy v2.5, by default, headers with potentially sensitive information (`Cookie`, `Set-Cookie`, `Authorization` and `Proxy-Authorization`) will be logged with empty values in access logs (see the [`log` directive](/docs/caddyfile/directives/log)).
+
+If you wish to _not_ have these headers redacted, you may enable the `log_credentials` option.
+
+
 ##### `protocol`
 
 - **allow_h2c** enables H2C ("Cleartext HTTP/2" or "H2 over TCP") support, which will serve HTTP/2 over plaintext TCP connections if a client support it. Because this is not implemented by the Go standard library, using H2C is incompatible with most of the other options for this server. Do not enable this only to achieve maximum client compatibility. In practice, very few clients implement H2C, and even fewer require it. This setting applies only to unencrypted HTTP listeners. ⚠️ Experimental feature; subject to change or removal.
 
 - **experimental_http3** enables experimental draft HTTP/3 support. Note that HTTP/3 is not a finished spec and client support is extremely limited. This option will go away in the future. _This option is not subject to compatibility promises._
 
-- **strict_sni_host** require that a request's `Host` header matches the value of the ServerName sent by the client's TLS ClientHello; often a necessary safeguard when using TLS client authentication.
+- **strict_sni_host** require that a request's `Host` header matches the value of the ServerName sent by the client's TLS ClientHello; often a necessary safeguard when using TLS client authentication. If there's a mismatch, an HTTP status `421 Misdirected Request` response is written to the client.
+  
+  This option will be implicitly turned on if [client authentication](/docs/caddyfile/directives/tls#client_auth) is configured. This disallow TLS client auth bypass (domain fronting) which could otherwise be exploited by sending an unprotected SNI value during a TLS handshake, then putting a protected domain in the Host header after establishing connection. This is a safe default, but you may explicitly turn it off with `insecure_off`, for example in the case of running a proxy where domain fronting is desired and access is not restricted based on hostname.
+
+
+
+## PKI Options
+
+The PKI (Public Key Infrastructure) app is the foundation for Caddy's [Local HTTPS](/docs/automatic-https#local-https) and [ACME server](/docs/caddyfile/directives/acme_server) features. The app defines certificate authorities (CAs) which are capable of signing certificates.
+
+The default CA ID is `local`. If the ID is omitted when configuring the `ca`, then `local` is assumed.
+
+##### `name`
+The user-facing name of the certificate authority. Default: `Caddy Local Authority`
+
+##### `root_cn`
+The name to put in the CommonName field of the root certificate. Default: `{pki.ca.name} - {time.now.year} ECC Root`
+
+##### `intermediate_cn`
+The name to put in the CommonName field of the intermediate certificates. Default: `{pki.ca.name} - ECC Intermediate`
+
+##### `root`
+A key pair (certificate and private key) to use as the root for the CA. If not specified, one will be generated and managed automatically.
+
+- **format** is the format in which the certificate and private key are provided. Currently, only `pem_file` is supported, which is the default, so this field is optional.
+- **cert** is the certificate. This should be the path to a PEM file, when using `pem_file` format.
+- **key** is the private key. This should be the path to a PEM file, when using `pem_file` format.
+
+##### `intermediate`
+A key pair (certificate and private key) to use as the intermediate for the CA. If not specified, one will be generated and managed automatically.
+
+- **format** is the format in which the certificate and private key are provided. Currently, only `pem_file` is supported, which is the default, so this field is optional.
+- **cert** is the certificate. This should be the path to a PEM file, when using `pem_file` format.
+- **key** is the private key. This should be the path to a PEM file, when using `pem_file` format.

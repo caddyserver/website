@@ -13,7 +13,7 @@ $(function() {
 			$(item).addClass('nd').removeClass('k')
 			$(item).html('<a href="#response-matcher" style="color: inherit;" title="Response matcher">' + text + '</a>');
 		});
-	
+
 	// Fix matcher placeholder
 	$('pre.chroma .k:contains("handle_response")').first().nextAll().slice(0, 3)
 		.wrapAll('<span class="nd">').parent()
@@ -30,6 +30,10 @@ Proxies requests to one or more backends with configurable transport, load balan
 
 - [Syntax](#syntax)
 - [Upstreams](#upstreams)
+  - [Upstream addresses](#upstream-addresses)
+  - [Dynamic upstreams](#dynamic-upstreams)
+    - [SRV](#srv)
+    - [A/AAAA](#aaaaa)
 - [Load balancing](#load-balancing)
   - [Active health checks](#active-health-checks)
   - [Passive health checks](#passive-health-checks)
@@ -48,8 +52,8 @@ Proxies requests to one or more backends with configurable transport, load balan
 ```caddy-d
 reverse_proxy [<matcher>] [<upstreams...>] {
     # backends
-    to <upstreams...>
-	...
+    to      <upstreams...>
+    dynamic <module> ...
 
     # load balancing
     lb_policy       <name> [<options...>]
@@ -81,6 +85,7 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 	max_buffer_size <size>
 
     # header manipulation
+	trusted_proxies [private_ranges] <ranges...>
     header_up   [+|-]<field> [<value|regexp> [<replacement>]]
     header_down [+|-]<field> [<value|regexp> [<replacement>]]
 
@@ -94,8 +99,18 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 		status <code...>
 		header <field> [<value>]
 	}
-	handle_response [<matcher>] [status_code] {
+	replace_status [<matcher>] <status_code>
+	handle_response [<matcher>] {
 		<directives...>
+
+		# special directives only available in handle_response
+		copy_response [<matcher>] [<status>] {
+			status <status>
+		}
+		copy_response_headers [<matcher>] {
+			include <fields...>
+			exclude <fields...>
+		}
 	}
 }
 ```
@@ -106,8 +121,12 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 
 - **&lt;upstreams...&gt;** is a list of upstreams (backends) to which to proxy.
 - **to** <span id="to"/> is an alternate way to specify the list of upstreams, one (or more) per line.
+- **dynamic** <span id="dynamic"/> configures a _dynamic upstreams_ module. This allows getting the list of upstreams dynamically for every request. See [dynamic upstreams](#dynamic-upstreams) below for a description of standard dynamic upstream modules. Dynamic upstreams are retrieved at every proxy loop iteration (i.e. potentially multiple times per request if load balancing retries are enabled) and will be preferred over static upstreams. If an error occurs, the proxy will fall back to using any statically-configured upstreams.
 
-Upstream addresses can take the form of a conventional [Caddy network address](/docs/conventions#network-addresses) or a URL that contains only scheme and host/port, with a special exception that the scheme may be prefixed by `srv+` to enable SRV DNS record lookups for load balancing. Valid examples:
+
+#### Upstream addresses
+
+Static upstream addresses can take the form of a conventional [Caddy network address](/docs/conventions#network-addresses) or a URL that contains only scheme and host/port. Valid examples:
 
 - `localhost:4000`
 - `127.0.0.1:4000`
@@ -116,16 +135,69 @@ Upstream addresses can take the form of a conventional [Caddy network address](/
 - `h2c://127.0.0.1`
 - `example.com`
 - `unix//var/php.sock`
-- `srv+http://internal.service.consul`
-- `srv+https://internal.service.consul`
 
-Note: Schemes cannot be mixed, since they modify the common transport configuration (a TLS-enabled transport cannot carry both HTTPS and plaintext HTTP). Specifying ports 80 and 443 are the same as specifying the HTTP and HTTPS schemes, respectively. Any explicit transport configuration will not be overwritten, and omitting schemes or using other ports will not assume a particular transport.
+Note: Schemes cannot be mixed, since they modify the common transport configuration (a TLS-enabled transport cannot carry both HTTPS and plaintext HTTP). Any explicit transport configuration will not be overwritten, and omitting schemes or using other ports will not assume a particular transport.
 
 Additionally, upstream addresses cannot contain paths or query strings, as that would imply simultaneous rewriting the request while proxying, which behavior is not defined or supported. You may use the [`rewrite`](/docs/caddyfile/directives/rewrite) directive should you need this.
 
-If the address is not a URL (i.e. does not have a scheme), then placeholders can be used, but this makes the upstream dynamic, meaning that the potentially many different backends act as one upstream in terms of health checks and load balancing.
+If the address is not a URL (i.e. does not have a scheme), then placeholders can be used, but this makes the upstream _dynamically static_, meaning that potentially many different backends act as a single, static upstream in terms of health checks and load balancing.
 
-When proxying over HTTPS, you may need to override the `Host` header (which by default, retains the value from the original request) such that the `Host` header matches the TLS SNI value, which is used by servers for routing and certificate selection. See the [Headers](#headers) section below for more details.
+When proxying over HTTPS, you may need to override the `Host` header such that it matches the TLS SNI value, which is used by servers for routing and certificate selection. See the [Headers](#headers) section below for more details.
+
+
+#### Dynamic upstreams
+
+Caddy's reverse proxy comes standard with some dynamic upstream modules. Note that using dynamic upstreams has implications for load balancing and health checks, depending on specific policy configuration: active health checks do not run for dynamic upstreams; and load balancing and passive health checks are best served if the list of upstreams is relatively stable and consistent (especially with round-robin). Ideally, dynamic upstream modules only return healthy, usable backends.
+
+
+##### SRV
+
+Retrieves upstreams from SRV DNS records.
+
+```caddy-d
+	dynamic srv [<name>] {
+		service   <service>
+		proto     <proto>
+		name      <name>
+		refresh   <interval>
+		resolvers <ip...>
+		dial_timeout        <duration>
+		dial_fallback_delay <duration>
+	}
+```
+
+- **&lt;name&gt;** - The full domain name of the record to look up (i.e. `_service._proto.name`).
+- **service** - The service component of the full name.
+- **proto** - The protocol component of the full name. Either `tcp` or `udp`.
+- **name** - The name component. Or, if `service` and `proto` are empty, the full domain name to query.
+- **refresh** - How often to refresh cached results. Default: `1m`
+- **resolvers** - List of DNS resolvers to override system resolvers.
+- **dial_timeout** - Timeout for dialing the query.
+- **dial_fallback_delay** - Timeout for falling back from IPv6 to IPv4 via RFC 6555. Default: `300ms`
+
+
+
+##### A/AAAA
+
+Retrieves upstreams from A/AAAA DNS records.
+
+```caddy-d
+	dynamic a [<name> <port>] {
+		name      <name>
+		port      <port>
+		refresh   <interval>
+		resolvers <ip...>
+		dial_timeout        <duration>
+		dial_fallback_delay <duration>
+	}
+```
+
+- **&lt;name&gt;, name** - The domain name to query.
+- **&lt;port&gt;, port** - The port to use for the backend.
+- **refresh** - How often to refresh cached results. Default: `1m`
+- **resolvers** - List of DNS resolvers to override system resolvers.
+- **dial_timeout** - Timeout for dialing the query.
+- **dial_fallback_delay** - Timeout for falling back from IPv6 to IPv4 via RFC 6555. Default: `300ms`
 
 
 
@@ -193,24 +265,25 @@ The proxy can **manipulate headers** between itself and the backend:
 - **header_up** <span id="header_up"/> Sets, adds, removes, or performs a replacement in a request header going upstream to the backend.
 - **header_down** <span id="header_down"/> Sets, adds, removes, or performs a replacement in a response header coming downstream from the backend.
 
-
 #### Defaults
 
-By default, Caddy passes thru incoming headers to the backend&mdash;including the `Host` header&mdash;without modifications, with two exceptions:
+By default, Caddy passes thru incoming headers&mdash;including `Host`&mdash;to the backend without modifications, with three exceptions:
 
 - It adds or augments the [X-Forwarded-For](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For) header field.
 - It sets the [X-Forwarded-Proto](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Proto) header field.
+- It sets the [X-Forwarded-Host](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Host) header field.
+
+For these `X-Forwarded-*` headers, by default, Caddy will ignore their values from incoming requests, to prevent spoofing. If Caddy is not the first server being connected to by your clients (for example when a CDN is in front of Caddy), you may configure `trusted_proxies` <span id="trusted_proxies"/> with a list of IP ranges (CIDRs) from which incoming requests are trusted to have sent good values for these headers. As a shortcut, `trusted_proxies private_ranges` may be configured to trust all private IP ranges.
 
 Additionally, when using the [`http` transport](#the-http-transport), the `Accept-Encoding: gzip` header will be set, if it is missing in the request from the client. This behavior can be disabled with [`compression off`](#compression) on the transport.
 
 #### HTTPS
 
-For HTTPS upstreams, since the `Host` header retains its original value, it is typically necessary to override the header with the configured upstream address, such that the `Host` header matches the TLS SNI value. A `X-Forwarded-Host` header may also be added to inform the upstream of the original `Host` header's value. For example:
+Since (most) headers retain their original value when being proxied, it is often necessary to override the `Host` header with the configured upstream address when proxying to HTTPS, such that the `Host` header matches the TLS ServerName value. For example:
 
 ```caddy-d
 reverse_proxy https://example.com {
 	header_up Host {upstream_hostport}
-	header_up X-Forwarded-Host {host}
 }
 ```
 
@@ -297,18 +370,27 @@ transport fastcgi {
 - **write_timeout** <span id="write_timeout"/> is how long to wait when sending to the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
 
 
+
+
 ### Intercepting responses
 
 The reverse proxy can be configured to intercept responses from the backend. To facilitate this, response matchers can be defined (similar to the syntax for request matchers) and the first matching `handle_response` route will be invoked. When this happens, the response from the backend is not written to the client, and the configured `handle_response` route will be executed instead, and it is up to that route to write a response.
 
 - **@name** is the name of a [response matcher](#response-matcher). As long as each response matcher has a unique name, multiple matchers can be defined. A response can be matched on the status code and presence or value of a response header.
+- **replace_status** <span id="replace_status"/> simply changes the status code of response when matched by the given matcher.
 - **handle_response** <span id="handle_response"/> defines the route to execute when matched by the given matcher (or, if a matcher is omitted, all responses). The first matching block will be applied. Inside a `handle_response` block, any other [directives](/docs/caddyfile/directives) can be used.
 
-Three placeholders will be made available to the `handle_response` routes:
+Additionally, inside `handle_response`, two special handler directives may be used:
+
+- **copy_response** <span id="copy_response"/> copies the response from the backend back to the client. Optionally allows changing the status code of the response while doing so. This directive is [ordered before `respond`](/docs/caddyfile/directives#directive-order).
+- **copy_response_headers** <span id="copy_response_headers"/> copies the response headers from the backend to the client, optionally including _OR_ excluding a list of headers fields (cannot specify both `include` and `exclude`). This directive is [ordered after `header`](/docs/caddyfile/directives#directive-order).
+
+Three placeholders will be made available within the `handle_response` routes:
 
 - `{http.reverse_proxy.status_code}` The status code from the backend's response.
 - `{http.reverse_proxy.status_text}` The status text from the backend's response.
 - `{http.reverse_proxy.header.*}` The headers from the backend's response.
+
 
 #### Response matcher
 
@@ -326,7 +408,11 @@ By HTTP status code.
 
 ##### header
 
-See the [header](/docs/caddyfile/matchers#header) request matcher for the supported syntax.
+See the [`header`](/docs/caddyfile/matchers#header) request matcher for the supported syntax.
+
+
+
+
 
 ## Examples
 
@@ -401,7 +487,7 @@ reverse_proxy localhost:8080 {
 	@accel header X-Accel-Redirect *
 	handle_response @accel {
 		root    * /path/to/private/files
-		rewrite   {http.reverse_proxy.header.X-Accel-Redirect}
+		rewrite * {http.reverse_proxy.header.X-Accel-Redirect}
 		file_server
 	}
 }
@@ -418,5 +504,21 @@ reverse_proxy localhost:8080 {
 		rewrite * /{http.reverse_proxy.status_code}.html
 		file_server
 	}
+}
+```
+
+Get backends dynamically from A/AAAA record DNS queries:
+
+```caddy-d
+reverse_proxy {
+	dynamic a example.com 9000
+}
+```
+
+Get backends dynamically from SRV record DNS queries:
+
+```caddy-d
+reverse_proxy {
+	dynamic srv _api._tcp.example.com
 }
 ```

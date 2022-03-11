@@ -58,7 +58,7 @@ Caddy's configuration supports the use of _placeholders_ (variables). Using plac
 
 Placeholders are bounded on either side by curly braces `{ }` and contain the variable name inside, for example: `{foo.bar}`. Placeholder braces can be escaped, `\{like so\}`. Variable names are typically namespaced with dots to avoid collisions across modules.
 
-Which placeholders are available depends on the context. Not all placeholders are available in all parts of the config. For example, [the HTTP app sets placeholders](/docs/json/apps/http/) that are only available in areas of the config related to handling HTTP requests.
+Which placeholders are available depends on the context. Not all placeholders are available in all parts of the config. For example, [the HTTP app sets placeholders](/docs/json/apps/http/#docs) that are only available in areas of the config related to handling HTTP requests.
 
 The following placeholders are always available:
 

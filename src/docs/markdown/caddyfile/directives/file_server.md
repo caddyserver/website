@@ -21,6 +21,7 @@ file_server [<matcher>] [browse] {
 	precompressed <formats...>
 	status        <status>
 	disable_canonical_uris
+	pass_thru
 }
 ```
 
@@ -32,6 +33,7 @@ file_server [<matcher>] [browse] {
 - **precompressed** is the list of encoding formats to search for precompressed sidecar files. Arguments are an ordered list of encoding formats to search for precompressed sidecar files. Supported formats are `gzip`, `zstd` and `br`.
 - **status** is an optional status code override to be used when writing the response. Particularly useful when responding to a request with a custom error page. Can be a 3-digit status code, For example: `404`. Placeholders are supported. By default, the written status code will typically be `200`, or `206` for partial content.
 - **disable_canonical_uris** disables the default behaviour of redirecting to add a trailing slash if the request path is a directory, or remove the trailing slash if the request path is a file. Note that by default, canonicalization will not happen if the last element of the request's path (the filename) underwent an internal rewrite, to avoid clobbering an explicit rewrite with implicit behaviour.
+- **pass_thru** enables pass-thru mode, which continues to the next HTTP handler in the route if the requested file is not found, instead of returning a `404`. Practically, this is likely only be useful inside of a [`route`](/docs/caddyfile/directives/route) block, because the `file_server` directive is effectively [ordered last](/docs/caddyfile/directives#directive-order) otherwise.
 
 ## Examples
 
