@@ -96,33 +96,33 @@ Export entire config and pretty-print it:
 
 <pre><code class="cmd"><span class="bash">curl "http://localhost:2019/config/" | jq</span>
 {
-  "apps": {
-    "http": {
-      "servers": {
-        "myserver": {
-          "listen": [
-            ":443"
-          ],
-          "routes": [
-            {
-              "match": [
-                {
-                  "host": [
-                    "example.com"
-                  ]
-                }
-              ],
-              "handle": [
-                {
-                  "handler": "file_server"
-                }
-              ]
-            }
-          ]
-        }
-      }
-    }
-  }
+	"apps": {
+		"http": {
+			"servers": {
+				"myserver": {
+					"listen": [
+						":443"
+					],
+					"routes": [
+						{
+							"match": [
+								{
+									"host": [
+										"example.com"
+									]
+								}
+							],
+							"handle": [
+								{
+									"handler": "file_server"
+								}
+							]
+						}
+					]
+				}
+			}
+		}
+	}
 }</code></pre>
 
 Export just the listener addresses:
@@ -244,12 +244,12 @@ Returns information about a particular [PKI app](/docs/json/apps/pki/) CA by its
 
 <pre><code class="cmd"><span class="bash">curl "http://localhost:2019/pki/ca/local" | jq</span>
 {
-  "id": "local",
-  "name": "Caddy Local Authority",
-  "root_common_name": "Caddy Local Authority - 2022 ECC Root",
-  "intermediate_common_name": "Caddy Local Authority - ECC Intermediate",
-  "root_certificate": "-----BEGIN CERTIFICATE-----\nMIIB ... gRw==\n-----END CERTIFICATE-----\n",
-  "intermediate_certificate": "-----BEGIN CERTIFICATE-----\nMIIB ... FzQ==\n-----END CERTIFICATE-----\n"
+	"id": "local",
+	"name": "Caddy Local Authority",
+	"root_common_name": "Caddy Local Authority - 2022 ECC Root",
+	"intermediate_common_name": "Caddy Local Authority - ECC Intermediate",
+	"root_certificate": "-----BEGIN CERTIFICATE-----\nMIIB ... gRw==\n-----END CERTIFICATE-----\n",
+	"intermediate_certificate": "-----BEGIN CERTIFICATE-----\nMIIB ... FzQ==\n-----END CERTIFICATE-----\n"
 }</code></pre>
 
 
