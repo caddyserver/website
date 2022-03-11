@@ -321,46 +321,64 @@ Note: the flag `--config` doesn't support `-` to read the config from stdin.
 
 Use of this command is discouraged with system services or on Windows. On Windows, the child process will remain attached to the terminal, so closing the window will forcefully stop Caddy, which is not obvious. Consider running Caddy [as a service](/docs/running) instead.
 
-Once started, you can use [`caddy stop`](#caddy-stop) or [the /stop API endpoint](/docs/api#post-stop) to exit the background process.
+Once started, you can use [`caddy stop`](#caddy-stop) or the [`POST /stop`](/docs/api#post-stop) API endpoint to exit the background process.
 
 
 
 ### `caddy stop`
 
-<pre><code class="cmd bash">caddy stop [--address &lt;interface&gt;]</code></pre>
+<pre><code class="cmd bash">caddy stop
+	[--address &lt;interface&gt;]
+	[--config &lt;path&gt; [--adapter &lt;name&gt;]]</code></pre>
 
 <aside class="tip">
 	Stopping (and restarting) the server is orthogonal to config changes. <b>Do not use the stop command to change configuration in production, unless you want downtime.</b> Use the <a href="#caddy-reload">caddy reload</a> command instead.
 </aside>
 
-Gracefully stops the running Caddy process (other than the process of the stop command) and causes it to exit. It uses the [/stop endpoint](/docs/api#post-stop) of the admin API to perform a graceful shutdown.
+Gracefully stops the running Caddy process (other than the process of the stop command) and causes it to exit. It uses the [`POST /stop`](/docs/api#post-stop)  endpoint of the admin API to perform a graceful shutdown.
 
-`--address` can be used if the running instance's admin API is not on the default port; an alternate address can be specified here.
+The address of this request can be customized using the `--address` flag, or from the given `--config`, if the running instance's admin API is not using the default listen address.
 
 If you want to stop the current configuration but do not want to exit the process, use [`caddy reload`](#caddy-reload) with a blank config, or the [`DELETE /config/`](/docs/api#delete-configpath) endpoint.
 
 
 ### `caddy trust`
 
-<pre><code class="cmd bash">caddy trust</code></pre>
+<pre><code class="cmd bash">caddy trust
+	[--ca &lt;id&gt;]
+	[--address &lt;interface&gt;]
+	[--config &lt;path&gt; [--adapter &lt;name&gt;]]</code></pre>
 
-Installs the root certificate for Caddy's default internal CA (named "local") into the local trust store(s); intended for development environments only. May prompt for a password if there are not already sufficient privileges.
+Installs a root certificate for a CA managed by Caddy's [PKI app](/docs/json/apps/pki/) into local trust stores. 
 
-**This command is often unnecessary.** Because Caddy will install its root certificate into local trust stores automatically when first needed, this command is only useful if you need to pre-install the certificates while you have elevated privileges, like during system provisioning in automated environments.
+Caddy will attempt to install its root certificates into the local trust stores automatically when they are first generated, but it might fail if Caddy doesn't have the appropriate permissions to write to the trust store. This command is necessary to pre-install the certificates before using them, if the server process runs as an unprivileged user (such as via systemd). You may need to run this command with `sudo` to unix systems.
+
+By default, this command installs the root certificate for Caddy's default CA (i.e. "local"). You may specify the ID of another CA with the `--ca` flag.
+
+This command will attempt to connect to Caddy's [admin API](/docs/api) to fetch the root certificate, using the [`GET /pki/ca/<id>/certificates`](/docs/api#get-pkicaidcertificates) endpoint. You may explicitly specify the `--address`, or use the `--config` flag to load the admin address from your config, if the running instance's admin API is not using the default listen address.
+
+You may also use the `caddy` binary with this command to install certificates on other machines in your network, if the admin API is made accessible to other machines -- be careful if doing this, to not expose the admin API to untrusted clients.
 
 
 ### `caddy untrust`
 
 <pre><code class="cmd bash">caddy untrust
+	[--cert &lt;path&gt;]
 	[--ca &lt;id&gt;]
-	[--cert &lt;path&gt;]</code></pre>
+	[--address &lt;interface&gt;]
+	[--config &lt;path&gt; [--adapter &lt;name&gt;]]</code></pre>
 
-Untrusts a root certificate from the local trust store(s). Intended for development environments only. Specify either the `--ca` or `--cert` flags, but not both. If neither are specified, Caddy's default CA (`local`).
+Untrusts a root certificate from the local trust store(s).
 
-`--ca` specifies the ID of the Caddy CA to untrust. The default CA's ID is `local`.
+This command uninstalls trust; it does not necessarily delete the root certificate from trust stores entirely. Thus, repeatedly trusting and untrusting new certificates can fill up trust databases.
 
-`--cert` specifies the path to the PEM-encoded certificate file to uninstall.
+This command does not delete or modify certificate files from Caddy's configured storage.
 
+This command can be used in one of two ways:
+- By specifying a direct path to the root certificate to untrust with the `--cert` flag.
+- By fetching the root certificate from the [admin API](/docs/api) using the [`GET /pki/ca/<id>/certificates`](/docs/api#get-pkicaidcertificates) endpoint. This is the default behaviour if no flags are given.
+
+If the admin API is used, then the CA ID defaults to "local". You may specify the ID of another CA with the `--ca` flag. You may explicitly specify the `--address`, or use the `--config` flag to load the admin address from your config, if the running instance's admin API is not using the default listen address.
 
 
 ### `caddy upgrade`
