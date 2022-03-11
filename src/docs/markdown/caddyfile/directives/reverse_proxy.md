@@ -85,6 +85,7 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 	max_buffer_size <size>
 
     # header manipulation
+	trusted_proxies [private_ranges] <ranges...>
     header_up   [+|-]<field> [<value|regexp> [<replacement>]]
     header_down [+|-]<field> [<value|regexp> [<replacement>]]
 
@@ -264,7 +265,6 @@ The proxy can **manipulate headers** between itself and the backend:
 - **header_up** <span id="header_up"/> Sets, adds, removes, or performs a replacement in a request header going upstream to the backend.
 - **header_down** <span id="header_down"/> Sets, adds, removes, or performs a replacement in a response header coming downstream from the backend.
 
-
 #### Defaults
 
 By default, Caddy passes thru incoming headers&mdash;including `Host`&mdash;to the backend without modifications, with three exceptions:
@@ -272,6 +272,8 @@ By default, Caddy passes thru incoming headers&mdash;including `Host`&mdash;to t
 - It adds or augments the [X-Forwarded-For](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For) header field.
 - It sets the [X-Forwarded-Proto](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Proto) header field.
 - It sets the [X-Forwarded-Host](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Host) header field.
+
+For these `X-Forwarded-*` headers, by default, Caddy will ignore their values from incoming requests, to prevent spoofing. If Caddy is not the first server being connected to by your clients (for example when a CDN is in front of Caddy), you may configure `trusted_proxies` <span id="trusted_proxies"/> with a list of IP ranges (CIDRs) from which incoming requests are trusted to have sent good values for these headers. As a shortcut, `trusted_proxies private_ranges` may be configured to trust all private IP ranges.
 
 Additionally, when using the [`http` transport](#the-http-transport), the `Accept-Encoding: gzip` header will be set, if it is missing in the request from the client. This behavior can be disabled with [`compression off`](#compression) on the transport.
 
