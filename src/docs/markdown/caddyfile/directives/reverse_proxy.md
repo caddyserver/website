@@ -13,7 +13,7 @@ $(function() {
 			$(item).addClass('nd').removeClass('k')
 			$(item).html('<a href="#response-matcher" style="color: inherit;" title="Response matcher">' + text + '</a>');
 		});
-	
+
 	// Fix matcher placeholder
 	$('pre.chroma .k:contains("handle_response")').first().nextAll().slice(0, 3)
 		.wrapAll('<span class="nd">').parent()
@@ -98,8 +98,18 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 		status <code...>
 		header <field> [<value>]
 	}
-	handle_response [<matcher>] [status_code] {
+	replace_status [<matcher>] <status_code>
+	handle_response [<matcher>] {
 		<directives...>
+
+		# special directives only available in handle_response
+		copy_response [<matcher>] [<status>] {
+			status <status>
+		}
+		copy_response_headers [<matcher>] {
+			include <fields...>
+			exclude <fields...>
+		}
 	}
 }
 ```
@@ -358,18 +368,27 @@ transport fastcgi {
 - **write_timeout** <span id="write_timeout"/> is how long to wait when sending to the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
 
 
+
+
 ### Intercepting responses
 
 The reverse proxy can be configured to intercept responses from the backend. To facilitate this, response matchers can be defined (similar to the syntax for request matchers) and the first matching `handle_response` route will be invoked. When this happens, the response from the backend is not written to the client, and the configured `handle_response` route will be executed instead, and it is up to that route to write a response.
 
 - **@name** is the name of a [response matcher](#response-matcher). As long as each response matcher has a unique name, multiple matchers can be defined. A response can be matched on the status code and presence or value of a response header.
+- **replace_status** <span id="replace_status"/> simply changes the status code of response when matched by the given matcher.
 - **handle_response** <span id="handle_response"/> defines the route to execute when matched by the given matcher (or, if a matcher is omitted, all responses). The first matching block will be applied. Inside a `handle_response` block, any other [directives](/docs/caddyfile/directives) can be used.
 
-Three placeholders will be made available to the `handle_response` routes:
+Additionally, inside `handle_response`, two special handler directives may be used:
+
+- **copy_response** <span id="copy_response"/> copies the response from the backend back to the client. Optionally allows changing the status code of the response while doing so. This directive is [ordered before `respond`](/docs/caddyfile/directives#directive-order).
+- **copy_response_headers** <span id="copy_response_headers"/> copies the response headers from the backend to the client, optionally including _OR_ excluding a list of headers fields (cannot specify both `include` and `exclude`). This directive is [ordered after `header`](/docs/caddyfile/directives#directive-order).
+
+Three placeholders will be made available within the `handle_response` routes:
 
 - `{http.reverse_proxy.status_code}` The status code from the backend's response.
 - `{http.reverse_proxy.status_text}` The status text from the backend's response.
 - `{http.reverse_proxy.header.*}` The headers from the backend's response.
+
 
 #### Response matcher
 
@@ -387,7 +406,11 @@ By HTTP status code.
 
 ##### header
 
-See the [header](/docs/caddyfile/matchers#header) request matcher for the supported syntax.
+See the [`header`](/docs/caddyfile/matchers#header) request matcher for the supported syntax.
+
+
+
+
 
 ## Examples
 
@@ -462,7 +485,7 @@ reverse_proxy localhost:8080 {
 	@accel header X-Accel-Redirect *
 	handle_response @accel {
 		root    * /path/to/private/files
-		rewrite   {http.reverse_proxy.header.X-Accel-Redirect}
+		rewrite * {http.reverse_proxy.header.X-Accel-Redirect}
 		file_server
 	}
 }
