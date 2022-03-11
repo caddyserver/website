@@ -13,6 +13,10 @@ $(function() {
 
 Enables and configures HTTP request logging (also known as access logs).
 
+<aside class="tip">
+	If you're looking to configure Caddy's runtime logs, you're looking for the <a href="/docs/caddyfile/options#log"><code>log</code> global option</a> instead.
+</aside>
+
 The `log` directive applies to the host/port of the site block it appears in, not any other part of the site address (e.g. path).
 
 - [Syntax](#syntax)

@@ -132,7 +132,13 @@ Possible options are:
 ## General Options
 
 ##### `debug`
-Enables debug mode, which sets the log level to `DEBUG` for the default logger. This reveals more details that can be useful when troubleshooting (and is very verbose in production). We ask that you enable this before asking for help on the [community forums](https://caddy.community).
+Enables debug mode, which sets the log level to `DEBUG` for the [default logger](#log). This reveals more details that can be useful when troubleshooting (and is very verbose in production). We ask that you enable this before asking for help on the [community forums](https://caddy.community). For example, at the top of your Caddyfile, if you have no other global options:
+
+```caddy
+{
+	debug
+}
+```
 
 
 ##### `http_port`
@@ -188,13 +194,15 @@ Customizes the [admin API endpoint](/docs/api). If `off`, then the admin endpoin
 
 
 ##### `log`
-Customizes the named logger. The name can be passed to indicate a specific logger to customize the behavior for. If no name is specified, the behavior of the default logger is modified. This option can be specified multiple times to configure different loggers. You can read more about the default logger and other logging behaviors in the [logging documentation](/docs/logging).
+Configures named loggers. The name can be passed to indicate a specific logger for which to customize the behavior. If no name is specified, the behavior of the `default` logger is modified. Multiple loggers with different names can be configured by using the `log` multiple times. You can read more about the `default` logger and an explanation of [how logging works in Caddy](/docs/logging).
 
-- **output** configures where to write the logs. See the [log directive](/docs/caddyfile/directives/log#output-modules) documentation for more information, which has the same structure.
-- **format** describes how to encode, or format, the logs. See the [log directive](/docs/caddyfile/directives/log#format-modules) documentation for more information, which has the same structure.
-- **level** is the minimum entry level to log. Default: `INFO`
-- **include** identifies the loggers that are included in this log configuration. See the [JSON documentation](/docs/json/logging/logs/include/) for more information.
-- **exclude** identifies the loggers that are excluded from this log configuration. See the [JSON documentation](/docs/json/logging/logs/exclude/) for more information.
+The differs from the [`log` directive](/docs/caddyfile/directives/log), which only configures HTTP request logging (also known as access logs). The `log` global option shares its configuration structure with the directive (except for `include` and `exclude`), and complete documentation can be found on the directive's page.
+
+- **output** configures where to write the logs. See the [`log` directive](/docs/caddyfile/directives/log#output-modules) for complete documentation.
+- **format** describes how to encode, or format, the logs. See the [`log` directive](/docs/caddyfile/directives/log#format-modules) for complete documentation.
+- **level** is the minimum entry level to log. Default: `INFO`.
+- **include** specifies the log names to be included in this logger. For example, to include only logs emitted by the admin API, you would include `admin.api`.
+- **exclude** specifies the log names to be excluded from this logger. For example, to exclude only HTTP access logs, you would exclude `http.log.access`.
 
 
 ##### `grace_period`
