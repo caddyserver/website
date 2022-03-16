@@ -45,16 +45,24 @@ Installing this package automatically starts and runs Caddy as a [systemd servic
 Stable releases:
 
 <pre><code class="cmd"><span class="bash">sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https</span>
-<span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo tee /etc/apt/trusted.gpg.d/caddy-stable.asc</span>
-<span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list</span>
+<span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' \\</span>
+<span class="bash-continuation">  | gpg --dearmor \\</span>
+<span class="bash-continuation">  | sudo tee /usr/share/keyrings/caddy-stable-archive-keyring.gpg >/dev/null</span>
+<span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' \\</span>
+<span class="bash-continuation">  | sed 's|^deb\(-src\)\?|\0 [signed-by=/usr/share/keyrings/caddy-stable-archive-keyring.gpg]|' \\</span>
+<span class="bash-continuation">  | sudo tee /etc/apt/sources.list.d/caddy-stable.list</span>
 <span class="bash">sudo apt update</span>
 <span class="bash">sudo apt install caddy</span></code></pre>
 
 Testing releases (includes betas and release candidates):
 
 <pre><code class="cmd"><span class="bash">sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https</span>
-<span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/testing/gpg.key' | sudo tee /etc/apt/trusted.gpg.d/caddy-testing.asc</span>
-<span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/testing/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-testing.list</span>
+<span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/testing/gpg.key' \\</span>
+<span class="bash-continuation">  | gpg --dearmor \\</span>
+<span class="bash-continuation">  | sudo tee /usr/share/keyrings/caddy-testing-archive-keyring.gpg >/dev/null</span>
+<span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/testing/debian.deb.txt' \\</span>
+<span class="bash-continuation">  | sed 's|^deb\(-src\)\?|\0 [signed-by=/usr/share/keyrings/caddy-testing-archive-keyring.gpg]|' \\</span>
+<span class="bash-continuation">  | sudo tee /etc/apt/sources.list.d/caddy-testing.list</span>
 <span class="bash">sudo apt update</span>
 <span class="bash">sudo apt install caddy</span></code></pre>
 
