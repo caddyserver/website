@@ -137,15 +137,16 @@ In addition to the syntax for each individual encoder, these common properties c
 
 ```caddy-d
 format <encoder_module> {
-	message_key <key>
-	level_key   <key>
-	time_key    <key>
-	name_key    <key>
-	caller_key  <key>
-	stacktrace_key <key>
-	line_ending  <char>
-	time_format  <format>
-	level_format <format>
+	message_key     <key>
+	level_key       <key>
+	time_key        <key>
+	name_key        <key>
+	caller_key      <key>
+	stacktrace_key  <key>
+	line_ending     <char>
+	time_format     <format>
+	duration_format <format>
+	level_format    <format>
 }
 ```
 
@@ -156,8 +157,27 @@ format <encoder_module> {
 - **caller_key** The key for the caller field of the log entry.
 - **stacktrace_key** The key for the stacktrace field of the log entry.
 - **line_ending** The line endings to use.
-- **time_format** The format for timestamps.
-- **level_format** The format for levels.
+- **time_format** The format for timestamps. May be one of:
+  - **unix_seconds_float** Floating-point number of seconds since the Unix epoch; this is the default.
+  - **unix_milli_float** Floating-point number of milliseconds since the Unix epoch.
+  - **unix_nano** Integer number of nanoseconds since the Unix epoch.
+  - **iso8601** Example: `2006-01-02T15:04:05.000Z0700`
+  - **rfc3339** Example: `2006-01-02T15:04:05Z07:00`
+  - **rfc3339_nano** Example: `2006-01-02T15:04:05.999999999Z07:00`
+  - **wall** Example: `2006/01/02 15:04:05`
+  - **wall_milli** Example: `2006/01/02 15:04:05.000`
+  - **wall_nano** Example: `2006/01/02 15:04:05.000000000`
+  - **common_log** Example: `02/Jan/2006:15:04:05 -0700`
+  - Or, any compatible time layout string; see the [Go documentation](https://pkg.go.dev/time#pkg-constants) for full details.
+- **duration_format** The format for durations. May be one of:
+  - **seconds** Floating-point number of seconds elapsed; this is the default.
+  - **nano** Integer number of nanoseconds elapsed.
+  - **string** Using Go's built-in string format, for example `1m32.05s` or `6.31ms`.
+- **level_format** The format for levels. May be one of:
+  - **lower** Lowercase; this is the default.
+  - **upper** Uppercase.
+  - **color** Uppercase, with console colors.
+  
 
 #### console
 

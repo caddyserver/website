@@ -262,14 +262,42 @@ The proxy **buffers responses** by default for wire efficiency:
 
 The proxy can **manipulate headers** between itself and the backend:
 
-- **header_up** <span id="header_up"/> Sets, adds, removes, or performs a replacement in a request header going upstream to the backend.
-- **header_down** <span id="header_down"/> Sets, adds, removes, or performs a replacement in a response header coming downstream from the backend.
+- **header_up** <span id="header_up"/> Sets, adds (with the `+` prefix), removes (with the `-` prefix), or performs a replacement (by using two arguments, a search and replacement) in a request header going upstream to the backend.
+- **header_down** <span id="header_down"/> Sets, adds (with the `+` prefix), removes (with the `-` prefix), or performs a replacement (by using two arguments, a search and replacement) in a response header coming downstream from the backend.
+
+For example, to set a request header, overwriting any existing values:
+
+```caddy-d
+header_up Some-Header "the value"
+```
+
+To add a response header; note that there can be multiple values for a header field:
+
+```caddy-d
+header_down +Some-Header "first value"
+header_down +Some-Header "second value"
+```
+
+To remove a request header, preventing it from reaching the backend:
+
+```caddy-d
+header_up -Some-Header
+```
+
+To perform a regular expression replacement on a request header:
+
+```caddy-d
+header_up Some-Header "^prefix-([A-Za-z0-9]*)$" "replaced-$1-suffix"
+```
+
+The regular expression language used is RE2, included in Go. See the [RE2 syntax reference](https://github.com/google/re2/wiki/Syntax) and the [Go regexp syntax overview](https://pkg.go.dev/regexp/syntax). The replacement string is [expanded](https://pkg.go.dev/regexp#Regexp.Expand), allowing use of captured values, for example `$1` being the first capture group.
+
 
 #### Defaults
 
 By default, Caddy passes thru incoming headers&mdash;including `Host`&mdash;to the backend without modifications, with three exceptions:
 
-- It adds or augments the [X-Forwarded-For](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For) header field.
+- It sets or augments the [X-Forwarded-For](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For) header field.
 - It sets the [X-Forwarded-Proto](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Proto) header field.
 - It sets the [X-Forwarded-Host](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Host) header field.
 
