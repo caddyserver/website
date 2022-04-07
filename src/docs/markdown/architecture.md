@@ -53,7 +53,7 @@ The core of Caddy knows how to work with some of these fields natively:
 - [`admin`](/docs/json/admin/) so it can set up the [admin API](/docs/api) and manage the process
 - [`logging`](/docs/json/logging/) so it can [emit logs](/docs/logging)
 
-But other top-level fields (like [`apps`](/docs/json/apps/)) are opaque to the core of Caddy. In fact, all Caddy knows how to do with the bytes in `apps` is deserialize them into an interface type that it can call two methods on:
+But other top-level fields (like [`apps`](/docs/json/apps/)) are opaque to the core of Caddy. In fact, all Caddy knows to do with the bytes in `apps` is deserialize them into an interface type that it can call two methods on:
 
 1. `Start()`
 2. `Stop()`
@@ -97,7 +97,7 @@ Since any properties from the JSON encoding will already have been decoded, only
 
 You can get a sense for this by [traversing Caddy's JSON structure in our docs](/docs/json/). Anywhere you see `{•••}` is where guest modules may be used; and as you click into one, you can continue exploring all the way down until there are no more guest modules.
 
-Other common provisioning tasks are setting up internal values that will be used during the module's lifetime, or standardizing inputs. For example, the [http.matchers.remote_ip](/docs/modules/http.matchers.remote_ip) module uses the provisioning phase to parse CIDR values out of the string inputs it received from the JSON. That way, it doesn't have to do this during every HTTP request, and is more efficient as a result.
+Other common provisioning tasks are setting up internal values that will be used during the module's lifetime, or standardizing inputs. For example, the [`http.matchers.remote_ip`](/docs/modules/http.matchers.remote_ip) module uses the provisioning phase to parse CIDR values out of the string inputs it received from the JSON. That way, it doesn't have to do this during every HTTP request, and is more efficient as a result.
 
 Validation also can take place in the provision phase. If a module's resulting config is invalid, an error can be returned here which aborts the entire config load process.
 

@@ -373,7 +373,7 @@ If you wish to _not_ have these headers redacted, you may enable the `log_creden
 
 - **strict_sni_host** require that a request's `Host` header matches the value of the ServerName sent by the client's TLS ClientHello; often a necessary safeguard when using TLS client authentication. If there's a mismatch, an HTTP status `421 Misdirected Request` response is written to the client.
   
-  This option will be implicitly turned on if [client authentication](/docs/caddyfile/directives/tls#client_auth) is configured. This disallow TLS client auth bypass (domain fronting) which could otherwise be exploited by sending an unprotected SNI value during a TLS handshake, then putting a protected domain in the Host header after establishing connection. This is a safe default, but you may explicitly turn it off with `insecure_off`, for example in the case of running a proxy where domain fronting is desired and access is not restricted based on hostname.
+  This option will be implicitly turned on if [client authentication](/docs/caddyfile/directives/tls#client_auth) is configured. This disallows TLS client auth bypass (domain fronting) which could otherwise be exploited by sending an unprotected SNI value during a TLS handshake, then putting a protected domain in the Host header after establishing connection. This is a safe default, but you may explicitly turn it off with `insecure_off`, for example in the case of running a proxy where domain fronting is desired and access is not restricted based on hostname.
 
 
 

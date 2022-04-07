@@ -262,14 +262,42 @@ The proxy **buffers responses** by default for wire efficiency:
 
 The proxy can **manipulate headers** between itself and the backend:
 
-- **header_up** <span id="header_up"/> Sets, adds, removes, or performs a replacement in a request header going upstream to the backend.
-- **header_down** <span id="header_down"/> Sets, adds, removes, or performs a replacement in a response header coming downstream from the backend.
+- **header_up** <span id="header_up"/> Sets, adds (with the `+` prefix), removes (with the `-` prefix), or performs a replacement (by using two arguments, a search and replacement) in a request header going upstream to the backend.
+- **header_down** <span id="header_down"/> Sets, adds (with the `+` prefix), removes (with the `-` prefix), or performs a replacement (by using two arguments, a search and replacement) in a response header coming downstream from the backend.
+
+For example, to set a request header, overwriting any existing values:
+
+```caddy-d
+header_up Some-Header "the value"
+```
+
+To add a response header; note that there can be multiple values for a header field:
+
+```caddy-d
+header_down +Some-Header "first value"
+header_down +Some-Header "second value"
+```
+
+To remove a request header, preventing it from reaching the backend:
+
+```caddy-d
+header_up -Some-Header
+```
+
+To perform a regular expression replacement on a request header:
+
+```caddy-d
+header_up Some-Header "^prefix-([A-Za-z0-9]*)$" "replaced-$1-suffix"
+```
+
+The regular expression language used is RE2, included in Go. See the [RE2 syntax reference](https://github.com/google/re2/wiki/Syntax) and the [Go regexp syntax overview](https://pkg.go.dev/regexp/syntax). The replacement string is [expanded](https://pkg.go.dev/regexp#Regexp.Expand), allowing use of captured values, for example `$1` being the first capture group.
+
 
 #### Defaults
 
 By default, Caddy passes thru incoming headers&mdash;including `Host`&mdash;to the backend without modifications, with three exceptions:
 
-- It adds or augments the [X-Forwarded-For](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For) header field.
+- It sets or augments the [X-Forwarded-For](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For) header field.
 - It sets the [X-Forwarded-Proto](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Proto) header field.
 - It sets the [X-Forwarded-Host](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Host) header field.
 
@@ -308,6 +336,7 @@ transport http {
 	dial_fallback_delay     <duration>
 	response_header_timeout <duration>
 	expect_continue_timeout <duration>
+	resolvers <ip...>
 	tls
 	tls_client_auth <automate_name> | <cert_file> <key_file>
 	tls_insecure_skip_verify
@@ -331,6 +360,7 @@ transport http {
 - **dial_fallback_delay** <span id="dial_fallback_delay"/> is how long to wait before spawning an RFC 6555 Fast Fallback connection. A negative value disables this. Accepts [duration values](/docs/conventions#durations). Default: `300ms`.
 - **response_header_timeout** <span id="response_header_timeout"/> is how long to wait for reading response headers from the upstream. Accepts [duration values](/docs/conventions#durations). Default: No timeout.
 - **expect_continue_timeout** <span id="expect_continue_timeout"/> is how long to wait for the upstreams's first response headers after fully writing the request headers if the request has the header `Expect: 100-continue`. Accepts [duration values](/docs/conventions#durations). Default: No timeout.
+- **resolvers** <span id="resolvers"/> is a list of DNS resolvers to override system resolvers.
 - **tls** <span id="tls"/> uses HTTPS with the backend. This will be enabled automatically if you specify backends using the `https://` scheme or port `:443`.
 - **tls_client_auth** <span id="tls_client_auth"/> enables TLS client authentication one of two ways: (1) by specifying a domain name for which Caddy should obtain a certificate and keep it renewed, or (2) by specifying a certificate and key file to present for TLS client authentication with the backend.
 - **tls_insecure_skip_verify** <span id="tls_insecure_skip_verify"/> turns off security. _Do not use in production._
