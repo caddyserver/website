@@ -336,6 +336,7 @@ transport http {
 	dial_fallback_delay     <duration>
 	response_header_timeout <duration>
 	expect_continue_timeout <duration>
+	resolvers <ip...>
 	tls
 	tls_client_auth <automate_name> | <cert_file> <key_file>
 	tls_insecure_skip_verify
@@ -359,6 +360,7 @@ transport http {
 - **dial_fallback_delay** <span id="dial_fallback_delay"/> is how long to wait before spawning an RFC 6555 Fast Fallback connection. A negative value disables this. Accepts [duration values](/docs/conventions#durations). Default: `300ms`.
 - **response_header_timeout** <span id="response_header_timeout"/> is how long to wait for reading response headers from the upstream. Accepts [duration values](/docs/conventions#durations). Default: No timeout.
 - **expect_continue_timeout** <span id="expect_continue_timeout"/> is how long to wait for the upstreams's first response headers after fully writing the request headers if the request has the header `Expect: 100-continue`. Accepts [duration values](/docs/conventions#durations). Default: No timeout.
+- **resolvers** <span id="resolvers"/> is a list of DNS resolvers to override system resolvers.
 - **tls** <span id="tls"/> uses HTTPS with the backend. This will be enabled automatically if you specify backends using the `https://` scheme or port `:443`.
 - **tls_client_auth** <span id="tls_client_auth"/> enables TLS client authentication one of two ways: (1) by specifying a domain name for which Caddy should obtain a certificate and keep it renewed, or (2) by specifying a certificate and key file to present for TLS client authentication with the backend.
 - **tls_insecure_skip_verify** <span id="tls_insecure_skip_verify"/> turns off security. _Do not use in production._
