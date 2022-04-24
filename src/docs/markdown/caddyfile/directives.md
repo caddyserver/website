@@ -66,6 +66,7 @@ Directive | Description
 **[tracing](/docs/caddyfile/directives/tracing)** | Integration with OpenTelemetry tracing
 **[try_files](/docs/caddyfile/directives/try_files)** | Rewrite that depends on file existence
 **[uri](/docs/caddyfile/directives/uri)** | Manipulate the URI
+**[vars](/docs/caddyfile/directives/vars)** | Set arbitrary variables
 
 </div>
 
@@ -109,6 +110,7 @@ Many directives manipulate the HTTP handler chain. The order in which those dire
 tracing
 
 map
+vars
 root
 
 header

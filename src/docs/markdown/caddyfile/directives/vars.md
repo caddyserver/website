@@ -1,0 +1,53 @@
+---
+title: vars (Caddyfile directive)
+---
+
+# vars
+
+Sets one or more variables to a particular value, to be used later in the request handling chain.
+
+The primary way to access variables is with placeholders, which have the form `{vars.variable_name}`, or with the [`vars`](/docs/caddyfile/matchers#vars) and [`vars_regexp`](/docs/caddyfile/matchers#vars_regexp) request matchers.
+
+## Syntax
+
+```caddy-d
+vars [<matcher>] [<name> <value>] {
+    <name> <value>
+    ...
+}
+```
+
+- **&lt;name&gt;** is the variable name to set.
+
+- **&lt;value&gt;** is the value of the variable.
+
+  The value will be type converted if possible; `true` and `false` will be converted to boolean types, and numeric values will be converted to integer or float accordingly. To avoid this conversion, you may wrap the output with [quotes](/docs/caddyfile/concepts#tokens-and-quotes) and they will stay strings.
+
+## Examples
+
+To set a single variable, the value being conditional based on the request path, then responding with the value:
+
+```caddy-d
+vars /foo* isFoo "yep"
+vars isFoo "nope"
+
+respond {vars.isFoo}
+```
+
+To set multiple variables, each converted to the appropriate scalar type:
+
+```caddy-d
+vars {
+	# boolean
+	abc true
+
+	# integer
+	def 1
+
+	# float
+	ghi 2.3
+
+	# string
+	jkl "example"
+}
+```
