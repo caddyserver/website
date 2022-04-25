@@ -130,6 +130,7 @@ Obtains certificates using the ACME protocol.
 	trusted_roots <pem_files...>
 	dns <provider_name> [<options>]
 	propagation_timeout <duration>
+	propagation_delay <duration>
 	resolvers <dns_servers...>
 	preferred_chains [smallest] {
 		root_common_name <common_names...>
@@ -149,7 +150,8 @@ Obtains certificates using the ACME protocol.
 - **eab** <span id="eab"/> specifies an External Account Binding which may be required with some ACME CAs.
 - **trusted_roots** <span id="trusted_roots"/> is one or more root certificates (as PEM filenames) to trust when connecting to the ACME CA server.
 - **dns** <span id="dns"/> configures the DNS challenge.
-- **propagation_timeout** <span id="propagation_timeout"/> is a [duration value](/docs/conventions#durations) that sets how long to wait for DNS TXT records to propagate when using the DNS challenge. Default 2 minutes.
+- **propagation_timeout** <span id="propagation_timeout"/> is a [duration value](/docs/conventions#durations) that sets the maximum time to wait for the DNS TXT records to appear when using the DNS challenge. Set to `-1` to disable propagation checks. Default 2 minutes.
+- **propagation_delay** <span id="propagation_delay"/> is a [duration value](/docs/conventions#durations) that sets how long to wait before starting DNS TXT records propagation checks when using the DNS challenge. Default 0 (no wait).
 - **resolvers** <span id="resolvers"/> customizes the DNS resolvers used when performing the DNS challenge; these take precedence over system resolvers or any default ones.
 - **preferred_chains** <span id="preferred_chains"/> specifies which certificate chains Caddy should prefer; useful if your CA provides multiple chains. Use one of the following options:
 	- **smallest** <span id="smallest"/> will tell Caddy to prefer chains with the fewest amount of bytes.

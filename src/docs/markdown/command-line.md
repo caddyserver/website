@@ -179,13 +179,15 @@ This command disables the admin API, making it easier to run multiple instances 
 
 ### `caddy fmt`
 
-<pre><code class="cmd bash">caddy fmt [--overwrite] [&lt;path&gt;]</code></pre>
+<pre><code class="cmd bash">caddy fmt [--overwrite] [--diff] [&lt;path&gt;]</code></pre>
 
 Formats or prettifies a Caddyfile, then exits. The result is printed to stdout unless `--overwrite` is used.
 
 `<path>` specifies the path to the Caddyfile. If `-`, the input is read from stdin. If omitted, a file named Caddyfile in the current directory is assumed instead.
 
 `--overwrite` causes the result to be written to the input file instead of being printed to the terminal. If the input is not a regular file, this flag has no effect.
+
+`--diff` causes the output to be compared against the input, and lines will be prefixed with `-` and `+` where they differ. Note that unchanges lines are prefixed with two spaces for alignment, and that this is not a valid patch format; it's just meant as a visual tool.
 
 
 
@@ -294,7 +296,7 @@ Runs Caddy and blocks indefinitely; i.e. "daemon" mode.
 
 `--environ` prints out the environment before starting. This is the same as the `caddy environ` command, but does not exit after printing.
 
-`--envfile` loads environment variables from the specified file.
+`--envfile` loads environment variables from the specified file, in `KEY=VALUE` format. Comments starting with `#` are supported; keys may be prefixed with `export`; values may be double-quoted (double-quotes within can be escaped); multi-line values are supported.
 
 `--resume` uses the last loaded configuration that was autosaved, overriding the `--config` flag (if present). Using this flag guarantees config durability through machine reboots or process restarts. It is most useful in [API](/docs/api)-centric deployments.
 

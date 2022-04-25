@@ -141,15 +141,18 @@ Quotes can be escaped if you need to use quotes in quoted tokens, too:
 directive "\"abc def\""
 ```
 
-Inside quoted tokens, all other characters are treated literally, including spaces, tabs, and newlines.
-
-You can also use a backtick <code>`</code> to quote tokens:
+Inside quoted tokens, all other characters are treated literally, including spaces, tabs, and newlines. Multi-line tokens are possible:
 
 ```caddy-d
-directive `"foo bar"`
+directive "first line
+second line"
 ```
 
-Backtick strings are convenient when tokens contain quote literals, e.g. JSON text.
+You can also use a backtick <code>`</code> to quote tokens; these are convenient when tokens themselves contain double quotes, e.g. JSON text:
+
+```caddy-d
+directive `{"foo": "bar"}`
+```
 
 
 
@@ -254,6 +257,7 @@ You can use any [Caddy placeholders](/docs/conventions#placeholders) in the Cadd
 | `{tls_client_certificate_pem}` | `{http.request.tls.client.certificate_pem}` |
 | `{tls_client_certificate_der_base64}` | `{http.request.tls.client.certificate_der_base64}` |
 | `{upstream_hostport}` | `{http.reverse_proxy.upstream.hostport}` |
+| `{vars.*}` | `{http.vars.*}` |
 
 
 
