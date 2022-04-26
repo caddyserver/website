@@ -31,7 +31,7 @@ bind 127.0.0.1
 To include IPv6:
 
 ```caddy-d
-bind 127.0.0.1 ::1
+bind 127.0.0.1 [::1]
 ```
 
 To bind to a Unix domain socket at `/run/caddy`:
