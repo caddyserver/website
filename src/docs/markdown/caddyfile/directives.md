@@ -42,6 +42,7 @@ Directive | Description
 **[encode](/docs/caddyfile/directives/encode)** | Encodes (usually compresses) responses
 **[error](/docs/caddyfile/directives/error)** | Trigger an error
 **[file_server](/docs/caddyfile/directives/file_server)** | Serve files from disk
+**[forward_auth](/docs/caddyfile/directives/forward_auth)** | Delegate authentication to an external service
 **[handle](/docs/caddyfile/directives/handle)** | A mutually-exclusive group of directives
 **[handle_errors](/docs/caddyfile/directives/handle_errors)** | Defines routes for handling errors
 **[handle_path](/docs/caddyfile/directives/handle_path)** | Like handle, but strips path prefix
@@ -126,6 +127,7 @@ try_files
 
 # middleware handlers; some wrap responses
 basicauth
+forward_auth
 request_header
 encode
 push

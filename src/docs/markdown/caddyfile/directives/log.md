@@ -31,6 +31,7 @@ The `log` directive applies to the host/port of the site block it appears in, no
   - [json](#json)
   - [filter](#filter)
     - [delete](#delete)
+	- [rename](#rename)
 	- [replace](#replace)
 	- [ip_mask](#ip-mask)
 	- [query](#query)
@@ -221,6 +222,14 @@ Marks a field to be skipped from being encoded.
 
 ```caddy-d
 <field> delete
+```
+
+##### rename
+
+Rename the key of a log field.
+
+```caddy-d
+<field> rename <key>
 ```
 
 ##### replace

@@ -26,7 +26,7 @@ $(function() {
 
 # reverse_proxy
 
-Proxies requests to one or more backends with configurable transport, load balancing, health checking, header manipulation, and buffering options.
+Proxies requests to one or more backends with configurable transport, load balancing, health checking, request manipulation, and buffering options.
 
 - [Syntax](#syntax)
 - [Upstreams](#upstreams)
@@ -39,6 +39,7 @@ Proxies requests to one or more backends with configurable transport, load balan
   - [Passive health checks](#passive-health-checks)
 - [Streaming](#streaming)
 - [Headers](#headers)
+- [Rewrites](#rewrites)
 - [Transports](#transports)
   - [The `http` transport](#the-http-transport)
   - [The `fastcgi` transport](#the-fastcgi-transport)
@@ -51,48 +52,50 @@ Proxies requests to one or more backends with configurable transport, load balan
 
 ```caddy-d
 reverse_proxy [<matcher>] [<upstreams...>] {
-    # backends
-    to      <upstreams...>
-    dynamic <module> ...
+	# backends
+	to      <upstreams...>
+	dynamic <module> ...
 
-    # load balancing
-    lb_policy       <name> [<options...>]
-    lb_try_duration <duration>
-    lb_try_interval <interval>
+	# load balancing
+	lb_policy       <name> [<options...>]
+	lb_try_duration <duration>
+	lb_try_interval <interval>
 
-    # active health checking
-    health_uri      <uri>
-    health_port     <port>
-    health_interval <interval>
-    health_timeout  <duration>
-    health_status   <status>
-    health_body     <regexp>
+	# active health checking
+	health_uri      <uri>
+	health_port     <port>
+	health_interval <interval>
+	health_timeout  <duration>
+	health_status   <status>
+	health_body     <regexp>
 	health_headers {
 		<field> [<values...>]
 	}
 
-    # passive health checking
-    fail_duration     <duration>
-    max_fails         <num>
-    unhealthy_status  <status>
-    unhealthy_latency <duration>
-    unhealthy_request_count <num>
+	# passive health checking
+	fail_duration     <duration>
+	max_fails         <num>
+	unhealthy_status  <status>
+	unhealthy_latency <duration>
+	unhealthy_request_count <num>
 
-    # streaming
-    flush_interval <duration>
-    buffer_requests
+	# streaming
+	flush_interval <duration>
+	buffer_requests
 	buffer_responses
 	max_buffer_size <size>
 
-    # header manipulation
+	# request manipulation
 	trusted_proxies [private_ranges] <ranges...>
-    header_up   [+|-]<field> [<value|regexp> [<replacement>]]
-    header_down [+|-]<field> [<value|regexp> [<replacement>]]
+	header_up   [+|-]<field> [<value|regexp> [<replacement>]]
+	header_down [+|-]<field> [<value|regexp> [<replacement>]]
+	method <method>
+	rewrite <to>
 
-    # round trip
-    transport <name> {
-        ...
-    }
+	# round trip
+	transport <name> {
+		...
+	}
 
 	# optionally intercept responses from upstream
 	@name {
@@ -317,6 +320,23 @@ reverse_proxy https://example.com {
 
 
 
+### Rewrites
+
+By default, Caddy performs the upstream request with the same HTTP method and URI as the incoming request, unless a rewrite was performed in the middleware chain before it reaches `reverse_proxy`.
+
+Before proxying it, the request is cloned; this ensures that any modifications done to the request during the handler do not leak to other handlers. This is useful in situations where the handling needs to continue after the proxy.
+
+In addition to [header manipulations](#headers), the request's method and URI may be changed before it is sent to the upstream:
+
+- **method** <span id="method"/> changes the HTTP method of the cloned request. If the method is changed to `GET` or `HEAD`, then the incoming request's body will _not_ be sent upstream by this handler. This is useful if you wish to allow a different handler to consume the request body.
+- **rewrite** <span id="rewrite"/> changes the URI (path and query) of the cloned request. This is similar to the [`rewrite` directive](/docs/caddyfile/directives/rewrite), except that it doesn't persist the rewrite past the scope of this handler.
+
+These rewrites are often useful for a pattern like "pre-check requests", where a request is sent to another server to help make a decision on how to continue handling the current request.
+
+For example, the request could be sent to an authentication gateway to decide whether the request was from an authenticated user (e.g. the request has a session cookie) and should continue, or should instead be redirected to a login page. For this pattern, Caddy provides a shortcut directive [`forward_auth`](/docs/caddyfile/directives/forward_auth) to skip most of the config boilerplate.
+
+
+
 
 ### Transports
 
@@ -342,14 +362,14 @@ transport http {
 	tls_insecure_skip_verify
 	tls_timeout <duration>
 	tls_trusted_ca_certs <pem_files...>
-    tls_server_name <sni>
+	tls_server_name <sni>
 	keepalive [off|<duration>]
 	keepalive_interval <interval>
 	keepalive_idle_conns <max_count>
-    keepalive_idle_conns_per_host <count>
-    versions <versions...>
-    compression off
-    max_conns_per_host <count>
+	keepalive_idle_conns_per_host <count>
+	versions <versions...>
+	compression off
+	max_conns_per_host <count>
 }
 ```
 
@@ -399,27 +419,32 @@ transport fastcgi {
 - **read_timeout** <span id="read_timeout"/> is how long to wait when reading from the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
 - **write_timeout** <span id="write_timeout"/> is how long to wait when sending to the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
 
+<aside class="tip">
+	If you're trying to serve a modern PHP application, you may be looking for the <a href="/docs/caddyfile/directives/php_fastcgi"><code>php_fastcgi</code> directive</a>, which is a shortcut for a proxy using the `fastcgi` directive, with the necessary rewrites for using `index.php` as the routing entrypoint.
+</aside>
 
 
 
 ### Intercepting responses
 
-The reverse proxy can be configured to intercept responses from the backend. To facilitate this, response matchers can be defined (similar to the syntax for request matchers) and the first matching `handle_response` route will be invoked. When this happens, the response from the backend is not written to the client, and the configured `handle_response` route will be executed instead, and it is up to that route to write a response.
+The reverse proxy can be configured to intercept responses from the backend. To facilitate this, response matchers can be defined (similar to the syntax for request matchers) and the first matching `handle_response` route will be invoked.
+
+When a response handler is invoked, the response from the backend is not written to the client, and the configured `handle_response` route will be executed instead, and it is up to that route to write a response. If the route does _not_ write a response, then request handling will continue with any handlers that are ordered after this `reverse_proxy`.
 
 - **@name** is the name of a [response matcher](#response-matcher). As long as each response matcher has a unique name, multiple matchers can be defined. A response can be matched on the status code and presence or value of a response header.
 - **replace_status** <span id="replace_status"/> simply changes the status code of response when matched by the given matcher.
-- **handle_response** <span id="handle_response"/> defines the route to execute when matched by the given matcher (or, if a matcher is omitted, all responses). The first matching block will be applied. Inside a `handle_response` block, any other [directives](/docs/caddyfile/directives) can be used.
+- **handle_response** <span id="handle_response"/> defines the route to execute when matched by the given matcher (or, if a matcher is omitted, all responses). The first matching block will be applied. Inside a `handle_response` block, any other [directives](/docs/caddyfile/directives) can be used. During 
 
 Additionally, inside `handle_response`, two special handler directives may be used:
 
-- **copy_response** <span id="copy_response"/> copies the response from the backend back to the client. Optionally allows changing the status code of the response while doing so. This directive is [ordered before `respond`](/docs/caddyfile/directives#directive-order).
+- **copy_response** <span id="copy_response"/> copies the response body received from the backend back to the client. Optionally allows changing the status code of the response while doing so. This directive is [ordered before `respond`](/docs/caddyfile/directives#directive-order).
 - **copy_response_headers** <span id="copy_response_headers"/> copies the response headers from the backend to the client, optionally including _OR_ excluding a list of headers fields (cannot specify both `include` and `exclude`). This directive is [ordered after `header`](/docs/caddyfile/directives#directive-order).
 
 Three placeholders will be made available within the `handle_response` routes:
 
-- `{http.reverse_proxy.status_code}` The status code from the backend's response.
-- `{http.reverse_proxy.status_text}` The status text from the backend's response.
-- `{http.reverse_proxy.header.*}` The headers from the backend's response.
+- `{rp.status_code}` The status code from the backend's response.
+- `{rp.status_text}` The status text from the backend's response.
+- `{rp.header.*}` The headers from the backend's response.
 
 
 #### Response matcher
@@ -486,7 +511,6 @@ Reverse proxy to an HTTPS endpoint:
 ```caddy-d
 reverse_proxy https://example.com {
 	header_up Host {upstream_hostport}
-	header_up X-Forwarded-Host {host}
 }
 ```
 
@@ -510,14 +534,23 @@ handle_path /old-prefix/* {
 ```
 
 
-X-Accel-Redirect support:
+When Caddy is behind another proxy or load balancer whose IP is `123.123.123.123`, which may set `X-Forwarded-*` headers to identify details about the original client request, that downstream proxy must be listed as trusted, otherwise Caddy will ignore those incoming headers:
+
+```caddy-d
+reverse_proxy localhost:8080 {
+	trusted_proxies 123.123.123.123
+}
+```
+
+
+X-Accel-Redirect support, i.e. serving static files as requested by the proxy upstream:
 
 ```caddy-d
 reverse_proxy localhost:8080 {
 	@accel header X-Accel-Redirect *
 	handle_response @accel {
 		root    * /path/to/private/files
-		rewrite * {http.reverse_proxy.header.X-Accel-Redirect}
+		rewrite * {rp.header.X-Accel-Redirect}
 		file_server
 	}
 }
@@ -531,11 +564,12 @@ reverse_proxy localhost:8080 {
 	@error status 500 503
 	handle_response @error {
 		root    * /path/to/error/pages
-		rewrite * /{http.reverse_proxy.status_code}.html
+		rewrite * /{rp.status_code}.html
 		file_server
 	}
 }
 ```
+
 
 Get backends dynamically from A/AAAA record DNS queries:
 
@@ -544,6 +578,7 @@ reverse_proxy {
 	dynamic a example.com 9000
 }
 ```
+
 
 Get backends dynamically from SRV record DNS queries:
 
