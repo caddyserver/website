@@ -935,8 +935,13 @@ td code {
 	}
 
 	#logo {
-		/* TODO: Add some color */
-		filter: invert(1) opacity(.35);
+		filter: invert(1);
+	}
+	#zerossl-logo {
+		filter: invert(1) hue-rotate(180deg);
+	}
+	#footer-logo {
+		filter: invert(1) hue-rotate(180deg);
 	}
 
 	#logo-docs {
