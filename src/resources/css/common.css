@@ -82,29 +82,18 @@ header nav > a.current {
 	font-weight: bold;
 }
 
-/* Algolia search */
+/* Algolia DocSearch */
 #search {
-	border-radius: 5px;
-	border: 1px solid rgba(0, 0, 0, .2);
-	font-size: 14px;
-	padding: 8px;
-	background: none;
-	width: 200px;
-	max-width: 100%;
-	margin-right: 20px;
-	margin-top: 4px;
-	outline: none;
+	display: inline-block;
+	vertical-align: middle;
 }
-
-#search:focus {
-	background: #fff;
+.DocSearch-Container {
+	color: initial;
 }
-
-.algolia-autocomplete .ds-dropdown-menu {
-	width: 90%;
-	max-width: 800px;
+.DocSearch-Footer {
+	margin-top: 0;
 }
-/* End Algolia search */
+/* End Algolia DocSearch */
 
 header nav .new {
 	background-color: #ffe300;
