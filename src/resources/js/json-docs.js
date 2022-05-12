@@ -22,6 +22,12 @@ $.get("/api/docs/config"+configPath, function(json) {
 			$('<span> &rsaquo; <a href="'+jsonDocsPathPrefix+bcPath.substr(1)+'/" class="breadcrumb has-popup" data-sibling-path="'+bcSiblingPath+'">'+pathComponents[i]+'</a></span>').appendTo($bc);
 		}
 
+		// re-trigger the URL fragment if any, to scroll to the archor
+		var fragment = window.location.hash;
+		if (fragment) {
+			window.location.hash = '';
+			window.location.hash = fragment;
+		}
 	});
 });
 
