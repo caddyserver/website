@@ -386,13 +386,21 @@ pre > code.cmd {
 }
 
 code.cmd.bash,
-code.cmd .bash {
+code.cmd .bash,
+code.cmd.bash-continuation,
+code.cmd .bash-continuation {
 	font-weight: bold;
 }
 
 code.cmd.bash::before,
 code.cmd .bash::before {
-    content: '$';
+	content: '$';
+	margin-right: .5rem;
+}
+
+code.cmd.bash-continuation::before,
+code.cmd .bash-continuation::before {
+	content: '>';
 	margin-right: .5rem;
 }
 
