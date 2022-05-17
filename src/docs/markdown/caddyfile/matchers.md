@@ -192,13 +192,13 @@ As a special case, Caddy [placeholders](/docs/conventions#placeholders) (or [Cad
 
 #### Examples:
 
-Match requests whose methods start with `P`, e.g. `PUT` or `POST`.
+Match requests whose methods start with `P`, e.g. `PUT` or `POST`:
 
 ```caddy-d
 expression {method}.startsWith("P")
 ```
 
-Match requests where handler returned error status code `404`, would be used in conjunction with the [`handle_errors` directive](/docs/caddyfile/directives/handle_errors).
+Match requests where handler returned error status code `404`, would be used in conjunction with the [`handle_errors` directive](/docs/caddyfile/directives/handle_errors):
 
 ```caddy-d
 expression {http.error.status_code} == 404
@@ -246,13 +246,13 @@ Upon matching, two new placeholders will be made available:
 
 #### Examples:
 
-Match requests where the path is a file that exists.
+Match requests where the path is a file that exists:
 
 ```caddy-d
 file
 ```
 
-Match requests where the path followed by `.html` is a file that exists, or if not, where the path is a file that exists.
+Match requests where the path followed by `.html` is a file that exists, or if not, where the path is a file that exists:
 
 ```caddy-d
 file {
@@ -260,7 +260,7 @@ file {
 }
 ```
 
-Same as above, except using the one-line shortcut, and falling back to emitting a 404 error if a file is not found.
+Same as above, except using the one-line shortcut, and falling back to emitting a 404 error if a file is not found:
 
 ```caddy-d
 file {path}.html {path} =404
@@ -289,13 +289,13 @@ Different header fields within the same set are AND-ed. Multiple values per fiel
 
 #### Example:
 
-Match requests with the `Connection` header containing `Upgrade`.
+Match requests with the `Connection` header containing `Upgrade`:
 
 ```caddy-d
 header Connection *Upgrade*
 ```
 
-Match requests with the `Foo` header containing `bar` OR `baz`.
+Match requests with the `Foo` header containing `bar` OR `baz`:
 ```caddy-d
 @foo {
 	header Foo bar
@@ -367,13 +367,13 @@ Multiple `method` matchers will be OR'ed together.
 
 #### Examples:
 
-Match requests with the `GET` method.
+Match requests with the `GET` method:
 
 ```caddy-d
 method GET
 ```
 
-Match requests with the `PUT` or `DELETE` methods.
+Match requests with the `PUT` or `DELETE` methods:
 
 ```caddy-d
 method PUT DELETE
@@ -469,7 +469,7 @@ There can only be one `path_regexp` matcher per named matcher.
 
 #### Example:
 
-Match requests where the path ends a 6 character hex string followed by `.css` or `.js` as the file extension, with capture groups that can be accessed with `{re.static.1}` and `{re.static.2}` for each part enclosed in `( )`, respectively.
+Match requests where the path ends a 6 character hex string followed by `.css` or `.js` as the file extension, with capture groups that can be accessed with `{re.static.1}` and `{re.static.2}` for each part enclosed in `( )`, respectively:
 
 ```caddy-d
 path_regexp static \.([a-f0-9]{6})\.(css|js)$
@@ -503,7 +503,7 @@ There can be multiple `query` matchers per named matcher, and pairs with the sam
 
 #### Example:
 
-Match requests with a `sort` query parameter with the value `asc`
+Match requests with a `sort` query parameter with the value `asc`:
 
 ```caddy-d
 query sort=asc
@@ -520,14 +520,23 @@ remote_ip [forwarded] <ranges...>
 
 By remote (client) IP address. Accepts exact IPs or CIDR ranges. If the first argument is `forwarded`, then the first IP in the `X-Forwarded-For` request header, if present, will be preferred as the reference IP, rather than the immediate peer's IP, which is the default. IPv6 zones are supported.
 
-Multiple `remote_ip` matchers will be OR'ed together.
+As a shortcut, `private_ranges` can be used to match all private IPv4 and IPv6 ranges. It's the same as specifying all of these ranges: `192.168.0.0/16 172.16.0.0/12 10.0.0.0/8 127.0.0.1/8 fd00::/8 ::1`
+
+There can be multiple `remote_ip` matchers per named matcher, and their ranges will be merged and OR'ed together.
 
 #### Example:
 
-Match requests from private IPv4 addresses.
+Match requests from private IPv4 addresses:
 
 ```caddy-d
-remote_ip 192.168.0.0/16 172.16.0.0/12 10.0.0.0/8
+remote_ip 192.168.0.0/16 172.16.0.0/12 10.0.0.0/8 127.0.0.1/8
+```
+
+This matcher is commonly paired with the [`not`](#not) matcher to invert the match. For example, to abort all connections from _public_ IPv4 and IPv6 addresses (which is the inverse of all private ranges):
+
+```caddy-d
+@denied not remote_ip private_ranges
+abort @denied
 ```
 
 
@@ -545,7 +554,7 @@ This matcher is most useful when paired with the [`map` directive](/docs/caddyfi
 
 #### Example:
 
-Match an output of the [`map` directive](/docs/caddyfile/directives/map) named `magic_number` for the values `3`, or `5`.
+Match an output of the [`map` directive](/docs/caddyfile/directives/map) named `magic_number` for the values `3`, or `5`:
 
 ```caddy-d
 vars {magic_number} 3 5
@@ -568,7 +577,7 @@ There can only be one `vars_regexp` matcher per named matcher.
 
 #### Example:
 
-Match an output of the [`map` directive](/docs/caddyfile/directives/map) named `magic_number` for a value starting with `4`, capturing the value in a capture group.
+Match an output of the [`map` directive](/docs/caddyfile/directives/map) named `magic_number` for a value starting with `4`, capturing the value in a capture group:
 
 ```caddy-d
 vars_regexp magic {magic_number} ^(4.*)

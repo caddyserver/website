@@ -100,7 +100,7 @@ To remove it for **multiple domains** at once:
 
 ```caddy
 www.example-one.com, www.example-two.com {
-	redir https://{labels.1}{labels.0}{uri}
+	redir https://{labels.1}.{labels.0}{uri}
 }
 
 example-one.com, example-two.com {

@@ -169,7 +169,6 @@ These are examples of valid addresses:
 - `localhost:8080`
 - `127.0.0.1`
 - `[::1]:2015`
-- `example.com/foo/*`
 - `*.example.com`
 - `http://`
 
@@ -177,7 +176,7 @@ These are examples of valid addresses:
 	<a href="/docs/automatic-https">Automatic HTTPS</a> is enabled if your site's address contains a hostname or IP address. This behavior is purely implicit, however, so it never overrides any explicit configuration. For example, if the site's address is <code>http://example.com</code>, auto-HTTPS will not activate because the scheme is explicitly <code>http://</code>.
 </aside>
 
-From the address, Caddy can potentially infer the scheme, host, port, and path of your site. If the address is without a port, the Caddyfile will choose the port matching the scheme if specified, or the default port of 443 will be assumed.
+From the address, Caddy can potentially infer the scheme, host and port of your site. If the address is without a port, the Caddyfile will choose the port matching the scheme if specified, or the default port of 443 will be assumed.
 
 If you specify a hostname, only requests with a matching Host header will be honored. In other words, if the site address is `localhost`, then Caddy will not match requests to `127.0.0.1`.
 
@@ -257,6 +256,7 @@ You can use any [Caddy placeholders](/docs/conventions#placeholders) in the Cadd
 | `{tls_client_certificate_pem}` | `{http.request.tls.client.certificate_pem}` |
 | `{tls_client_certificate_der_base64}` | `{http.request.tls.client.certificate_der_base64}` |
 | `{upstream_hostport}` | `{http.reverse_proxy.upstream.hostport}` |
+| `{rp.*}` | `{http.reverse_proxy.*}` |
 | `{vars.*}` | `{http.vars.*}` |
 
 

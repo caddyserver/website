@@ -15,7 +15,7 @@ Caddy's [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy) is capable o
 
 It expects that any `index.php` at the site root acts as a router. If that is not desirable, either reconfigure the `try_files` option to modify the default rewrite behaviour, or take the [expanded form](#expanded-form) below as a basis and customize it to your needs.
 
-It supports all the subdirectives of [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy) and passes them through to the underlying reverse_proxy handler, plus a few subdirectives that customize the FastCGI transport specifically.
+It supports all the subdirectives of [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy) and passes them through to the underlying `reverse_proxy` handler, plus a few subdirectives that customize the FastCGI transport specifically.
 
 **Most modern PHP apps work fine without extra subdirectives or customization.** Subdirectives are usually only used in certain edge cases or with legacy PHP apps.
 
@@ -49,7 +49,7 @@ php_fastcgi [<matcher>] <php-fpm_gateways...> {
 - **write_timeout** is how long to wait when sending to the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
 
 
-Since this directive is an opinionated wrapper over a reverse proxy, you can use any of reverse_proxy's subdirectives to customize it.
+Since this directive is an opinionated wrapper over a reverse proxy, you can use any of [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy#syntax)'s subdirectives to customize it.
 
 
 ## Expanded form
