@@ -842,8 +842,8 @@ td code {
 		display: none;
 	}
 	.paper3 {
-		top: 0;
-		left: 0;
+		margin-top: 0;
+		margin-left: 0;
 	}
 
 	article {
@@ -908,10 +908,6 @@ td code {
 	.paper {
 		border-radius: 0;
 		box-shadow: none;
-	}
-
-	.anchor-link {
-		display: none;
 	}
 }
 
