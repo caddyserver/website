@@ -216,7 +216,7 @@ Load balancing is used whenever more than one upstream is defined.
 	- `least_conn` - choose upstream with fewest number of current requests
 	- `ip_hash` - map client IP to sticky upstream
 	- `uri_hash` - map URI to sticky upstream
-	- `header [field]` - map request header to sticky upstream
+	- `header [field]` - map request header to sticky upstream. If the specified header is not present, a random upstream is selected.
 	- `cookie [<name> [<secret>]]` - based on the given cookie (default name is `lb` if not specified), which value is hashed; optionally with a secret for HMAC-SHA256
 
 - **lb_try_duration** <span id="lb_try_duration"/> is a [duration value](/docs/conventions#durations) that defines how long to try selecting available backends for each request if the next available host is down. By default, this retry is disabled. Clients will wait for up to this long while the load balancer tries to find an available upstream host.
