@@ -56,6 +56,7 @@ This blocks forever, but what is it doing? At the moment... nothing. By default,
 
 We can make Caddy useful by giving it a config. This can be done many ways, but we'll start by making a POST request to the [/load](/docs/api#post-load) endpoint using `curl` in the next section.
 
+
 ## Your first config
 
 To prepare our request, we need to make a config. At its core, Caddy's configuration is simply a [JSON document](/docs/json/).
@@ -124,11 +125,12 @@ Another way to configure Caddy is with the [**Caddyfile**](/docs/caddyfile). The
 respond "Hello, world!"
 ```
 
+
 Save that to a file named `Caddyfile` (no extension) in the current directory.
 
 <aside class="complete">Make a Caddyfile</aside>
 
-Next we check if the configuration is valid. 
+Next we check if our new configuration is valid. 
 
 Stop Caddy if it is already running (Ctrl+C), then run:
 
@@ -198,7 +200,7 @@ Kind of boring | Kind of fun
 You will need to decide which is best for your use case.
 
 <aside class="tip" markdown="1">
-	The Caddyfile offers shortcuts for many common tasks that are require complex JSON configurations. Use `caddy adapt` to learn how these shortcuts work in JSON.
+	The Caddyfile offers shortcuts for many common tasks that require quite complex JSON configurations. You can use `caddy adapt` to learn how these shortcuts are translated between the formats.
 </aside>
 
 It is important to note that both JSON and the Caddyfile (and [any other supported config adapter](/docs/config-adapters)) can be used with [Caddy's API](/docs/api). However, you only get the full range of Caddy's functionality and API features if you use JSON. If using a config adapter, the only way to load or change the config with the API is the [/load endpoint](/docs/api#post-load).
@@ -233,6 +235,7 @@ But most people will use JSON+API or Caddyfile+CLI combinations.
 As you can see, Caddy is well-suited for a wide variety of use cases and deployments!
 
 <aside class="complete">Compare API and config files</aside>
+
 
 
 ## Start, stop, run
