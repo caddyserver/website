@@ -34,6 +34,10 @@ Let's start by running it:
 
 Oops; without a subcommand, the `caddy` command only displays help text. You can use this any time you forget what to do.
 
+<aside class="tip" markdown="1">
+	Caddy is controlled through the `caddy` command. It offers many useful tools for different tasks while running Caddy. Have a closer look at [ `caddy`'s subcommands ](https://caddyserver.com/docs/command-line) to learn what you can do. 
+</aside>
+
 To start Caddy as a daemon, use the `run` subcommand:
 
 <pre><code class="cmd bash">caddy run</code></pre>
@@ -51,11 +55,6 @@ This blocks forever, but what is it doing? At the moment... nothing. By default,
 <aside class="complete">Try the API</aside>
 
 We can make Caddy useful by giving it a config. This can be done many ways, but we'll start by making a POST request to the [/load](/docs/api#post-load) endpoint using `curl` in the next section.
-
-<aside class="tip" markdown="1">
-	Caddy is controlled through the `caddy` command. It offers many useful tools for different tasks while running Caddy. Have a closer look at [ `caddy`'s subcommands ](https://caddyserver.com/docs/command-line) to learn what you can do. 
-</aside>
-
 
 ## Your first config
 
