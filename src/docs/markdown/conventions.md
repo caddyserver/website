@@ -15,7 +15,14 @@ When specifying a network address to dial or bind, Caddy accepts a string in the
 network/address
 ```
 
-The network part is optional, and is anything that [Go's `net` package](https://golang.org/pkg/net/) recognizes. The default network is `tcp`. If a network is specified, a single forward slash `/` must separate the network and address portions.
+The network part is optional (defaulting to `tcp`), and is anything that [Go's `net.Dial` function](https://pkg.go.dev/net#Dial) recognizes. If a network is specified, a single forward slash `/` must separate the network and address portions.
+
+The network can be any of the following; ones suffixed with `4` or `6` are IPv4 or IPv6 only, respectively:
+
+- TCP: `tcp`, `tcp4`, `tcp6`
+- UDP: `udp`, `udp4`, `udp6`
+- IP: `ip`, `ip4`, `ip6`
+- Unix: `unix`, `unixgram`, `unixpacket`
 
 The address part may be any of these forms:
 
@@ -28,7 +35,7 @@ The host may be any hostname, resolvable domain name, or IP address.
 
 The port may be a single value (`:8080`) or an inclusive range (`:8080-8085`). A port range will be multiplied into singular addresses. Not all config fields accept port ranges. The special port `:0` means any available port.
 
-A unix socket path is only acceptable when using a unix* network type. The forward slash that separates the network and address is not considered part of the path.
+A unix socket path is only acceptable when using a `unix*` network type. The forward slash that separates the network and address is not considered part of the path.
 
 Valid examples:
 

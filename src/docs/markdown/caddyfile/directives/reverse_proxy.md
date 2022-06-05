@@ -213,13 +213,13 @@ Load balancing is used whenever more than one upstream is defined.
 	- `random_choose <n>` - selects two or more upstreams randomly, then chooses one with least load (`n` is usually 2)
 	- `first` - choose first available upstream, from the order they are defined in the config
 	- `round_robin` - iterate each upstream in turn
-	- `least_conn` - choose upstream with fewest number of current requests
-	- `ip_hash` - map client IP to sticky upstream
-	- `uri_hash` - map URI to sticky upstream
-	- `header [field]` - map request header to sticky upstream. If the specified header is not present, a random upstream is selected.
-	- `cookie [<name> [<secret>]]` - based on the given cookie (default name is `lb` if not specified), which value is hashed; optionally with a secret for HMAC-SHA256
+	- `least_conn` - choose upstream with fewest number of current requests; if more than one host has the least number of requests, then one of the hosts is chosen at random
+	- `ip_hash` - map the client IP to sticky upstream
+	- `uri_hash` - map the request URI (path and query) to sticky upstream
+	- `header [field]` - map request header to sticky upstream; if the specified header is not present, a random upstream is selected
+	- `cookie [<name> [<secret>]]` - based on the given cookie (default name is `lb` if not specified), the cookie value is hashed, optionally with a secret for HMAC-SHA256; on the first request from a client, a random upstream is selected
 
-- **lb_try_duration** <span id="lb_try_duration"/> is a [duration value](/docs/conventions#durations) that defines how long to try selecting available backends for each request if the next available host is down. By default, this retry is disabled. Clients will wait for up to this long while the load balancer tries to find an available upstream host.
+- **lb_try_duration** <span id="lb_try_duration"/> is a [duration value](/docs/conventions#durations) that defines how long to try selecting available backends for each request if the next available host is down. By default, this retry is disabled. Clients will wait for up to this long while the load balancer tries to find an available upstream host. A reasonable starting point might be `5s`, since the HTTP transport's default dial timeout is `3s`, so that should allow for at least one retry; but feel free to experiment to find the right balance for your usecase.
 - **lb_try_interval** <span id="lb_try_interval"/> is a [duration value](/docs/conventions#durations) that defines how long to wait between selecting the next host from the pool. Default is `250ms`. Only relevant when a request to an upstream host fails. Be aware that setting this to 0 with a non-zero `lb_try_duration` can cause the CPU to spin if all backends are down and latency is very low.
 
 
@@ -242,8 +242,8 @@ Active health checks perform health checking in the background on a timer:
 
 Passive health checks happen inline with actual proxied requests:
 
-- **fail_duration** <span id="fail_duration"/>  is a [duration value](/docs/conventions#durations) that defines how long to remember a failed request. A duration > 0 enables passive health checking.
-- **max_fails** <span id="max_fails"/> is the maximum number of failed requests within `fail_duration` that are needed before considering a backend to be down; must be >= 1; default is 1.
+- **fail_duration** <span id="fail_duration"/>  is a [duration value](/docs/conventions#durations) that defines how long to remember a failed request. A duration > `0` enables passive health checking; it's off by default. A reasonable starting point might be `30s`, to balance error rates with responsiveness when bringing an unhealthy upstream back online; but feel free to experiment to find the right balance for your usecase.
+- **max_fails** <span id="max_fails"/> is the maximum number of failed requests within `fail_duration` that are needed before considering a backend to be down; must be >= `1`; default is `1`.
 - **unhealthy_status** <span id="unhealthy_status"/> counts a request as failed if the response comes back with one of these status codes. Can be a 3-digit status code or a status code class ending in `xx`, for example: `404` or `5xx`.
 - **unhealthy_latency** <span id="unhealthy_latency"/> is a [duration value](/docs/conventions#durations) that counts a request as failed if it takes this long to get a response.
 - **unhealthy_request_count** <span id="unhealthy_request_count"/> is the permissible number of simultaneous requests to a backend before marking it as down.

@@ -14,10 +14,15 @@ $(function() {
 			let url = '#' + item.innerText.replace(/_/g, "-");
 			$(item).html('<a href="' + url + '" style="color: inherit;" title="' + text + '">' + text + '</a>');
 		});
-	$('pre.chroma .k:contains("servers")')
+	// Add links on comments to their respective sections
+	$('pre.chroma .c1')
+		.filter((k, item) => item.innerText.includes('#'))
 		.map(function(k, item) {
-			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
-			$(item).html('<a href="#server-options" style="color: inherit;" title="Server Options">' + text + '</a>');
+			let text = item.innerText;
+			let before = text.slice(0, text.indexOf('#'));
+			text = text.slice(text.indexOf('#'));
+			let url = '#' + text.replace(/#/g, '').trim().toLowerCase().replace(/ /g, "-");
+			$(item).html(before + '<a href="' + url + '" style="color: inherit;" title="' + text + '">' + text + '</a>');
 		});
 });
 </script>
@@ -258,7 +263,7 @@ Configures the ACME DNS challenge provider to use for all ACME transactions. The
 ##### `on_demand_tls`
 Configures [On-Demand TLS](/docs/automatic-https#on-demand-tls) where it is enabled, but does not enable it (to enable it, use the [on_demand `tls` subdirective](/docs/caddyfile/directives/tls#syntax)). Highly recommended if using in production environments, to prevent abuse.
 
-- **ask** will cause Caddy to make an HTTP request to the given URL with a query string of `?domain=` containing the value of the domain name. If the endpoint returns 200 OK, Caddy will be authorized to obtain a certificate for that name.
+- **ask** will cause Caddy to make an HTTP request to the given URL with a query string of `?domain=` containing the value of the domain name. If the endpoint returns a `2xx` status code, Caddy will be authorized to obtain a certificate for that name. Any other status code will result in cancelling issuance of the certificate.
 
 - **interval** and **burst** allows `<n>` certificate operations within `<duration>` interval.
 
