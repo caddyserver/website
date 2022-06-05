@@ -52,6 +52,9 @@ This blocks forever, but what is it doing? At the moment... nothing. By default,
 
 We can make Caddy useful by giving it a config. This can be done many ways, but we'll start by making a POST request to the [/load](/docs/api#post-load) endpoint using `curl` in the next section.
 
+<aside class="tip" markdown="1">
+	Caddy is controlled through the `caddy` command. It offers many useful tools for different tasks while running Caddy. Have a closer look at [ `caddy`'s subcommands ](https://caddyserver.com/docs/command-line) to learn what you can do. 
+</aside>
 
 
 ## Your first config
@@ -122,10 +125,11 @@ Another way to configure Caddy is with the [**Caddyfile**](/docs/caddyfile). The
 respond "Hello, world!"
 ```
 
-
 Save that to a file named `Caddyfile` (no extension) in the current directory.
 
 <aside class="complete">Make a Caddyfile</aside>
+
+Next we check if the configuration is valid. 
 
 Stop Caddy if it is already running (Ctrl+C), then run:
 
@@ -135,9 +139,14 @@ Or if you stored the Caddyfile somewhere else or named it something other than `
 
 <pre><code class="cmd bash">caddy adapt --config /path/to/Caddyfile</code></pre>
 
-You will see JSON output! What happened here?
+If you made no errors, you will see JSON output! What happened here?
 
-We just used a [_config adapter_](/docs/config-adapters) to convert our Caddyfile to Caddy's native JSON structure.
+We just used a [_config adapter_](/docs/config-adapters) to convert our Caddyfile to Caddy's native JSON structure. 
+
+<aside class="tip" markdown="1">
+	It is always good to test the changes in your `Caddyfile` using `caddy adapt`. If there are errors in your `Caddyfile`, you will see where you made a mistake instead of the JSON. 
+</aside>
+
 
 <aside class="complete">Use the config adapter</aside>
 
@@ -176,6 +185,7 @@ Full range of Caddy functionality | Most common parts of Caddy functionality
 Easy to generate | Easy to craft by hand
 Easily programmable | Difficult to automate
 Extremely expressive | Moderately expressive
+Hard to read | Easy to read 
 Allows config traversal | Cannot traverse within Caddyfile
 Partial config changes | Whole config changes only
 Can be exported | Cannot be exported
@@ -188,7 +198,11 @@ Kind of boring | Kind of fun
 
 You will need to decide which is best for your use case.
 
-It is important to note that both JSON and the Caddyfile (and [any other supported config adapter](/docs/config-adapters)) can be used with [Caddy's API](/docs/api). However, you get the full range of Caddy's functionality and API features if you use JSON. If using a config adapter, the only way to load or change the config with the API is the [/load endpoint](/docs/api#post-load).
+<aside class="tip" markdown="1">
+	The Caddyfile offers shortcuts for many common tasks that are require complex JSON configurations. Use `caddy adapt` to learn how these shortcuts work in JSON.
+</aside>
+
+It is important to note that both JSON and the Caddyfile (and [any other supported config adapter](/docs/config-adapters)) can be used with [Caddy's API](/docs/api). However, you only get the full range of Caddy's functionality and API features if you use JSON. If using a config adapter, the only way to load or change the config with the API is the [/load endpoint](/docs/api#post-load).
 
 <aside class="complete">Compare JSON and Caddyfile</aside>
 
@@ -220,7 +234,6 @@ But most people will use JSON+API or Caddyfile+CLI combinations.
 As you can see, Caddy is well-suited for a wide variety of use cases and deployments!
 
 <aside class="complete">Compare API and config files</aside>
-
 
 
 ## Start, stop, run
