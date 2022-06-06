@@ -328,7 +328,7 @@ A default value can be specified for when the environment variable is not found,
 {$DOMAIN:localhost}
 ```
 
-If you want to defer the substitution of an environment variable until runtime, you can use the [standard `{env.*}` placeholders](/docs/conventions#placeholders). Note that not all config parameters support these placeholders though, since module developers need to add a line of code to perform the replacement; placeholder replacement is not automatic and needs to be performed at runtime. If it doesn't seem to work, please file an issue to request support for it.
+If you want to defer the substitution of an environment variable until runtime, you can use the [standard `{env.*}` placeholders](/docs/conventions#placeholders). Note that not all config parameters support these placeholders though, since module developers need to add a line of code to perform the replacement. If it doesn't seem to work, please file an issue to request support for it.
 
 
 
