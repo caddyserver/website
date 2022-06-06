@@ -96,7 +96,7 @@ example.com {
 ```
 
 
-To remove it for **multiple domains** at once:
+To remove it for **multiple domains** at once; this uses the `{labels.*}` placeholders which are the parts of the hostname, 0-indexed from the right (e.g. 0=com, 1=example-one, 2=www):
 
 ```caddy
 www.example-one.com, www.example-two.com {
@@ -180,11 +180,12 @@ When a web page does its own routing, servers may receive lots of requests for p
 
 The main idea is to have the server "try files" to see if the requested file exists server-side, and if not, fall back to an index file where the client does the routing (usually with client-side JavaScript): `try_files {path} /index.html`
 
-The most basic SPA config usually looks something like this:
+A typical SPA config usually looks something like this:
 
 ```caddy
 example.com {
 	root * /path/to/site
+	encode gzip
 	try_files {path} /index.html
 	file_server
 }
@@ -194,6 +195,8 @@ If your SPA is coupled with an API or other server-side-only endpoints, you will
 
 ```caddy
 example.com {
+	encode gzip
+
 	handle /api/* {
 		reverse_proxy backend:8000
 	}

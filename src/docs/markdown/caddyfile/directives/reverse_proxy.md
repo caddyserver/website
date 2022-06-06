@@ -213,13 +213,13 @@ Load balancing is used whenever more than one upstream is defined.
 	- `random_choose <n>` - selects two or more upstreams randomly, then chooses one with least load (`n` is usually 2)
 	- `first` - choose first available upstream, from the order they are defined in the config
 	- `round_robin` - iterate each upstream in turn
-	- `least_conn` - choose upstream with fewest number of current requests
-	- `ip_hash` - map client IP to sticky upstream
-	- `uri_hash` - map URI to sticky upstream
-	- `header [field]` - map request header to sticky upstream. If the specified header is not present, a random upstream is selected.
-	- `cookie [<name> [<secret>]]` - based on the given cookie (default name is `lb` if not specified), which value is hashed; optionally with a secret for HMAC-SHA256
+	- `least_conn` - choose upstream with fewest number of current requests; if more than one host has the least number of requests, then one of the hosts is chosen at random
+	- `ip_hash` - map the client IP to sticky upstream
+	- `uri_hash` - map the request URI (path and query) to sticky upstream
+	- `header [field]` - map request header to sticky upstream; if the specified header is not present, a random upstream is selected
+	- `cookie [<name> [<secret>]]` - based on the given cookie (default name is `lb` if not specified), the cookie value is hashed, optionally with a secret for HMAC-SHA256; on the first request from a client, a random upstream is selected
 
-- **lb_try_duration** <span id="lb_try_duration"/> is a [duration value](/docs/conventions#durations) that defines how long to try selecting available backends for each request if the next available host is down. By default, this retry is disabled. Clients will wait for up to this long while the load balancer tries to find an available upstream host.
+- **lb_try_duration** <span id="lb_try_duration"/> is a [duration value](/docs/conventions#durations) that defines how long to try selecting available backends for each request if the next available host is down. By default, this retry is disabled. Clients will wait for up to this long while the load balancer tries to find an available upstream host. A reasonable starting point might be `5s` since the HTTP transport's default dial timeout is `3s`, so that should allow for at least one retry if the first selected upstream cannot be reached; but feel free to experiment to find the right balance for your usecase.
 - **lb_try_interval** <span id="lb_try_interval"/> is a [duration value](/docs/conventions#durations) that defines how long to wait between selecting the next host from the pool. Default is `250ms`. Only relevant when a request to an upstream host fails. Be aware that setting this to 0 with a non-zero `lb_try_duration` can cause the CPU to spin if all backends are down and latency is very low.
 
 
@@ -242,8 +242,8 @@ Active health checks perform health checking in the background on a timer:
 
 Passive health checks happen inline with actual proxied requests:
 
-- **fail_duration** <span id="fail_duration"/>  is a [duration value](/docs/conventions#durations) that defines how long to remember a failed request. A duration > 0 enables passive health checking.
-- **max_fails** <span id="max_fails"/> is the maximum number of failed requests within `fail_duration` that are needed before considering a backend to be down; must be >= 1; default is 1.
+- **fail_duration** <span id="fail_duration"/>  is a [duration value](/docs/conventions#durations) that defines how long to remember a failed request. A duration > `0` enables passive health checking; the default is `0` (off). A reasonable starting point might be `30s` to balance error rates with responsiveness when bringing an unhealthy upstream back online; but feel free to experiment to find the right balance for your usecase.
+- **max_fails** <span id="max_fails"/> is the maximum number of failed requests within `fail_duration` that are needed before considering a backend to be down; must be >= `1`; default is `1`.
 - **unhealthy_status** <span id="unhealthy_status"/> counts a request as failed if the response comes back with one of these status codes. Can be a 3-digit status code or a status code class ending in `xx`, for example: `404` or `5xx`.
 - **unhealthy_latency** <span id="unhealthy_latency"/> is a [duration value](/docs/conventions#durations) that counts a request as failed if it takes this long to get a response.
 - **unhealthy_request_count** <span id="unhealthy_request_count"/> is the permissible number of simultaneous requests to a backend before marking it as down.
@@ -362,7 +362,7 @@ transport http {
 	tls_insecure_skip_verify
 	tls_timeout <duration>
 	tls_trusted_ca_certs <pem_files...>
-	tls_server_name <sni>
+	tls_server_name <server_name>
 	keepalive [off|<duration>]
 	keepalive_interval <interval>
 	keepalive_idle_conns <max_count>
@@ -381,12 +381,12 @@ transport http {
 - **response_header_timeout** <span id="response_header_timeout"/> is how long to wait for reading response headers from the upstream. Accepts [duration values](/docs/conventions#durations). Default: No timeout.
 - **expect_continue_timeout** <span id="expect_continue_timeout"/> is how long to wait for the upstreams's first response headers after fully writing the request headers if the request has the header `Expect: 100-continue`. Accepts [duration values](/docs/conventions#durations). Default: No timeout.
 - **resolvers** <span id="resolvers"/> is a list of DNS resolvers to override system resolvers.
-- **tls** <span id="tls"/> uses HTTPS with the backend. This will be enabled automatically if you specify backends using the `https://` scheme or port `:443`.
+- **tls** <span id="tls"/> uses HTTPS with the backend. This will be enabled automatically if you specify backends using the `https://` scheme or port `:443`, or if any of the below `tls_*` options are configured.
 - **tls_client_auth** <span id="tls_client_auth"/> enables TLS client authentication one of two ways: (1) by specifying a domain name for which Caddy should obtain a certificate and keep it renewed, or (2) by specifying a certificate and key file to present for TLS client authentication with the backend.
-- **tls_insecure_skip_verify** <span id="tls_insecure_skip_verify"/> turns off security. _Do not use in production._
+- **tls_insecure_skip_verify** <span id="tls_insecure_skip_verify"/> turns off TLS handshake verification, making the connection insecure and vulnerable to man-in-the-middle attacks. _Do not use in production._
 - **tls_timeout** <span id="tls_timeout"/> is a [duration value](/docs/conventions#durations) that specifies how long to wait for the TLS handshake to complete. Default: No timeout.
 - **tls_trusted_ca_certs** <span id="tls_trusted_ca_certs"/> is a list of PEM files that specify CA public keys to trust when connecting to the backend.
-- **tls_server_name** <span id="tls_server_name"/> sets the ServerName (SNI) to put in the ClientHello; only needed if the remote server requires it.
+- **tls_server_name** <span id="tls_server_name"/> sets the server name used when verifying the certificate received in the TLS handshake. By default, this will use the upstream address' host part. You only need to override this if your upstream address does not match the certificate the upstream is likely to use. For example if the upstream address is an IP address, then you would need to configure this to the hostname being served by the upstream server. Currently, this does not support placeholders, so a static value must be used.
 - **keepalive** <span id="keepalive"/> is either `off` or a [duration value](/docs/conventions#durations) that specifies how long to keep connections open (timeout). Default: `2m`.
 - **keepalive_interval** <span id="keepalive"/> is a [duration value](/docs/conventions#durations) that specifies how often to probe for liveness. Default: `30s`.
 - **keepalive_idle_conns** <span id="keepalive_idle_conns"/> defines the maximum number of connections to keep alive. Default: No limit.
@@ -500,7 +500,7 @@ Configure some transport options:
 reverse_proxy localhost:8080 {
 	transport http {
 		dial_timeout 2s
-		tls_timeout  2s
+		response_header_timeout 30s
 	}
 }
 ```

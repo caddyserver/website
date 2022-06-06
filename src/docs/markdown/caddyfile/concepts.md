@@ -24,9 +24,9 @@ The Caddyfile's structure can be described visually:
 
 Key points:
 
-- An optional **global options block** can be the very first thing in the file.
-- Otherwise, the first line of the Caddyfile is **always** the address(es) of the site to serve.
-- All directives and matchers **must** go in a site block. There is no global scope or inheritence across site blocks.
+- An optional [**global options block**](#global-options) can be the very first thing in the file.
+- Otherwise, the first line of the Caddyfile is **always** the [address(es)](#addresses) of the site to serve.
+- All [directives](#directives) and [matchers](#matchers) **must** go in a site block. There is no global scope or inheritence across site blocks.
 - If there is **only one site block**, its curly braces `{ }` are optional.
 
 A Caddyfile consists of at least one or more site blocks, which always starts with one or more [addresses](#addresses) for the site. Any directives appearing before the address will be confusing to the parser.
@@ -145,7 +145,7 @@ Inside quoted tokens, all other characters are treated literally, including spac
 
 ```caddy-d
 directive "first line
-second line"
+	second line"
 ```
 
 You can also use a backtick <code>`</code> to quote tokens; these are convenient when tokens themselves contain double quotes, e.g. JSON text:
@@ -308,7 +308,8 @@ Comments start with `#` and proceed until the end of the line:
 directive  # or go at the end
 ```
 
-The hash character `#` cannot appear in the middle of a token (i.e. it must be preceded by a space or appear at the beginning of a line). This allows the use of hashes within URIs or other values without requiring quoting.
+The hash character `#` for a comment cannot appear in the middle of a token (i.e. it must be preceded by a space or appear at the beginning of a line). This allows the use of hashes within URIs or other values without requiring quoting.
+
 
 
 ## Environment variables
@@ -319,7 +320,7 @@ If your configuration relies on environment variables, you can use them in the C
 {$SITE_ADDRESS}
 ```
 
-Environment variables in this form are substituted before parsing begins, so they can expand to empty values, partial tokens, complete tokens, or even multiple tokens and lines.
+Environment variables in this form are substituted before Caddyfile parsing begins, so they can expand to empty values, partial tokens, complete tokens, or even multiple tokens and lines.
 
 A default value can be specified for when the environment variable is not found, by using `:` as the delimiter between the variable name and the default value:
 
@@ -327,7 +328,8 @@ A default value can be specified for when the environment variable is not found,
 {$DOMAIN:localhost}
 ```
 
-If you want to defer the substitution of an environment variable until runtime, you can use the [standard `{env.*}` placeholders](/docs/conventions#placeholders).
+If you want to defer the substitution of an environment variable until runtime, you can use the [standard `{env.*}` placeholders](/docs/conventions#placeholders). Note that not all config parameters support these placeholders though, since module developers need to add a line of code to perform the replacement. If it doesn't seem to work, please file an issue to request support for it.
+
 
 
 ## Global options
