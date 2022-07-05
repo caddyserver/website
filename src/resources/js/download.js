@@ -154,7 +154,9 @@ $(function() {
 
 		disableFields(true);
 
-		fathom.trackGoal('U9K2UTFV', 0);
+		if (fathom) {
+			fathom.trackGoal('U9K2UTFV', 0);
+		}
 
 		$.ajax($(this).attr('href'), { method: "HEAD" }).done(function(data, status, jqxhr) {
 			window.onbeforeunload = null; // disable exit confirmation before "redirecting" to download
