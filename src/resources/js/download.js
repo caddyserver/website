@@ -154,7 +154,7 @@ $(function() {
 
 		disableFields(true);
 
-		if (fathom) {
+		if (fathom !== undefined) {
 			fathom.trackGoal('U9K2UTFV', 0);
 		}
 
