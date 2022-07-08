@@ -45,6 +45,9 @@ To get started with the API, try our [API tutorial](/docs/api-tutorial) or, if y
 - **[Concurrent config changes](#concurrent-config-changes)**
   Avoid collisions and data loss when making unsynchronized changes to config
 
+- **[POST /adapt](#post-adapt)**
+  Adapts a configuration to JSON without running it
+
 - **[GET /pki/ca/&lt;id&gt;](#get-pkicaid)**
   Returns information about a particular [PKI app](/docs/json/apps/pki/) CA
 
@@ -53,9 +56,6 @@ To get started with the API, try our [API tutorial](/docs/api-tutorial) or, if y
 
 - **[GET /reverse_proxy/upstreams](#get-reverse-proxyupstreams)**
   Returns the current status of the configured proxy upstreams
-
-- **[POST /adapt](#post-adapt)**
-  Adapts a configuration to JSON without running it
 
 
 ## POST /load
@@ -246,7 +246,9 @@ which is much easier to remember and write by hand.
 ## Concurrent config changes
 
 <aside class="tip">
-	This section is for all <code>/config/</code> endpoints. It is experimental and subject to change.
+
+	This section is for all `/config/` endpoints. It is experimental and subject to change.
+
 </aside>
 
 Caddy's config API provides [ACID guarantees](https://en.wikipedia.org/wiki/ACID) for individual requests, but changes that involve more than a single request are subject to collisions or data loss if not properly synchronized.
@@ -263,6 +265,24 @@ The basic algorithm for this is as follows:
 4. If the response is HTTP 412 (Precondition Failed), repeat from step 1, or give up after too many attempts.
 
 This algorithm safely allows multiple, overlapping changes to Caddy's configuration without explicit synchronization. It is designed so that simultaneous changes to different parts of the config don't require a retry: only changes that overlap the same scope of the config can possibly cause a collision and thus require a retry.
+
+
+## POST /adapt
+
+Adapts a configuration to Caddy JSON without loading or running it. If successful, the resulting JSON document is returned in the response body.
+
+The Content-Type header is used to specify the configuration format in the same way that [/load](#post-load) works. For example, to adapt a Caddyfile, set `Content-Type: text/caddyfile`.
+
+This endpoint will adapt any configuration format as long as the associated [config adapter](/docs/config-adapters) is plugged in to your Caddy build.
+
+### Examples
+
+Adapt a Caddyfile to JSON:
+
+<pre><code class="cmd bash">curl "http://localhost:2019/adapt" \
+	-H "Content-Type: text/caddyfile" \
+	--data-binary @Caddyfile</code></pre>
+
 
 ## GET /pki/ca/&lt;id&gt;
 
@@ -316,20 +336,3 @@ Each entry in the JSON array is a configured [upstream](/docs/json/apps/http/ser
 - **fails** the current number of failed requests remembered, as configured by passive health checks.
 
 If your goal is to determine a backend's availability, you will need to cross-check relevant properties of the upstream against the handler configuration you are utilizing. For example, if you've enabled [passive health checks](/docs/json/apps/http/servers/routes/handle/reverse_proxy/health_checks/passive/) for your proxies, then you need to also take into consideration the `fails` and `num_requests` values to determine if an upstream is considered available: check that the `fails` amount is less than your configured maximum amount of failures for your proxy (i.e. [`max_fails`](/docs/json/apps/http/servers/routes/handle/reverse_proxy/health_checks/passive/max_fails/)), and that `num_requests` is less than or equal to your configured amount of maximum requests per upstream (i.e. [`unhealthy_request_count`](/docs/json/apps/http/servers/routes/handle/reverse_proxy/health_checks/passive/unhealthy_request_count/) for the whole proxy, or [`max_requests`](/docs/json/apps/http/servers/routes/handle/reverse_proxy/upstreams/max_requests/) for individual upstreams).
-
-
-## POST /adapt
-
-Adapts a configuration to Caddy JSON without loading or running it. If successful, the resulting JSON document is returned in the response body.
-
-The Content-Type header is used to specify the configuration format in the same way that [/load](#post-load) works. For example, to adapt a Caddyfile, set `Content-Type: text/caddyfile`.
-
-This endpoint will adapt any configuration format as long as the associated [config adapter](/docs/config-adapters) is plugged in to your Caddy build.
-
-### Examples
-
-Adapt a Caddyfile to JSON:
-
-<pre><code class="cmd bash">curl "http://localhost:2019/adapt" \
-	-H "Content-Type: text/caddyfile" \
-	--data-binary @Caddyfile</code></pre>
