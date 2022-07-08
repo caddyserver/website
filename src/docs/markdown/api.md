@@ -64,13 +64,13 @@ If the new config is the same as the current one, no reload will occur. To force
 
 Set a new active configuration:
 
-<pre><code class="cmd bash">curl -X POST "http://localhost:2019/load" \
+<pre><code class="cmd bash">curl "http://localhost:2019/load" \
 	-H "Content-Type: application/json" \
 	-d @caddy.json</code></pre>
 
 Note: curl's `-d` flag removes newlines, so if your config format is sensitive to line breaks (e.g. the Caddyfile), use `--data-binary` instead:
 
-<pre><code class="cmd bash">curl -X POST "http://localhost:2019/load" \
+<pre><code class="cmd bash">curl "http://localhost:2019/load" \
 	-H "Content-Type: text/caddyfile" \
 	--data-binary @Caddyfile</code></pre>
 
@@ -152,14 +152,14 @@ baseSlice = append(baseSlice, newElems...)
 
 Add a listener address:
 
-<pre><code class="cmd bash">curl -X POST \
+<pre><code class="cmd bash">curl \
 	-H "Content-Type: application/json" \
 	-d '":8080"' \
 	"http://localhost:2019/config/apps/http/servers/myserver/listen"</code></pre>
 
 Add multiple listener addresses:
 
-<pre><code class="cmd bash">curl -X POST \
+<pre><code class="cmd bash">curl \
 	-H "Content-Type: application/json" \
 	-d '[":8080", ":5133"]' \
 	"http://localhost:2019/config/apps/http/servers/myserver/listen/..."</code></pre>

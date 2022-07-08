@@ -89,7 +89,6 @@ Save this to a JSON file (e.g. `caddy.json`):
 Then upload it:
 
 <pre><code class="cmd bash">curl localhost:2019/load \
-	-X POST \
 	-H "Content-Type: application/json" \
 	-d @caddy.json
 </code></pre>

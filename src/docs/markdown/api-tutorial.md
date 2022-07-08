@@ -68,7 +68,6 @@ Save this to a JSON file:
 Then upload it:
 
 <pre><code class="cmd bash">curl localhost:2019/load \
-	-X POST \
 	-H "Content-Type: application/json" \
 	-d @caddy.json
 </code></pre>
@@ -104,7 +103,6 @@ Let's change our welcome message from "Hello world!" to something a little more 
 Save the config file, then update Caddy's active configuration by running the same POST request again:
 
 <pre><code class="cmd bash">curl localhost:2019/load \
-	-X POST \
 	-H "Content-Type: application/json" \
 	-d @caddy.json
 </code></pre>
@@ -130,7 +128,6 @@ Using the request URI's path, we can traverse into the config structure and upda
 
 <pre><code class="cmd bash">curl \
 	localhost:2019/config/apps/http/servers/example/routes/0/handle/0/body \
-	-X POST \
 	-H "Content-Type: application/json" \
 	-d '"Work smarter, not harder."'
 </code></pre>
@@ -171,7 +168,6 @@ We can give our handler object an [`@id` tag](/docs/api#using-id-in-json) to mak
 
 <pre><code class="cmd bash">curl \
 	localhost:2019/config/apps/http/servers/example/routes/0/handle/0/@id \
-	-X POST \
 	-H "Content-Type: application/json" \
 	-d '"msg"'
 </code></pre>
@@ -198,7 +194,6 @@ And now we can change the message with a shorter path:
 
 <pre><code class="cmd bash">curl \
 	localhost:2019/id/msg/body \
-	-X POST \
 	-H "Content-Type: application/json" \
 	-d '"Some shortcuts are good."'
 </code></pre>

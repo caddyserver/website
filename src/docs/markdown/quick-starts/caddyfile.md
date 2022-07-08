@@ -56,7 +56,6 @@ localhost:2016 {
 You can give Caddy the updated configuration two ways, either with the API directly:
 
 <pre><code class="cmd bash">curl localhost:2019/load \
-	-X POST \
 	-H "Content-Type: text/caddyfile" \
 	--data-binary @Caddyfile
 </code></pre>
