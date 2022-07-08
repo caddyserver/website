@@ -42,6 +42,9 @@ To get started with the API, try our [API tutorial](/docs/api-tutorial) or, if y
 - **[Using `@id` in JSON](#using-id-in-json)**
   Easily traverse into the config structure
 
+- **[Concurrent config changes](#concurrent-config-changes)**
+  Avoid collisions and data loss when making unsynchronized changes to config
+
 - **[GET /pki/ca/&lt;id&gt;](#get-pkicaid)**
   Returns information about a particular [PKI app](/docs/json/apps/pki/) CA
 
@@ -50,6 +53,9 @@ To get started with the API, try our [API tutorial](/docs/api-tutorial) or, if y
 
 - **[GET /reverse_proxy/upstreams](#get-reverse-proxyupstreams)**
   Returns the current status of the configured proxy upstreams
+
+- **[POST /adapt](#post-adapt)**
+  Adapts a configuration to JSON without running it
 
 
 ## POST /load
@@ -237,6 +243,26 @@ but with an ID, the path becomes
 
 which is much easier to remember and write by hand.
 
+## Concurrent config changes
+
+<aside class="tip">
+	This section is for all <code>/config/</code> endpoints. It is experimental and subject to change.
+</aside>
+
+Caddy's config API provides [ACID guarantees](https://en.wikipedia.org/wiki/ACID) for individual requests, but changes that involve more than a single request are subject to collisions or data loss if not properly synchronized.
+
+For example, two clients may `GET /config/foo` at the same time, make an edit within that scope (config path), then call `POST|PUT|PATCH|DELETE /config/foo` at the same time to apply their changes, resulting in a collision: one will overwrite the other, even if the specific changes within the scope (`/config/foo`) don't overlap. This is because the changes are not aware of each other.
+
+Caddy's API does not support transactions spanning multiple requests, and HTTP is a stateless protocol. However, you can use the `Etag` trailer and `If-Match` header to detect and prevent collisions for any and all changes as a kind of pessimistic concurrency control. This is useful if there is any chance that you are using Caddy's `/config/...` endpoints concurrently without synchronization. All responses to `GET /config/...` requests have an HTTP trailer called `Etag` that contains the path and a hash of the contents in that scope (e.g. `Etag: "/config/apps/http/servers 65760b8e"`). Simply set the `If-Match` header on a mutative request to that of an Etag trailer from a previous `GET` request.
+
+The basic algorithm for this is as follows:
+
+1. Perform a `GET` request to any scope `S` within the config. Hold onto the `Etag` trailer of the response.
+2. Make your desired change on the returned config.
+3. Perform a `POST|PUT|PATCH|DELETE` request within scope `S`, setting the `If-Match` header to the `Etag`.
+4. If the response is HTTP 412 (Precondition Failed), repeat from step 1, or give up after too many attempts.
+
+This algorithm safely allows multiple, overlapping changes to Caddy's configuration without explicit synchronization. It is designed so that simultaneous changes to different parts of the config don't require a retry: only changes that overlap the same scope of the config can possibly cause a collision and thus require a retry.
 
 ## GET /pki/ca/&lt;id&gt;
 
@@ -289,4 +315,21 @@ Each entry in the JSON array is a configured [upstream](/docs/json/apps/http/ser
 - **num_requests** is the amount of active requests currently being handled by the upstream.
 - **fails** the current number of failed requests remembered, as configured by passive health checks.
 
-If your goal is to determine a backend's _availability_, you will need to cross-check relevant properties of the upstream against the handler configuration you are utilizing. For example, if you've enabled [passive health checks](/docs/json/apps/http/servers/routes/handle/reverse_proxy/health_checks/passive/) for your proxies, then you need to also take into consideration the `fails` and `num_requests` values to determine if an upstream is considered available: check that the `fails` amount is less than your configured maximum amount of failures for your proxy (i.e. [`max_fails`](/docs/json/apps/http/servers/routes/handle/reverse_proxy/health_checks/passive/max_fails/)), and that `num_requests` is less than or equal to your configured amount of maximum requests per upstream (i.e. [`unhealthy_request_count`](/docs/json/apps/http/servers/routes/handle/reverse_proxy/health_checks/passive/unhealthy_request_count/) for the whole proxy, or [`max_requests`](/docs/json/apps/http/servers/routes/handle/reverse_proxy/upstreams/max_requests/) for individual upstreams).
+If your goal is to determine a backend's availability, you will need to cross-check relevant properties of the upstream against the handler configuration you are utilizing. For example, if you've enabled [passive health checks](/docs/json/apps/http/servers/routes/handle/reverse_proxy/health_checks/passive/) for your proxies, then you need to also take into consideration the `fails` and `num_requests` values to determine if an upstream is considered available: check that the `fails` amount is less than your configured maximum amount of failures for your proxy (i.e. [`max_fails`](/docs/json/apps/http/servers/routes/handle/reverse_proxy/health_checks/passive/max_fails/)), and that `num_requests` is less than or equal to your configured amount of maximum requests per upstream (i.e. [`unhealthy_request_count`](/docs/json/apps/http/servers/routes/handle/reverse_proxy/health_checks/passive/unhealthy_request_count/) for the whole proxy, or [`max_requests`](/docs/json/apps/http/servers/routes/handle/reverse_proxy/upstreams/max_requests/) for individual upstreams).
+
+
+## POST /adapt
+
+Adapts a configuration to Caddy JSON without loading or running it. If successful, the resulting JSON document is returned in the response body.
+
+The Content-Type header is used to specify the configuration format in the same way that [/load](#post-load) works. For example, to adapt a Caddyfile, set `Content-Type: text/caddyfile`.
+
+This endpoint will adapt any configuration format as long as the associated [config adapter](/docs/config-adapters) is plugged in to your Caddy build.
+
+### Examples
+
+Adapt a Caddyfile to JSON:
+
+<pre><code class="cmd bash">curl "http://localhost:2019/adapt" \
+	-H "Content-Type: text/caddyfile" \
+	--data-binary @Caddyfile</code></pre>
