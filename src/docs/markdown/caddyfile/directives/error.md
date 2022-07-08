@@ -37,7 +37,7 @@ example.com {
 
     # Handle the error by serving an HTML page 
     handle_errors {
-        rewrite * /{http.error.status_code}.html
+        rewrite * /{err.status_code}.html
 		file_server
     }
 

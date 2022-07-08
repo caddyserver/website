@@ -145,7 +145,7 @@ Additionally, upstream addresses cannot contain paths or query strings, as that 
 
 If the address is not a URL (i.e. does not have a scheme), then placeholders can be used, but this makes the upstream _dynamically static_, meaning that potentially many different backends act as a single, static upstream in terms of health checks and load balancing.
 
-When proxying over HTTPS, you may need to override the `Host` header such that it matches the TLS SNI value, which is used by servers for routing and certificate selection. See the [Headers](#headers) section below for more details.
+When proxying over HTTPS, you may need to override the `Host` header such that it matches the TLS SNI value, which is used by servers for routing and certificate selection. See the [HTTPS](#https) section below for more details.
 
 
 #### Dynamic upstreams
@@ -158,7 +158,7 @@ Caddy's reverse proxy comes standard with some dynamic upstream modules. Note th
 Retrieves upstreams from SRV DNS records.
 
 ```caddy-d
-	dynamic srv [<name>] {
+	dynamic srv [<full_name>] {
 		service   <service>
 		proto     <proto>
 		name      <name>
@@ -169,14 +169,14 @@ Retrieves upstreams from SRV DNS records.
 	}
 ```
 
-- **&lt;name&gt;** - The full domain name of the record to look up (i.e. `_service._proto.name`).
-- **service** - The service component of the full name.
-- **proto** - The protocol component of the full name. Either `tcp` or `udp`.
-- **name** - The name component. Or, if `service` and `proto` are empty, the full domain name to query.
-- **refresh** - How often to refresh cached results. Default: `1m`
-- **resolvers** - List of DNS resolvers to override system resolvers.
-- **dial_timeout** - Timeout for dialing the query.
-- **dial_fallback_delay** - Timeout for falling back from IPv6 to IPv4 via RFC 6555. Default: `300ms`
+- **&lt;full_name&gt;** is the full domain name of the record to look up (i.e. `_service._proto.name`).
+- **service** is the service component of the full name.
+- **proto** is the protocol component of the full name. Either `tcp` or `udp`.
+- **name** is the name component. Or, if `service` and `proto` are empty, the full domain name to query.
+- **refresh** is how often to refresh cached results. Default: `1m`
+- **resolvers** is the list of DNS resolvers to override system resolvers.
+- **dial_timeout** is the timeout for dialing the query.
+- **dial_fallback_delay** is how long to wait before spawning an RFC 6555 Fast Fallback connection. Default: `300ms`
 
 
 
@@ -195,12 +195,12 @@ Retrieves upstreams from A/AAAA DNS records.
 	}
 ```
 
-- **&lt;name&gt;, name** - The domain name to query.
-- **&lt;port&gt;, port** - The port to use for the backend.
-- **refresh** - How often to refresh cached results. Default: `1m`
-- **resolvers** - List of DNS resolvers to override system resolvers.
-- **dial_timeout** - Timeout for dialing the query.
-- **dial_fallback_delay** - Timeout for falling back from IPv6 to IPv4 via RFC 6555. Default: `300ms`
+- **name** is the domain name to query.
+- **port** is the port to use for the backend.
+- **refresh** is how often to refresh cached results. Default: `1m`
+- **resolvers** is the list of DNS resolvers to override system resolvers.
+- **dial_timeout** is the timeout for dialing the query.
+- **dial_fallback_delay** is how long to wait before spawning an RFC 6555 Fast Fallback connection. Default: `300ms`
 
 
 
@@ -208,18 +208,43 @@ Retrieves upstreams from A/AAAA DNS records.
 
 Load balancing is used whenever more than one upstream is defined.
 
-- **lb_policy** <span id="lb_policy"/> is the name of the load balancing policy, along with any options. Default: `random`. Can be:
-	- `random` - randomly choose an upstream
-	- `random_choose <n>` - selects two or more upstreams randomly, then chooses one with least load (`n` is usually 2)
-	- `first` - choose first available upstream, from the order they are defined in the config
-	- `round_robin` - iterate each upstream in turn
-	- `least_conn` - choose upstream with fewest number of current requests; if more than one host has the least number of requests, then one of the hosts is chosen at random
-	- `ip_hash` - map the client IP to sticky upstream
-	- `uri_hash` - map the request URI (path and query) to sticky upstream
-	- `header [field]` - map request header to sticky upstream; if the specified header is not present, a random upstream is selected
-	- `cookie [<name> [<secret>]]` - based on the given cookie (default name is `lb` if not specified), the cookie value is hashed, optionally with a secret for HMAC-SHA256; on the first request from a client, a random upstream is selected
+- **lb_policy** <span id="lb_policy"/> is the name of the load balancing policy, along with any options. Default: `random`.
+
+  For policies that involve hashing, the [highest-random-weight (HRW)](https://en.wikipedia.org/wiki/Rendezvous_hashing) algorithm is used to ensure that a client or request with the same hash key is mapped to the same upstream, even if the list of upstreams change.
+
+	- `random` randomly chooses an upstream
+
+	- `random_choose <n>` selects two or more upstreams randomly, then chooses one with least load (`n` is usually 2)
+
+	- `first` chooses the first available upstream, from the order they are defined in the config
+
+	- `round_robin` iterates each upstream in turn
+
+	- `least_conn` choose upstream with fewest number of current requests; if more than one host has the least number of requests, then one of those hosts is chosen at random
+
+	- `ip_hash` maps the client IP to a sticky upstream
+
+	- `uri_hash` maps the request URI (path and query) to a sticky upstream
+
+	- `header [field]` maps a request header to a sticky upstream, by hashing the header value; if the specified header field is not present, a random upstream is selected
+
+	- `cookie [<name> [<secret>]]` on the first request from a client (when there's no cookie), a random upstream is selected, and a `Set-Cookie` header is added to the response (default cookie name is `lb` if not specified). The cookie value is the upstream dial address of the chosen upstream, hashed with HMAC-SHA256 (using `<secret>` as the shared secret, empty string if not specified).
+	
+	  On subsequent requests where the cookie is present, the cookie value will be mapped to the same upstream if it's available; if not available or not found, a new random upstream is selected and the cookie is added to the response.
+
+	  If you wish to use a particular upstream for debugging purposes, you may hash the upstream address with the secret, and set the cookie in your HTTP client (browser or otherwise). For example, with PHP, you could run the following to compute the cookie value, where `10.1.0.10:8080` is the address of one of your upstreams, and `secret` is your configured secret.
+	  ```php
+	  echo hash_hmac('sha256', '10.1.0.10:8080', 'secret');
+	  // cdd96966817dd14a99f47ee17451464f29998da170814a16b483e4c1ff4c48cf
+	  ```
+	
+	  You can set the cookie in your browser via the Javascript console, for example to set the cookie named `lb`:
+	  ```js
+	  document.cookie = "lb=cdd96966817dd14a99f47ee17451464f29998da170814a16b483e4c1ff4c48cf";
+	  ```
 
 - **lb_try_duration** <span id="lb_try_duration"/> is a [duration value](/docs/conventions#durations) that defines how long to try selecting available backends for each request if the next available host is down. By default, this retry is disabled. Clients will wait for up to this long while the load balancer tries to find an available upstream host. A reasonable starting point might be `5s` since the HTTP transport's default dial timeout is `3s`, so that should allow for at least one retry if the first selected upstream cannot be reached; but feel free to experiment to find the right balance for your usecase.
+
 - **lb_try_interval** <span id="lb_try_interval"/> is a [duration value](/docs/conventions#durations) that defines how long to wait between selecting the next host from the pool. Default is `250ms`. Only relevant when a request to an upstream host fails. Be aware that setting this to 0 with a non-zero `lb_try_duration` can cause the CPU to spin if all backends are down and latency is very low.
 
 
@@ -229,11 +254,17 @@ Load balancing is used whenever more than one upstream is defined.
 Active health checks perform health checking in the background on a timer:
 
 - **health_uri** <span id="health_uri"/> is the URI path (and optional query) for active health checks.
+
 - **health_port** <span id="health_port"/> is the port to use for active health checks, if different from the upstream's port.
+
 - **health_interval** <span id="health_interval"/> is a [duration value](/docs/conventions#durations) that defines how often to perform active health checks.
+
 - **health_timeout** <span id="health_timeout"/> is a [duration value](/docs/conventions#durations) that defines how long to wait for a reply before marking the backend as down.
+
 - **health_status** <span id="health_status"/> is the HTTP status code to expect from a healthy backend. Can be a 3-digit status code, or a status code class ending in `xx`. For example: `200` (which is the default), or `2xx`.
+
 - **health_body** <span id="health_body"/> is a substring or regular expression to match on the response body of an active health check. If the backend does not return a matching body, it will be marked as down.
+
 - **health_headers** <span id="health_headers"/> allows specifying headers to set on the active health check requests. This is useful if you need to change the `Host` header, or if you need to provide some authentication to your backend as part of your health checks.
 
 
@@ -243,10 +274,16 @@ Active health checks perform health checking in the background on a timer:
 Passive health checks happen inline with actual proxied requests:
 
 - **fail_duration** <span id="fail_duration"/>  is a [duration value](/docs/conventions#durations) that defines how long to remember a failed request. A duration > `0` enables passive health checking; the default is `0` (off). A reasonable starting point might be `30s` to balance error rates with responsiveness when bringing an unhealthy upstream back online; but feel free to experiment to find the right balance for your usecase.
+
 - **max_fails** <span id="max_fails"/> is the maximum number of failed requests within `fail_duration` that are needed before considering a backend to be down; must be >= `1`; default is `1`.
+
 - **unhealthy_status** <span id="unhealthy_status"/> counts a request as failed if the response comes back with one of these status codes. Can be a 3-digit status code or a status code class ending in `xx`, for example: `404` or `5xx`.
+
 - **unhealthy_latency** <span id="unhealthy_latency"/> is a [duration value](/docs/conventions#durations) that counts a request as failed if it takes this long to get a response.
-- **unhealthy_request_count** <span id="unhealthy_request_count"/> is the permissible number of simultaneous requests to a backend before marking it as down.
+
+- **unhealthy_request_count** <span id="unhealthy_request_count"/> is the permissible number of simultaneous requests to a backend before marking it as down. In other words, if a particular backend is currently handling this many requests, then it's considered "overloaded" and other backends will be preferred instead.
+
+  This should be a reasonably large number; configuring this means that the proxy will have a limit of `unhealthy_request_count × upstreams_count` total simultaneous requests, and any requests after that point will result in an error due to no upstreams being available.
 
 
 
@@ -255,8 +292,11 @@ Passive health checks happen inline with actual proxied requests:
 The proxy **buffers responses** by default for wire efficiency:
 
 - **flush_interval** <span id="flush_interval"/> is a [duration value](/docs/conventions#durations) that adjusts how often Caddy should flush the response buffer to the client. By default, no periodic flushing is done. A negative value disables response buffering, and flushes immediately after each write to the client. This option is ignored when the upstream's response is recognized as a streaming response, or if its content length is `-1`; for such responses, writes are flushed to the client immediately.
+
 - **buffer_requests** <span id="buffer_requests"/> will cause the proxy to read the entire request body into a buffer before sending it upstream. This is very inefficient and should only be done if the upstream requires reading request bodies without delay (which is something the upstream application should fix).
+
 - **buffer_responses** <span id="buffer_responses"/> will cause the entire response body to be read and buffered in memory before being proxied to the client. This should be avoided if at all possible for performance reasons, but could be useful if the backend has tighter memory constraints.
+
 - **max_buffer_size** <span id="max_buffer_size"/> if body buffering is enabled, this sets the maximum size of the buffers used for the requests and responses. This accepts all size formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
 
 
@@ -265,8 +305,9 @@ The proxy **buffers responses** by default for wire efficiency:
 
 The proxy can **manipulate headers** between itself and the backend:
 
-- **header_up** <span id="header_up"/> Sets, adds (with the `+` prefix), removes (with the `-` prefix), or performs a replacement (by using two arguments, a search and replacement) in a request header going upstream to the backend.
-- **header_down** <span id="header_down"/> Sets, adds (with the `+` prefix), removes (with the `-` prefix), or performs a replacement (by using two arguments, a search and replacement) in a response header coming downstream from the backend.
+- **header_up** <span id="header_up"/> sets, adds (with the `+` prefix), deletes (with the `-` prefix), or performs a replacement (by using two arguments, a search and replacement) in a request header going upstream to the backend.
+
+- **header_down** <span id="header_down"/> sets, adds (with the `+` prefix), deletes (with the `-` prefix), or performs a replacement (by using two arguments, a search and replacement) in a response header coming downstream from the backend.
 
 For example, to set a request header, overwriting any existing values:
 
@@ -281,10 +322,16 @@ header_down +Some-Header "first value"
 header_down +Some-Header "second value"
 ```
 
-To remove a request header, preventing it from reaching the backend:
+To delete a request header, preventing it from reaching the backend:
 
 ```caddy-d
 header_up -Some-Header
+```
+
+To delete all matching request, using a suffix match:
+
+```caddy-d
+header_up -Some-*
 ```
 
 To perform a regular expression replacement on a request header:
@@ -300,11 +347,21 @@ The regular expression language used is RE2, included in Go. See the [RE2 syntax
 
 By default, Caddy passes thru incoming headers&mdash;including `Host`&mdash;to the backend without modifications, with three exceptions:
 
-- It sets or augments the [X-Forwarded-For](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For) header field.
-- It sets the [X-Forwarded-Proto](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Proto) header field.
-- It sets the [X-Forwarded-Host](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Host) header field.
+- It sets or augments the [`X-Forwarded-For`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For) header field.
+- It sets the [`X-Forwarded-Proto`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Proto) header field.
+- It sets the [`X-Forwarded-Host`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Host) header field.
 
-For these `X-Forwarded-*` headers, by default, Caddy will ignore their values from incoming requests, to prevent spoofing. If Caddy is not the first server being connected to by your clients (for example when a CDN is in front of Caddy), you may configure `trusted_proxies` <span id="trusted_proxies"/> with a list of IP ranges (CIDRs) from which incoming requests are trusted to have sent good values for these headers. As a shortcut, `trusted_proxies private_ranges` may be configured to trust all private IP ranges.
+<span id="trusted_proxies"/> For these `X-Forwarded-*` headers, by default, Caddy will ignore their values from incoming requests, to prevent spoofing. If Caddy is not the first server being connected to by your clients (for example when a CDN is in front of Caddy), you may configure `trusted_proxies` with a list of IP ranges (CIDRs) from which incoming requests are trusted to have sent good values for these headers. As a shortcut, `private_ranges` may be configured to trust all private IP ranges.
+
+```caddy-d
+trusted_proxies private_ranges
+```
+
+<aside class="tip">
+
+If you're using Cloudflare in front of Caddy, be aware that you may be vulnerable to spoofing of the `X-Forwarded-For` header. Our friends at [Authelia](https://www.authelia.com) have documented a [workaround](https://www.authelia.com/integration/proxies/fowarded-headers/) to configure Cloudflare to ignore incoming values for this header.
+
+</aside>
 
 Additionally, when using the [`http` transport](#the-http-transport), the `Accept-Encoding: gzip` header will be set, if it is missing in the request from the client. This behavior can be disabled with [`compression off`](#compression) on the transport.
 
@@ -363,6 +420,8 @@ transport http {
 	tls_timeout <duration>
 	tls_trusted_ca_certs <pem_files...>
 	tls_server_name <server_name>
+	tls_renegotiation <level>
+	tls_except_ports <ports...>
 	keepalive [off|<duration>]
 	keepalive_interval <interval>
 	keepalive_idle_conns <max_count>
@@ -374,25 +433,56 @@ transport http {
 ```
 
 - **read_buffer** <span id="read_buffer"/> is the size of the read buffer in bytes. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). Default: `4KiB`.
+
 - **write_buffer** <span id="write_buffer"/> is the size of the write buffer in bytes. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). Default: `4KiB`.
+
 - **max_response_header** <span id="max_response_header"/> is the maximum amount of bytes to read from response headers. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). Default: `10MiB`.
+
 - **dial_timeout** <span id="dial_timeout"/> is how long to wait when connecting to the upstream socket. Accepts [duration values](/docs/conventions#durations). Default: No timeout.
+
 - **dial_fallback_delay** <span id="dial_fallback_delay"/> is how long to wait before spawning an RFC 6555 Fast Fallback connection. A negative value disables this. Accepts [duration values](/docs/conventions#durations). Default: `300ms`.
+
 - **response_header_timeout** <span id="response_header_timeout"/> is how long to wait for reading response headers from the upstream. Accepts [duration values](/docs/conventions#durations). Default: No timeout.
+
 - **expect_continue_timeout** <span id="expect_continue_timeout"/> is how long to wait for the upstreams's first response headers after fully writing the request headers if the request has the header `Expect: 100-continue`. Accepts [duration values](/docs/conventions#durations). Default: No timeout.
+
 - **resolvers** <span id="resolvers"/> is a list of DNS resolvers to override system resolvers.
+
 - **tls** <span id="tls"/> uses HTTPS with the backend. This will be enabled automatically if you specify backends using the `https://` scheme or port `:443`, or if any of the below `tls_*` options are configured.
+
 - **tls_client_auth** <span id="tls_client_auth"/> enables TLS client authentication one of two ways: (1) by specifying a domain name for which Caddy should obtain a certificate and keep it renewed, or (2) by specifying a certificate and key file to present for TLS client authentication with the backend.
+
 - **tls_insecure_skip_verify** <span id="tls_insecure_skip_verify"/> turns off TLS handshake verification, making the connection insecure and vulnerable to man-in-the-middle attacks. _Do not use in production._
+
 - **tls_timeout** <span id="tls_timeout"/> is a [duration value](/docs/conventions#durations) that specifies how long to wait for the TLS handshake to complete. Default: No timeout.
+
 - **tls_trusted_ca_certs** <span id="tls_trusted_ca_certs"/> is a list of PEM files that specify CA public keys to trust when connecting to the backend.
-- **tls_server_name** <span id="tls_server_name"/> sets the server name used when verifying the certificate received in the TLS handshake. By default, this will use the upstream address' host part. You only need to override this if your upstream address does not match the certificate the upstream is likely to use. For example if the upstream address is an IP address, then you would need to configure this to the hostname being served by the upstream server. Currently, this does not support placeholders, so a static value must be used.
+
+- **tls_server_name** <span id="tls_server_name"/> sets the server name used when verifying the certificate received in the TLS handshake. By default, this will use the upstream address' host part.
+
+  You only need to override this if your upstream address does not match the certificate the upstream is likely to use. For example if the upstream address is an IP address, then you would need to configure this to the hostname being served by the upstream server.
+
+  A request placeholder may be used, in which case a clone of the HTTP transport config will be used on every request, which may incur a performance penalty.
+
+- **tls_renegotiation** <span id="tls_renegotiation"/> sets the TLS renegotiation level. TLS renegotiation is the act of performing subsequent handshakes after the first. The level may be one of:
+  - `never` (the default) disables renegotiation.
+  - `once` allows a remote server to request renegotiation once per connection.
+  - `freely` allows a remote server to repeatedly request renegotiation.
+
+- **tls_except_ports** <span id="tls_except_ports"/> when TLS is enabled, if the upstream target uses one of the given ports, TLS will be disabled for those connections. This may be useful when configuring dynamic upstreams, where some upstreams expect HTTP and others expect HTTPS requests.
+
 - **keepalive** <span id="keepalive"/> is either `off` or a [duration value](/docs/conventions#durations) that specifies how long to keep connections open (timeout). Default: `2m`.
+
 - **keepalive_interval** <span id="keepalive"/> is a [duration value](/docs/conventions#durations) that specifies how often to probe for liveness. Default: `30s`.
+
 - **keepalive_idle_conns** <span id="keepalive_idle_conns"/> defines the maximum number of connections to keep alive. Default: No limit.
+
 - **keepalive_idle_conns_per_host** <span id="keepalive_idle_conns_per_host"/> if non-zero, controls the maximum idle (keep-alive) connections to keep per-host. Default: `32`.
+
 - **versions** <span id="versions"/> allows customizing which versions of HTTP to support. As a special case, "h2c" is a valid value which will enable cleartext HTTP/2 connections to the upstream (however, this is a non-standard feature that does not use Go's default HTTP transport, so it is exclusive of other features; subject to change or removal). Default: `1.1 2`, or if scheme is `h2c://`, `h2c 2`
+
 - **compression** <span id="compression"/> can be used to disable compression to the backend by setting it to `off`.
+
 - **max_conns_per_host** <span id="max_conns_per_host"/> optionally limits the total number of connections per host, including connections in the dialing, active, and idle states. Default: No limit.
 
 
@@ -412,11 +502,17 @@ transport fastcgi {
 ```
 
 - **root** <span id="root"/> is the root of the site. Default: `{http.vars.root}` or current working directory.
+
 - **split** <span id="split"/> is where to split the path to get PATH_INFO at the end of the URI.
+
 - **env** <span id="env"/> sets an extra environment variable to the given value. Can be specified more than once for multiple environment variables.
+
 - **resolve_root_symlink** <span id="resolve_root_symlink"/> enables resolving the `root` directory to its actual value by evaluating a symbolic link, if one exists.
+
 - **dial_timeout** <span id="dial_timeout"/> is how long to wait when connecting to the upstream socket. Accepts [duration values](/docs/conventions#durations). Default: `3s`.
+
 - **read_timeout** <span id="read_timeout"/> is how long to wait when reading from the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
+
 - **write_timeout** <span id="write_timeout"/> is how long to wait when sending to the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
 
 <aside class="tip">

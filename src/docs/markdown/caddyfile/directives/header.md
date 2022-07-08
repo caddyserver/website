@@ -12,20 +12,37 @@ By default, header operations are performed immediately unless any of the header
 ## Syntax
 
 ```caddy-d
-header [<matcher>] [[+|-|?]<field> [<value>|<find>|<default_value>] [<replace>]] {
+header [<matcher>] [[+|-|?]<field> [<value>|<find>] [<replace>]] {
+	# Replace
 	<field> <find> <replace>
+
+	# Add or Set
 	[+]<field> <value>
+
+	# Delete
 	-<field>
-	?<field> <default_value>
+
+	# Default
+	?<field> <value>
+
 	[defer]
 }
 ```
 
-- **&lt;field&gt;** is the name of the header field. By default, will overwrite any existing field of the same name. Prefix with `+` to add the field instead of replace, or prefix with `-` to remove the field.
+- **&lt;field&gt;** is the name of the header field. By default, will overwrite any existing field of the same name.
+
+  Prefix with `+` to add the field instead of overwriting (setting) the field if it already exists; header fields can appear more than once in a request.
+
+  Prefix with `-` to delete the field. The field may use prefix or suffix `*` wildcards to delete all matching fields.
+
+  Prefix with `?` to set a default value for the field. The field is only written if it doesn't yet exist.
+
 - **&lt;value&gt;** is the header field value, if adding or setting a field.
-- **&lt;default_value&gt;** is the header field value that will be set only if the header does not already exist.
+
 - **&lt;find&gt;** is the substring or regular expression to search for.
+
 - **&lt;replace&gt;** is the replacement value; required if performing a search-and-replace.
+
 - **defer** will force the header operations to be deferred until the response is being written out to the client. This is automatically enabled if any of the header fields are being deleted with `-`, or when setting a default value with `?`.
 
 For multiple header manipulations, you can open a block and specify one manipulation per line in the same way.

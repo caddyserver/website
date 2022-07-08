@@ -260,7 +260,8 @@ Because this command uses the API, the admin endpoint must not be disabled.
 <pre><code class="cmd bash">caddy reverse-proxy
 	[--from &lt;addr&gt;]
 	--to &lt;addr&gt;
-	[--change-host-header]</code></pre>
+	[--change-host-header]
+	[--internal-certs]</code></pre>
 
 Spins up a simple but production-ready HTTP(S) reverse proxy.
 
@@ -269,6 +270,8 @@ Spins up a simple but production-ready HTTP(S) reverse proxy.
 `--to` is the address to proxy to.
 
 `--change-host-header` will cause Caddy to change the Host header from the incoming value to the address of the upstream.
+
+`--internal-certs` will cause Caddy to issue certificates using its internal issuer (effectively self-signed) for the domain specified in the `--from` address.
 
 Both `--from` and `--to` parameters can be URLs, as scheme and domain name will be inferred from the provided URL (paths and query strings ignored). Or they can be a simple network address and not a complete URL.
 

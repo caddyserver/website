@@ -201,7 +201,7 @@ expression {method}.startsWith("P")
 Match requests where handler returned error status code `404`, would be used in conjunction with the [`handle_errors` directive](/docs/caddyfile/directives/handle_errors):
 
 ```caddy-d
-expression {http.error.status_code} == 404
+expression {err.status_code} == 404
 ```
 
 

@@ -9,6 +9,8 @@ An opinionated directive which proxies a clone of the request to an authenticati
 - [Syntax](#syntax)
 - [Expanded Form](#expanded-form)
 - [Examples](#examples)
+  - [Authelia](#authelia)
+  - [Tailscale](#tailscale)
 
 Caddy's [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy) is capable of performing "pre-check requests" to an external service, but this directive is tailored specifically for the authentication usecase. This directive is actually just a convenient way to use a longer, more common configuration (below).
 
@@ -26,13 +28,21 @@ All the subdirectives of [`reverse_proxy`](/docs/caddyfile/directives/reverse_pr
 ```caddy-d
 forward_auth [<matcher>] [<upstreams...>] {
 	uri          <to>
-	copy_headers <fields...>
+	copy_headers <fields...> {
+		<fields...>
+	}
 }
 ```
 
 - **&lt;upstreams...&gt;** is a list of upstreams (backends) to which to send auth requests.
+
 - **uri** is the URI (path and query) to set on the request sent to the upstream. This will usually be the verification endpoint of the authentication gateway.
+
 - **copy_headers** is a list of HTTP header fields to copy from the response to the original request, when the request has a success status code.
+
+  The field can be renamed by using `>` followed by the new name, for example `Before>After`.
+
+  A block may be used to list all the fields, one per line, if you prefer for readability.
 
 Since this directive is an opinionated wrapper over a reverse proxy, you can use any of [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy#syntax)'s subdirectives to customize it.
 
@@ -67,19 +77,14 @@ reverse_proxy <upstreams...> {
 			Remote-Email {rp.header.Remote-Email}
 		}
 	}
-
-	# On a failed response, copy the response back to
-	# the client, with some hop-by-hop headers removed
-	handle_response {
-		copy_response_headers {
-			exclude Connection Keep-Alive Te Trailers Transfer-Encoding Upgrade
-		}
-		copy_response
-	}
 }
 ```
 
+
 ## Examples
+
+
+### Authelia
 
 Delegating authentication to [Authelia](https://www.authelia.com/), before serving your app via a reverse proxy:
 
@@ -97,5 +102,28 @@ app1.example.com {
 	}
 
 	reverse_proxy app1:8080
+}
+```
+
+For more information, see [Authelia's documentation](https://www.authelia.com/integration/proxies/caddy/) for integrating with Caddy.
+
+
+### Tailscale
+
+Delegation authentication to [Tailscale](https://tailscale.com/) (currently named [`nginx-auth`](https://tailscale.com/blog/tailscale-auth-nginx/), but it still works with Caddy), and using the alternative syntax for `copy_headers` to rename the copied headers:
+
+```caddy-d
+forward_auth unix//run/tailscale.nginx-auth.sock {
+	uri /auth
+	header_up Remote-Addr {remote_host}
+	header_up Remote-Port {remote_port}
+	header_up Original-URI {uri}
+	copy_headers {
+		Tailscale-User>X-Webauth-User
+		Tailscale-Name>X-Webauth-Name
+		Tailscale-Login>X-Webauth-Login
+		Tailscale-Tailnet>X-Webauth-Tailnet
+		Tailscale-Profile-Picture>X-Webauth-Profile-Picture
+	}
 }
 ```

@@ -33,7 +33,7 @@ Custom error pages based on the status code (i.e. a page called `404.html` for 4
 
 ```caddy-d
 handle_errors {
-	rewrite * /{http.error.status_code}.html
+	rewrite * /{err.status_code}.html
 	file_server
 }
 ```
@@ -52,7 +52,7 @@ Reverse proxy to a professional server that is highly qualified for handling HTT
 
 ```caddy-d
 handle_errors {
-	rewrite * /{http.error.status_code}
+	rewrite * /{err.status_code}
 	reverse_proxy https://http.cat {
 		header_up Host http.cat
 	}
@@ -63,7 +63,7 @@ Simply use [`respond`](/docs/caddyfile/directives/respond) to return the error c
 
 ```caddy-d
 handle_errors {
-	respond "{http.error.status_code} {http.error.status_text}"
+	respond "{err.status_code} {err.status_text}"
 }
 ```
 
@@ -71,7 +71,7 @@ To handle specific error codes differently, use an [`expression`](/docs/caddyfil
 
 ```caddy-d
 handle_errors {
-	@4xx expression `{http.error.status_code} >= 400 && {http.error.status_code} < 500`
+	@4xx expression `{err.status_code} >= 400 && {err.status_code} < 500`
 	respond @4xx "It's a 4xx error!"
 
 	respond "It's not a 4xx error."
