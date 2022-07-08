@@ -278,15 +278,14 @@ Returns the current status of the configured reverse proxy upstreams (backends) 
 
 <pre><code class="cmd"><span class="bash">curl "http://localhost:2019/reverse_proxy/upstreams" | jq</span>
 [
-	{"address": "10.0.1.1:80", "healthy": true, "num_requests": 4, "fails": 2},
-	{"address": "10.0.1.2:80", "healthy": true, "num_requests": 5, "fails": 4},
-	{"address": "10.0.1.3:80", "healthy": true, "num_requests": 3, "fails": 3}
+	{"address": "10.0.1.1:80", "num_requests": 4, "fails": 2},
+	{"address": "10.0.1.2:80", "num_requests": 5, "fails": 4},
+	{"address": "10.0.1.3:80", "num_requests": 3, "fails": 3}
 ]</code></pre>
 
 Each entry in the JSON array is a configured [upstream](/docs/json/apps/http/servers/routes/handle/reverse_proxy/upstreams/) stored in the global upstream pool.
 
 - **address** is the dial address of the upstream. For SRV upstreams, this is the `lookup_srv` DNS name.
-- **healthy** reflects whether Caddy believes the upstream to be healthy or not. Note that "health" is a distinct concept from "availability". An unhealthy backend will always be unavailable, but a healthy backend might not be available. Health is a global characteristic regardless of specific reverse proxy handler configuration, whereas availability is determined by the configuration of the specific reverse proxy handler. For example, a healthy backend would be unavailable if the handler is configured to only allow N requests at a time and it currently has N active requests. The "healthy" property does not reflect availability.
 - **num_requests** is the amount of active requests currently being handled by the upstream.
 - **fails** the current number of failed requests remembered, as configured by passive health checks.
 

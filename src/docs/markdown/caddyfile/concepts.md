@@ -258,6 +258,7 @@ You can use any [Caddy placeholders](/docs/conventions#placeholders) in the Cadd
 | `{upstream_hostport}` | `{http.reverse_proxy.upstream.hostport}` |
 | `{rp.*}` | `{http.reverse_proxy.*}` |
 | `{vars.*}` | `{http.vars.*}` |
+| `{err.*}` | `{http.error.*}` |
 
 
 
