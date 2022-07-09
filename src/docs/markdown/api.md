@@ -247,7 +247,7 @@ which is much easier to remember and write by hand.
 
 <aside class="tip">
 
-	This section is for all `/config/` endpoints. It is experimental and subject to change.
+This section is for all `/config/` endpoints. It is experimental and subject to change.
 
 </aside>
 
