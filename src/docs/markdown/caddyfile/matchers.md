@@ -180,15 +180,15 @@ Full matcher documentation can be found [in each respective matcher module's doc
 
 ### expression
 
-⚠️ _This module is still experimental and, as such, may experience breaking changes._
-
 ```caddy-d
 expression <cel...>
 ```
 
 By any [CEL (Common Expression Language)](https://github.com/google/cel-spec) expression that returns `true` or `false`.
 
-As a special case, Caddy [placeholders](/docs/conventions#placeholders) (or [Caddyfile shorthands](/docs/caddyfile/concepts#placeholders)) may be used in these CEL expressions, as they are preprocessed and converted to regular CEL function calls before being interpreted by the CEL environment.
+Caddy [placeholders](/docs/conventions#placeholders) (or [Caddyfile shorthands](/docs/caddyfile/concepts#placeholders)) may be used in these CEL expressions, as they are preprocessed and converted to regular CEL function calls before being interpreted by the CEL environment.
+
+Since v2.5.2, most other request matchers can also be used in expressions as functions, which allows for more flexibility for boolean logic than outside expressions. See the documentation for each other matcher for the supported syntax within CEL expressions.
 
 #### Examples:
 
@@ -204,6 +204,11 @@ Match requests where handler returned error status code `404`, would be used in 
 expression {err.status_code} == 404
 ```
 
+Match requests where the path matches one of two different regular expressions; this is only possible to write using an expression, because the [`path_regexp`](#path-regexp) matcher can normally only exist once per named matcher:
+
+```caddy-d
+expression path_regexp('^/user/(\w*)') || path_regexp('^/(\w*)')
+```
 
 
 ---
@@ -211,11 +216,20 @@ expression {err.status_code} == 404
 
 ```caddy-d
 file {
-	root       <paths>
+	root       <path>
 	try_files  <files...>
 	try_policy first_exist|smallest_size|largest_size|most_recent_modified
 	split_path <delims...>
 }
+file <files...>
+
+expression `file({
+	'root': '<path>',
+	'try_files': ['<files...>'],
+	'try_policy': 'first_exist|smallest_size|largest_size|most_recent_modified',
+	'split_path': ['<delims...>']
+})`
+expression file('<files...>')
 ```
 
 By files.
@@ -235,9 +249,15 @@ Because `try_files` with a policy of `first_exist` is so common, there is a one-
 file <files...>
 ```
 
-An empty `file` matcher (one with no files listed after it) will see if the requested file&mdash;verbatim from the URI, relative to the [site root](/docs/caddyfile/directives/root)&mdash;exists.
+An empty `file` matcher (one with no files listed after it) will see if the requested file&mdash;verbatim from the URI, relative to the [site root](/docs/caddyfile/directives/root)&mdash;exists. This is effectively the same as `file {path}`.
+
+
+<aside class="tip">
 
 Since rewriting based on the existence of a file on disk is so common, there is also a [`try_files` directive](/docs/caddyfile/directives/try_files) which is a shortcut of the `file` matcher and a [`rewrite` handler](/docs/caddyfile/directives/rewrite).
+
+</aside>
+
 
 Upon matching, two new placeholders will be made available:
 
@@ -273,6 +293,8 @@ file {path}.html {path} =404
 
 ```caddy-d
 header <field> [<value>]
+
+expression header({'<field>': '<value>'})
 ```
 
 By request header fields.
@@ -305,9 +327,7 @@ Match requests with the `Foo` header containing `bar` OR `baz`:
 
 Match requests that do not have the `Foo` header field at all:
 ```caddy-d
-@not_foo {
-	header !Foo
-}
+@not_foo header !Foo
 ```
 
 
@@ -317,6 +337,9 @@ Match requests that do not have the `Foo` header field at all:
 
 ```caddy-d
 header_regexp [<name>] <field> <regexp>
+
+expression header_regexp('<name>', '<field>', '<regexp>')
+expression header_regexp('<field>', '<regexp>')
 ```
 
 Like [`header`](#header), but supports regular expressions. Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) like `{re.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
@@ -340,6 +363,8 @@ header_regexp login Cookie login_([a-f0-9]+)
 
 ```caddy-d
 host <hosts...>
+
+expression host('<hosts...>')
 ```
 
 Matches request by the `Host` header field of the request. It is not common to use this in the Caddyfile, since most site blocks already indicate hosts in the address of the site. This matcher is mostly used in site blocks that don't define specific hostnames.
@@ -359,6 +384,8 @@ host sub.example.com
 
 ```caddy-d
 method <verbs...>
+
+expression method('<verbs...>')
 ```
 
 By the method (verb) of the HTTP request. Verbs should be uppercase, like `POST`. Can match one or many methods.
@@ -437,6 +464,8 @@ not {
 
 ```caddy-d
 path <paths...>
+
+expression path('<paths...>')
 ```
 
 By request path, meaning the path component of the request's URI. Path matches are exact, but wildcards `*` may be used:
@@ -457,6 +486,9 @@ Multiple `path` matchers will be OR'ed together.
 
 ```caddy-d
 path_regexp [<name>] <regexp>
+
+expression path_regexp('<name>', '<regexp>')
+expression path_regexp('<regexp>')
 ```
 
 Like [`path`](#path), but supports regular expressions. Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) like `{re.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
@@ -482,6 +514,8 @@ path_regexp static \.([a-f0-9]{6})\.(css|js)$
 
 ```caddy-d
 protocol http|https|grpc
+
+expression protocol('http|https|grpc')
 ```
 
 By request protocol.
@@ -495,6 +529,9 @@ There can only be one `protocol` matcher per named matcher.
 
 ```caddy-d
 query <key>=<val>...
+
+expression query({'<key>': '<val>'})
+expression query({'<key>': ['<vals...>']})
 ```
 
 By query string parameters. Should be a sequence of `key=value` pairs. Keys are matched exactly, case-sensitively. Values can contain placeholders. Values are matched exactly, but also support `*` to match any value.
@@ -516,6 +553,9 @@ query sort=asc
 
 ```caddy-d
 remote_ip [forwarded] <ranges...>
+
+expression remote_ip('<ranges...>')
+expression remote_ip('forwarded', '<ranges...>')
 ```
 
 By remote (client) IP address. Accepts exact IPs or CIDR ranges. If the first argument is `forwarded`, then the first IP in the `X-Forwarded-For` request header, if present, will be preferred as the reference IP, rather than the immediate peer's IP, which is the default. IPv6 zones are supported.
