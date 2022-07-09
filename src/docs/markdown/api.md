@@ -253,7 +253,7 @@ This section is for all `/config/` endpoints. It is experimental and subject to 
 
 Caddy's config API provides [ACID guarantees](https://en.wikipedia.org/wiki/ACID) for individual requests, but changes that involve more than a single request are subject to collisions or data loss if not properly synchronized.
 
-For example, two clients may `GET /config/foo` at the same time, make an edit within that scope (config path), then call `POST|PUT|PATCH|DELETE /config/foo` at the same time to apply their changes, resulting in a collision: one will overwrite the other, even if the specific changes within the scope (`/config/foo`) don't overlap. This is because the changes are not aware of each other.
+For example, two clients may `GET /config/foo` at the same time, make an edit within that scope (config path), then call `POST|PUT|PATCH|DELETE /config/foo/...` at the same time to apply their changes, resulting in a collision: either one will overwrite the other, or the second might leave the config in an unintended state since it was applied to a different version of the config than it was prepared against. This is because the changes are not aware of each other.
 
 Caddy's API does not support transactions spanning multiple requests, and HTTP is a stateless protocol. However, you can use the `Etag` trailer and `If-Match` header to detect and prevent collisions for any and all changes as a kind of pessimistic concurrency control. This is useful if there is any chance that you are using Caddy's `/config/...` endpoints concurrently without synchronization. All responses to `GET /config/...` requests have an HTTP trailer called `Etag` that contains the path and a hash of the contents in that scope (e.g. `Etag: "/config/apps/http/servers 65760b8e"`). Simply set the `If-Match` header on a mutative request to that of an Etag trailer from a previous `GET` request.
 
@@ -261,7 +261,7 @@ The basic algorithm for this is as follows:
 
 1. Perform a `GET` request to any scope `S` within the config. Hold onto the `Etag` trailer of the response.
 2. Make your desired change on the returned config.
-3. Perform a `POST|PUT|PATCH|DELETE` request within scope `S`, setting the `If-Match` header to the `Etag`.
+3. Perform a `POST|PUT|PATCH|DELETE` request within scope `S`, setting the `If-Match` header to the recent `Etag` value.
 4. If the response is HTTP 412 (Precondition Failed), repeat from step 1, or give up after too many attempts.
 
 This algorithm safely allows multiple, overlapping changes to Caddy's configuration without explicit synchronization. It is designed so that simultaneous changes to different parts of the config don't require a retry: only changes that overlap the same scope of the config can possibly cause a collision and thus require a retry.
