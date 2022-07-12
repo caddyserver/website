@@ -516,7 +516,9 @@ transport fastcgi {
 - **write_timeout** <span id="write_timeout"/> is how long to wait when sending to the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
 
 <aside class="tip">
-	If you're trying to serve a modern PHP application, you may be looking for the <a href="/docs/caddyfile/directives/php_fastcgi"><code>php_fastcgi</code> directive</a>, which is a shortcut for a proxy using the `fastcgi` directive, with the necessary rewrites for using `index.php` as the routing entrypoint.
+
+If you're trying to serve a modern PHP application, you may be looking for the [`php_fastcgi` directive](/docs/caddyfile/directives/php_fastcgi), which is a shortcut for a proxy using the `fastcgi` directive, with the necessary rewrites for using `index.php` as the routing entrypoint.
+
 </aside>
 
 

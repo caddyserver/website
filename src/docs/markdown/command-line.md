@@ -337,8 +337,11 @@ Once started, you can use [`caddy stop`](#caddy-stop) or the [`POST /stop`](/doc
 	[--config &lt;path&gt; [--adapter &lt;name&gt;]]</code></pre>
 
 <aside class="tip">
-	Stopping (and restarting) the server is orthogonal to config changes. <b>Do not use the stop command to change configuration in production, unless you want downtime.</b> Use the <a href="#caddy-reload">caddy reload</a> command instead.
+
+Stopping (and restarting) the server is orthogonal to config changes. **Do not use the stop command to change configuration in production, unless you want downtime.** Use the [`caddy reload`](#caddy-reload) command instead.
+
 </aside>
+
 
 Gracefully stops the running Caddy process (other than the process of the stop command) and causes it to exit. It uses the [`POST /stop`](/docs/api#post-stop)  endpoint of the admin API to perform a graceful shutdown.
 

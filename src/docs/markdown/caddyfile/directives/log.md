@@ -14,8 +14,11 @@ $(function() {
 Enables and configures HTTP request logging (also known as access logs).
 
 <aside class="tip">
-	If you're looking to configure Caddy's runtime logs, you're looking for the <a href="/docs/caddyfile/options#log"><code>log</code> global option</a> instead.
+
+If you're looking to configure Caddy's runtime logs, you're looking for the [`log` global option](/docs/caddyfile/options#log) instead.
+
 </aside>
+
 
 The `log` directive applies to the host/port of the site block it appears in, not any other part of the site address (e.g. path).
 
@@ -131,8 +134,11 @@ output net <address> {
 The **format** subdirective lets you customize how logs get encoded (formatted). It appears within a `log` block.
 
 <aside class="tip">
-	<b>A note about Common Log Format (CLF):</b> CLF clashes with modern structured logs. To transform your access logs into the deprecated Common Log Format, please use the <a href="https://github.com/caddyserver/transform-encoder"><code>transform-encoder</code> plugin</a>.
+
+**A note about Common Log Format (CLF):** CLF clashes with modern structured logs. To transform your access logs into the deprecated Common Log Format, please use the [`transform-encoder` plugin](https://github.com/caddyserver/transform-encoder).
+
 </aside>
+
 
 In addition to the syntax for each individual encoder, these common properties can be set on most encoders:
 

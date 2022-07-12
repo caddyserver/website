@@ -49,8 +49,11 @@ foo.gizmo
 ...</code></pre>
 
 <aside class="tip">
-	The <a href="https://github.com/caddyserver/xcaddy"><code>xcaddy</code> command</a> is an important part of every module developer's workflow. It compiles Caddy with your plugin, then runs it with the given arguments. It discards the temporary binary each time (similar to <code>go run</code>).
+
+The [`xcaddy` command](https://github.com/caddyserver/xcaddy) is an important part of every module developer's workflow. It compiles Caddy with your plugin, then runs it with the given arguments. It discards the temporary binary each time (similar to `go run`).
+
 </aside>
+
 
 Congratulations, your module registers with Caddy and can be used in [Caddy's config document](/docs/json/) in whatever places use modules in the same namespace.
 

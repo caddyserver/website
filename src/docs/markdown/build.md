@@ -19,9 +19,13 @@ Build:
 <pre><code class="cmd"><span class="bash">cd caddy/cmd/caddy/</span>
 <span class="bash">go build</span></code></pre>
 
+
 <aside class="tip">
-	Due to <a href="https://github.com/golang/go/issues/29228">a bug in Go</a>, these basic steps do not embed version information. If you want the version (<code>caddy version</code>), you need to compile Caddy as a dependency rather than as the main module. Instructions for this are in Caddy's <a href="https://github.com/caddyserver/caddy/blob/master/cmd/caddy/main.go">main.go</a> file. Or, you can use <a href="#xcaddy"><code>xcaddy</code></a> which automates this.
+
+Due to [a bug in Go](https://github.com/golang/go/issues/29228), these basic steps do not embed version information. If you want the version (`caddy version`), you need to compile Caddy as a dependency rather than as the main module. Instructions for this are in Caddy's [main.go](https://github.com/caddyserver/caddy/blob/master/cmd/caddy/main.go) file. Or, you can use [`xcaddy`](#xcaddy) which automates this.
+
 </aside>
+
 
 ## xcaddy
 

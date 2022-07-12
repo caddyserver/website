@@ -51,7 +51,9 @@ unix//path/to/socket
 ```
 
 <aside class="tip">
-	Caddy network addresses are not URLs. URLs couple the lower and higher layers of the <a href="https://en.wikipedia.org/wiki/OSI_model#Layer_architecture">OSI model</a>, but Caddy often uses network addresses independently of a specific application, so combining them would be problematic. In Caddy, network addresses refer precisely to resources that can be dialed or bound at L3-L5, but URLs combine L3-L7, which is too many. A network address requires a host+port and path to be mutually exclusive, but URLs do not. Network addresses sometimes support port ranges, but URLs do not.
+
+Caddy network addresses are not URLs. URLs couple the lower and higher layers of the [OSI model](https://en.wikipedia.org/wiki/OSI_model#Layer_architecture), but Caddy often uses network addresses independently of a specific application, so combining them would be problematic. In Caddy, network addresses refer precisely to resources that can be dialed or bound at L3-L5, but URLs combine L3-L7, which is too many. A network address requires a host+port and path to be mutually exclusive, but URLs do not. Network addresses sometimes support port ranges, but URLs do not.
+
 </aside>
 
 
@@ -60,8 +62,11 @@ unix//path/to/socket
 Caddy's configuration supports the use of _placeholders_ (variables). Using placeholders is a simple way to inject dynamic values into a static configuration.
 
 <aside class="tip">
-	Placeholders are a similar idea to variables in other software. For example, <a href="https://nginx.org/en/docs/varindex.html">nginx has variables</a> like $uri and $document_root.
+
+Placeholders are a similar idea to variables in other software. For example, [nginx has variables](https://nginx.org/en/docs/varindex.html) like `$uri` and `$document_root`.
+
 </aside>
+
 
 Placeholders are bounded on either side by curly braces `{ }` and contain the variable name inside, for example: `{foo.bar}`. Placeholder braces can be escaped, `\{like so\}`. Variable names are typically namespaced with dots to avoid collisions across modules.
 
@@ -94,10 +99,13 @@ This section contains information about where to find various files. File and di
 There is no single, conventional place for you to put your config files. Put them wherever makes the most sense to you.
 
 <aside class="tip">
-	The only exception to this might be a file named "Caddyfile" in the current working directory, which the caddy command tries for convenience if no other config file is specified.
+
+The only exception to this might be a file named `Caddyfile` in the current working directory, which the caddy command tries for convenience if no other config file is specified.
+
 </aside>
 
-Distributions that ship with a default config file should document where this config file is at, even if it might be obvious to the package/distro maintainers.
+
+Distributions that ship with a default config file should document where this config file is at, even if it might be obvious to the package/distro maintainers. For most Linux installations, the Caddyfile will be found at `/etc/caddy/Caddyfile`.
 
 
 ### Data directory
@@ -128,8 +136,11 @@ It is crucial that this directory is persistent and writeable by Caddy.
 This is where Caddy may store certain configuration to disk. Most notably, it persists the last active configuration (by default) to this folder for easy resumption later using [`caddy run --resume`](/docs/command-line#caddy-run).
 
 <aside class="tip">
-	The configuration directory is <i>not</i> where you need to store <a href="#your-config-files">your config files</a>. (Though, you are allowed to.)
+
+The configuration directory is *not* where you need to store [your config files](#your-config-files). (Though, you are allowed to.)
+
 </aside>
+
 
 If the `XDG_CONFIG_HOME` environment variable is set, it is `$XDG_CONFIG_HOME/caddy`.
 
@@ -150,7 +161,7 @@ It is crucial that this directory is persistent and writeable by Caddy.
 
 ## Durations
 
-Duration strings are commonly used throughout Caddy's configuration. They take on the same format as [Go's time.ParseDuration syntax](https://golang.org/pkg/time/#ParseDuration) except you can also use `d` for day (we assume 1 day = 24 hours for simplicity). Valid units are:
+Duration strings are commonly used throughout Caddy's configuration. They take on the same format as [Go's `time.ParseDuration` syntax](https://golang.org/pkg/time/#ParseDuration) except you can also use `d` for day (we assume 1 day = 24 hours for simplicity). Valid units are:
 
 - `ns` (nanosecond)
 - `us`/`µs` (microsecond)

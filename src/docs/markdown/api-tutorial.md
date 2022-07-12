@@ -132,9 +132,13 @@ Using the request URI's path, we can traverse into the config structure and upda
 	-d '"Work smarter, not harder."'
 </code></pre>
 
+
 <aside class="tip">
-	Every time you change the config using the API, Caddy persists a copy of the new config so you can <a href="/docs/command-line#caddy-run"><b>--resume</b> it later</a>!
+
+Every time you change the config using the API, Caddy persists a copy of the new config so you can [**--resume** it later](/docs/command-line#caddy-run)!
+
 </aside>
+
 
 You can verify that it worked with a similar GET request, for example:
 
@@ -146,9 +150,13 @@ You should see:
 [{"handle":[{"body":"Work smarter, not harder.","handler":"static_response"}]}]
 ```
 
+
 <aside class="tip">
-	You can use the <a href="https://stedolan.github.io/jq/">jq command</a> to prettify JSON output: <b><code>curl ... | jq</code></b>
+
+You can use the [`jq` command](https://stedolan.github.io/jq/) to prettify JSON output: **`curl ... | jq`**
+
 </aside>
+
 
 <aside class="complete">Traverse config</aside>
 
@@ -182,9 +190,13 @@ This adds a property to our handler object: `"@id": "msg"`, so it now looks like
 }
 ```
 
+
 <aside class="tip">
-	<b>@id</b> tags can go in any object and can have any primitive value (usually a string). <a href="/docs/api#using-id-in-json">Learn more</a>
+
+**@id** tags can go in any object and can have any primitive value (usually a string). [Learn more](/docs/api#using-id-in-json)
+
 </aside>
+
 
 We can then access it directly:
 

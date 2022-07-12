@@ -32,8 +32,11 @@ localhost
 ```
 
 <aside class="tip">
-	If the HTTP and HTTPS ports (80 and 443, respectively) are privileged ports on your OS, you will either need to run with elevated privileges or use a higher port. To use a higher port, just change the address to something like <code>localhost:2015</code> and change the HTTP port using the <a href="/docs/caddyfile/options">http_port</a> Caddyfile option.
+
+If the HTTP and HTTPS ports (80 and 443, respectively) are privileged ports on your OS, you will either need to run with elevated privileges or use a higher port. To use a higher port, just change the address to something like `localhost:2015` and change the HTTP port using the [http_port](/docs/caddyfile/options) Caddyfile option.
+
 </aside>
+
 
 Then hit enter and type what you want it to do. For this tutorial, make your Caddyfile look like this:
 
@@ -48,18 +51,28 @@ Save that and run Caddy (since this is a training tutorial, we'll use the `--wat
 <pre><code class="cmd bash">caddy run --watch</code></pre>
 
 <aside class="tip">
-	If you get permissions errors, try using a higher port in your address (like <code>localhost:2015</code>) and <a href="/docs/caddyfile/options">change the HTTP port</a>, or run with elevated privileges.
+
+If you get permissions errors, try using a higher port in your address (like `localhost:2015`) and [change the HTTP port](/docs/caddyfile/options), or run with elevated privileges.
+
 </aside>
+
 
 The first time, you'll be asked for your password. This is so Caddy can serve your site over HTTPS.
 
-<aside class="tip">Caddy serves all sites over HTTPS by default as long as a host or IP is part of the site's address. <a href="/docs/automatic-https">Automatic HTTPS</a> can be disabled by prefixing the address with <code>http://</code> explicitly.</aside>
+<aside class="tip">
+
+Caddy serves all sites over HTTPS by default as long as a host or IP is part of the site's address. [Automatic HTTPS](/docs/automatic-https) can be disabled by prefixing the address with `http://` explicitly.
+
+</aside>
+
 
 <aside class="complete">First site</aside>
 
 Open [localhost](https://localhost) in your browser and see your web server working, complete with HTTPS!
 
-<aside class="tip">You might need to restart your browser if you get a certificate error the first time.</aside>
+<aside class="tip">
+	You might need to restart your browser if you get a certificate error the first time.
+</aside>
 
 That's not particularly exciting, so let's change our static response to a [file server](/docs/caddyfile/directives/file_server) with directory listings enabled:
 
@@ -126,7 +139,9 @@ templates
 file_server browse
 ```
 
-<aside class="tip">Browsers don't support Zstandard encodings yet. Hopefully soon!</aside>
+<aside class="tip">
+	Browsers don't support Zstandard encodings yet. Hopefully soon!
+</aside>
 
 
 <aside class="complete">Compression</aside>

@@ -172,17 +172,21 @@ These are examples of valid addresses:
 - `*.example.com`
 - `http://`
 
+
 <aside class="tip">
-	<a href="/docs/automatic-https">Automatic HTTPS</a> is enabled if your site's address contains a hostname or IP address. This behavior is purely implicit, however, so it never overrides any explicit configuration. For example, if the site's address is <code>http://example.com</code>, auto-HTTPS will not activate because the scheme is explicitly <code>http://</code>.
+
+[Automatic HTTPS](/docs/automatic-https) is enabled if your site's address contains a hostname or IP address. This behavior is purely implicit, however, so it never overrides any explicit configuration. For example, if the site's address is `http://example.com`, auto-HTTPS will not activate because the scheme is explicitly `http://`.
+
 </aside>
+
 
 From the address, Caddy can potentially infer the scheme, host and port of your site. If the address is without a port, the Caddyfile will choose the port matching the scheme if specified, or the default port of 443 will be assumed.
 
-If you specify a hostname, only requests with a matching Host header will be honored. In other words, if the site address is `localhost`, then Caddy will not match requests to `127.0.0.1`.
+If you specify a hostname, only requests with a matching `Host` header will be honored. In other words, if the site address is `localhost`, then Caddy will not match requests to `127.0.0.1`.
 
 Wildcards (`*`) may be used, but only to represent precisely one label of the hostname. For example, `*.example.com` matches `foo.example.com` but not `foo.bar.example.com`, and `*` matches `localhost` but not `example.com`. To catch all hosts, omit the host portion of the address.
 
-If multiple sites share the same definition, you can list all of them together:
+If multiple sites share the same definition, you can list all of them together; notice how the commas indicate the continuation of addresses:
 
 ```caddy
 localhost:8080, example.com, www.example.com
@@ -196,9 +200,9 @@ example.com,
 www.example.com
 ```
 
-Notice how the commas indicate the continuation of addresses.
-
 An address must be unique; you cannot specify the same address more than once.
+
+By default, sites bind on all network interfaces. If you wish to override this, use the [`bind` directive](/docs/caddyfile/directives/bind) or the [`default_bind` global option](/docs/caddyfile/options#default-bind) to do so.
 
 
 

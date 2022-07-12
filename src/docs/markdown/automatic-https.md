@@ -8,7 +8,9 @@ title: "Automatic HTTPS"
 
 Automatic HTTPS provisions TLS certificates for all your sites and keeps them renewed. It also redirects HTTP to HTTPS for you! Caddy uses safe and modern defaults -- no downtime, extra configuration, or separate tooling is required.
 
-<aside class="tip">Caddy innovated automatic HTTPS technology; we've been doing this since the first day it was feasible in 2015. Caddy's HTTPS automation logic is the most mature and robust in the world.</aside>
+<aside class="tip">
+	Caddy innovated automatic HTTPS technology; we've been doing this since the first day it was feasible in 2015. Caddy's HTTPS automation logic is the most mature and robust in the world.
+</aside>
 
 Here's a 28-second video showing how it works:
 
@@ -40,19 +42,24 @@ Here's a 28-second video showing how it works:
 - Caddy serves public DNS names over HTTPS using certificates from a public ACME CA such as [Let's Encrypt](https://letsencrypt.org) or [ZeroSSL](https://zerossl.com).
 	- Examples: `example.com`, `sub.example.com`, `*.example.com`
 
-Caddy keeps all managed certificates renewed and redirects HTTP (default port 80) to HTTPS (default port 443) automatically.
+Caddy keeps all managed certificates renewed and redirects HTTP (default port `80`) to HTTPS (default port `443`) automatically.
 
 **For local HTTPS:**
 
 - Caddy may prompt for a password to install its unique root certificate into your trust store. This happens only once per root; and you can remove it at any time.
-- Any client accessing the site without trusting Caddy's root will show security errors.
+- Any client accessing the site without trusting Caddy's root CA certificate will show security errors.
 
 **For public domain names:**
 
-<aside class="tip">These are common requirements for any basic production website, not just Caddy. The main difference is to set your DNS records properly <b>before</b> running Caddy so it can provision certificates.</aside>
+<aside class="tip">
+
+These are common requirements for any basic production website, not just Caddy. The main difference is to set your DNS records properly **before** running Caddy so it can provision certificates.
+
+</aside>
+
 
 - If your domain's A/AAAA records point to your server,
-- ports 80 and 443 are open externally,
+- ports `80` and `443` are open externally,
 - Caddy can bind to those ports (_or_ those ports are forwarded to Caddy),
 - your [data directory](/docs/conventions#data-directory) is writeable and persistent,
 - and your domain name appears somewhere relevant in the config,
@@ -68,16 +75,17 @@ Because HTTPS utilizes a shared, public infrastructure, you as the server admin 
 Caddy implicitly activates automatic HTTPS when it knows a domain name (i.e. hostname) or IP address it is serving. There are various ways to tell Caddy your domain/IP, depending on how you run or configure Caddy:
 
 - A [site address](/docs/caddyfile/concepts#addresses) in the [Caddyfile](/docs/caddyfile)
-- A [host matcher](/docs/json/apps/http/servers/routes/match/host/) in a [route](/docs/modules/http#servers/routes)
+- A [host matcher](/docs/json/apps/http/servers/routes/match/host/) in a [JSON route](/docs/modules/http#servers/routes)
 - Command line flags like [--domain](/docs/command-line#caddy-file-server) or [--from](/docs/command-line#caddy-reverse-proxy)
 - The [automate](/docs/json/apps/tls/certificates/automate/) certificate loader
 
 Any of the following will prevent automatic HTTPS from being activated, either in whole or in part:
 
-- [Explicitly disabling it](/docs/json/apps/http/servers/automatic_https/)
+- Explicitly disabling it [via JSON](/docs/json/apps/http/servers/automatic_https/) or [via Caddyfile](/docs/caddyfile/options#auto-https)
 - Not providing any hostnames or IP addresses in the config
 - Listening exclusively on the HTTP port
-- Manually loading certificates (unless [this config property](/docs/json/apps/http/servers/automatic_https/ignore_loaded_certificates/) is true)
+- Prefixing the [site address](/docs/caddyfile/concepts#addresses) with `http://` in the Caddyfile
+- Manually loading certificates (unless [`ignore_loaded_certificates`](/docs/json/apps/http/servers/automatic_https/ignore_loaded_certificates/) is set)
 
 **Special cases:**
 
@@ -89,8 +97,8 @@ Any of the following will prevent automatic HTTPS from being activated, either i
 When automatic HTTPS is activated, the following occurs:
 
 - Certificates are obtained and renewed for [all domain names](#hostname-requirements)
-- The default port (if any) is changed to the [HTTPS port](/docs/modules/http#https_port) 443
-- HTTP is redirected to HTTPS (this uses [HTTP port](/docs/modules/http#http_port) 80)
+- The default port (if any) is changed to the [HTTPS port](/docs/modules/http#https_port) `443`
+- HTTP is redirected to HTTPS (this uses [HTTP port](/docs/modules/http#http_port) `80`)
 
 Automatic HTTPS never overrides explicit configuration.
 
@@ -126,9 +134,11 @@ The root's private key is uniquely generated using a cryptographically-secure ps
 
 Although Caddy can be configured to sign with the root directly (to support non-compliant clients), this is disabled by default, and the root key is only used to sign intermediates.
 
-The first time a root key is used, Caddy will try to install it into the system's local trust store(s). If it does not have permission to do so, it will prompt for a password. This behavior can be disabled in the configuration if it is not desired.
+The first time a root key is used, Caddy will try to install it into the system's local trust store(s). If it does not have permission to do so, it will prompt for a password. This behavior can be disabled in the configuration if it is not desired. If this fails due to being run as an unprivileged user, you may run [`caddy trust`](/docs/command-line#caddy-trust) to retry installation as a privileged user.
 
-<aside class="tip">It is safe to trust Caddy's root certificate on your own machine as long as your computer is not compromised and your unique root key is not leaked.</aside>
+<aside class="tip">
+	It is safe to trust Caddy's root certificate on your own machine as long as your computer is not compromised and your unique root key is not leaked.
+</aside>
 
 After Caddy's root CA is installed, you will see it in your local trust store as "Caddy Local Authority" (unless you've configured a different name). You can uninstall it any time if you wish (the [`caddy untrust`](/docs/command-line#caddy-untrust) command makes this easy).
 
@@ -161,29 +171,29 @@ The first two challenge types are enabled by default. If multiple challenges are
 
 ### HTTP challenge
 
-The HTTP challenge performs an authoritative DNS lookup for the candidate hostname's A/AAAA record, then requests a temporary cryptographic resource over port 80 using HTTP. If the CA sees the expected resource, a certificate is issued.
+The HTTP challenge performs an authoritative DNS lookup for the candidate hostname's A/AAAA record, then requests a temporary cryptographic resource over port `80` using HTTP. If the CA sees the expected resource, a certificate is issued.
 
-This challenge requires port 80 to be externally accessible. If Caddy cannot listen on port 80, packets from port 80 must be forwarded to Caddy's [HTTP port](/docs/json/apps/http/http_port/).
+This challenge requires port `80` to be externally accessible. If Caddy cannot listen on port 80, packets from port `80` must be forwarded to Caddy's [HTTP port](/docs/json/apps/http/http_port/).
 
 This challenge is enabled by default and does not require explicit configuration.
 
 
 ### TLS-ALPN challenge
 
-The TLS-ALPN challenge performs an authoritative DNS lookup for the candidate hostname's A/AAAA record, then requests a temporary cryptographic resource over port 443 using a TLS handshake containing special ServerName and ALPN values. If the CA sees the expected resource, a certificate is issued.
+The TLS-ALPN challenge performs an authoritative DNS lookup for the candidate hostname's A/AAAA record, then requests a temporary cryptographic resource over port `443` using a TLS handshake containing special ServerName and ALPN values. If the CA sees the expected resource, a certificate is issued.
 
-This challenge requires port 443 to be externally accessible. If Caddy cannot listen on port 443, packets from port 443 must be forwarded to Caddy's [HTTPS port](/docs/json/apps/http/https_port/).
+This challenge requires port `443` to be externally accessible. If Caddy cannot listen on port 443, packets from port `443` must be forwarded to Caddy's [HTTPS port](/docs/json/apps/http/https_port/).
 
 This challenge is enabled by default and does not require explicit configuration.
 
 
 ### DNS challenge
 
-The DNS challenge performs an authoritative DNS lookup for the candidate hostname's TXT records, and looks for a special TXT record with a certain value. If the CA sees the expected value, a certificate is issued.
+The DNS challenge performs an authoritative DNS lookup for the candidate hostname's `TXT` records, and looks for a special `TXT` record with a certain value. If the CA sees the expected value, a certificate is issued.
 
-This challenge does not require any open ports, and the server requesting a certificate does not need to be externally accessible. However, the DNS challenge requires configuration. Caddy needs to know the credentials to access your domain's DNS provider so it can set (and clear) the special TXT records. If the DNS challenge is enabled, other challenges are disabled by default.
+This challenge does not require any open ports, and the server requesting a certificate does not need to be externally accessible. However, the DNS challenge requires configuration. Caddy needs to know the credentials to access your domain's DNS provider so it can set (and clear) the special `TXT` records. If the DNS challenge is enabled, other challenges are disabled by default.
 
-Since ACME CAs follow DNS standards when looking up TXT records for challenge verification, you can use CNAME records to delegate answering the challenge to other DNS zones. This can be used to delegate the `_acme-challenge` subdomain to another zone. This is particularly useful if your DNS provider doesn't provide an API, or isn't supported by one of the DNS plugins for Caddy.
+Since ACME CAs follow DNS standards when looking up `TXT` records for challenge verification, you can use CNAME records to delegate answering the challenge to other DNS zones. This can be used to delegate the `_acme-challenge` subdomain to another zone. This is particularly useful if your DNS provider doesn't provide an API, or isn't supported by one of the DNS plugins for Caddy.
 
 DNS provider support is a community effort. [Learn how to enable the DNS challenge for your provider at our wiki.](https://caddy.community/t/how-to-use-dns-provider-modules-in-caddy-2/8148)
 

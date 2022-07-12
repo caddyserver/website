@@ -13,8 +13,11 @@ localhost
 ```
 
 <aside class="tip">
-	If the HTTP and HTTPS ports (80 and 443, respectively) are privileged ports on your OS, you will either need to run with elevated privileges or use a higher port. To use a higher port, just change the address to something like <code>localhost:2015</code> and change the HTTP port using the <a href="/docs/caddyfile/options">http_port</a> Caddyfile option.
+
+If the HTTP and HTTPS ports (80 and 443, respectively) are privileged ports on your OS, you will either need to run with elevated privileges or use a higher port. To use a higher port, just change the address to something like `localhost:2015` and change the HTTP port using the [`http_port`](/docs/caddyfile/options) Caddyfile option.
+
 </aside>
+
 
 Then hit enter and type what you want it to do, so it looks like this:
 
