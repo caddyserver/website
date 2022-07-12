@@ -16,7 +16,9 @@ This page describes various methods for installing Caddy on your system.
 - [DigitalOcean](#digitalocean)
 
 <aside class="tip">
-    Our <a href="https://github.com/caddyserver/dist">official packages</a> come only with the standard modules. If you need third-party plugins, <a href="/docs/build#xcaddy">build from source with <code>xcaddy</code></a> or use <a href="/download">our download page</a>.
+
+Our [official packages](https://github.com/caddyserver/dist) come only with the standard modules. If you need third-party plugins, [build from source with `xcaddy`](/docs/build#xcaddy) or use [our download page](/download).
+
 </aside>
 
 

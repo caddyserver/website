@@ -30,7 +30,9 @@ Before continuing, verify correct records with an authoritative lookup. Replace 
 
 Also make sure your server is externally reachable on ports 80 and 443 from a public interface.
 
-<aside class="tip">If you're on your home or other restricted network, you may need to forward ports or adjust firewall settings.</aside>
+<aside class="tip">
+	If you're on your home or other restricted network, you may need to forward ports or adjust firewall settings.
+</aside>
 
 All we have to do is start Caddy with your domain name in the config. There are several ways to do this.
 

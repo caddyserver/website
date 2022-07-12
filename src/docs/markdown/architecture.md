@@ -18,16 +18,23 @@ Caddy consists of a command, core library, and modules.
 
 The **command** provides the [command line interface](/docs/command-line) you are hopefully familiar with. It's how you launch the process from your operating system. The amount of code and logic here is fairly minimal, and has only what is needed to bootstrap the core in the user's desired way. We intentionally avoid using flags and environment variables for configuration except as they pertain to bootstrapping config.
 
+
 <aside class="tip">
-	Modules can add subcommands to the command line interface! For instance, that's where the <a href="/docs/command-line#caddy-file-server">caddy file-server</a> command comes from. These added commands may have any flags or use any environment variables they want, even though the core Caddy commands minimize their use.
+
+Modules can add subcommands to the command line interface! For instance, that's where the [`caddy file-server`](/docs/command-line#caddy-file-server) command comes from. These added commands may have any flags or use any environment variables they want, even though the core Caddy commands minimize their use.
+
 </aside>
+
 
 The **[core library](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc)**, or "core" of Caddy, primarily manages configuration. It can [`Run()`](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#Run) a new configuration or [`Stop()`](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#Stop) a running config. It also provides various utilities, types, and values for modules to use.
 
 **Modules** do everything else. Many modules come built into Caddy, which are called the _standard modules_. These are determined to be the most useful to the most users.
 
+
 <aside class="tip">
-	Sometimes the terms <i>module</i>, <i>plugin</i>, and <i>extension</i> get used interchangably, and usually that's OK. Technically, all modules are plugins, but not all plugins are modules. Modules are specifically a kind of plugin that extends Caddy's <a href="/docs/json/">config structure</a>.
+
+Sometimes the terms *module*, *plugin*, and *extension* get used interchangably, and usually that's OK. Technically, all modules are plugins, but not all plugins are modules. Modules are specifically a kind of plugin that extends Caddy's [config structure](/docs/json/).
+
 </aside>
 
 
@@ -64,7 +71,9 @@ When an app module is started, it initiates the app's module lifecycle.
 
 
 <aside class="tip">
-	If you are a programmer who is building Caddy modules, you can find analogous information in our <a href="/docs/extending-caddy">Extending Caddy</a> guide, but with more focus on code.
+
+If you are a programmer who is building Caddy modules, you can find analogous information in our [Extending Caddy](/docs/extending-caddy) guide, but with more focus on code.
+
 </aside>
 
 
@@ -116,8 +125,11 @@ When it is time for a config to be stopped, all modules get unloaded. If a modul
 
 A module -- or any Caddy plugin -- gets "plugged in" to Caddy by adding an `import` for the module's package. By importing the package, [the module registers itself](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#RegisterModule) with the Caddy core, so when the Caddy process starts, it knows each module by name. It can even associate between module values and names, and vice-versa.
 
+
 <aside class="tip">
-	Plugins can be added without modifying the Caddy code base at all. There are instructions <a href="https://github.com/caddyserver/caddy/#with-version-information-andor-plugins">in the readme</a> for doing this!
+
+Plugins can be added without modifying the Caddy code base at all. There are instructions [in the readme](https://github.com/caddyserver/caddy/#with-version-information-andor-plugins) for doing this!
+
 </aside>
 
 

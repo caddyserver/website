@@ -32,7 +32,6 @@ You can use a config adapter by specifying it on the command line by using the `
 Or via the API at the [`/load` endpoint](/docs/api#post-load):
 
 <pre><code class="cmd bash">curl localhost:2019/load \
-	-X POST \
 	-H "Content-Type: application/yaml" \
 	--data-binary @caddy.yaml</code></pre>
 

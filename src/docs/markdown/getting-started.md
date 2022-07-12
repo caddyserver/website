@@ -45,8 +45,11 @@ This blocks forever, but what is it doing? At the moment... nothing. By default,
 <pre><code class="cmd bash">curl localhost:2019/config/</code></pre>
 
 <aside class="tip">
-	This is <b>not</b> your website: the administration endpoint at localhost:2019 is used for controlling Caddy and is restricted to localhost by default.
+
+This is **not** your website: the administration endpoint at localhost:2019 is used for controlling Caddy and is restricted to localhost by default.
+
 </aside>
+
 
 <aside class="complete">Try the API</aside>
 
@@ -83,13 +86,15 @@ Save this to a JSON file (e.g. `caddy.json`):
 ```
 
 <aside class="tip">
-	You do not have to use config files, but we are for this tutorial. Caddy's <a href="/docs/api">admin API</a> is designed for use by other programs or scripts.
+
+You do not have to use config files, but we are for this tutorial. Caddy's [admin API](/docs/api) is designed for use by other programs or scripts.
+
 </aside>
+
 
 Then upload it:
 
 <pre><code class="cmd bash">curl localhost:2019/load \
-	-X POST \
 	-H "Content-Type: application/json" \
 	-d @caddy.json
 </code></pre>
@@ -196,8 +201,11 @@ It is important to note that both JSON and the Caddyfile (and [any other support
 ## API vs. Config files
 
 <aside class="tip">
-	Under the hood, even config files go through Caddy's API endpoints; the <code>caddy</code> command just wraps up those API calls for you.
+
+Under the hood, even config files go through Caddy's API endpoints; the `caddy` command just wraps up those API calls for you.
+
 </aside>
+
 
 You will also want to decide whether your workflow is API-based or CLI-based. (You _can_ use both the API and config files on the same server, but we don't recommend it: best to have one source of truth.)
 

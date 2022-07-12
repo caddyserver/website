@@ -68,7 +68,6 @@ Save this to a JSON file:
 Then upload it:
 
 <pre><code class="cmd bash">curl localhost:2019/load \
-	-X POST \
 	-H "Content-Type: application/json" \
 	-d @caddy.json
 </code></pre>
@@ -104,7 +103,6 @@ Let's change our welcome message from "Hello world!" to something a little more 
 Save the config file, then update Caddy's active configuration by running the same POST request again:
 
 <pre><code class="cmd bash">curl localhost:2019/load \
-	-X POST \
 	-H "Content-Type: application/json" \
 	-d @caddy.json
 </code></pre>
@@ -130,14 +128,17 @@ Using the request URI's path, we can traverse into the config structure and upda
 
 <pre><code class="cmd bash">curl \
 	localhost:2019/config/apps/http/servers/example/routes/0/handle/0/body \
-	-X POST \
 	-H "Content-Type: application/json" \
 	-d '"Work smarter, not harder."'
 </code></pre>
 
+
 <aside class="tip">
-	Every time you change the config using the API, Caddy persists a copy of the new config so you can <a href="/docs/command-line#caddy-run"><b>--resume</b> it later</a>!
+
+Every time you change the config using the API, Caddy persists a copy of the new config so you can [**--resume** it later](/docs/command-line#caddy-run)!
+
 </aside>
+
 
 You can verify that it worked with a similar GET request, for example:
 
@@ -149,9 +150,13 @@ You should see:
 [{"handle":[{"body":"Work smarter, not harder.","handler":"static_response"}]}]
 ```
 
+
 <aside class="tip">
-	You can use the <a href="https://stedolan.github.io/jq/">jq command</a> to prettify JSON output: <b><code>curl ... | jq</code></b>
+
+You can use the [`jq` command](https://stedolan.github.io/jq/) to prettify JSON output: **`curl ... | jq`**
+
 </aside>
+
 
 <aside class="complete">Traverse config</aside>
 
@@ -171,7 +176,6 @@ We can give our handler object an [`@id` tag](/docs/api#using-id-in-json) to mak
 
 <pre><code class="cmd bash">curl \
 	localhost:2019/config/apps/http/servers/example/routes/0/handle/0/@id \
-	-X POST \
 	-H "Content-Type: application/json" \
 	-d '"msg"'
 </code></pre>
@@ -186,9 +190,13 @@ This adds a property to our handler object: `"@id": "msg"`, so it now looks like
 }
 ```
 
+
 <aside class="tip">
-	<b>@id</b> tags can go in any object and can have any primitive value (usually a string). <a href="/docs/api#using-id-in-json">Learn more</a>
+
+**@id** tags can go in any object and can have any primitive value (usually a string). [Learn more](/docs/api#using-id-in-json)
+
 </aside>
+
 
 We can then access it directly:
 
@@ -198,7 +206,6 @@ And now we can change the message with a shorter path:
 
 <pre><code class="cmd bash">curl \
 	localhost:2019/id/msg/body \
-	-X POST \
 	-H "Content-Type: application/json" \
 	-d '"Some shortcuts are good."'
 </code></pre>

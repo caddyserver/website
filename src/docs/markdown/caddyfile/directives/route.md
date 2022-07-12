@@ -58,8 +58,11 @@ route {
 ```
 
 <aside class="tip">
-	Another way to do this is to make the two matchers mutually exclusive, but this can quickly become complex if there are more than one or two conditions. With the <code>route</code> directive, the mutual exclusivity of the two handlers is implicit because they are both terminal handlers.
+
+Another way to do this is to make the two matchers mutually exclusive, but this can quickly become complex if there are more than one or two conditions. With the `route` directive, the mutual exclusivity of the two handlers is implicit because they are both terminal handlers.
+
 </aside>
+
 
 And now `file_server` will be chained in before `redir` because the order is taken literally.
 

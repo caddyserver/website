@@ -131,8 +131,11 @@ As you saw above, messages are emitted by **loggers**. The messages are then sen
 Caddy lets you [configure multiple logs](/docs/json/logging/logs/) which can process messages. A log consists of an encoder, writer, minimum level, sampling ratio, and a list of loggers to include or exclude. In Caddy, there is always a default log named `default`. You can customize it by specifying a log keyed as `"default"` in [this object](/docs/json/logging/logs/) in the config.
 
 <aside class="tip">
-	Now would be a good time to <a href="/docs/json/logging/">explore Caddy's logging docs</a> so you can become familiar with the structure and parameters we're talking about.
+
+Now would be a good time to [explore Caddy's logging docs](/docs/json/logging/) so you can become familiar with the structure and parameters we're talking about.
+
 </aside>
+
 
 - **Encoder:** The format for the log. Transforms the in-memory data representation into a byte slice. Encoders have access to all fields of a log message.
 - **Writer:** The log output. Can be any log writer module, like to a file or network socket. It simply writes bytes.

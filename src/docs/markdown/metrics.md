@@ -135,9 +135,9 @@ All Caddy HTTP middleware handlers are instrumented automatically for
 determining request latency, time-to-first-byte, errors, and request/response
 body sizes.
 
-<aside class="tip">Because all middleware handlers are instrumented, and many
-requests are handled by multiple handlers, make sure not to simply sum
-all the counters together.</aside>
+<aside class="tip">
+	Because all middleware handlers are instrumented, and many requests are handled by multiple handlers, make sure not to simply sum all the counters together.
+</aside>
 
 For the histogram metrics below, the buckets are currently not configurable.
 For durations, the default ([`prometheus.DefBuckets`](https://pkg.go.dev/github.com/prometheus/client_golang/prometheus#pkg-variables)
@@ -220,9 +220,12 @@ Label  | Description
 Once you have Prometheus scraping Caddy's metrics, you can start to see some
 interesting metrics about how Caddy's performing.
 
-<aside class="tip">If you've started up a Prometheus server to scrape Caddy with
-the config above, try pasting these queries into the Prometheus UI at
-<a href="http://localhost:9090/graph">http://localhost:9090/graph</a></aside>
+<aside class="tip">
+
+If you've started up a Prometheus server to scrape Caddy with the config above, try pasting these queries into the Prometheus UI at [http://localhost:9090/graph](http://localhost:9090/graph)
+
+</aside>
+
 
 For example, to see the per-second request rate, as averaged over 5 minutes:
 

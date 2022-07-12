@@ -49,7 +49,7 @@ Possible options are:
 	debug
 	http_port    <port>
 	https_port   <port>
-	default_bind <host>
+	default_bind <hosts...>
 	order <dir1> first|last|[before|after <dir2>]
 	storage <module_name> {
 		<options...>
@@ -155,7 +155,7 @@ The port for the server to use for HTTPS. For internal use only; does not change
 
 
 ##### `default_bind`
-The default bind address to be used for all sites, if the [`bind` directive](/docs/caddyfile/directives/bind) is not used in the site. Default: empty, which binds to all interfaces.
+The default bind address(es) to be used for all sites, if the [`bind` directive](/docs/caddyfile/directives/bind) is not used in the site. Default: empty, which binds to all interfaces.
 
 
 ##### `order`
@@ -298,8 +298,11 @@ Customizes [HTTP servers](/docs/json/apps/http/servers/) with settings that pote
 Can be specified more than once, with different `listener_address` values, to configure different options per server. For example, `servers :443` will only apply to the server that is bound to the listener address `:443`. Omitting the listener address will apply the options to any remaining server.
 
 <aside class="tip">
-	Use the <a href="/docs/command-line#caddy-adapt"><code>caddy adapt</code></a> command to find the listen address for the servers in your Caddyfile.
+
+Use the [`caddy adapt`](/docs/command-line#caddy-adapt) command to find the listen address for the servers in your Caddyfile.
+
 </aside>
+
 
 For example, to configure different options for the servers on port `:80` and `:443`, you would specify two `servers` blocks:
 
