@@ -538,6 +538,8 @@ By query string parameters. Should be a sequence of `key=value` pairs. Keys are 
 
 There can be multiple `query` matchers per named matcher, and pairs with the same keys will be OR'ed together.
 
+Illegal query strings (bad syntax, unescaped semicolons, etc.) will fail to parse and thus will not match.
+
 #### Example:
 
 Match requests with a `sort` query parameter with the value `asc`:
