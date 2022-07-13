@@ -177,10 +177,10 @@ The Caddyfile seems easier than JSON, but should you always use it? There are pr
 
 JSON | Caddyfile
 -----|----------
-Full range of Caddy functionality | Most common parts of Caddy functionality
 Easy to generate | Easy to craft by hand
-Easily programmable | Difficult to automate
+Easily programmable | Awkward to automate
 Extremely expressive | Moderately expressive
+Full range of Caddy functionality | Most of Caddy functionality
 Allows config traversal | Cannot traverse within Caddyfile
 Partial config changes | Whole config changes only
 Can be exported | Cannot be exported

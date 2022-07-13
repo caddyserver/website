@@ -80,7 +80,11 @@ The ellipses `...` indicates a continuation, i.e. one or more parameters.
 - **[caddy version](#caddy-version)**
   Prints the version
 
+- **[Signals](#signals)**
+  How Caddy handles signals
 
+- **[Exit codes](#exit-codes)**
+  Emitted when the Caddy process exits
 
 ## Subcommands
 
@@ -444,3 +448,33 @@ Validates a configuration file, then exits. This command deserializes the config
 <pre><code class="cmd bash">caddy version</code></pre>
 
 Prints the version and exits.
+
+
+
+## Signals
+
+Caddy traps certain signals and ignores others. Signals can initiate specific process behavior.
+
+Signal | Behavior
+-------|----------
+`SIGINT` | Graceful exit. Send signal again to force exit immediately.
+`SIGQUIT` | Quits Caddy immediately, but still cleans up locks in storage because it is important.
+`SIGTERM` | Graceful exit.
+`SIGUSR1` | Ignored. For config updates, use the `caddy reload` command or [the API](/docs/api).
+`SIGUSR2` | Ignored.
+`SIGHUP` | Ignored.
+
+A graceful exit means that new connections are no longer accepted, and existing connections will be drained before the socket is closed. A grace period may apply (and is configurable). Once the grace period is up, connections will be forcefully terminated. Locks in storage and other resources that individual modules need to release are cleaned up during a graceful shutdown.
+
+## Exit codes
+
+Caddy returns a code when the process exits:
+
+Code | Meaning
+-----|---------
+`0` | Normal exit.
+`1` | Failed startup. **Do not automatically restart the process; it will likely error again unless changes are made.**
+`2` | Forced quit. Caddy was forced to exit without cleaning up resources.
+`3` | Failed quit. Caddy exited with some errors during cleanup.
+
+In bash, you can get the exit code of the last command with `echo $?`.
