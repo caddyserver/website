@@ -110,7 +110,7 @@ For more information, see [Authelia's documentation](https://www.authelia.com/in
 
 ### Tailscale
 
-Delegation authentication to [Tailscale](https://tailscale.com/) (currently named [`nginx-auth`](https://tailscale.com/blog/tailscale-auth-nginx/), but it still works with Caddy), and using the alternative syntax for `copy_headers` to rename the copied headers:
+Delegating authentication to [Tailscale](https://tailscale.com/) (currently named [`nginx-auth`](https://tailscale.com/blog/tailscale-auth-nginx/), but it still works with Caddy), and using the alternative syntax for `copy_headers` to *rename* the copied headers (note the `>` in each header):
 
 ```caddy-d
 forward_auth unix//run/tailscale.nginx-auth.sock {
