@@ -20,8 +20,7 @@ The following config adapters are currently available (some are third-party proj
 - [**cue**](https://github.com/caddyserver/cue-adapter)
 - [**toml**](https://github.com/awoodbeck/caddy-toml-adapter)
 - [**hcl**](https://github.com/francislavoie/caddy-hcl)
-
-(This list is the temporary home for known adapters until our new website is finished.)
+- [**dhall**](https://github.com/mholt/caddy-dhall)
 
 ## Using config adapters
 
