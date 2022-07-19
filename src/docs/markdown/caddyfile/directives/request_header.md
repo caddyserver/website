@@ -6,6 +6,8 @@ title: request_header (Caddyfile directive)
 
 Manipulates HTTP header fields on the request. It can set, add, and delete header values, or perform replacements using regular expressions.
 
+If you intend to manipulate headers for proxying, use the [`header_up` subdirective](/docs/caddyfile/directives/reverse_proxy#header_up) of `reverse_proxy` instead, as those manipulations are proxy-aware.
+
 
 ## Syntax
 

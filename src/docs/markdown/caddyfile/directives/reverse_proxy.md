@@ -85,7 +85,7 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 	buffer_responses
 	max_buffer_size <size>
 
-	# request manipulation
+	# request/header manipulation
 	trusted_proxies [private_ranges] <ranges...>
 	header_up   [+|-]<field> [<value|regexp> [<replacement>]]
 	header_down [+|-]<field> [<value|regexp> [<replacement>]]
