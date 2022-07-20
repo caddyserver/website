@@ -245,7 +245,7 @@ function getDownloadLink() {
 
 		qs.append("p", p);
 	});
-
+	$("#darwin-warning").toggle(os === "darwin");
 	var idempotencyKey = Math.floor(Math.random() * 99999999999999);
 	qs.append("idempotency", idempotencyKey);
 
