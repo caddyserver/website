@@ -62,6 +62,10 @@ body {
 	background: #333;
 }
 
+#darwin-warning {
+	display: none;
+}
+
 input:disabled,
 select:disabled,
 #optional-packages.disabled {
