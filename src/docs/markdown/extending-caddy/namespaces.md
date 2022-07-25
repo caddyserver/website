@@ -15,7 +15,7 @@ Documentation for non-standard module namespaces can be found with the documenta
 Namespace | Expected Type | Description
 --------- | ------------- | -----------
 |         | [`caddy.App`](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#App) | Caddy app
-caddy.fs | [`fs.StatFS`](https://pkg.go.dev/io/fs#StatFS) | Virtual file system
+caddy.fs | [`fs.FS`](https://pkg.go.dev/io/fs#FS) | Virtual file system <i>⚠️ Experimental</i>
 caddy.logging.encoders.filter | [`logging.LogFieldFilter`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/logging?tab=doc#LogFieldFilter) | Log field filter</i>
 caddy.logging.writers | [`caddy.WriterOpener`](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#WriterOpener) | Log writers
 caddy.storage | [`caddy.StorageConverter`](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#StorageConverter) | Storage backends
