@@ -9,11 +9,10 @@ This page describes various methods for installing Caddy on your system.
 **Official:**
 
 - [Static binaries](#static-binaries)
-- [Debian, Ubuntu, Raspbian](#debian-ubuntu-raspbian)
-- [Fedora, RedHat, CentOS](#fedora-redhat-centos)
-- [Arch Linux, Manjaro, Parabola](#arch-linux-manjaro-parabola)
-- [Docker](#docker)
-- [DigitalOcean](#digitalocean)
+- [Debian, Ubuntu, Raspbian packages](#debian-ubuntu-raspbian)
+- [Fedora, RedHat, CentOS packages](#fedora-redhat-centos)
+- [Arch Linux, Manjaro, Parabola packages](#arch-linux-manjaro-parabola)
+- [Docker image](#docker)
 
 <aside class="tip">
 
@@ -34,17 +33,19 @@ Our [official packages](https://github.com/caddyserver/dist) come only with the 
 
 ## Static binaries
 
-Simply downloading a Caddy binary does not [install it as a service](/docs/running#manual-installation), but can be useful in dev or when upgrading an existing installation.
+1. Obtain a Caddy binary:
+	- [**From releases on GitHub**](https://github.com/caddyserver/caddy/releases) (expand "Assets")
+	- [**From our download page**](/download)
+	- [**By building from source**](/docs/build) (either with `go` or `xcaddy`)
+2. We recommend [installing Caddy as a system service](/docs/running#manual-installation)
 
-- [**View releases on GitHub**](https://github.com/caddyserver/caddy/releases) (expand "Assets")
-- [**Use our download page**](/download)
-
+You can upgrade static binaries by replacing them with newer versions and restarting Caddy.
 
 ## Debian, Ubuntu, Raspbian
 
-Installing this package automatically starts and runs Caddy as a [systemd service](/docs/running#linux-service) named `caddy`, and also comes with a `caddy-api` service which is _not_ enabled by default, should you need it.
+Installing this package automatically starts and runs Caddy as a [systemd service](/docs/running#linux-service) named `caddy`. It also comes with a `caddy-api` service which is _not_ enabled by default but should be used if you primarily configure Caddy via its API instead of config files.
 
-Stable releases:
+**Stable releases:**
 
 <pre><code class="cmd"><span class="bash">sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https</span>
 <span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg</span>
@@ -52,7 +53,7 @@ Stable releases:
 <span class="bash">sudo apt update</span>
 <span class="bash">sudo apt install caddy</span></code></pre>
 
-Testing releases (includes betas and release candidates):
+**Testing releases** (includes betas and release candidates):
 
 <pre><code class="cmd"><span class="bash">sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https</span>
 <span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/testing/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-testing-archive-keyring.gpg</span>
@@ -98,13 +99,6 @@ This package comes with both of Caddy's [systemd service](/docs/running#linux-se
 <pre><code class="cmd bash">docker pull caddy</code></pre>
 
 [**View on Docker Hub**](https://hub.docker.com/_/caddy)
-
-
-## DigitalOcean
-
-[**Deploy a Caddy droplet on DigitalOcean**](https://marketplace.digitalocean.com/apps/caddy)
-
-The droplet is preconfigured to run Caddy as a [systemd service](/docs/running#linux-service) via being installed with the [`apt` repo](#debian-ubuntu-raspbian).
 
 
 ## Homebrew

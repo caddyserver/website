@@ -4,7 +4,7 @@ title: Keep Caddy Running
 
 # Keep Caddy Running
 
-While Caddy can be run successfully by directly using its [Command Line Interface](/docs/command-line), there are numerous advantages to using a service manager to keep it running, such as ensuring it starts back up when the system boots, and to capture stdout/stderr logging.
+While Caddy can be run directly with its [command line interface](/docs/command-line), there are numerous advantages to using a service manager to keep it running, such as ensuring it starts automatically when the system reboots and to capture stdout/stderr logs.
 
 
 - [Linux Service](#linux-service)
@@ -25,7 +25,7 @@ The recommended way to run Caddy on Linux distributions with systemd is with our
 
 We provide two different systemd unit files that you can choose between, depending on your usecase:
 
-- [**`caddy.service`**](https://github.com/caddyserver/dist/blob/master/init/caddy.service) if you configure Caddy with a [Caddyfile](/docs/caddyfile). If you prefer to use a JSON config file, you may [override](#overrides) the `ExecStart` and `ExecReload` commands.
+- [**`caddy.service`**](https://github.com/caddyserver/dist/blob/master/init/caddy.service) if you configure Caddy with a [Caddyfile](/docs/caddyfile). If you prefer to use a different config adapter or a JSON config file, you may [override](#overrides) the `ExecStart` and `ExecReload` commands.
 
 - [**`caddy-api.service`**](https://github.com/caddyserver/dist/blob/master/init/caddy-api.service) if you configure Caddy solely through its [API](/docs/api). This service uses the [`--resume`](/docs/command-line#caddy-run) option which will start Caddy using the `autosave.json` which is [persisted](/docs/json/admin/config/) by default.
 
@@ -84,7 +84,7 @@ Test that it worked:
 Create a group named `caddy`:
 <pre><code class="cmd bash">sudo groupadd --system caddy</code></pre>
 
-Create a user named `caddy`, with a writeable home directory:
+Create a user named `caddy` with a writeable home directory:
 <pre><code class="cmd bash">sudo useradd --system \
     --gid caddy \
     --create-home \
@@ -140,6 +140,33 @@ Then, save the file and exit the text editor, and restart the service for it to 
 
 ## Windows service
 
+There are two ways to run Caddy as a service on Windows: sc.exe or WinSW.
+
+### sc.exe
+
+To create the service, run:
+
+```
+sc.exe create caddy start= auto binPath= "YOURPATH\caddy.exe run"
+```
+
+(replace YOURPATH with the actual path to your `caddy.exe`)
+
+To start:
+
+```
+sc.exe start caddy
+```
+
+To stop:
+
+```
+sc.exe stop caddy
+```
+
+
+### WinSW
+
 Install Caddy as a service on Windows with these instructions.
 
 **Requirements:**
@@ -185,7 +212,7 @@ For customizing the service wrapper, see the [WinSW documentation](https://githu
 
 ## Docker Compose
 
-The simplest way to get up and running with Docker is to use Docker Compose. _The below is only an excerpt, see the docs on [Docker Hub](https://hub.docker.com/_/caddy) for more details_.
+The simplest way to get up and running with Docker is to use Docker Compose. _The below is only an excerpt. See the docs on [Docker Hub](https://hub.docker.com/_/caddy) for more details_.
 
 First, create a file `docker-compose.yml` (or add this service to your existing file):
 
