@@ -47,6 +47,9 @@ The ellipses `...` indicates a continuation, i.e. one or more parameters.
 - **[caddy reload](#caddy-reload)**
   Changes the config of the running Caddy process
 
+  - **[caddy respond](#caddy-respond)**
+  A quick-and-clean, hard-coded HTTP server for development and testing
+
 - **[caddy reverse-proxy](#caddy-reverse-proxy)**
   A simple but production-ready HTTP(S) reverse proxy
 
@@ -257,6 +260,73 @@ Because this command uses the API, the admin endpoint must not be disabled.
 
 `--force` will cause a reload to happen even if the specified config is the same as what Caddy is already running. Can be useful to force Caddy to reprovision its modules, which can have side-effects, for example: reloading manually-loaded TLS certificates.
 
+
+### `caddy respond`
+
+<pre><code class="cmd bash">caddy respond
+	[--status &lt;code&gt;]
+	[--header "&lt;Field&gt;: &lt;value&gt;"]
+	[--body &lt;content&gt;]
+	[--listen &lt;addr&gt;]
+	[--access-log]
+	[--debug]
+	[&lt;status|body&gt;]</code></pre>
+
+
+Starts one or more simple, hard-coded HTTP servers that are useful for development, staging, and some production use cases.
+
+`--status` is the HTTP status code to return.
+
+`--header` adds an HTTP header; `Field: value` format is expected. This flag can be used multiple times.
+
+`--body` specifies the response body.
+
+`--listen` is the listener address, which can be any [network address](/docs/conventions#network-addresses) recognized by Caddy, and may include a port range to start multiple servers.
+
+`--access-log` enables access/request logging.
+
+`--debug` enables more verbose debug logging.
+
+With no options specified, this command listens on a random available port and answers HTTP requests with an empty 200 response. The listen address can be customized with the `--listen` flag and will always be printed to stdout. If the listen address includes a port range, multiple servers will be started.
+
+If a final, unnamed argument is given, it will be treated as a status code (same as the `--status` flag) if it is a 3-digit number. Otherwise, it is used as the response body (same as the `--body` flag). The `--status` and `--body` flags will always override this argument.
+
+A body may be given in 3 ways: a flag, a final (and unnamed) argument to the command, or piped to stdin (if flag and argument are unset). Limited [template evaluation](https://pkg.go.dev/text/template) is supported on the body, with the following variables:
+
+Variable | Description
+---------|-------------
+`{{.N}}`       | Server number
+`{{.Port}}`    | Listener port
+`{{.Address}}` | Listener address
+
+
+#### Examples
+
+Empty 200 response on a random port:
+<pre><code class="cmd bash">caddy respond</code></pre>
+
+HTTP response with a body:
+<pre><code class="cmd bash">caddy respond "Hello, world!"</code></pre>
+
+Multiple servers and templates:
+```plain
+$ caddy respond --listen :2000-2004 "I'm server {{.N}} on port {{.Port}}"
+
+Server address: [::]:2000
+Server address: [::]:2001
+Server address: [::]:2002
+Server address: [::]:2003
+Server address: [::]:2004
+
+$ curl 127.0.0.1:2002
+I'm server 2 on port 2002
+```
+
+Pipe in a maintenance page:
+<pre><code class="cmd bash">cat maintenance.html | caddy respond \
+	--status 503 \
+	--header "Content-Type: text/html" \
+	--listen :80</code></pre>
 
 
 ### `caddy reverse-proxy`

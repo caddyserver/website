@@ -43,7 +43,7 @@ To get started with the API, try our [API tutorial](/docs/api-tutorial) or, if y
   Easily traverse into the config structure
 
 - **[Concurrent config changes](#concurrent-config-changes)**
-  Avoid collisions and data loss when making unsynchronized changes to config
+  Avoid collisions when making unsynchronized changes to config
 
 - **[POST /adapt](#post-adapt)**
   Adapts a configuration to JSON without running it
