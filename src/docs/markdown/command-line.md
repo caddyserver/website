@@ -47,7 +47,7 @@ The ellipses `...` indicates a continuation, i.e. one or more parameters.
 - **[caddy reload](#caddy-reload)**
   Changes the config of the running Caddy process
 
-  - **[caddy respond](#caddy-respond)**
+- **[caddy respond](#caddy-respond)**
   A quick-and-clean, hard-coded HTTP server for development and testing
 
 - **[caddy reverse-proxy](#caddy-reverse-proxy)**
@@ -295,9 +295,9 @@ A body may be given in 3 ways: a flag, a final (and unnamed) argument to the com
 
 Variable | Description
 ---------|-------------
-`{{.N}}`       | Server number
-`{{.Port}}`    | Listener port
-`{{.Address}}` | Listener address
+`.N`       | Server number
+`.Port`    | Listener port
+`.Address` | Listener address
 
 
 #### Examples
@@ -309,8 +309,7 @@ HTTP response with a body:
 <pre><code class="cmd bash">caddy respond "Hello, world!"</code></pre>
 
 Multiple servers and templates:
-```plain
-$ caddy respond --listen :2000-2004 "I'm server {{.N}} on port {{.Port}}"
+<pre><code class="cmd"><b>$ caddy respond --listen :2000-2004 "{{printf "I'm server {{.N}} on port {{.Port}}"}}"</b>
 
 Server address: [::]:2000
 Server address: [::]:2001
@@ -318,15 +317,14 @@ Server address: [::]:2002
 Server address: [::]:2003
 Server address: [::]:2004
 
-$ curl 127.0.0.1:2002
-I'm server 2 on port 2002
-```
+<b>$ curl 127.0.0.1:2002</b>
+I'm server 2 on port 2002</pre></code>
 
 Pipe in a maintenance page:
 <pre><code class="cmd bash">cat maintenance.html | caddy respond \
+	--listen :80 \
 	--status 503 \
-	--header "Content-Type: text/html" \
-	--listen :80</code></pre>
+	--header "Content-Type: text/html"</code></pre>
 
 
 ### `caddy reverse-proxy`
