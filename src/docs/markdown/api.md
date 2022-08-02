@@ -48,10 +48,10 @@ To get started with the API, try our [API tutorial](/docs/api-tutorial) or, if y
 - **[POST /adapt](#post-adapt)**
   Adapts a configuration to JSON without running it
 
-- **[GET /pki/ca/&lt;id&gt;](#get-pkicaid)**
+- **[GET /pki/ca/&lt;id&gt;](#get-pkicaltidgt)**
   Returns information about a particular [PKI app](/docs/json/apps/pki/) CA
 
-- **[GET /pki/ca/&lt;id&gt;/certificates](#get-pkicaidcertificates)**
+- **[GET /pki/ca/&lt;id&gt;/certificates](#get-pkicaltidgtcertificates)**
   Returns the certificate chain of a particular [PKI app](/docs/json/apps/pki/) CA
 
 - **[GET /reverse_proxy/upstreams](#get-reverse-proxyupstreams)**
