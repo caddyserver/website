@@ -29,7 +29,7 @@ $(function() {
 
 # Request Matchers
 
-**Request matchers** can be used to filter (or classify) requests by specific criteria.
+**Request matchers** can be used to filter (or classify) requests by various criteria.
 
 ### Menu
 
@@ -74,7 +74,7 @@ This directive applies to [all](#wildcard-matchers) HTTP requests:
 reverse_proxy localhost:9000
 ```
 
-And this is the same:
+And this is the same (`*` is unnecessary here):
 
 ```caddy-d
 reverse_proxy * localhost:9000
@@ -107,12 +107,12 @@ The wildcard (or "catch-all") matcher `*` matches all requests, and is only need
 root * /home/www/mysite
 ```
 
-Otherwise, this matcher is not often used. It is convenient to omit it when possible; just a matter of preference.
+Otherwise, this matcher is not often used. We generally recommend omitting it if syntax doesn't require it.
 
 
 ### Path matchers
 
-Because matching by path is so common, a single path matcher can be inlined, like so:
+Matching by URI path is the most common way to match requests, so the matcher can be inlined, like this:
 
 ```caddy-d
 redir /old.html /new.html
@@ -120,7 +120,7 @@ redir /old.html /new.html
 
 Path matcher tokens must start with a forward slash `/`.
 
-**[Path matching](/docs/caddyfile/matchers#path) is an exact match by default;** you must append a `*` for a fast prefix match. Note that `/foo*` will match `/foo` and `/foo/` as well as `/foobar`; you might actually want `/foo/*` instead.
+**[Path matching](/docs/caddyfile/matchers#path) is an exact match by default, not a prefix match.** You must append a `*` for a fast prefix match. Note that `/foo*` will match `/foo` and `/foo/` as well as `/foobar`; you might actually want `/foo/*` instead.
 
 
 ### Named matchers
@@ -135,7 +135,7 @@ Defining a matcher with a unique name gives you more flexibility, allowing you t
 }
 ```
 
-or, if there is only one matcher in the set:
+or, if there is only one matcher in the set, you can put it on the same line:
 
 ```caddy-d
 @name ...
@@ -166,7 +166,7 @@ Like directives, named matcher definitions must go inside the site blocks that u
 
 A named matcher definition constitutes a _matcher set_. Matchers in a set are AND'ed together; i.e. all must match. For example, if you have both a `header` and `path` matcher in the set, both must match.
 
-Multiple matchers of the same type may be combined (e.g. multiple `path` matchers in the same set) using boolean algebra (AND/OR), as described in their respective sections below.
+Multiple matchers of the same type may be unioned (e.g. multiple `path` matchers in the same set) using boolean algebra (AND/OR), as described in their respective sections below.
 
 
 
@@ -367,7 +367,7 @@ host <hosts...>
 expression host('<hosts...>')
 ```
 
-Matches request by the `Host` header field of the request. It is not common to use this in the Caddyfile, since most site blocks already indicate hosts in the address of the site. This matcher is mostly used in site blocks that don't define specific hostnames.
+Matches request by the `Host` header field of the request. It is not common to use this in the Caddyfile, since most site blocks already indicate hosts in the address of the site. This matcher is mostly used in site blocks that don't define specific hostnames (like wildcard subdomains), but where hostname-specific logic is required.
 
 Multiple `host` matchers will be OR'ed together.
 
@@ -468,16 +468,22 @@ path <paths...>
 expression path('<paths...>')
 ```
 
-By request path, meaning the path component of the request's URI. Path matches are exact, but wildcards `*` may be used:
+By request path (the path component of the request URI). Path matches are exact but case-insensitive. Wildcards `*` may be used:
 
-- At the end, for a prefix match (`/prefix/*`)
-- At the beginning, for a suffix match (`*.suffix`)
-- On both sides, for a substring match (`*/contains/*`)
-- In the middle, for a globular match (`/accounts/*/info`)
+- At the end only, for a prefix match (`/prefix/*`)
+- At the beginning only, for a suffix match (`*.suffix`)
+- On both sides only, for a substring match (`*/contains/*`)
+- In the middle only, for a globular match (`/accounts/*/info`)
 
-The request path is URL-decoded, lowercased (to be case insensitive), and cleaned (to collapse doubled-up slashes and directory traversal dots) before matching. For example `/foo*` will also match `/FOO`, `//foo` and `/%2F/foo`.
+Slashes are significant. For example, `/foo*` will match `/foo`, `/foobar`, `/foo/`, and `/foo/bar`, but `/foo/*` will _not_ match `/foo` or `/foobar`.
 
-Multiple `path` matchers will be OR'ed together.
+Request paths are cleaned to resolve directory traversal dots before matching. Additionally, multiple slashes are merged unless the match pattern has multiple slashes. In other words, `/foo` will match `/foo` and `//foo`, but `//foo` will only match `//foo`.
+
+The request path is normalized (URL-decoded, unescaped) except for escape sequences at positions where escape sequences are also present in the match pattern. For example, `/foo/bar` matches both `/foo/bar` and `/foo%2Fbar`, but `/foo%2Fbar` will match only `/foo%2Fbar`.
+
+The special wildcard escape `%*` can also be used instead of `*` to leave its matching span escaped. For example, `/bands/*/*` will not match `/bands/AC%2FDC/T.N.T` because the path will be compared in normalized space where it looks like `/bands/AC/DC/T.N.T`, which does not match the pattern; however, `/bands/%*/*` will match `/bands/AC%2FDC/T.N.T` because the span represented by `%*` will be compared without decoding escape sequences.
+
+Multiple paths will be OR'ed together.
 
 
 
@@ -491,13 +497,13 @@ expression path_regexp('<name>', '<regexp>')
 expression path_regexp('<regexp>')
 ```
 
-Like [`path`](#path), but supports regular expressions. Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) like `{re.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
-
-The request path is URL-decoded, and cleaned (to collapse doubled-up slashes and directory traversal dots) before matching. For example `/foo*` will also match `//foo` and `/%2F/foo`.
+Like [`path`](#path), but supports regular expressions. Write the pattern on the URI-decoded/unescaped form of the path.
 
 The regular expression language used is RE2, included in Go. See the [RE2 syntax reference](https://github.com/google/re2/wiki/Syntax) and the [Go regexp syntax overview](https://pkg.go.dev/regexp/syntax).
 
-There can only be one `path_regexp` matcher per named matcher.
+Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) like `{re.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
+
+There can only be one `path_regexp` pattern per named matcher.
 
 #### Example:
 

@@ -4,9 +4,9 @@ title: rewrite (Caddyfile directive)
 
 # rewrite
 
-Rewrites the request internally. A rewrite changes some or all of the request URI.
+Rewrites the request internally. A rewrite changes some or all of the request URI. Note that the URI does not include scheme or authority (host & port), and clients typically do not send fragments. Thus, this directive is mostly used for path and query string manipulation.
 
-The `rewrite` directive implies the intent to accept the request, but with modifications. It is mutually exclusive to other `rewrite` directives in the same block, so it is safe to define rewrites that would otherwise cascade into each other; only the first matching rewrite will be executed.
+The `rewrite` directive implies the intent to accept the request, but with modifications. It is mutually exclusive to other `rewrite` directives in the same block, so it is safe to define rewrites that would otherwise cascade into each other as only the first matching rewrite will be executed.
 
 Because `rewrite` essentially performs an internal redirect, the Caddyfile adapter will not fold any subsequent, adjacent handlers into the same route if their matchers happen to be exactly the same. This allows the matchers of the next handlers to be deferred until after the rewrite. In other words, a matcher that matches a request before the `rewrite` might not match the same request after the `rewrite`. If you want your `rewrite` to share a route with other handlers, use the [`route`](route) or [`handle`](handle) directives.
 
@@ -17,7 +17,7 @@ Because `rewrite` essentially performs an internal redirect, the Caddyfile adapt
 rewrite [<matcher>] <to>
 ```
 
-- **&lt;to&gt;** is the URI to set on the request. Only designated parts will be replaced. The URI path is any substring that comes before `?`. If `?` is omitted, then the whole token is considered to be the path.
+- **&lt;to&gt;** is the URI to rewrite the request to. Only the components of the URI (path or query string) that are specified in the rewrite will be operated on. The URI path is any substring that comes before `?`. If `?` is omitted, then the whole token is considered to be the path.
 
 
 ## Examples
