@@ -13,7 +13,7 @@ This guide will show you how to get a production-ready static file server up and
 
 ---
 
-There are two easy ways to get a quick file server up and running. We'll show you two equivalent ways to do the same thing.
+There are two easy ways to get a quick file server up and running.
 
 ## Command line
 
