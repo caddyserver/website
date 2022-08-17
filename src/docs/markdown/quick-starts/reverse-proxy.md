@@ -100,7 +100,7 @@ This requires that the backend's certificate is trusted by the system Caddy is r
 
 Of course, you can do HTTPS on both ends too:
 
-<pre><code class="cmd bash">caddy reverse-proxy --from example.com --to https://localhost:9000</code></pre>
+<pre><code class="cmd bash">caddy reverse-proxy --from example.com --to https://example.com:9000</code></pre>
 
 This serves HTTPS from client to proxy, and from proxy to backend.
 

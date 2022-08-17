@@ -155,7 +155,7 @@ file_server /subfolder/* browse
 Custom error pages can be accomplished with [`handle_errors`](/docs/caddyfile/directives/handle_errors).
 
 
-- **v1:**:
+- **v1:**
 
 ```
 errors {
@@ -164,7 +164,7 @@ errors {
 }
 ```
 
-- **v2:**:
+- **v2:**
 
 ```
 handle_errors {

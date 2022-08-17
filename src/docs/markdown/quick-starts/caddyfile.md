@@ -14,7 +14,7 @@ localhost
 
 <aside class="tip">
 
-If the HTTP and HTTPS ports (80 and 443, respectively) are privileged ports on your OS, you will either need to run with elevated privileges or use a higher port. To use a higher port, just change the address to something like `localhost:2015` and change the HTTP port using the [`http_port`](/docs/caddyfile/options) Caddyfile option.
+If the HTTP and HTTPS ports (80 and 443, respectively) are privileged ports on your OS, you will either need to run with elevated privileges or use higher ports. To gain permission, run as root with `sudo -E` or use `sudo setcap cap_net_bind_service=+ep $(which caddy)`. Alternatively, to use higher ports, just change the address to something like `localhost:2080` and change the HTTP port using the [`http_port`](/docs/caddyfile/options) Caddyfile option.
 
 </aside>
 
@@ -37,7 +37,7 @@ You will probably be asked for your password, because Caddy serves all sites -- 
 	For local HTTPS, Caddy automatically generates certificates and unique private keys for you. The root certificate is added to your system's trust store, which is why the password prompt is necessary. It allows you to develop locally over HTTPS without certificate errors.
 </aside>
 
-If you get permission errors, you may need to run with elevated privileges.
+(If you get permission errors, you may need to run with elevated privileges or choose a port higher than 1024.)
 
 Either open your browser to [localhost](http://localhost) or `curl` it:
 
