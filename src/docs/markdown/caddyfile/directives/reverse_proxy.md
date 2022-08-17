@@ -531,7 +531,7 @@ When a response handler is invoked, the response from the backend is not written
 
 - **@name** is the name of a [response matcher](#response-matcher). As long as each response matcher has a unique name, multiple matchers can be defined. A response can be matched on the status code and presence or value of a response header.
 - **replace_status** <span id="replace_status"/> simply changes the status code of response when matched by the given matcher.
-- **handle_response** <span id="handle_response"/> defines the route to execute when matched by the given matcher (or, if a matcher is omitted, all responses). The first matching block will be applied. Inside a `handle_response` block, any other [directives](/docs/caddyfile/directives) can be used. During 
+- **handle_response** <span id="handle_response"/> defines the route to execute when matched by the given matcher (or, if a matcher is omitted, all responses). The first matching block will be applied. Inside a `handle_response` block, any other [directives](/docs/caddyfile/directives) can be used.
 
 Additionally, inside `handle_response`, two special handler directives may be used:
 
