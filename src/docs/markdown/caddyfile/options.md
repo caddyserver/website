@@ -56,6 +56,7 @@ Possible options are:
 	}
 	storage_clean_interval <duration>
 	renew_interval <duration>
+	ocsp_interval <duration>
 	admin   off|<addr> {
 		origins <origins...>
 		enforce_origin
@@ -188,6 +189,10 @@ Storage will always be cleaned when the process first starts. Then, a new cleani
 
 ##### `renew_interval`
 How often to scan all loaded, managed certificates for expiration, and trigger renewal if expired. Default: `10m`.
+
+
+##### `ocsp_interval`
+How often to check if OCSP stapling needs updating. Default: `1h`.
 
 
 ##### `admin`
