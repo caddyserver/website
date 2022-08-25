@@ -81,10 +81,10 @@ Requirements:
 - Your custom `caddy` binary should be located in the current directory.
 
 Procedure:
-<pre><code class="cmd"><span class="bash">dpkg-divert --divert /usr/bin/caddy.default --rename /usr/bin/caddy</span>
-<span class="bash">mv ./caddy /usr/bin/caddy.custom</span>
-<span class="bash">update-alternatives --install /usr/bin/caddy caddy /usr/bin/caddy.default 10</span>
-<span class="bash">update-alternatives --install /usr/bin/caddy caddy /usr/bin/caddy.custom 50</span>
+<pre><code class="cmd"><span class="bash">sudo dpkg-divert --divert /usr/bin/caddy.default --rename /usr/bin/caddy</span>
+<span class="bash">sudo mv ./caddy /usr/bin/caddy.custom</span>
+<span class="bash">sudo update-alternatives --install /usr/bin/caddy caddy /usr/bin/caddy.default 10</span>
+<span class="bash">sudo update-alternatives --install /usr/bin/caddy caddy /usr/bin/caddy.custom 50</span>
 </code></pre>
 
 
