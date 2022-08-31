@@ -16,7 +16,7 @@ The`[brackets]` indicate optional parameters.
 
 The ellipses `...` indicates a continuation, i.e. one or more parameters.
 
-**Quick start: `caddy help`**
+**Quick start: `caddy`, `caddy help`, or `man caddy` (if installed)**
 
 ---
 
@@ -25,7 +25,10 @@ The ellipses `...` indicates a continuation, i.e. one or more parameters.
 
 - **[caddy build-info](#caddy-build-info)**
   Prints build information
-  
+
+- **[caddy completion](#caddy-completion)**
+  Generate shell completion script
+
 - **[caddy environ](#caddy-environ)**
   Prints the environment
 
@@ -43,6 +46,9 @@ The ellipses `...` indicates a continuation, i.e. one or more parameters.
 
 - **[caddy list-modules](#caddy-list-modules)**
   Lists the installed Caddy modules
+
+- **[caddy manpage](#caddy-manpage)**
+  Generate manpages
 
 - **[caddy reload](#caddy-reload)**
   Changes the config of the running Caddy process
@@ -146,6 +152,17 @@ Prints information provided by Go about the build (main module path, package ver
 
 
 
+
+### `caddy completion`
+
+<pre><code class="cmd bash">caddy completion [bash|zsh|fish|powershell]</code></pre>
+
+Generates shell completion scripts. This allows you to get tab-complete or auto-complete (or similar, depending on your shell) when typing `caddy` commands.
+
+To get instructions for installing this script into your specific shell, run `caddy help completion` or `caddy completion -h`.
+
+
+
 ### `caddy environ`
 
 <pre><code class="cmd bash">caddy environ</code></pre>
@@ -240,6 +257,29 @@ NOTE: Due to [a bug in Go](https://github.com/golang/go/issues/29228), version i
 
 
 
+### `caddy manpage`
+
+<pre><code class="cmd bash">caddy manpage
+	--directory &lt;path&gt;</code></pre>
+
+Generates manual/documentation pages for Caddy commands and writes them to the directory at the specified path. The output of this command can be read by the `man` command.
+
+`--directory` (required) is the path to the directory into which to write the man pages. It will be created if it does not exist.
+
+Once generated, the manual pages generally need to be installed. This procedure varies by platform, but on typical Linux systems, it's something like this:
+
+<pre><code class="cmd"><b>$ caddy manpage --directory man
+$ gzip -r man/
+$ sudo cp man/* /usr/share/man/man8/
+$ sudo mandb
+</b></code></pre>
+
+Then you can run `man caddy` (or `man caddy-*` for subcommands) to read documentation in your terminal.
+
+Manual pages are separate documentation from what is on our website. Our website has more comprehensive documentation that is updated often.
+
+
+
 ### `caddy reload`
 
 <pre><code class="cmd bash">caddy reload
@@ -318,7 +358,7 @@ Server address: [::]:2003
 Server address: [::]:2004
 
 <b>$ curl 127.0.0.1:2002</b>
-I'm server 2 on port 2002</pre></code>
+I'm server 2 on port 2002</code></pre>
 
 Pipe in a maintenance page:
 <pre><code class="cmd bash">cat maintenance.html | caddy respond \
