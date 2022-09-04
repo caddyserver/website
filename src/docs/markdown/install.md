@@ -116,11 +116,11 @@ _Note: This is a community-maintained installation method._
 
 Linux and macOS:
 
-<pre><code class="cmd bash">curl -sS https://webinstall.dev/caddy | bash</code></pre>
+<pre><code class="cmd bash">curl -sS https://webi.sh/caddy | sh</code></pre>
 
 Windows:
 
-<pre><code class="cmd">curl.exe -A MS https://webinstall.dev/caddy | powershell</code></pre>
+<pre><code class="cmd">curl.exe https://webi.ms/caddy | powershell</code></pre>
 
 You may need to adjust the Windows firewall rules to allow non-localhost incoming connections.
 
