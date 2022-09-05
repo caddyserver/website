@@ -43,15 +43,15 @@ map [<matcher>] <source> <destinations...> {
 The following example demonstrates most aspects of this directive:
 
 ```caddy-d
-map {host}             {my_placeholder}  {magic_number} {
-	example.com        "some value"      3
-	foo.example.com    "another value"
-	(.*)\.example.com  "${1} subdomain"  5
+map {host}                {my_placeholder}  {magic_number} {
+	example.com           "some value"      3
+	foo.example.com       "another value"
+	~(.*)\.example\.com$  "${1} subdomain"  5
 
-	~.*\.net$          -                 7
-	~.*\.xyz$          -                 15
+	~.*\.net$             -                 7
+	~.*\.xyz$             -                 15
 
-	default            "unknown domain"  42
+	default               "unknown domain"  42
 }
 ```
 

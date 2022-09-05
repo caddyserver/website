@@ -289,7 +289,7 @@ Passive health checks happen inline with actual proxied requests:
 
 ### Streaming
 
-By default, the proxy partially buffers and periodically flushes responses to the client for wire efficiency:
+By default, the proxy partially buffers the response for wire efficiency:
 
 - **flush_interval** <span id="flush_interval"/> is a [duration value](/docs/conventions#durations) that adjusts how often Caddy should flush the response buffer to the client. By default, no periodic flushing is done. A negative value (typically -1) suggests "low-latency mode" which disables response buffering completely and flushes immediately after each write to the client, and does not cancel the request to the backend even if the client disconnects early. This option is ignored and responses are flushed immediately to the client if one of the following applies from the response:
 	- `Content-Type: text/event-stream`
