@@ -289,9 +289,12 @@ Passive health checks happen inline with actual proxied requests:
 
 ### Streaming
 
-The proxy partially buffers and periodically flushes responses by default for wire efficiency:
+By default, the proxy partially buffers and periodically flushes responses to the client for wire efficiency:
 
-- **flush_interval** <span id="flush_interval"/> is a [duration value](/docs/conventions#durations) that adjusts how often Caddy should flush the response buffer to the client. By default, no periodic flushing is done. A negative value disables response buffering, and flushes immediately after each write to the client. This option is ignored when the upstream's response is recognized as a streaming response, or if its content length is `-1`; for such responses, writes are always flushed to the client immediately.
+- **flush_interval** <span id="flush_interval"/> is a [duration value](/docs/conventions#durations) that adjusts how often Caddy should flush the response buffer to the client. By default, no periodic flushing is done. A negative value (typically -1) suggests "low-latency mode" which disables response buffering completely and flushes immediately after each write to the client, and does not cancel the request to the backend even if the client disconnects early. This option is ignored and responses are flushed immediately to the client if one of the following applies from the response:
+	- `Content-Type: text/event-stream`
+	- `Content-Length` is unknown
+	- HTTP/2 on both sides of the proxy, `Content-Length` is unknown, and `Accept-Encoding` is either not set or is "identity"
 
 - **buffer_requests** <span id="buffer_requests"/> will cause the proxy to read the entire request body into a buffer before sending it upstream. This is very inefficient and should only be done if the upstream requires reading request bodies without delay (which is something the upstream application should fix).
 
