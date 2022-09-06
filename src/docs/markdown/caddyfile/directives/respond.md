@@ -6,6 +6,8 @@ title: respond (Caddyfile directive)
 
 Writes a hard-coded/static response to the client.
 
+If the body is non-empty, this directive sets the `Content-Type` header if it is not already set. The default value is `text/plain; utf-8` unless the body is a valid JSON object or array, in which case it is set to `application/json`. For all other types of content, set the proper Content-Type explicitly using the [`header` directive](/docs/caddyfile/directives/header).
+
 
 ## Syntax
 
@@ -16,7 +18,7 @@ respond [<matcher>] <status>|<body> [<status>] {
 }
 ```
 
-- **&lt;status&gt;** is the HTTP status code to write. Default 200.
+- **&lt;status&gt;** is the HTTP status code to write. If 103 (Early Hints), the response will be written without a body and the handler chain will continue. (HTTP 1xx responses are informational, not final.) Default: 200.
 - **&lt;body&gt;** is the response body to write.
 - **body** is an alternate way to provide a body; convenient if it is multiple lines.
 - **close** will close the client's connection to the server after writing the response.

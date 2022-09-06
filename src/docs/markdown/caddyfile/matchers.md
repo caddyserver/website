@@ -120,7 +120,7 @@ redir /old.html /new.html
 
 Path matcher tokens must start with a forward slash `/`.
 
-**[Path matching](/docs/caddyfile/matchers#path) is an exact match by default, not a prefix match.** You must append a `*` for a fast prefix match. Note that `/foo*` will match `/foo` and `/foo/` as well as `/foobar`; you might actually want `/foo/*` instead.
+**[Path matching](#path) is an exact match by default, not a prefix match.** You must append a `*` for a fast prefix match. Note that `/foo*` will match `/foo` and `/foo/` as well as `/foobar`; you might actually want `/foo/*` instead.
 
 
 ### Named matchers
@@ -162,6 +162,12 @@ If the matcher set consists of only one matcher, a one-liner syntax also works:
 reverse_proxy @post localhost:6001
 ```
 
+As a special case, the [`expression` matcher](#expression) may be used without specifying its name as long as a single quoted argument (the CEL expression itself) follows the matcher name:
+
+```caddy-d
+@notFound `{err.status_code} == 404`
+```
+
 Like directives, named matcher definitions must go inside the site blocks that use them.
 
 A named matcher definition constitutes a _matcher set_. Matchers in a set are AND'ed together; i.e. all must match. For example, if you have both a `header` and `path` matcher in the set, both must match.
@@ -176,7 +182,7 @@ Multiple matchers of the same type may be unioned (e.g. multiple `path` matchers
 
 Full matcher documentation can be found [in each respective matcher module's docs](/docs/json/apps/http/servers/routes/match/).
 
-
+Requests can be matched the following ways:
 
 ### expression
 
@@ -188,7 +194,15 @@ By any [CEL (Common Expression Language)](https://github.com/google/cel-spec) ex
 
 Caddy [placeholders](/docs/conventions#placeholders) (or [Caddyfile shorthands](/docs/caddyfile/concepts#placeholders)) may be used in these CEL expressions, as they are preprocessed and converted to regular CEL function calls before being interpreted by the CEL environment.
 
-Since v2.5.2, most other request matchers can also be used in expressions as functions, which allows for more flexibility for boolean logic than outside expressions. See the documentation for each other matcher for the supported syntax within CEL expressions.
+Since v2.5.2, most other request matchers can also be used in expressions as functions, which allows for more flexibility for boolean logic than outside expressions. See the documentation for each matcher for the supported syntax within CEL expressions.
+
+For convenience, the matcher name may be omitted if defining a named matcher that consists solely of a CEL expression. This reads quite nicely:
+
+```caddy-d
+@mutable `{method}.startsWith("P")`
+```
+
+In this case the CEL matcher is assumed.
 
 #### Examples:
 
@@ -479,7 +493,7 @@ Slashes are significant. For example, `/foo*` will match `/foo`, `/foobar`, `/fo
 
 Request paths are cleaned to resolve directory traversal dots before matching. Additionally, multiple slashes are merged unless the match pattern has multiple slashes. In other words, `/foo` will match `/foo` and `//foo`, but `//foo` will only match `//foo`.
 
-The request path is normalized (URL-decoded, unescaped) except for escape sequences at positions where escape sequences are also present in the match pattern. For example, `/foo/bar` matches both `/foo/bar` and `/foo%2Fbar`, but `/foo%2Fbar` will match only `/foo%2Fbar`.
+Because there are multiple escaped forms of any given URI, the request path is normalized (URL-decoded, unescaped) except for those escape sequences at positions where escape sequences are also present in the match pattern. For example, `/foo/bar` matches both `/foo/bar` and `/foo%2Fbar`, but `/foo%2Fbar` will match only `/foo%2Fbar`, because the escape sequence is explicitly given in the configuration.
 
 The special wildcard escape `%*` can also be used instead of `*` to leave its matching span escaped. For example, `/bands/*/*` will not match `/bands/AC%2FDC/T.N.T` because the path will be compared in normalized space where it looks like `/bands/AC/DC/T.N.T`, which does not match the pattern; however, `/bands/%*/*` will match `/bands/AC%2FDC/T.N.T` because the span represented by `%*` will be compared without decoding escape sequences.
 
@@ -598,11 +612,13 @@ vars <variable> <values...>
 
 By the value of a variable in the request context, or the value of a placeholder. Multiple values may be specified to match any of those possible values (OR'ed).
 
+The **&lt;variable&gt;** argument may be either a variable name or a placeholder in curly braces `{ }`. (Placeholders are not expanded in the first parameter.)
+
 This matcher is most useful when paired with the [`map` directive](/docs/caddyfile/directives/map) which sets outputs, or with plugins which set some information in the request context.
 
 #### Example:
 
-Match an output of the [`map` directive](/docs/caddyfile/directives/map) named `magic_number` for the values `3`, or `5`:
+Match an output of the [`map` directive](/docs/caddyfile/directives/map) named `magic_number` for the values `3` or `5`:
 
 ```caddy-d
 vars {magic_number} 3 5

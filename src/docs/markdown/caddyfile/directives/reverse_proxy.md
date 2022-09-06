@@ -34,6 +34,7 @@ Proxies requests to one or more backends with configurable transport, load balan
   - [Dynamic upstreams](#dynamic-upstreams)
     - [SRV](#srv)
     - [A/AAAA](#aaaaa)
+	- [Multi](#multi)
 - [Load balancing](#load-balancing)
   - [Active health checks](#active-health-checks)
   - [Passive health checks](#passive-health-checks)
@@ -138,6 +139,7 @@ Static upstream addresses can take the form of a conventional [Caddy network add
 - `h2c://127.0.0.1`
 - `example.com`
 - `unix//var/php.sock`
+- `unix+h2c//var/grpc.sock`
 
 Note: Schemes cannot be mixed, since they modify the common transport configuration (a TLS-enabled transport cannot carry both HTTPS and plaintext HTTP). Any explicit transport configuration will not be overwritten, and omitting schemes or using other ports will not assume a particular transport.
 
@@ -203,6 +205,17 @@ Retrieves upstreams from A/AAAA DNS records.
 - **dial_fallback_delay** is how long to wait before spawning an RFC 6555 Fast Fallback connection. Default: `300ms`
 
 
+##### Multi
+
+Append the results of multiple dynamic upstream modules. Useful if you want redundant sources of upstreams, for example: a primary cluster of SRVs backed up by a secondary cluster of SRVs.
+
+```caddy-d
+	dynamic multi {
+		<source> [...]
+	}
+```
+
+- **&lt;source&gt;** is the name of the module for the dynamic upstreams, followed by its configuration. More than one may be specified.
 
 ### Load balancing
 
@@ -441,13 +454,17 @@ transport http {
 
 - **max_response_header** <span id="max_response_header"/> is the maximum amount of bytes to read from response headers. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). Default: `10MiB`.
 
-- **dial_timeout** <span id="dial_timeout"/> is how long to wait when connecting to the upstream socket. Accepts [duration values](/docs/conventions#durations). Default: No timeout.
+- **dial_timeout** <span id="dial_timeout"/> is the maximum [duration](/docs/conventions#durations) to wait when connecting to the upstream socket. Default: No timeout.
 
-- **dial_fallback_delay** <span id="dial_fallback_delay"/> is how long to wait before spawning an RFC 6555 Fast Fallback connection. A negative value disables this. Accepts [duration values](/docs/conventions#durations). Default: `300ms`.
+- **dial_fallback_delay** <span id="dial_fallback_delay"/> is the maximum [duration](/docs/conventions#durations) to wait before spawning an RFC 6555 Fast Fallback connection. A negative value disables this. Default: `300ms`.
 
-- **response_header_timeout** <span id="response_header_timeout"/> is how long to wait for reading response headers from the upstream. Accepts [duration values](/docs/conventions#durations). Default: No timeout.
+- **response_header_timeout** <span id="response_header_timeout"/> is the maximum [duration](/docs/conventions#durations) to wait for reading response headers from the upstream. Default: No timeout.
 
-- **expect_continue_timeout** <span id="expect_continue_timeout"/> is how long to wait for the upstreams's first response headers after fully writing the request headers if the request has the header `Expect: 100-continue`. Accepts [duration values](/docs/conventions#durations). Default: No timeout.
+- **expect_continue_timeout** <span id="expect_continue_timeout"/> is the maximum [duration](/docs/conventions#durations) to wait for the upstreams's first response headers after fully writing the request headers if the request has the header `Expect: 100-continue`. Default: No timeout.
+
+- **read_timeout** <span id="read_timeout"/> is the maximum [duration](/docs/conventions#durations) to wait for the next read from the backend. Default: No timeout.
+
+- **write_timeout** <span id="write_timeout"/> is the maximum [duration](/docs/conventions#durations) to wait for the next writes to the backend. Default: No timeout.
 
 - **resolvers** <span id="resolvers"/> is a list of DNS resolvers to override system resolvers.
 
@@ -457,7 +474,7 @@ transport http {
 
 - **tls_insecure_skip_verify** <span id="tls_insecure_skip_verify"/> turns off TLS handshake verification, making the connection insecure and vulnerable to man-in-the-middle attacks. _Do not use in production._
 
-- **tls_timeout** <span id="tls_timeout"/> is a [duration value](/docs/conventions#durations) that specifies how long to wait for the TLS handshake to complete. Default: No timeout.
+- **tls_timeout** <span id="tls_timeout"/> is the maximum [duration](/docs/conventions#durations) to wait for the TLS handshake to complete. Default: No timeout.
 
 - **tls_trusted_ca_certs** <span id="tls_trusted_ca_certs"/> is a list of PEM files that specify CA public keys to trust when connecting to the backend.
 
@@ -476,7 +493,7 @@ transport http {
 
 - **keepalive** <span id="keepalive"/> is either `off` or a [duration value](/docs/conventions#durations) that specifies how long to keep connections open (timeout). Default: `2m`.
 
-- **keepalive_interval** <span id="keepalive"/> is a [duration value](/docs/conventions#durations) that specifies how often to probe for liveness. Default: `30s`.
+- **keepalive_interval** <span id="keepalive"/> is the [duration](/docs/conventions#durations) between liveness probes. Default: `30s`.
 
 - **keepalive_idle_conns** <span id="keepalive_idle_conns"/> defines the maximum number of connections to keep alive. Default: No limit.
 

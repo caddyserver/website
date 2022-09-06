@@ -19,15 +19,15 @@ After a successful authentication, the `{http.auth.user.id}` placeholder will be
 
 ```caddy-d
 basicauth [<matcher>] [<hash_algorithm> [<realm>]] {
-	<username> <hashed_password_base64> [<salt_base64>]
+	<username> <hashed_password> [<salt_base64>]
 	...
 }
 ```
 
-- **&lt;hash_algorithm&gt;** is the name of the password hashing algorithm (or KDF) used for the hashes in this configuration. Can be `bcrypt` (default) or `scrypt`.
+- **&lt;hash_algorithm&gt;** is the name of the password hashing algorithm (or KDF) used for the hashes in this configuration. Default: `bcrypt`
 - **&lt;realm&gt;** is a custom realm name.
 - **&lt;username&gt;** is a username or user ID.
-- **&lt;hashed_password_base64&gt;** is the base-64 encoding of the hashed password.
+- **&lt;hashed_password&gt;** is the password hash.
 - **&lt;salt_base64&gt;** is the base-64 encoding of the password salt, if an external salt is required.
 
 
@@ -37,7 +37,7 @@ Protect all resources in /secret so only Bob can access them with the password "
 
 ```caddy-d
 basicauth /secret/* {
-	Bob JDJhJDEwJEVCNmdaNEg2Ti5iejRMYkF3MFZhZ3VtV3E1SzBWZEZ5Q3VWc0tzOEJwZE9TaFlZdEVkZDhX
+	Bob $2a$14$Zkx19XLiW6VYouLHR5NmfOFU0z2GTNmpkT/5qqR7hx4IjWJPDhjvG
 }
 ```
 

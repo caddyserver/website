@@ -111,7 +111,8 @@ main > nav.sidebar {
 }
 
 main nav li img,
-article li img {
+article li img,
+img.external-link {
 	max-height: .9em;
 }
 

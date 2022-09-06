@@ -223,11 +223,11 @@ Formats or prettifies a Caddyfile, then exits. The result is printed to stdout u
 	[--algorithm &lt;name&gt;]
 	[--salt &lt;string&gt;]</code></pre>
 
-Hashes a password and writes the output to stdout in base64 encoding, then exits.
+Hashes a password and writes the output to stdout, then exits.
 
 `--plaintext` is the plaintext form of the password. If omitted, interactive mode will be assumed and the user will be shown a prompt to enter the password manually.
 
-`--algorithm` may be bcrypt or scrypt. Default is bcrypt.
+`--algorithm` may be bcrypt or any installed hash algorithm. Default is bcrypt.
 
 `--salt` is used only if the algorithm requires an external salt (like scrypt).
 
@@ -313,13 +313,13 @@ Because this command uses the API, the admin endpoint must not be disabled.
 	[&lt;status|body&gt;]</code></pre>
 
 
-Starts one or more simple, hard-coded HTTP servers that are useful for development, staging, and some production use cases.
+Starts one or more simple, hard-coded HTTP servers that are useful for development, staging, and some production use cases. It can be useful for verifying or debugging HTTP clients, scripts, or even load balancers.
 
 `--status` is the HTTP status code to return.
 
 `--header` adds an HTTP header; `Field: value` format is expected. This flag can be used multiple times.
 
-`--body` specifies the response body.
+`--body` specifies the response body. Alternatively, the body can be piped from stdin.
 
 `--listen` is the listener address, which can be any [network address](/docs/conventions#network-addresses) recognized by Caddy, and may include a port range to start multiple servers.
 

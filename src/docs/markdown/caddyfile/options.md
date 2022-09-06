@@ -29,7 +29,7 @@ $(function() {
 
 # Global options
 
-The Caddyfile has a way for you to specify options that apply globally. Some options act as default values, while others customize the behavior of the Caddyfile [adapter](/docs/config-adapters).
+The Caddyfile has a way for you to specify options that apply globally. Some options act as default values; others customize HTTP servers and don't apply to just one particular site; while yet others customize the behavior of the Caddyfile [adapter](/docs/config-adapters).
 
 The very top of your Caddyfile can be a **global options block**. This is a block that has no keys:
 
@@ -56,7 +56,7 @@ Possible options are:
 	}
 	storage_clean_interval <duration>
 	renew_interval <duration>
-	ocsp_interval <duration>
+	ocsp_interval  <duration>
 	admin   off|<addr> {
 		origins <origins...>
 		enforce_origin
@@ -68,7 +68,8 @@ Possible options are:
 		include <namespaces...>
 		exclude <namespaces...>
 	}
-	grace_period <duration>
+	grace_period   <duration>
+	shutdown_delay <duration>
 
 	# TLS Options
 	auto_https off|disable_redirects|ignore_loaded_certs|disable_certs
@@ -106,11 +107,8 @@ Possible options are:
 		}
 		max_header_size <size>
 		log_credentials
-		protocol {
-			allow_h2c
-			experimental_http3
-			strict_sni_host [on|insecure_off]
-		}
+		protocols [h1|h2|h2c|h3]
+		strict_sni_host [on|insecure_off]
 	}
 
 	# PKI Options
@@ -130,6 +128,11 @@ Possible options are:
 				key    <path>
 			}
 		}
+	}
+
+	# Event options
+	events {
+		on <event> <handler...>
 	}
 }
 ```
@@ -192,7 +195,7 @@ How often to scan all loaded, managed certificates for expiration, and trigger r
 
 
 ##### `ocsp_interval`
-How often to check if OCSP stapling needs updating. Default: `1h`.
+How often to check if OCSP staples need updating. Default: `1h`.
 
 
 ##### `admin`
@@ -211,13 +214,24 @@ The differs from the [`log` directive](/docs/caddyfile/directives/log), which on
 - **output** configures where to write the logs. See the [`log` directive](/docs/caddyfile/directives/log#output-modules) for complete documentation.
 - **format** describes how to encode, or format, the logs. See the [`log` directive](/docs/caddyfile/directives/log#format-modules) for complete documentation.
 - **level** is the minimum entry level to log. Default: `INFO`.
-- **include** specifies the log names to be included in this logger. For example, to include only logs emitted by the admin API, you would include `admin.api`.
-- **exclude** specifies the log names to be excluded from this logger. For example, to exclude only HTTP access logs, you would exclude `http.log.access`.
+- **include** specifies the log names to be included in this logger. For example, to include only logs emitted by the admin API, you would include `admin.api`. By default, all logs are included.
+- **exclude** specifies the log names to be excluded from this logger. For example, to exclude only HTTP access logs, you would exclude `http.log.access`. By default, no logs are excluded.
 
 
 ##### `grace_period`
-Defines the grace period for shutting down HTTP servers during config reloads. If clients do not finish their requests within the grace period, the server will be forcefully terminated to allow the reload to complete and free up resources. By default, no grace period is set.
+Defines the grace period for shutting down HTTP servers during config changes. During the grace period, no new connections are accepted, idle connections are closed, and active connections are impatiently waited upon to finish their requests. If clients do not finish their requests within the grace period, the server will be forcefully terminated to allow the reload to complete and free up resources. By default, no grace period is set.
 
+
+##### `shutdown_delay`
+Defines a duration before the grace period during which a server that is going to be stopped continues to operate normally, except the `{http.shutting_down}` placeholder evaluates to `true` and `{http.time_until_shutdown}` gives the time until the grace period begins. This causes a delay if any server is being shut down as part of a config change and effectively schedules the change for a later time. It is useful for announcing to health checkers of this server's impending doom and to give time for a load balancer to move it out of the rotation; for example:
+
+```caddy-d
+handle /health-check {
+	@goingDown vars {http.shutting_down} true
+	respond @goingDown "Bye-bye in {http.time_until_shutdown}" 503
+	respond 200
+}
+```
 
 
 ## TLS Options
@@ -298,9 +312,9 @@ Note that specifying `preferred_chains` as a global option will affect all issue
 
 ## Server Options
 
-Customizes [HTTP servers](/docs/json/apps/http/servers/) with settings that potentially span multiple sites and thus can't be rightly configured in site blocks. These options affect the listener/socket, or other behavior beneath the HTTP layer.
+Customizes [HTTP servers](/docs/json/apps/http/servers/) with settings that potentially span multiple sites and thus can't be rightly configured in site blocks. These options affect the listener/socket or other facilities beneath the HTTP layer.
 
-Can be specified more than once, with different `listener_address` values, to configure different options per server. For example, `servers :443` will only apply to the server that is bound to the listener address `:443`. Omitting the listener address will apply the options to any remaining server.
+Can be specified more than once with different `listener_address` values to configure different options per server. For example, `servers :443` will only apply to the server that is bound to the listener address `:443`. Omitting the listener address will apply the options to any remaining server.
 
 <aside class="tip">
 
@@ -309,18 +323,19 @@ Use the [`caddy adapt`](/docs/command-line#caddy-adapt) command to find the list
 </aside>
 
 
-For example, to configure different options for the servers on port `:80` and `:443`, you would specify two `servers` blocks:
+For example, to configure different options for the servers on ports `:80` and `:443`, you would specify two `servers` blocks:
 
 ```caddy
 {
 	servers :443 {
-		protocol {
-			experimental_http3
+		listener_wrappers {
+			http_redirect
+			tls
 		}
 	}
 
 	servers :80 {
-		protocol {
+		protocols {
 			allow_h2c
 		}
 	}
@@ -329,11 +344,11 @@ For example, to configure different options for the servers on port `:80` and `:
 
 ##### `listener_wrappers`
 
-Allows configuring [listener wrappers](/docs/json/apps/http/servers/listener_wrappers/), which can modify the behaviour of the base listener. They are applied in the given order.
+Allows configuring [listener wrappers](/docs/json/apps/http/servers/listener_wrappers/), which can modify the behaviour of the socket listener. They are applied in the given order.
 
 There is a special no-op [`tls`](/docs/json/apps/http/servers/listener_wrappers/tls/) listener wrapper provided as a standard module which marks where TLS should be handled in the chain of listener wrappers. It should only be used if another listener wrapper must be placed in front of the TLS handshake.
 
-The standard distribution of Caddy includes an [`http_redirect`](/docs/json/apps/http/servers/listener_wrappers/http_redirect/) listener wrapper, which can look at the first few bytes of an incoming request to determine if it's HTTP (instead of TLS), and trigger an HTTP->HTTPS redirect on the same port with the `https://` scheme. It must be placed _before_ the `tls` listener wrapper. For example:
+The standard distribution of Caddy includes the [`http_redirect`](/docs/json/apps/http/servers/listener_wrappers/http_redirect/) listener wrapper, which can look at the first few bytes of an incoming request to determine if it's likely HTTP (instead of TLS), and trigger an HTTP->HTTPS redirect on the same port but using the `https://` scheme. It must be placed _before_ the `tls` listener wrapper. For example:
 
 ```caddy-d
 listener_wrappers {
@@ -378,17 +393,19 @@ Since Caddy v2.5, by default, headers with potentially sensitive information (`C
 If you wish to _not_ have these headers redacted, you may enable the `log_credentials` option.
 
 
-##### `protocol`
+##### `protocols`
 
-- **allow_h2c** enables H2C ("Cleartext HTTP/2" or "H2 over TCP") support, which will serve HTTP/2 over plaintext TCP connections if a client support it. Because this is not implemented by the Go standard library, using H2C is incompatible with most of the other options for this server. Do not enable this only to achieve maximum client compatibility. In practice, very few clients implement H2C, and even fewer require it. This setting applies only to unencrypted HTTP listeners. ⚠️ Experimental feature; subject to change or removal.
+The space-separated list of HTTP protocols to support. Accepted values are: `h1 h2 h2c h3` for HTTP/1.1, HTTP/2, HTTP/2 over cleartext, and HTTP/3, respectively. Default: `h1 h2 h3`.
 
-- **experimental_http3** enables experimental draft HTTP/3 support. Note that HTTP/3 is not a finished spec and client support is extremely limited. This option will go away in the future. _This option is not subject to compatibility promises._
+Currently, enabling HTTP/2 (including H2C) necessarily implies enabling HTTP/1.1 because the Go standard library does not let us disable HTTP/1.1 when using its HTTP server. However, either HTTP/1.1 or HTTP/3 can be enabled independently.
 
-- **strict_sni_host** require that a request's `Host` header matches the value of the ServerName sent by the client's TLS ClientHello; often a necessary safeguard when using TLS client authentication. If there's a mismatch, an HTTP status `421 Misdirected Request` response is written to the client.
-  
-  This option will be implicitly turned on if [client authentication](/docs/caddyfile/directives/tls#client_auth) is configured. This disallows TLS client auth bypass (domain fronting) which could otherwise be exploited by sending an unprotected SNI value during a TLS handshake, then putting a protected domain in the Host header after establishing connection. This is a safe default, but you may explicitly turn it off with `insecure_off`, for example in the case of running a proxy where domain fronting is desired and access is not restricted based on hostname.
+Note that H2C ("Cleartext HTTP/2" or "H2 over TCP") and HTTP/3 are not implemented by the Go standard library, so some functionality or features may be limited. We recommend against enabling H2C unless it is absolutely necessary for your application.
 
+##### `strict_sni_host`
 
+Enabling this requires that a request's `Host` header matches the value of the `ServerName` sent by the client's TLS ClientHello, a necessary safeguard when using TLS client authentication. If there's a mismatch, HTTP status `421 Misdirected Request` response is written to the client.
+
+This option will automatically be turned on if [client authentication](/docs/caddyfile/directives/tls#client_auth) is configured. This disallows TLS client auth bypass (domain fronting) which could otherwise be exploited by sending an unprotected SNI value during a TLS handshake, then putting a protected domain in the Host header after establishing connection. This behavior is a safe default, but you may explicitly turn it off with `insecure_off`; for example in the case of running a proxy where domain fronting is desired and access is not restricted based on hostname.
 
 ## PKI Options
 
@@ -418,3 +435,17 @@ A key pair (certificate and private key) to use as the intermediate for the CA. 
 - **format** is the format in which the certificate and private key are provided. Currently, only `pem_file` is supported, which is the default, so this field is optional.
 - **cert** is the certificate. This should be the path to a PEM file, when using `pem_file` format.
 - **key** is the private key. This should be the path to a PEM file, when using `pem_file` format.
+
+
+## Event Options
+
+Caddy modules emit events when interesting things happen (or are about to happen).
+
+##### `on`
+Binds an event handler to the named event. Specify the name of the event handler module, followed by its configuration.
+
+For example, to run a command after a certificate is obtained ([third-party plugin <img src="/resources/images/external-link.svg" class="external-link">](https://github.com/mholt/caddy-events-exec) required):
+
+```caddy-d
+on cert_obtained exec systemctl reload mydaemon
+```

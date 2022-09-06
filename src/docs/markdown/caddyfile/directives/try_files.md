@@ -10,10 +10,13 @@ Rewrites the request URI path to the first of the listed files which exists in t
 ## Syntax
 
 ```caddy-d
-try_files <files...>
+try_files <files...> {
+	policy first_exist|smallest_size|largest_size|most_recently_modified
+}
 ```
 
-- **<files...>** is the list of files to try. The URI will be rewritten to the first one that exists. To match directories, append a trailing forward slash `/` to the path. All file paths are relative to the site [root](/docs/caddyfile/directives/root). Each argument may also contain a query string, in which case the query string will also be changed if it matches that particular file. The last item in the list may be a number prefixed by `=` (e.g. `=404`), which as a fallback, will emit an error with that code; the error can be caught and handled with [`handle_errors`](/docs/caddyfile/directives/handle_errors).
+- **<files...>** is the list of files to try. The URI path will be rewritten to the first one that exists. To match directories, append a trailing forward slash `/` to the path. All file paths are relative to the site [root](/docs/caddyfile/directives/root), and [glob patterns](https://pkg.go.dev/path/filepath#Match) will be expanded. Each argument may also contain a query string, in which case the query string will also be changed if it matches that particular file. The last item in the list may be a number prefixed by `=` (e.g. `=404`), which as a fallback, will emit an error with that code; the error can be caught and handled with [`handle_errors`](/docs/caddyfile/directives/handle_errors).
+- **policy** is the policy for choosing the file among the list of files. Default: `first_exist`
 
 
 ## Expanded form
@@ -54,4 +57,12 @@ Attempt to rewrite to a file or directory if it exists, otherwise emit a 404 err
 
 ```caddy-d
 try_files {path} {path}/ =404
+```
+
+Choose the most recently deployed version of a static file (e.g. serve `index.be331df.html` when `index.html` is requested):
+
+```caddy-d
+try_files {file.base}.*.{file.ext} {
+	policy most_recently_modified
+}
 ```

@@ -9,7 +9,7 @@ title: Caddyfile Directives
 }
 
 #directive-table tr:hover {
-	background: rgba(0, 0, 0, 10%);
+	background: rgba(109, 226, 255, 0.11);
 }
 
 #directive-table tr td:first-child {
