@@ -70,11 +70,12 @@ caddy_http_request_duration_seconds_bucket{code="308",handler="static_response",
 ...
 ```
 
-There are a number of metrics you'll see, that broadly fall under 3 categories:
+There are a number of metrics you'll see, that broadly fall under 4 categories:
 
 - Runtime metrics
 - Admin API metrics
 - HTTP Middleware metrics
+- Reverse proxy metrics
 
 ### Runtime metrics
 
@@ -214,6 +215,18 @@ Label  | Description
 `handler` | The handler or module name
 `code` | HTTP status code
 `method` | The HTTP method
+
+### Reverse proxy metrics
+
+#### `caddy_reverse_proxy_upstreams_healthy`
+
+A gauge of the reverse proxy upstreams healthiness.
+
+Value `0` means the upstream is unhealthy, where as `1` means the upstream is healthy.
+
+Label  | Description
+-------|------------
+`upstream` | Address of the upstream
 
 ## Sample Queries
 
