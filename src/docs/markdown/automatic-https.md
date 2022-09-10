@@ -122,6 +122,8 @@ In addition, hostnames qualify for publicly-trusted certificates if they:
 
 ## Local HTTPS
 
+Caddy uses HTTPS automatically for all sites with a host (domain, IP, or hostname) specified, including internal and local hosts. Some hosts are either not public (e.g. `127.0.0.1`, `localhost`) or do not generally qualify for publicly-trusted certificates (e.g. IP addresses -- you can get certificates for them, but only from some CAs). These are still served over HTTPS unless disabled.
+
 To serve non-public sites over HTTPS, Caddy generates its own certificate authority (CA) and uses it to sign certificates. The trust chain consists of a root and intermediate certificate. Leaf certificates are signed by the intermediate. They are stored in [Caddy's data directory](/docs/conventions#data-directory) at `pki/authorities/local`.
 
 Caddy's local CA is powered by [Smallstep libraries](https://smallstep.com/certificates/).

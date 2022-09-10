@@ -33,17 +33,23 @@ Our [official packages](https://github.com/caddyserver/dist) come only with the 
 
 ## Static binaries
 
-1. Obtain a Caddy binary:
-	- [**From releases on GitHub**](https://github.com/caddyserver/caddy/releases) (expand "Assets")
-	- [**From our download page**](/download)
-	- [**By building from source**](/docs/build) (either with `go` or `xcaddy`)
-2. We recommend [installing Caddy as a system service](/docs/running#manual-installation)
+**If installing onto a production system, we recommend using our official package for your distro if available below.**
 
-You can upgrade static binaries by replacing them with newer versions and restarting Caddy.
+1. Obtain a Caddy binary:
+	- [from releases on GitHub](https://github.com/caddyserver/caddy/releases) (expand "Assets")
+	- [from our download page](/download)
+	- [by building from source](/docs/build) (either with `go` or `xcaddy`)
+2. [Install Caddy as a system service.](/docs/running#manual-installation) This is strongly recommended, especially for production servers.
+
+Place the binary in one of your `$PATH` (or `%PATH%` on Windows) directories so you can run `caddy` without typing the full path of the executable file. (Run `echo $PATH` to see the list of directories that qualify.)
+
+You can upgrade static binaries by replacing them with newer versions and restarting Caddy. The [`caddy upgrade` command](/docs/command-line#caddy-upgrade) can make this easy.
+
+
 
 ## Debian, Ubuntu, Raspbian
 
-Installing this package automatically starts and runs Caddy as a [systemd service](/docs/running#linux-service) named `caddy`. It also comes with a `caddy-api` service which is _not_ enabled by default but should be used if you primarily configure Caddy via its API instead of config files.
+Installing this package automatically starts and runs Caddy as a [systemd service](/docs/running#linux-service) named `caddy`. It also comes with an optional `caddy-api` service which is _not_ enabled by default, but should be used if you primarily configure Caddy via its API instead of config files.
 
 **Stable releases:**
 

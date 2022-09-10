@@ -9,8 +9,8 @@ While Caddy can be run directly with its [command line interface](/docs/command-
 
 - [Linux Service](#linux-service)
   - [Unit Files](#unit-files)
-  - [Using the Service](#using-the-service)
   - [Manual Installation](#manual-installation)
+  - [Using the Service](#using-the-service)
   - [Overrides](#overrides)
 - [Windows Service](#windows-service)
 - [Docker Compose](#docker-compose)
@@ -34,35 +34,6 @@ They are very similar, but differ in the `ExecStart` and `ExecReload` commands t
 If you need to switch between the services, you should disable and stop the previous one before enabling and starting the other. For example, to switch from the `caddy` service to the `caddy-api` service:
 <pre><code class="cmd"><span class="bash">sudo systemctl disable --now caddy</span>
 <span class="bash">sudo systemctl enable --now caddy-api</span></code></pre>
-
-
-### Using the Service
-
-If using a Caddyfile, you can edit your configuration with `nano`, `vi`, or your preferred editor:
-<pre><code class="cmd bash">sudo nano /etc/caddy/Caddyfile</code></pre>
-
-You can place your static site files in either `/var/www/html` or `/srv`. Make sure the `caddy` user has permission to read the files.
-
-To verify that the service is running:
-<pre><code class="cmd bash">systemctl status caddy</code></pre>
-The status command will also show the location of the currently running service file.
-
-When running with our official service file, Caddy's output will be redirected to `journalctl`. To read your full logs and to avoid lines being truncated:
-<pre><code class="cmd bash">journalctl -u caddy --no-pager | less +G</code></pre>
-
-If using a config file, you can gracefully reload Caddy after making any changes:
-<pre><code class="cmd bash">sudo systemctl reload caddy</code></pre>
-
-You can stop the service with:
-<pre><code class="cmd bash">sudo systemctl stop caddy</code></pre>
-
-<aside class="advice">
-	Do not stop the service to change Caddy's configuration. Stopping the server will incur downtime. Use the reload command instead.
-</aside>
-
-The Caddy process will run as the `caddy` user, which has its `$HOME` set to `/var/lib/caddy`. This means that:
-- The default [data storage location](/docs/conventions#data-directory) (for certificates and other state information) will be in `/var/lib/caddy/.local/share/caddy`.
-- The default [config storage location](/docs/conventions#configuration-directory) (for the auto-saved JSON config, primarily useful for the `caddy-api` service) will be in `/var/lib/caddy/.config/caddy`.
 
 
 ### Manual Installation
@@ -110,6 +81,37 @@ Verify that it is running:
 <pre><code class="cmd bash">systemctl status caddy</code></pre>
 
 Now you're ready to [use the service](#using-the-service)!
+
+
+
+### Using the Service
+
+If using a Caddyfile, you can edit your configuration with `nano`, `vi`, or your preferred editor:
+<pre><code class="cmd bash">sudo nano /etc/caddy/Caddyfile</code></pre>
+
+You can place your static site files in either `/var/www/html` or `/srv`. Make sure the `caddy` user has permission to read the files.
+
+To verify that the service is running:
+<pre><code class="cmd bash">systemctl status caddy</code></pre>
+The status command will also show the location of the currently running service file.
+
+When running with our official service file, Caddy's output will be redirected to `journalctl`. To read your full logs and to avoid lines being truncated:
+<pre><code class="cmd bash">journalctl -u caddy --no-pager | less +G</code></pre>
+
+If using a config file, you can gracefully reload Caddy after making any changes:
+<pre><code class="cmd bash">sudo systemctl reload caddy</code></pre>
+
+You can stop the service with:
+<pre><code class="cmd bash">sudo systemctl stop caddy</code></pre>
+
+<aside class="advice">
+	Do not stop the service to change Caddy's configuration. Stopping the server will incur downtime. Use the reload command instead.
+</aside>
+
+The Caddy process will run as the `caddy` user, which has its `$HOME` set to `/var/lib/caddy`. This means that:
+- The default [data storage location](/docs/conventions#data-directory) (for certificates and other state information) will be in `/var/lib/caddy/.local/share/caddy`.
+- The default [config storage location](/docs/conventions#configuration-directory) (for the auto-saved JSON config, primarily useful for the `caddy-api` service) will be in `/var/lib/caddy/.config/caddy`.
+
 
 
 ### Overrides

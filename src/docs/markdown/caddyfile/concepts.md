@@ -27,7 +27,7 @@ Key points:
 - An optional [**global options block**](#global-options) can be the very first thing in the file.
 - Otherwise, the first line of the Caddyfile is **always** the [address(es)](#addresses) of the site to serve.
 - All [directives](#directives) and [matchers](#matchers) **must** go in a site block. There is no global scope or inheritence across site blocks.
-- If there is **only one site block**, its curly braces `{ }` are optional.
+- If there is only one site block, its curly braces `{ }` are optional.
 
 A Caddyfile consists of at least one or more site blocks, which always starts with one or more [addresses](#addresses) for the site. Any directives appearing before the address will be confusing to the parser.
 
@@ -41,7 +41,7 @@ Opening and closing a **block** is done with curly braces:
 }
 ```
 
-- The open curly brace `{` must be at the end of its line.
+- The open curly brace `{` must be at the end of its line and preceded by a space.
 - The close curly brace `}` must be on its own line.
 
 When there is only one site block, the curly braces (and indentation) are optional. This is for convenience to quickly define a single site, for example, this:
@@ -82,7 +82,7 @@ If a request matches multiple site blocks, the site block with the most specific
 
 ### Directives
 
-[**Directives**](/docs/caddyfile/directives) are keywords which customize how the site is served. For example, a complete file server config might look like this:
+[**Directives**](/docs/caddyfile/directives) are functional keywords which customize how the site is served. They **must** appear within site blocks. For example, a complete file server config might look like this:
 
 ```caddy
 localhost
@@ -102,9 +102,7 @@ In these examples, [`file_server`](/docs/caddyfile/directives/file_server) and [
 
 In the second example, `localhost:9000` is an **argument** because it appears on the same line after the directive.
 
-Note that when the Caddyfile is adapted, directives are sorted according to a specific default [directive order](/docs/caddyfile/directives#directive-order).
-
-**Subdirectives** can appear in directive blocks:
+Sometimes directives can open their own blocks. **Subdirectives** appear on the beginning of each line within directive blocks:
 
 ```caddy
 localhost
@@ -115,6 +113,10 @@ reverse_proxy localhost:9000 localhost:9001 {
 ```
 
 Here, `lb_policy` is a subdirective to [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy) (it sets the load balancing policy to use between backends).
+
+**Unless otherwise documented, directives cannot be used within other directive blocks.** For example, `basicauth` cannot be used within `file_server` because the file server does not know how to do authentication; but you can use directives within [`route`](/docs/caddyfile/directives/route), [`handle`](/docs/caddyfile/directives/handle), and [`handle_path`](/docs/caddyfile/directives/handle_path) blocks because they are specifically designed to group directives together.
+
+Note that when the HTTP Caddyfile is adapted, HTTP handler directives are sorted according to a specific default [directive order](/docs/caddyfile/directives#directive-order) unless in a [`route`](/docs/caddyfile/directives/route) block, so the order of appearance of the directives does not matter except in `route` blocks.
 
 
 ### Tokens and quotes
@@ -141,17 +143,17 @@ Quotes can be escaped if you need to use quotes in quoted tokens, too:
 directive "\"abc def\""
 ```
 
-Inside quoted tokens, all other characters are treated literally, including spaces, tabs, and newlines. Multi-line tokens are possible:
+To avoid escaping quotes, you can instead use backticks <code>\` \`</code> to enclose tokens; for example:
+
+```caddy-d
+directive `{"foo": "bar"}`
+```
+
+Inside quoted tokens, all other characters are treated literally, including spaces, tabs, and newlines. Multi-line tokens are thus possible:
 
 ```caddy-d
 directive "first line
 	second line"
-```
-
-You can also use a backtick <code>`</code> to quote tokens; these are convenient when tokens themselves contain double quotes, e.g. JSON text:
-
-```caddy-d
-directive `{"foo": "bar"}`
 ```
 
 
@@ -208,9 +210,9 @@ By default, sites bind on all network interfaces. If you wish to override this, 
 
 ## Matchers
 
-By default, a directive that injects an HTTP handler applies to all requests (unless otherwise documented).
+HTTP handler directives apply to all requests by default (unless otherwise documented).
 
-Request matchers can be used to classify requests by a given criteria. This concept originates in the [underlying JSON](/docs/json/apps/http/servers/routes/match/) structure, and it's important to know how to use them in the Caddyfile. With matchers, you can specify exactly which requests a certain directive applies to.
+[Request matchers](/docs/caddyfile/matchers) can be used to classify requests by a given criteria. This concept originates in the [underlying JSON](/docs/json/apps/http/servers/routes/match/) structure, and it's important to know how to use them in the Caddyfile. With matchers, you can specify exactly which requests a certain directive applies to.
 
 For directives that support matchers, the first argument after the directive is the **matcher token**. Here are some examples:
 
