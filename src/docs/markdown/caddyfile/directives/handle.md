@@ -6,7 +6,7 @@ title: handle (Caddyfile directive)
 
 Evaluates a group of directives mutually exclusively from other `handle` blocks at the same level of nesting.
 
-The `handle` directive is kind of similar to the `location` directive from nginx config: the first matching `handle` block will be evaluated. Handle blocks can be nested if needed. Only HTTP handler directives can be used inside handle blocks.
+The `handle` directive is kind of similar to the `location` directive from nginx config: the first matching `handle` block will be evaluated. `handle` directives at the same level of nesting will be tried in the order they're written in the `Caddyfile`, except if there is a single path matcher, which orders them by longest (most specific) path pattern first. Handle blocks can be nested if needed. Only HTTP handler directives can be used inside handle blocks.
 
 ## Syntax
 
