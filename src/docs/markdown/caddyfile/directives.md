@@ -29,6 +29,8 @@ title: Caddyfile Directives
 
 # Caddyfile Directives
 
+Directives are functional keywords that appear within site [blocks](/docs/caddyfile/concepts#blocks). Sometimes, they may open blocks of their own which can contain _subdirectives_, but directives **cannot** be used within other directives unless noted. For example, you can't use `basicauth` inside a `file_server` block, because `file_server` does not know how to do authentication. However, you _may_ use some directives within special directive blocks like `handle` and `route` because they are specifically designed to group HTTP handler directives.
+
 The following directives come standard with Caddy, and can be used in the HTTP Caddyfile:
 
 <div id="directive-table">
