@@ -2,7 +2,7 @@
 title: "Getting Started"
 ---
 
-# Introduction
+# Getting Started
 
 Welcome to Caddy! This tutorial will explore the basics of using Caddy and help you get familiar with it at a high level.
 
