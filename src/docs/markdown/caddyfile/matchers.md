@@ -533,12 +533,12 @@ path_regexp static \.([a-f0-9]{6})\.(css|js)$
 ### protocol
 
 ```caddy-d
-protocol http|https|grpc
+protocol http|https|grpc|http/<version>[+]
 
 expression protocol('http|https|grpc')
 ```
 
-By request protocol.
+By request protocol. A broad protocol name such as `http`, `https`, or `grpc` can be used; or specific or minimum HTTP versions such as `http/1.1` or `http/2+`.
 
 There can only be one `protocol` matcher per named matcher.
 

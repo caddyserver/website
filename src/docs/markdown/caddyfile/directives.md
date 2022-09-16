@@ -115,6 +115,7 @@ vars
 root
 
 header
+copy_response_headers # only in reverse_proxy's handle_response block
 request_body
 
 redir
@@ -141,6 +142,7 @@ route
 # handlers that typically respond to requests
 abort
 error
+copy_response # only in reverse_proxy's handle_response block
 respond
 metrics
 reverse_proxy

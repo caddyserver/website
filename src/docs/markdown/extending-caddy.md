@@ -184,7 +184,7 @@ To emit logs, get a logger in your module's Provision method:
 
 ```go
 func (g *Gizmo) Provision(ctx caddy.Context) error {
-	g.logger = ctx.Logger(g) // g.logger is a *zap.Logger
+	g.logger = ctx.Logger() // g.logger is a *zap.Logger
 }
 ```
 

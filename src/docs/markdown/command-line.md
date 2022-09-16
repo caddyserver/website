@@ -180,7 +180,8 @@ Prints the environment as seen by caddy, then exits. Can be useful when debuggin
 	[--domain &lt;example.com&gt;]
 	[--browse]
 	[--templates]
-	[--access-log]</code></pre>
+	[--access-log]
+	[--debug]</code></pre>
 
 Spins up a simple but production-ready static file server.
 
@@ -195,6 +196,8 @@ Spins up a simple but production-ready static file server.
 `--templates` will enable template rendering.
 
 `--access-log` enables the request/access log.
+
+`--debug` enables verbose logging.
 
 This command disables the admin API, making it easier to run multiple instances on a local development machine.
 
@@ -373,7 +376,8 @@ Pipe in a maintenance page:
 	[--from &lt;addr&gt;]
 	--to &lt;addr&gt;
 	[--change-host-header]
-	[--internal-certs]</code></pre>
+	[--internal-certs]
+	[--debug]</code></pre>
 
 Spins up a simple but production-ready HTTP(S) reverse proxy.
 
@@ -384,6 +388,8 @@ Spins up a simple but production-ready HTTP(S) reverse proxy.
 `--change-host-header` will cause Caddy to change the Host header from the incoming value to the address of the upstream.
 
 `--internal-certs` will cause Caddy to issue certificates using its internal issuer (effectively self-signed) for the domain specified in the `--from` address.
+
+`--debug` enables verbose logging.
 
 Both `--from` and `--to` parameters can be URLs, as scheme and domain name will be inferred from the provided URL (paths and query strings ignored). Or they can be a simple network address and not a complete URL.
 
