@@ -1,0 +1,17 @@
+localhost
+
+root * src
+
+file_server
+templates
+encode gzip
+
+try_files {path}.html {path}
+
+redir   /docs/json      /docs/json/
+redir   /docs/modules   /docs/modules/
+rewrite /docs/json/*    /docs/json/index.html
+rewrite /docs/modules/* /docs/modules/index.html
+rewrite /docs/*         /docs/index.html
+
+reverse_proxy /api/* localhost:4444

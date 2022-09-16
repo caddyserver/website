@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Dashboard - Caddy</title>
+		{{include "/includes/account/head.html"}}
+		<link rel="stylesheet" href="/resources/css/account/dashboard.css">
+		<script src="/resources/js/account/dashboard.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			{{include "/includes/account/nav.html"}}
+			<main class="dashboard">
+				<section>
+					<h1 class="pad">Your packages<a href="/account/register-package" class="gray button float-right">Register package</a></h1>
+					<table id="user-packages">
+						<tr>
+							<th>Import path</th>
+							<th class="text-center"><span class="help" title="Whether package and module documentation is visible on the website.">Listed</span></th>
+							<th class="text-center"><span class="help" title="Whether visitors can download Caddy with this package plugged in.">Available</span></th>
+							<th>Downloads</th>
+							<th></th>
+						</tr>
+						<!-- Filled by JS -->
+					</table>
+					<!-- <div class="text-right pad">
+						<a href="/account/register-package" class="gray button">Register package</a>
+					</div> -->
+				</section>
+			</main>
+		</div>
+	</body>
+</html>

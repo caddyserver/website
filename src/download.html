@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Download Caddy</title>
+		{{include "/includes/head.html"}}
+		<link rel="stylesheet" href="/resources/css/download.css">
+		<script src="/resources/js/jquery-3.4.1.min.js"></script>
+		<script src="/resources/js/sweetalert.min.js"></script>
+		<script src="/resources/js/download.js"></script>
+	</head>
+	<body>
+		<div class="wrapper">
+			<header>
+				<div id="logo-container">
+					<a href="/"><img src="/resources/images/caddy-wordmark.svg" id="logo" alt="Caddy"></a>
+					<br>
+					a <a href="https://zerossl.com"><img src="/resources/images/zerossl-logo.svg" id="zerossl-logo"></a> project
+				</div>
+				{{include "/includes/header-nav.html"}}
+			</header>
+
+			<div class="download-bar">
+				<div>
+					<div>
+						<b>Platform:</b>
+						<select size="1" id="platform" selected="linux-amd64">
+							<option value="dragonfly-amd64">Dragonfly amd64</option>
+							<option value="freebsd-amd64">FreeBSD amd64</option>
+							<option value="freebsd-arm-6">FreeBSD arm 6</option>
+							<option value="freebsd-arm-7">FreeBSD arm 7</option>
+							<option value="freebsd-arm64">FreeBSD arm64</option>
+							<option value="linux-amd64">Linux amd64</option>
+							<option value="linux-arm-5">Linux arm 5</option>
+							<option value="linux-arm-6">Linux arm 6</option>
+							<option value="linux-arm-7">Linux arm 7</option>
+							<option value="linux-arm64">Linux arm64</option>
+							<option value="linux-mips">Linux mips</option>
+							<option value="linux-mips64">Linux mips64</option>
+							<option value="linux-mips64le">Linux mips64le</option>
+							<option value="linux-mipsle">Linux mipsle</option>
+							<option value="linux-ppc64">Linux ppc64</option>
+							<option value="linux-ppc64le">Linux ppc64le</option>
+							<option value="linux-s390x">Linux s390x</option>
+							<option value="darwin-amd64">macOS amd64 (Intel)</option>
+							<option value="darwin-arm64">macOS arm64 (Apple)</option>
+							<option value="openbsd-amd64">OpenBSD amd64</option>
+							<option value="openbsd-arm-6">OpenBSD arm 6</option>
+							<option value="openbsd-arm-7">OpenBSD arm 7</option>
+							<option value="openbsd-arm64">OpenBSD arm64</option>
+							<option value="windows-amd64">Windows amd64</option>
+							<option value="windows-arm-6">Windows arm 6</option>
+							<option value="windows-arm-7">Windows arm 7</option>
+							<option value="windows-arm64">Windows arm64</option>
+						</select>
+					</div>
+				</div>
+				<div>
+					<div>
+						<b>Standard features:</b> <span title="All official Caddy builds come with standard plugins">&#9745;&#65039;</span>
+					</div>
+				</div>
+				<div>
+					<div>
+						<b>Extra features:</b> <span id="package-count">0</span>
+					</div>
+				</div>
+				<div>
+					<a href="/api/download" class="blue button" id="download">Download</a>
+				</div>
+			</div>
+
+			<input type="search" id="filter" placeholder="Filter packages and modules...">
+
+			<div class="text-center">
+				<span class="warning">⚠️ Only choose plugins you need and trust</span>
+			</div>
+			<div class="text-center" id="darwin-warning">
+				<span class="warning">⚠️ Run the following against the downloaded binary:
+					<code>xattr -d com.apple.quarantine </code>
+				</span>
+			</div>
+
+			<div id="optional-packages">
+				<!-- Populated by JavaScript -->
+			</div>
+		</div>
+
+		{{include "/includes/footer.html"}}
+	</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Modules - Caddy Documentation</title>
+		{{include "/includes/docs/head.html"}}
+		<link rel="stylesheet" href="/resources/css/docs-json.css">
+		<script src="/resources/js/marked-0.8.0.min.js"></script>
+		<script src="/resources/js/docs-api.js"></script>
+		<script src="/resources/js/module-docs.js"></script>
+	</head>
+	<body>
+		{{include "/includes/docs/header.html"}}
+		<main>
+			{{include "/includes/docs/nav.html"}}
+			<div class="article-container">
+				<div class="paper" id="paper1"></div>
+				<div class="paper" id="paper2"></div>
+				<div class="paper paper3">
+					<article id="module-list-container">
+						<h1>All Modules</h1>
+						<p>
+							This page lists all registered Caddy modules. Modules are plugins which extend Caddy's <a href="/docs/json/">JSON configuration structure</a>.
+						</p>
+						<p>
+							We recommend using your browser's "Find in page" feature for quick lookups.
+						</p>
+						<table id="module-list">
+							<tr>
+								<th></th>
+								<th>Module ID</th>
+								<th>Description</th>
+							</tr>
+							<!--Populated by JS-->
+						</table>
+					</article>
+					<div id="module-docs-container">
+						<div class="pad"><h1 class="module-name"><!--Populated by JS--></h1></div>
+						<div id="module-multiple-repos">
+							There is more than one module named <b class="module-name"><!--Populated by JS--></b>. Choose one by its repository.
+						</div>
+						<div id="module-template" class="module-repo-container">
+							<div class="module-repo-selector"></div>
+							<article>
+								{{include "/includes/docs/renderbox.html"}}
+								{{include "/includes/docs/details.html"}}
+							</article>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="sidebar"></div>
+		</main>
+		{{include "/includes/docs/hovercard.html"}}
+		{{include "/includes/footer.html"}}
+	</body>
+</html>

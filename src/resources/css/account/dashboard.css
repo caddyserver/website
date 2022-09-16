@@ -1,0 +1,13 @@
+input[name=path] {
+	font-size: 14px;
+	padding: 4px;
+	border-radius: 4px;
+	width: auto;
+	/* max-width: 450px; */
+	max-width: none;
+}
+
+a.disabled {
+	color: #aaa;
+	cursor: not-allowed;
+}

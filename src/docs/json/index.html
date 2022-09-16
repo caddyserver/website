@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>JSON Config Structure - Caddy Documentation</title>
+		{{include "/includes/docs/head.html"}}
+		<link rel="stylesheet" href="/resources/css/docs-json.css">
+		<script src="/resources/js/marked-0.8.0.min.js"></script>
+		<script src="/resources/js/docs-api.js"></script>
+		<script src="/resources/js/json-docs.js"></script>
+	</head>
+	<body>
+		{{include "/includes/docs/header.html"}}
+		<main>
+			{{include "/includes/docs/nav.html"}}
+			<div class="article-container">
+				<div class="paper" id="paper1"></div>
+				<div class="paper" id="paper2"></div>
+				<div class="paper paper3">
+					<article id="json-docs-container">
+						<div class="breadcrumbs">
+							<!--Populated by JS-->
+						</div>
+						{{include "/includes/docs/renderbox.html"}}
+						{{include "/includes/docs/details.html"}}
+					</article>
+				</div>
+			</div>
+			<div class="sidebar"></div>
+		</main>
+
+		{{include "/includes/docs/hovercard.html"}}
+
+		{{include "/includes/footer.html"}}
+	</body>
+</html>

@@ -1,0 +1,32 @@
+article {
+	padding-top: 0 !important;
+}
+
+article h1 {
+	padding-top: 8%;
+}
+
+.renderbox {
+	border-radius: 0;
+	font-size: 20px;
+	line-height: 1.6em;
+}
+
+.toggle-obj {
+	padding: 0 .5em;
+	visibility: hidden;
+}
+
+.group:hover > .toggle-obj {
+	visibility: visible;
+}
+
+.collapsed {
+	display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+	pre > code.json {
+		background-color: #07212b;
+	}
+}

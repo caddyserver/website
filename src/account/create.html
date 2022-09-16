@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Create Account - Caddy</title>
+		{{include "/includes/account/head.html"}}
+		<script src="/resources/js/account/create.js"></script>
+	</head>
+	<body>
+		<form action="/api/create-account" class="card">
+			<section class="head">
+				<a href="/"><img src="/resources/images/caddy-lock.png" alt="Caddy Portal" class="logo"></a>
+			</section>
+			<section>
+				<h1>Create Account</h1>
+				or <a href="/account/login">log in</a>
+				<div class="form-fields">
+					<input type="text" name="name" id="name" placeholder="Name">
+					<input type="email" name="email" id="email" placeholder="Email address" required>
+					<input type="password" name="password" placeholder="Password" required>
+					<button type="submit" id="submit" class="blue">Create Account</button>
+					<p>
+						We will send you an email to verify your account.
+					</p>
+				</div>
+			</section>
+		</form>
+	</body>
+</html>

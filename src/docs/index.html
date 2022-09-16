@@ -1,0 +1,30 @@
+{{$pathParts := splitList "/" .OriginalReq.URL.Path}}
+{{$markdownFilename := default "index" (slice $pathParts 2 | join "/")}}
+{{$markdownFilePath := printf "/docs/markdown/%s.md" $markdownFilename}}
+{{if not (fileExists $markdownFilePath)}}{{httpError 404}}{{end}}
+{{$markdownFile := (include $markdownFilePath | splitFrontMatter)}}
+{{$title := default $markdownFilename $markdownFile.Meta.title}}
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{{$title}} &mdash; Caddy Documentation</title>
+		{{include "/includes/docs/head.html"}}
+		<meta property="og:title" content="{{$title}} - Caddy Documentation">
+		<meta name="twitter:title" value="{{$title}} - Caddy Documentation">
+	</head>
+	<body>
+		{{include "/includes/docs/header.html"}}
+		<main>
+			{{include "/includes/docs/nav.html"}}
+			<div class="article-container">
+				<div class="paper" id="paper1"></div>
+				<div class="paper" id="paper2"></div>
+				<div class="paper paper3">
+					<article>{{markdown $markdownFile.Body}}</article>
+				</div>
+			</div>
+			<div class="sidebar"></div>
+		</main>
+		{{include "/includes/footer.html"}}
+	</body>
+</html>

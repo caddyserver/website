@@ -1,0 +1,286 @@
+body {
+	background-color: #f0f6f9;
+}
+
+.download-bar {
+	display: flex;
+	justify-content: space-between;
+	background: white;
+	border-radius: 4px;
+	box-shadow: 0 3px 6px rgba(0, 0, 0, .1);
+	font-size: 20px;
+	margin-top: 20px;
+	position: sticky; /* uwu 💓 */
+	top: 0;
+	z-index: 1;
+}
+
+.download-bar > * {
+	padding: 15px;
+	display: flex;
+	align-items: center;
+}
+
+#platform {
+	padding: 5px 15px;
+	font-size: 16px;
+}
+
+#download {
+	margin: 0;
+	padding-left: 30px;
+	padding-right: 30px;
+	font-weight: bold;
+}
+
+#filter {
+	margin-top: 1em;
+	width: 100%;
+	padding: 15px;
+	font-size: 24px;
+	text-align: center;
+	border: 0;
+	border-bottom: 1px solid #ccc;
+	outline: none;
+}
+
+#filter.found {
+	color: green;
+}
+#filter.not-found {
+	color: #cc0000;
+}
+
+.warning {
+	margin-top: 20px;
+	display: inline-block;
+	font-size: 14px;
+	font-weight: bold;
+	padding: 5px 15px;
+	border-radius: 1em;
+	color: rgb(255, 208, 0);
+	background: #333;
+}
+
+#darwin-warning {
+	display: none;
+}
+
+input:disabled,
+select:disabled,
+#optional-packages.disabled {
+	cursor: not-allowed !important;
+}
+
+
+
+
+
+
+
+.loader {
+	display: inline-block;
+	font-size: 10px;
+	text-indent: -9999em;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: #aaa;
+	background: -moz-linear-gradient(left, #aaa 10%, rgba(255, 255, 255, 0) 42%);
+	background: -webkit-linear-gradient(left, #aaa 10%, rgba(255, 255, 255, 0) 42%);
+	background: -o-linear-gradient(left, #aaa 10%, rgba(255, 255, 255, 0) 42%);
+	background: -ms-linear-gradient(left, #aaa 10%, rgba(255, 255, 255, 0) 42%);
+	background: linear-gradient(to right, #aaa 10%, rgba(255, 255, 255, 0) 42%);
+	animation: load3 1.4s infinite linear;
+	transform: translateZ(0);
+	vertical-align: middle;
+	margin-right: .5em;
+	margin-top: -2px;
+}
+#signature .loader {
+	width: 12px;
+	height: 12px;
+}
+.loader:before {
+	width: 50%;
+	height: 50%;
+	background: #fff;
+	border-radius: 100% 0 0 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	content: '';
+}
+.loader:after {
+	background: #aaa;
+	width: 75%;
+	height: 75%;
+	border-radius: 50%;
+	content: '';
+	margin: auto;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+@-webkit-keyframes load3 {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+@keyframes load3 {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+
+
+
+
+
+#optional-packages {
+	margin-top: 2em;
+}
+
+.package {
+	display: flex;
+	padding: 2em;
+	background: rgba(255, 255, 255, .4);
+	border: 10px solid transparent;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+	cursor: pointer;
+	transition: all 200ms ease-out;
+}
+
+.package:hover {
+	transform: scale(1.02);
+	background: #fff;
+	box-shadow: 0 2px 20px -2px rgba(0, 0, 0, .05);
+}
+
+.package.selected {
+	border-color: rgb(25, 97, 192);
+	background: #fff;
+}
+
+.package-icon {
+	font-size: 48px;
+	margin-right: 20px;
+}
+
+.package-data {
+	flex-grow: 1;
+}
+
+.package-meta {
+	float: right;
+	font-size: 14px;
+}
+
+.package-downloads {
+	margin-right: 1em;
+}
+
+.package-version-input {
+	text-align: center;
+	max-width: 75px;
+	padding: 4px;
+	margin-left: 5px;
+	border-radius: 5px;
+	border: 1px solid #aaa;
+	outline: none;
+}
+
+.package-link {
+	font-size: 20px;
+	font-weight: bold;
+	color: inherit;
+	word-break: break-all;
+}
+
+.package-host {
+	font-size: 14px;
+}
+
+.package-modules {
+	margin-top: 1em;
+}
+
+.package-no-modules {
+	font-style: italic;
+	color: #555;
+	font-size: 14px;
+}
+
+.module {
+	margin: 10px 0;
+	word-wrap: break-word;
+}
+
+.module-link {
+	font-weight: bold;
+	font-family: 'PT Mono', monospace;
+}
+
+.module-desc {
+	font-size: 14px;
+	margin-left: 1em;
+}
+
+
+
+
+
+
+
+
+
+
+.swal-custom-content {
+	text-align: left;
+}
+
+.swal-custom-content ol {
+	margin: 1em 0 1em 2em;
+}
+
+.swal-custom-content li {
+	margin-bottom: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 860px) {
+	.download-bar {
+		flex-direction: column;
+		align-items: center;
+	}
+}
+
+@media (max-width: 600px) {
+	.download-bar {
+		font-size: inherit;
+	}
+
+	.download-bar > * {
+		padding: 5px;
+	}
+}
