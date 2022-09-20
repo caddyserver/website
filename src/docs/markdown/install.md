@@ -37,6 +37,7 @@ Our [official packages](https://github.com/caddyserver/dist) come only with the 
 
 1. Obtain a Caddy binary:
 	- [from releases on GitHub](https://github.com/caddyserver/caddy/releases) (expand "Assets")
+		- Refer to [Verifying Asset Signatures](/docs/signature-verification) for how to verify the asset signature
 	- [from our download page](/download)
 	- [by building from source](/docs/build) (either with `go` or `xcaddy`)
 2. [Install Caddy as a system service.](/docs/running#manual-installation) This is strongly recommended, especially for production servers.
