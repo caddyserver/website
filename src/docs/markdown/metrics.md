@@ -9,6 +9,20 @@ Caddy server on an embedded device, it's likely that at some point you'll want
 to have a high-level overview of what Caddy is doing, and how long it's taking.
 In other words, you're going to want to be able to _monitor_ Caddy.
 
+## Enabling metrics
+
+You'll need to turn metrics on. If using a Caddyfile, enable metrics [in global options](/docs/caddyfile/options#metrics):
+
+```caddy
+{
+    servers {
+        metrics
+    }
+}
+```
+
+If using JSON, enable metrics in your [server configuration](/docs/json/apps/http/servers/) by adding `"metrics": {}`.
+
 ## Prometheus
 
 [Prometheus](https://prometheus.io) is a monitoring platform that collects

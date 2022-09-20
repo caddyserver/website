@@ -19,6 +19,7 @@ caddy.fs  | [`fs.FS`](https://pkg.go.dev/io/fs#FS) | Virtual file system |  <i>�
 caddy.logging.encoders.filter | [`logging.LogFieldFilter`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/logging?tab=doc#LogFieldFilter) | Log field filter</i>
 caddy.logging.writers | [`caddy.WriterOpener`](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#WriterOpener) | Log writers
 caddy.storage | [`caddy.StorageConverter`](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#StorageConverter) | Storage backends
+events.handlers | [`caddyevents.Handler`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddyevents#Handler) | Event handlers | <i>⚠️ Experimental</i>
 http.authentication.hashes | [`caddyauth.Comparer`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddyhttp/caddyauth?tab=doc#Comparer) | Password hashers/comparers
 http.authentication.providers | [`caddyauth.Authenticator`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddyhttp/caddyauth?tab=doc#Authenticator) | HTTP authentication providers
 http.handlers | [`caddyhttp.MiddlewareHandler`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddyhttp?tab=doc#MiddlewareHandler) | HTTP handlers
@@ -32,3 +33,5 @@ tls.handshake_match | [`caddytls.ConnectionMatcher`](https://pkg.go.dev/github.c
 tls.issuance | [`certmagic.Issuer`](https://pkg.go.dev/github.com/caddyserver/certmagic?tab=doc#Issuer) | TLS certificate issuer<br>
 tls.get_certificate | [`certmagic.CertificateManager`](https://pkg.go.dev/github.com/caddyserver/certmagic?tab=doc#CertificateManager) | TLS certificate manager | <i>⚠️ Experimental</i>
 tls.stek | [`caddytls.STEKProvider`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddytls?tab=doc#STEKProvider) | TLS session ticket key source</i>
+
+Namespaces marked as "Experimental" are subject to change. (Please develop with them so we can finalize their interfaces!)

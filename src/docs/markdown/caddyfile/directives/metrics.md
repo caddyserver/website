@@ -5,7 +5,7 @@ title: metrics (Caddyfile directive)
 # metrics
 
 Configures a Prometheus metrics exposition endpoint so the gathered metrics can
-be exposed for scraping.
+be exposed for scraping. **Metrics must be [turned on in your global options](/docs/caddyfile/options#metrics) first.**
 
 Note that a `/metrics` endpoint is also attached to the [admin API](/docs/api),
 which is not configurable, and is not available when the admin API is disabled.

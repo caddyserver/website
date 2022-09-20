@@ -105,6 +105,7 @@ Possible options are:
 			write       <duration>
 			idle        <duration>
 		}
+		metrics
 		max_header_size <size>
 		log_credentials
 		protocols [h1|h2|h2c|h3]
@@ -379,6 +380,11 @@ listener_wrappers {
 - **write** is a [duration value](/docs/conventions#durations) that sets how long to allow a write to a client. Note that setting this to a small value when serving large files may negatively affect legitimately slow clients. Defaults to no timeout.
 
 - **idle** is a [duration value](/docs/conventions#durations) that sets the maximum time to wait for the next request when keep-alives are enabled. Defaults to 5 minutes to help avoid resource exhaustion.
+
+
+##### `metrics`
+
+Enables Prometheus metrics collection; necessary before scraping metrics. Note that metrics reduce performance on really busy servers. (Our community is working on improving this. Please get involved!)
 
 
 ##### `max_header_size`
