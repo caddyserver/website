@@ -248,7 +248,7 @@ Marks a field to be replaced with the provided string at encoding time.
 
 ##### ip_mask
 
-Masks IP addresses in the field using a CIDR mask, i.e. the number of bytes from the IP to retain, starting from the left side. There is separate configuration for IPv4 and IPv6 addresses. Most commonly, the field to filter would be `request>remote_ip`.
+Masks IP addresses in the field using a CIDR mask, i.e. the number of bits from the IP to retain, starting from the left side. There is separate configuration for IPv4 and IPv6 addresses. Most commonly, the field to filter would be `request>remote_ip`.
 
 ```caddy-d
 <field> ip_mask {
