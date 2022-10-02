@@ -60,6 +60,20 @@ handle_errors {
 }
 ```
 
+If you want to provide custom error pages only for some error codes, you can check the existence of the custom error files beforehand with a [`file`](/docs/caddyfile/matchers#file) matcher:
+
+```caddy-d
+handle_errors {
+	@custom_err file /err-{http.error.status_code}.html /err.html
+	handle @custom_err {
+		rewrite @custom_err {http.matchers.file.relative}
+		file_server
+	}
+	respond "{http.error.status_code} {http.error.status_text}"
+}
+
+```
+
 Reverse proxy to a professional server that is highly qualified for handling HTTP errors and improving your day 😸:
 
 ```caddy-d
