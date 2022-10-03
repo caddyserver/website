@@ -25,10 +25,14 @@ basicauth [<matcher>] [<hash_algorithm> [<realm>]] {
 ```
 
 - **&lt;hash_algorithm&gt;** is the name of the password hashing algorithm (or KDF) used for the hashes in this configuration. Default: `bcrypt`
+
 - **&lt;realm&gt;** is a custom realm name.
+
 - **&lt;username&gt;** is a username or user ID.
+
 - **&lt;hashed_password&gt;** is the password hash.
-- **&lt;salt_base64&gt;** is the base-64 encoding of the password salt, if an external salt is required.
+
+- **&lt;salt_base64&gt;** is the base-64 encoding of the password salt, if an external salt is required. This was only needed for the `scrypt` algorithm which is now deprecated. Subject to removal.
 
 
 ## Examples

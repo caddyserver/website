@@ -15,7 +15,14 @@ try_files <files...> {
 }
 ```
 
-- **<files...>** is the list of files to try. The URI path will be rewritten to the first one that exists. To match directories, append a trailing forward slash `/` to the path. All file paths are relative to the site [root](/docs/caddyfile/directives/root), and [glob patterns](https://pkg.go.dev/path/filepath#Match) will be expanded. Each argument may also contain a query string, in which case the query string will also be changed if it matches that particular file. The last item in the list may be a number prefixed by `=` (e.g. `=404`), which as a fallback, will emit an error with that code; the error can be caught and handled with [`handle_errors`](/docs/caddyfile/directives/handle_errors).
+- **<files...>** is the list of files to try. The URI path will be rewritten to the first one that exists.
+
+  To match directories, append a trailing forward slash `/` to the path. All file paths are relative to the site [root](/docs/caddyfile/directives/root), and [glob patterns](https://pkg.go.dev/path/filepath#Match) will be expanded.
+
+  Each argument may also contain a query string, in which case the query string will also be changed if it matches that particular file.
+
+  If the `try_policy` is `first_exist` (the default), then the last item in the list may be a number prefixed by `=` (e.g. `=404`), which as a fallback, will emit an error with that code; the error can be caught and handled with [`handle_errors`](/docs/caddyfile/directives/handle_errors).
+
 - **policy** is the policy for choosing the file among the list of files. Default: `first_exist`
 
 
@@ -25,7 +32,7 @@ The `try_files` directive is basically a shortcut for:
 
 ```caddy-d
 @try_files file <files...>
-rewrite @try_files {http.matchers.file.relative}
+rewrite @try_files {file_match.relative}
 ```
 
 Note that this directive does not accept a matcher token. If you need more complex matching logic, then use the expanded form above as a basis.

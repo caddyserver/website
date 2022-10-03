@@ -22,6 +22,9 @@ If you're looking to configure Caddy's runtime logs, you're looking for the [`lo
 
 The `log` directive applies to the host/port of the site block it appears in, not any other part of the site address (e.g. path).
 
+When configured, by default all requests to the site will be logged. To conditionally skip some requests from logging, use the [`skip_log` directive](/docs/caddyfile/directives/skip_log).
+
+
 - [Syntax](#syntax)
 - [Output modules](#output-modules)
   - [stderr](#stderr)

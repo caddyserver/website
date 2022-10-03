@@ -64,6 +64,7 @@ Directive | Description
 **[rewrite](/docs/caddyfile/directives/rewrite)** | Rewrites the request internally
 **[root](/docs/caddyfile/directives/root)** | Set the path to the site root
 **[route](/docs/caddyfile/directives/route)** | A group of directives treated literally as single unit
+**[skip_log](/docs/caddyfile/directives/skip_log)** | Skip access logging for matched requests
 **[templates](/docs/caddyfile/directives/templates)** | Execute templates on the response
 **[tls](/docs/caddyfile/directives/tls)** | Customize TLS settings
 **[tracing](/docs/caddyfile/directives/tracing)** | Integration with OpenTelemetry tracing
@@ -115,6 +116,7 @@ tracing
 map
 vars
 root
+skip_log
 
 header
 copy_response_headers # only in reverse_proxy's handle_response block
