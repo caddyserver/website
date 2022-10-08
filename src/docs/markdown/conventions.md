@@ -81,6 +81,7 @@ Placeholder | Description
 `{system.slash}` | The system's filepath separator
 `{system.os}` | The system's OS
 `{system.arch}` | The system's architecture
+`{system.wd}` | The current working directory
 `{time.now}` | The current time as a Go Time struct
 `{time.now.unix}` | The current time as a unix timestamp in seconds
 `{time.now.unix_ms}` | The current time as a unix timestamp in milliseconds
