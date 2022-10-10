@@ -14,7 +14,7 @@ In other words, you're going to want to be able to _monitor_ Caddy.
 You'll need to turn metrics on. If using a Caddyfile, enable metrics [in global options](/docs/caddyfile/options#metrics):
 
 > **Note**
-> Prior to Caddy 2.6, metrics were on by default, so this global configutaion is unnecessary. In 2.6+, they are opt-in for performance reasons.
+> Caddy 2.6 made metrics opt-in. To enable them, use either [Caddyfile global options](https://caddyserver.com/docs/caddyfile/options#metrics) or [the `metrics` parameter](https://caddyserver.com/docs/json/apps/http/servers/metrics/) of a server's JSON config.
 
 ```caddy
 {
