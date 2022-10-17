@@ -249,12 +249,25 @@ expression file('<files...>')
 By files.
 
 - `root` defines the directory in which to look for files. Default is the current working directory, or the `root` [variable](/docs/modules/http.handlers.vars) (`{http.vars.root}`) if set (can be set via the [`root` directive](/docs/caddyfile/directives/root)).
-- `try_files` checks files in its list that match the try_policy. If the `try_policy` is `first_exist`, then the last item in the list may be a number prefixed by `=` (e.g. `=404`), which as a fallback, will emit an error with that code; the error can be caught and handled with [`handle_errors`](/docs/caddyfile/directives/handle_errors).
+
+- `try_files` checks files in its list that match the try_policy.
+
+  To match directories, append a trailing forward slash `/` to the path. All file paths are relative to the site [root](/docs/caddyfile/directives/root), and [glob patterns](https://pkg.go.dev/path/filepath#Match) will be expanded.
+
+  If the `try_policy` is `first_exist` (the default), then the last item in the list may be a number prefixed by `=` (e.g. `=404`), which as a fallback, will emit an error with that code; the error can be caught and handled with [`handle_errors`](/docs/caddyfile/directives/handle_errors).
+
+
+
 - `try_policy` specifies how to choose a file. Default is `first_exist`.
+
 	- `first_exist` checks for file existence. The first file that exists is selected.
+
 	- `smallest_size` chooses the file with the smallest size.
+
 	- `largest_size` chooses the file with the largest size.
+
 	- `most_recent_modified` chooses the file that was most recently modified.
+
 - `split_path` will cause the path to be split at the first delimiter in the list that is found in each filepath to try. For each split value, the left-hand side of the split including the delimiter itself will be the filepath that is tried. For example, `/remote.php/dav/` using a delimiter of `.php` would try the file `/remote.php`. Each delimiter must appear at the end of a URI path component in order to be used as a split delimiter. This is a niche setting and is mostly used when serving PHP sites.
 
 Because `try_files` with a policy of `first_exist` is so common, there is a one-line shortcut for that:
@@ -273,10 +286,13 @@ Since rewriting based on the existence of a file on disk is so common, there is 
 </aside>
 
 
-Upon matching, two new placeholders will be made available:
+Upon matching, four new placeholders will be made available:
 
-- `{http.matchers.file.relative}` The root-relative path of the file. This is often useful when rewriting requests.
-- `{http.matchers.file.absolute}` The absolute path of the matched file.
+- `{file_match.relative}` The root-relative path of the file. This is often useful when rewriting requests.
+- `{file_match.absolute}` The absolute path of the matched file, including the root.
+- `{file_match.type}` The type of file, `file` or `directory`.
+- `{file_match.remainder}` The portion remaining after splitting the file path (if `split_path` is configured)
+
 
 #### Examples:
 

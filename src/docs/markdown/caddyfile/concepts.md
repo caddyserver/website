@@ -237,36 +237,38 @@ You can use any [Caddy placeholders](/docs/conventions#placeholders) in the Cadd
 |-----------------|-----------------------------------|
 | `{cookie.*}`    | `{http.request.cookie.*}`         |
 | `{dir}`         | `{http.request.uri.path.dir}`     |
-| `{err.*}`       | `{http.error.*}`                  |
+| `{err.*}`       | `{http.error.*}` |
+| `{file_match.*}` | `{http.matchers.file.*}` |
+| `{file.base}`   | `{http.request.uri.path.file.base}` |
+| `{file.ext}`    | `{http.request.uri.path.file.ext}`  |
 | `{file}`        | `{http.request.uri.path.file}`    |
-| `{file.*}`      | `{http.request.uri.path.file.*}`  |
 | `{header.*}`    | `{http.request.header.*}`         |
 | `{host}`        | `{http.request.host}`             |
-| `{labels.*}`    | `{http.request.host.labels.*}`    |
 | `{hostport}`    | `{http.request.hostport}`         |
-| `{port}`        | `{http.request.port}`             |
+| `{labels.*}`    | `{http.request.host.labels.*}`    |
 | `{method}`      | `{http.request.method}`           |
-| `{path}`        | `{http.request.uri.path}`         |
 | `{path.*}`      | `{http.request.uri.path.*}`       |
-| `{query}`       | `{http.request.uri.query}`        |
+| `{path}`        | `{http.request.uri.path}`         |
+| `{port}`        | `{http.request.port}`             |
 | `{query.*}`     | `{http.request.uri.query.*}`      |
-| `{re.*.*}`      | `{http.regexp.*.*}`               |
-| `{remote}`      | `{http.request.remote}`           |
+| `{query}`       | `{http.request.uri.query}`        |
+| `{re.*.*}`      | `{http.regexp.*.*}` |
 | `{remote_host}` | `{http.request.remote.host}`      |
 | `{remote_port}` | `{http.request.remote.port}`      |
-| `{rp.*}`        | `{http.reverse_proxy.*}`          |
+| `{remote}`      | `{http.request.remote}`           |
+| `{rp.*}`        | `{http.reverse_proxy.*}` |
 | `{scheme}`      | `{http.request.scheme}`           |
 | `{tls_cipher}`  | `{http.request.tls.cipher_suite}` |
-| `{tls_version}` | `{http.request.tls.version}`      |
-| `{tls_client_fingerprint}` | `{http.request.tls.client.fingerprint}` |
-| `{tls_client_issuer}`      | `{http.request.tls.client.issuer}`      |
-| `{tls_client_serial}`      | `{http.request.tls.client.serial}`      |
-| `{tls_client_subject}`     | `{http.request.tls.client.subject}`     |
-| `{tls_client_certificate_pem}`        | `{http.request.tls.client.certificate_pem}`        |
 | `{tls_client_certificate_der_base64}` | `{http.request.tls.client.certificate_der_base64}` |
-| `{uri}` | `{http.request.uri}` |
+| `{tls_client_certificate_pem}`        | `{http.request.tls.client.certificate_pem}` |
+| `{tls_client_fingerprint}`            | `{http.request.tls.client.fingerprint}`     |
+| `{tls_client_issuer}`                 | `{http.request.tls.client.issuer}`          |
+| `{tls_client_serial}`                 | `{http.request.tls.client.serial}`          |
+| `{tls_client_subject}`                | `{http.request.tls.client.subject}`         |
+| `{tls_version}` | `{http.request.tls.version}`      |
 | `{upstream_hostport}` | `{http.reverse_proxy.upstream.hostport}` |
-| `{vars.*}` | `{http.vars.*}` |
+| `{uri}`         | `{http.request.uri}`              |
+| `{vars.*}`      | `{http.vars.*}` |
 
 
 

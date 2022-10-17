@@ -200,7 +200,7 @@ How often to check if OCSP staples need updating. Default: `1h`.
 
 
 ##### `admin`
-Customizes the [admin API endpoint](/docs/api). If `off`, then the admin endpoint will be disabled. If disabled, config changes will be impossible without stopping and starting the server.
+Customizes the [admin API endpoint](/docs/api). Accepts placeholders. If `off`, then the admin endpoint will be disabled. If disabled, config changes will be impossible without stopping and starting the server.
 
 - **origins** configures the list of remotes/origins that are allowed to connect to the endpoint.
 
@@ -336,9 +336,7 @@ For example, to configure different options for the servers on ports `:80` and `
 	}
 
 	servers :80 {
-		protocols {
-			allow_h2c
-		}
+		protocols h1 h2c
 	}
 }
 ```
@@ -401,17 +399,26 @@ If you wish to _not_ have these headers redacted, you may enable the `log_creden
 
 ##### `protocols`
 
-The space-separated list of HTTP protocols to support. Accepted values are: `h1 h2 h2c h3` for HTTP/1.1, HTTP/2, HTTP/2 over cleartext, and HTTP/3, respectively. Default: `h1 h2 h3`.
+The space-separated list of HTTP protocols to support. Default: `h1 h2 h3`. Accepted values are:
+
+- `h1` for HTTP/1.1
+- `h2` For HTTP/2
+- `h2c` for HTTP/2 over cleartext
+- `h3` for HTTP/3
 
 Currently, enabling HTTP/2 (including H2C) necessarily implies enabling HTTP/1.1 because the Go standard library does not let us disable HTTP/1.1 when using its HTTP server. However, either HTTP/1.1 or HTTP/3 can be enabled independently.
 
 Note that H2C ("Cleartext HTTP/2" or "H2 over TCP") and HTTP/3 are not implemented by the Go standard library, so some functionality or features may be limited. We recommend against enabling H2C unless it is absolutely necessary for your application.
+
 
 ##### `strict_sni_host`
 
 Enabling this requires that a request's `Host` header matches the value of the `ServerName` sent by the client's TLS ClientHello, a necessary safeguard when using TLS client authentication. If there's a mismatch, HTTP status `421 Misdirected Request` response is written to the client.
 
 This option will automatically be turned on if [client authentication](/docs/caddyfile/directives/tls#client_auth) is configured. This disallows TLS client auth bypass (domain fronting) which could otherwise be exploited by sending an unprotected SNI value during a TLS handshake, then putting a protected domain in the Host header after establishing connection. This behavior is a safe default, but you may explicitly turn it off with `insecure_off`; for example in the case of running a proxy where domain fronting is desired and access is not restricted based on hostname.
+
+
+
 
 ## PKI Options
 

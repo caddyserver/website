@@ -19,8 +19,11 @@ respond [<matcher>] <status>|<body> [<status>] {
 ```
 
 - **&lt;status&gt;** is the HTTP status code to write. If 103 (Early Hints), the response will be written without a body and the handler chain will continue. (HTTP 1xx responses are informational, not final.) Default: 200.
+
 - **&lt;body&gt;** is the response body to write.
+
 - **body** is an alternate way to provide a body; convenient if it is multiple lines.
+
 - **close** will close the client's connection to the server after writing the response.
 
 To clarify, the first non-matcher argument can be either a 3-digit status code or a response body string. If it is a body, the next argument can be the status code.

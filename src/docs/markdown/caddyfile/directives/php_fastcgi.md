@@ -2,6 +2,13 @@
 title: php_fastcgi (Caddyfile directive)
 ---
 
+<script>
+$(function() {
+	// We'll add links to all the subdirectives if a matching anchor tag is found on the page.
+	addLinksToSubdirectives();
+});
+</script>
+
 # php_fastcgi
 
 An opinionated directive that proxies requests to a PHP FastCGI server such as php-fpm.
@@ -32,21 +39,33 @@ php_fastcgi [<matcher>] <php-fpm_gateways...> {
 	dial_timeout  <duration>
 	read_timeout  <duration>
 	write_timeout <duration>
+	capture_stderr
 
 	<any other reverse_proxy subdirectives...>
 }
 ```
 
 - **<php-fpm_gateways...>** are the [addresses](/docs/conventions#network-addresses) of the FastCGI servers.
-- **root** sets the root folder to the site. Default: [`root` directive](/docs/caddyfile/directives/root).
-- **split** sets the substrings for splitting the URI into two parts. The first matching substring will be used to split the "path info" from the path. The first piece is suffixed with the matching substring and will be assumed as the actual resource (CGI script) name. The second piece will be set to PATH_INFO for the CGI script to use. Default: `.php`
-- **env** sets an extra environment variable to the given value. Can be specified more than once for multiple environment variables.
-- **index** specifies the filename to treat as the directory index file. This affects the file matcher in the [expanded form](#expanded-form). Default: `index.php`. Can be set to `off` to disable rewriting to `index.php` when a matching file is not found.
-- **try_files** specifies an override for the default try-files rewrite. See the [`try_files` directive](/docs/caddyfile/directives/try_files) for details. Default: `{path} {path}/index.php index.php`.
-- **resolve_root_symlink** enables resolving the `root` directory to its actual value by evaluating a symbolic link, if one exists.
-- **dial_timeout** is how long to wait when connecting to the upstream socket. Accepts [duration values](/docs/conventions#durations). Default: `3s`.
-- **read_timeout** is how long to wait when reading from the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
-- **write_timeout** is how long to wait when sending to the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
+
+- **root** <span id="root"/> sets the root folder to the site. Default: [`root` directive](/docs/caddyfile/directives/root).
+
+- **split** <span id="split"/> sets the substrings for splitting the URI into two parts. The first matching substring will be used to split the "path info" from the path. The first piece is suffixed with the matching substring and will be assumed as the actual resource (CGI script) name. The second piece will be set to PATH_INFO for the CGI script to use. Default: `.php`
+
+- **env** <span id="env"/> sets an extra environment variable to the given value. Can be specified more than once for multiple environment variables.
+
+- **index** <span id="index"/> specifies the filename to treat as the directory index file. This affects the file matcher in the [expanded form](#expanded-form). Default: `index.php`. Can be set to `off` to disable rewriting to `index.php` when a matching file is not found.
+
+- **try_files** <span id="try_files"/> specifies an override for the default try-files rewrite. See the [`try_files` directive](/docs/caddyfile/directives/try_files) for details. Default: `{path} {path}/index.php index.php`.
+
+- **resolve_root_symlink** <span id="resolve_root_symlink"/> enables resolving the `root` directory to its actual value by evaluating a symbolic link, if one exists.
+
+- **dial_timeout** <span id="dial_timeout"/> is how long to wait when connecting to the upstream socket. Accepts [duration values](/docs/conventions#durations). Default: `3s`.
+
+- **read_timeout** <span id="read_timeout"/> is how long to wait when reading from the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
+
+- **write_timeout** <span id="write_timeout"/> is how long to wait when sending to the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
+
+- **capture_stderr** <span id="capture_stderr"/> enables capturing and logging of any messages sent by the upstream fastcgi server on `stderr`. Logging is done at `WARN` level by default. If the response has a `4xx` or `5xx` status, then the `ERROR` level will be used instead. By default, `stderr` is ignored.
 
 
 Since this directive is an opinionated wrapper over a reverse proxy, you can use any of [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy#syntax)'s subdirectives to customize it.
@@ -63,14 +82,14 @@ route {
 		file {path}/index.php
 		not path */
 	}
-	redir @canonicalPath {path}/ 308
+	redir @canonicalPath {http.request.orig_uri.path}/ 308
 
 	# If the requested file does not exist, try index files
 	@indexFiles file {
 		try_files {path} {path}/index.php index.php
 		split_path .php
 	}
-	rewrite @indexFiles {http.matchers.file.relative}
+	rewrite @indexFiles {file_match.relative}
 
 	# Proxy PHP files to the FastCGI responder
 	@phpFiles path *.php

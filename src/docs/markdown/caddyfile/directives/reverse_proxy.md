@@ -59,8 +59,10 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 
 	# load balancing
 	lb_policy       <name> [<options...>]
+	lb_retries      <retries>
 	lb_try_duration <duration>
 	lb_try_interval <interval>
+	lb_retry_match  <request-matcher>
 
 	# active health checking
 	health_uri      <uri>
@@ -217,6 +219,9 @@ Append the results of multiple dynamic upstream modules. Useful if you want redu
 
 - **&lt;source&gt;** is the name of the module for the dynamic upstreams, followed by its configuration. More than one may be specified.
 
+
+
+
 ### Load balancing
 
 Load balancing is used whenever more than one upstream is defined.
@@ -256,9 +261,19 @@ Load balancing is used whenever more than one upstream is defined.
 	  document.cookie = "lb=cdd96966817dd14a99f47ee17451464f29998da170814a16b483e4c1ff4c48cf";
 	  ```
 
-- **lb_try_duration** <span id="lb_try_duration"/> is a [duration value](/docs/conventions#durations) that defines how long to try selecting available backends for each request if the next available host is down. By default, this retry is disabled. Clients will wait for up to this long while the load balancer tries to find an available upstream host. A reasonable starting point might be `5s` since the HTTP transport's default dial timeout is `3s`, so that should allow for at least one retry if the first selected upstream cannot be reached; but feel free to experiment to find the right balance for your usecase.
+- **lb_retries** <span id="lb_retries"/> is how many times to retry selecting available backends for each request if the next available host is down. By default, retries are disabled (zero).
 
-- **lb_try_interval** <span id="lb_try_interval"/> is a [duration value](/docs/conventions#durations) that defines how long to wait between selecting the next host from the pool. Default is `250ms`. Only relevant when a request to an upstream host fails. Be aware that setting this to 0 with a non-zero `lb_try_duration` can cause the CPU to spin if all backends are down and latency is very low.
+  If [`lb_try_duration`](#lb_try_duration) is also configured, then retries may stop early if the duration is reached. In other words, the retry duration takes precedence over the retry count.
+
+- **lb_try_duration** <span id="lb_try_duration"/> is a [duration value](/docs/conventions#durations) that defines how long to try selecting available backends for each request if the next available host is down. By default, retries are disabled (zero duration).
+
+  Clients will wait for up to this long while the load balancer tries to find an available upstream host. A reasonable starting point might be `5s` since the HTTP transport's default dial timeout is `3s`, so that should allow for at least one retry if the first selected upstream cannot be reached; but feel free to experiment to find the right balance for your usecase.
+
+- **lb_try_interval** <span id="lb_try_interval"/> is a [duration value](/docs/conventions#durations) that defines how long to wait between selecting the next host from the pool. Default is `250ms`. Only relevant when a request to an upstream host fails. Be aware that setting this to `0` with a non-zero `lb_try_duration` can cause the CPU to spin if all backends are down and latency is very low.
+
+- **lb_retry_match** <span id="lb_retry_match"/> restricts with which requests retries are allowed. A request must match this condition in order to be retried if the connection to the upstream succeded but the subsequent round-trip failed. If the connection to the upstream failed, a retry is always allowed. By default, only `GET` requests are retried.
+
+  The syntax for this option is the same as for [named request matchers](/docs/caddyfile/matchers#named-matchers), but without the `@name`. If you only need a single matcher, you may configure it on the same line. For multiple matchers, a block is necessary.
 
 
 
@@ -518,6 +533,7 @@ transport fastcgi {
 	dial_timeout  <duration>
 	read_timeout  <duration>
 	write_timeout <duration>
+	capture_stderr
 }
 ```
 
@@ -534,6 +550,8 @@ transport fastcgi {
 - **read_timeout** <span id="read_timeout"/> is how long to wait when reading from the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
 
 - **write_timeout** <span id="write_timeout"/> is how long to wait when sending to the FastCGI server. Accepts [duration values](/docs/conventions#durations). Default: no timeout.
+
+- **capture_stderr** <span id="capture_stderr"/> enables capturing and logging of any messages sent by the upstream fastcgi server on `stderr`. Logging is done at `WARN` level by default. If the response has a `4xx` or `5xx` status, then the `ERROR` level will be used instead. By default, `stderr` is ignored.
 
 <aside class="tip">
 

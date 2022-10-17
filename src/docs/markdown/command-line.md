@@ -383,7 +383,7 @@ Spins up a simple but production-ready HTTP(S) reverse proxy.
 
 `--from` is the address to proxy from.
 
-`--to` is the address to proxy to.
+`--to` is the address(es) to proxy to. Can be repeated to load balance between multiple upstreams.
 
 `--change-host-header` will cause Caddy to change the Host header from the incoming value to the address of the upstream.
 
