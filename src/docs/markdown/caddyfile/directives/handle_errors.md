@@ -64,14 +64,13 @@ If you want to provide custom error pages only for some error codes, you can che
 
 ```caddy-d
 handle_errors {
-	@custom_err file /err-{http.error.status_code}.html /err.html
+	@custom_err file /err-{err.status_code}.html /err.html
 	handle @custom_err {
-		rewrite @custom_err {http.matchers.file.relative}
+		rewrite * {file_match.relative}
 		file_server
 	}
-	respond "{http.error.status_code} {http.error.status_text}"
+	respond "{err.status_code} {err.status_text}"
 }
-
 ```
 
 Reverse proxy to a professional server that is highly qualified for handling HTTP errors and improving your day 😸:

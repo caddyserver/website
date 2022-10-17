@@ -155,6 +155,7 @@ format <encoder_module> {
 	stacktrace_key  <key>
 	line_ending     <char>
 	time_format     <format>
+	time_local
 	duration_format <format>
 	level_format    <format>
 }
@@ -179,6 +180,7 @@ format <encoder_module> {
   - **wall_nano** Example: `2006/01/02 15:04:05.000000000`
   - **common_log** Example: `02/Jan/2006:15:04:05 -0700`
   - Or, any compatible time layout string; see the [Go documentation](https://pkg.go.dev/time#pkg-constants) for full details.
+- **time_local** Logs with the local system time rather than the default of UTC time.
 - **duration_format** The format for durations. May be one of:
   - **seconds** Floating-point number of seconds elapsed; this is the default.
   - **nano** Integer number of nanoseconds elapsed.
@@ -251,7 +253,11 @@ Marks a field to be replaced with the provided string at encoding time.
 
 ##### ip_mask
 
-Masks IP addresses in the field using a CIDR mask, i.e. the number of bits from the IP to retain, starting from the left side. There is separate configuration for IPv4 and IPv6 addresses. Most commonly, the field to filter would be `request>remote_ip`.
+Masks IP addresses in the field using a CIDR mask, i.e. the number of bits from the IP to retain, starting from the left side. If the field is an array of strings (e.g. HTTP headers), each value in the array is masked. The value may be a comma separated string of IP addresses.
+
+There is separate configuration for IPv4 and IPv6 addresses, since they have a different total number of bits.
+
+Most commonly, the fields to filter would be `request>remote_ip` for the directly connecting client, or `request>headers>X-Forwarded-For` if behind a reverse proxy.
 
 ```caddy-d
 <field> ip_mask {
@@ -296,7 +302,7 @@ If many actions are defined for the same cookie name, only the first action will
 
 ##### regexp
 
-Marks a field to have a regular expression replacement applied at encoding time.
+Marks a field to have a regular expression replacement applied at encoding time. If the field is an array of strings (e.g. HTTP headers), each value in the array has replacements applied.
 
 ```caddy-d
 <field> regexp <pattern> <replacement>
@@ -308,7 +314,9 @@ In the replacement string, capture groups can be referenced with `${group}` wher
 
 ##### hash
 
-Marks a field to be replaced with the first 4 bytes of the SHA-256 hash of the value at encoding time. Useful to obscure the value if it's sensitive, while being able to notice whether each request had a different value.
+Marks a field to be replaced with the first 4 bytes (8 hex characters) of the SHA-256 hash of the value at encoding time. If the field is a string array (e.g. HTTP headers), each value in the array is hashed.
+
+Useful to obscure the value if it's sensitive, while being able to notice whether each request had a different value.
 
 ```caddy-d
 <field> hash
