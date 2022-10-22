@@ -4,7 +4,7 @@ title: Verifying Asset Signatures
 
 # Signature Verification
 
-CI/CD release artifacts are now signed using project Sigstore technology, which issues certificates containing details about the subject to whom the certificate is issues amongst others. You can start by inspecting the certificate used to sign your artifact of choice. The certificates are base64 encoded, so you first have to base64 decode it to receive the pem file. In the example, we'll work with the `caddy_2.6.0_checksums.txt` artifact and assume *nix environemnt.
+CI/CD release artifacts are now signed using project [Sigstore](https://www.sigstore.dev/) technology, which issues certificates containing details about the subject to whom the certificate is issued. You can start by inspecting the certificate used to sign your artifact of choice. The certificates are base64-encoded, so you first have to base64-decode it to receive the PEM file. In this example, we'll work with the `caddy_2.6.0_checksums.txt` artifact and assume a Linux-like environment.
 
 Start by downloading the the 3 files pertaining to your artifact of choice (i.e. `<the artifact>` which is the actual artifact whose companion signature and certs are to be verified, `<the artifact>.sig` which is the signature of the artifact, and `<the artifact>.pem` is the certificate descending from the root cert by Fulcio by Sigstore). Then base64 decode the downloaded `.pem` file to the armored version:
 
@@ -150,7 +150,7 @@ Note how the UUID matches the one encountered in the earlier section for the sam
 
 <pre><code class="cmd bash">rekor-cli get --uuid 04deb84e5a73ba75ea69092c6d700eaeb869c29cae3e0cf98dbfef871361ed09 --format json | jq -r '.'</code></pre>
 
-However, we can shortcircuit the lookup by running this line to merge the two separate commands into a one-liner:
+However, we can short-circuit the lookup by running this line to merge the two separate commands into a one-liner:
 
 <pre><code class="cmd"><span class="bash">rekor-cli get --uuid $(rekor-cli search --artifact ./caddy_2.6.0_checksums.txt --format json | jq -r '.UUIDs[0]') --format json | jq -r '.'</span>
 {
