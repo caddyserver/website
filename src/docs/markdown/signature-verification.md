@@ -4,7 +4,9 @@ title: Verifying Asset Signatures
 
 # Signature Verification
 
-CI/CD release artifacts are now signed using project [Sigstore](https://www.sigstore.dev/) technology, which issues certificates containing details about the subject to whom the certificate is issued. You can start by inspecting the certificate used to sign your artifact of choice. The certificates are base64-encoded, so you first have to base64-decode it to receive the PEM file. In this example, we'll work with the `caddy_2.6.0_checksums.txt` artifact and assume a Linux-like environment.
+Artifact signing allows you to validate the artifact you have is the same one created by the project's workflow and was not modified by an unauthorized party (e.g. man-in-the-middle). The validation provides common ground, assurance, and knowledge that all parties are refering to the same artifact, collection of bytes, whether it is an executable, SBOM, or text file.
+
+As of Caddy v2.6.0, CI/CD release artifacts are signed using project [Sigstore](https://www.sigstore.dev/) technology, which issues certificates containing details about the subject to whom the certificate is issued. You can start by inspecting the certificate used to sign your artifact of choice. The certificates are base64-encoded, so you first have to base64-decode it to receive the PEM file. In this example, we'll work with the `caddy_2.6.0_checksums.txt` artifact and assume a Linux-like environment.
 
 Start by downloading the the 3 files pertaining to your artifact of choice (i.e. `<the artifact>` which is the actual artifact whose companion signature and certs are to be verified, `<the artifact>.sig` which is the signature of the artifact, and `<the artifact>.pem` is the certificate descending from the root cert by Fulcio by Sigstore). Then base64 decode the downloaded `.pem` file to the armored version:
 
@@ -93,7 +95,11 @@ oFQIJuECMQCnbZfbTMjdRxM9KHqm82RQLFqdnRDQz2/Q6Td2/cyOncNrungHQGpA
 -----END CERTIFICATE-----
 </code></pre>
 
-Worthy of note is the stated intended usage of the certificate, which is `Code Signing`. The certificate also contains the URI of the triggering Github Actions workflow in the `X509v3 Subject Alternative Name` extension, GHA workflow name in `1.3.6.1.4.1.57264.1.4`, the commit to be signed in `1.3.6.1.4.1.57264.1.3`, the repo name in `1.3.6.1.4.1.57264.1.5`, and the triggering ref `1.3.6.1.4.1.57264.1.6`. Those details together pinpoint the single event in the universe for which the certificate is to be used.
+<aside class="tip" id="x509-extensions">
+
+Notice the stated intended usage of the certificate, which is `Code Signing`. The certificate also contains the URI of the triggering Github Actions workflow in the `X509v3 Subject Alternative Name` extension, GHA workflow name in `1.3.6.1.4.1.57264.1.4`, the commit to be signed in `1.3.6.1.4.1.57264.1.3`, the repo name in `1.3.6.1.4.1.57264.1.5`, and the triggering ref `1.3.6.1.4.1.57264.1.6`. Those details together pinpoint the single event in the universe for which the certificate is to be used.
+
+</aside>
 
 Now that we have the certificate, we can use `cosign` cli to validate the signature. We run the following command (notice it uses the undecoded cert):
 
@@ -138,9 +144,9 @@ The use of `jq` is to prettify the output. You should see an output like this:
 
 Notice how the value of `.Body.HashedRekordObj.signature.content` matches the content of the signature generated in our CI and available in the file `caddy_2.6.0_checksums.txt.sig`. Moreover, the certificate used and downloaded is also stored in the Rekor server and available in the response at `.Body.HashedRekordObj.signature.publicKey.content` and matches the string we have in the file `caddy_2.6.0_checksums.txt.pem`. We can take one step further and check how `.Body.HashedRekordObj.data.hash.value` matches the output of the command `sha256sum ./caddy_2.6.0_checksums.txt`. So by now we have matching certs, matching signatures, and matching checksums (of the file containing the checksums of the archives but not of itself; this checksum is provided and recorded externally via Sigstore ecosystem). All of this is publicly recorded in transparency logs for the general public to validate.
 
-## What If...
+## Verifying Authenticity of an Artifact
 
-What if... you are handed an artifact of Caddy CI claimed to be signed but you were not given the signature file or the certificate? You can use `rekor-cli` to query Rekor server for the subject artifact:
+What if you are handed an artifact claimed to be the product of the Caddy project but you were not given the signature file or the certificate? You can use `rekor-cli` to query Rekor server for the subject artifact:
 
 <pre><code class="cmd"><span class="bash">rekor-cli search --artifact ./caddy_2.6.0_checksums.txt --format json | jq -r '.UUIDs[0]'</span>
 Found matching entries (listed by UUID):
@@ -178,3 +184,51 @@ However, we can short-circuit the lookup by running this line to merge the two s
   "LogID": "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d"
 }
 </code></pre>
+
+We now know the artifact is signed, and its signature is logged on Rekor transparency log server. The next step is to validate the signature and the artifact were the product of the CI/CD workflow of the Caddy project. We do this by extracting the public key from the JSON received by querying Rekor, base64-decode it into PEM file, then inspect the certificate using `openssl`. Run the following command to extract the certificate from the Rekor response we received earlier, base64-decode it, and store the result in a file.
+
+<pre>
+<code class="cmd"><span class="bash">rekor-cli get --uuid $(rekor-cli search --artifact ./caddy_2.6.0_checksums.txt --format json | jq -r '.UUIDs[0]') --format json | jq -r '.Body.HashedRekordObj.signature.publicKey.content' | base64 -d > cert.pem</span></code>
+</pre>
+
+Now inspect the certificate using `openssl` and pay attention to the `X509v3 extensions` section.
+
+<pre><code class="cmd"><span class="bash">openssl x509 -in cert.pem -text</span>
+Certificate:
+...
+        Issuer: O=sigstore.dev, CN=sigstore-intermediate
+...
+        X509v3 extensions:
+            X509v3 Key Usage: critical
+                Digital Signature
+            X509v3 Extended Key Usage:
+                Code Signing
+            X509v3 Subject Key Identifier:
+                3B:C0:D1:D2:C8:BA:2D:55:95:1F:68:78:DC:C6:2C:D9:B5:17:0E:EA
+            X509v3 Authority Key Identifier:
+                keyid:DF:D3:E9:CF:56:24:11:96:F9:A8:D8:E9:28:55:A2:C6:2E:18:64:3F
+
+            X509v3 Subject Alternative Name: critical
+                URI:https://github.com/caddyserver/caddy/.github/workflows/release.yml@refs/tags/v2.6.0
+            1.3.6.1.4.1.57264.1.1:
+                https://token.actions.githubusercontent.com
+            1.3.6.1.4.1.57264.1.2:
+                push
+            1.3.6.1.4.1.57264.1.3:
+                821a08a6e39ed0e7c43b0271ccf126c194eb6339
+            1.3.6.1.4.1.57264.1.4:
+                Release
+            1.3.6.1.4.1.57264.1.5:
+                caddyserver/caddy
+            1.3.6.1.4.1.57264.1.6:
+                refs/tags/v2.6.0
+            1.3.6.1.4.1.11129.2.4.2:
+                .z.x.v..`..(R.hE..k'..Eg...=.8.m..".6or....[.DS.....G0E.!..>MD.a..B.p..^..P*...um.....X..F. NYy.....#...TWIZ...y..qa....4P..
+   ...
+</code></pre>
+
+The [extensions values](#x509-extensions) indicate the authenticity of the artifact. Refer to [Sigstore OID information](https://github.com/sigstore/fulcio/blob/a25fb09c3f0561ac43e50357fdfc427e3f0aca4a/docs/oid-info.md) for the definition of each extension.
+
+## What If The Signature Is Not Verified?
+
+Signature verification failure indicates the artificate at hand was not produced by the CI/CD workflow of the Caddy project on GitHub. If you have the signature, the certificate, and the artifact, then you are looking for successful verification reported by `cosign`. Alternatively, you can use `rekor-cli` to inspect the Rekor server for the entry, validate the certificate extensions for the correct and expected values, and match the checksums and signatures. Mismatches or absence of Rekor entry means either the artifact was not produced by the CI/CD of the Caddy project, or the artifact was tampered somewhere between the build flow of the CI/CD, the GitHub releases page, and the delivery to you.
