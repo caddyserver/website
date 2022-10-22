@@ -21,7 +21,7 @@ handle [<matcher>] {
 
 ## Utility
 
-If you prefer crafting HTTP handler logic in a more inheritence-based way like nginx location blocks, you may prefer the use of `handle` blocks rather than defining mutually-exclusive matchers for your directives. If inheritence is a desired characteristic of your HTTP handler configurations, then the `handle` directive may suit you well.
+If you prefer crafting HTTP handler logic in a more inheritance-based way like nginx location blocks, you may prefer the use of `handle` blocks rather than defining mutually-exclusive matchers for your directives. If inheritance is a desired characteristic of your HTTP handler configurations, then the `handle` directive may suit you well.
 
 ## Similar directives
 
