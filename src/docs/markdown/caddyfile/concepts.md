@@ -26,7 +26,7 @@ Key points:
 
 - An optional [**global options block**](#global-options) can be the very first thing in the file.
 - Otherwise, the first line of the Caddyfile is **always** the [address(es)](#addresses) of the site to serve.
-- All [directives](#directives) and [matchers](#matchers) **must** go in a site block. There is no global scope or inheritence across site blocks.
+- All [directives](#directives) and [matchers](#matchers) **must** go in a site block. There is no global scope or inheritance across site blocks.
 - If there is only one site block, its curly braces `{ }` are optional.
 
 A Caddyfile consists of at least one or more site blocks, which always starts with one or more [addresses](#addresses) for the site. Any directives appearing before the address will be confusing to the parser.

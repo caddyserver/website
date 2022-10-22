@@ -47,7 +47,7 @@ Tokens are then evaluated by the parser for structure.
 
 ## Structure
 
-A Caddyfile has no global scope or inheritence between separate blocks. The most global unit of the Caddyfile is an <b>entry</b>. An entry consists of a list of labels and a definition associated with those labels. A <b>label</b> is a string identifier, and a <b>definition</b> is a body (one or more lines) of tokens grouped together in a <i>block</i>:
+A Caddyfile has no global scope or inheritance between separate blocks. The most global unit of the Caddyfile is an <b>entry</b>. An entry consists of a list of labels and a definition associated with those labels. A <b>label</b> is a string identifier, and a <b>definition</b> is a body (one or more lines) of tokens grouped together in a <i>block</i>:
 
 <code class="block"><span class="cf-label-bg">list of labels</span>
 <span class="cf-block-bg">definition (block)</span></code>
