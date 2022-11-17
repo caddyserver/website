@@ -469,7 +469,7 @@ transport http {
 
 - **max_response_header** <span id="max_response_header"/> is the maximum amount of bytes to read from response headers. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). Default: `10MiB`.
 
-- **dial_timeout** <span id="dial_timeout"/> is the maximum [duration](/docs/conventions#durations) to wait when connecting to the upstream socket. Default: No timeout.
+- **dial_timeout** <span id="dial_timeout"/> is the maximum [duration](/docs/conventions#durations) to wait when connecting to the upstream socket. Default: `3s`.
 
 - **dial_fallback_delay** <span id="dial_fallback_delay"/> is the maximum [duration](/docs/conventions#durations) to wait before spawning an RFC 6555 Fast Fallback connection. A negative value disables this. Default: `300ms`.
 
