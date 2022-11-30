@@ -31,7 +31,7 @@ http.reverse_proxy.upstreams | [`reverseproxy.UpstreamSource`](https://pkg.go.de
 tls.certificates | [`caddytls.CertificateLoader`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddytls?tab=doc#CertificateLoader) | TLS certificate source</i>
 tls.handshake_match | [`caddytls.ConnectionMatcher`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddytls?tab=doc#ConnectionMatcher) | TLS connection matcher</i>
 tls.issuance | [`certmagic.Issuer`](https://pkg.go.dev/github.com/caddyserver/certmagic?tab=doc#Issuer) | TLS certificate issuer<br>
-tls.get_certificate | [`certmagic.CertificateManager`](https://pkg.go.dev/github.com/caddyserver/certmagic?tab=doc#CertificateManager) | TLS certificate manager | <i>⚠️ Experimental</i>
+tls.get_certificate | [`certmagic.Manager`](https://pkg.go.dev/github.com/caddyserver/certmagic?tab=doc#Manager) | TLS certificate manager | <i>⚠️ Experimental</i>
 tls.stek | [`caddytls.STEKProvider`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddytls?tab=doc#STEKProvider) | TLS session ticket key source</i>
 
 Namespaces marked as "Experimental" are subject to change. (Please develop with them so we can finalize their interfaces!)
