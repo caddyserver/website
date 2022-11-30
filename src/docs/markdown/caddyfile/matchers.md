@@ -339,6 +339,8 @@ By request header fields.
 
 Different header fields within the same set are AND-ed. Multiple values per field are OR'ed.
 
+Note that header fields may be repeated and have different values. Backend applications MUST consider that header field values are arrays, not singular values, and Caddy does not interpret meaning in such quandaries.
+
 #### Example:
 
 Match requests with the `Connection` header containing `Upgrade`:
@@ -570,12 +572,13 @@ expression query({'<key>': '<val>'})
 expression query({'<key>': ['<vals...>']})
 ```
 
-By query string parameters. Should be a sequence of `key=value` pairs. Keys are matched exactly, case-sensitively. Values can contain placeholders. Values are matched exactly, but also support `*` to match any value.
+By query string parameters. Should be a sequence of `key=value` pairs. Keys are matched exactly (case-sensitively) but also support `*` to match any value. Values can use placeholders.
 
 There can be multiple `query` matchers per named matcher, and pairs with the same keys will be OR'ed together.
 
 Illegal query strings (bad syntax, unescaped semicolons, etc.) will fail to parse and thus will not match.
 
+**NOTE:** Query string parameters are arrays, not singular values. This is because repeated keys are valid in query strings, and each one may have a different value. This matcher will match for a key if any one of its configured values is assigned in the query string. Backend applications using query strings MUST take into consideration that query string values are arrays and can have multiple values.
 #### Example:
 
 Match requests with a `sort` query parameter with the value `asc`:
