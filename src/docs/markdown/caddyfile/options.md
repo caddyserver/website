@@ -215,9 +215,20 @@ The differs from the [`log` directive](/docs/caddyfile/directives/log), which on
 - **output** configures where to write the logs. See the [`log` directive](/docs/caddyfile/directives/log#output-modules) for complete documentation.
 - **format** describes how to encode, or format, the logs. See the [`log` directive](/docs/caddyfile/directives/log#format-modules) for complete documentation.
 - **level** is the minimum entry level to log. Default: `INFO`.
-- **include** specifies the log names to be included in this logger. For example, to include only logs emitted by the admin API, you would include `admin.api`. By default, all logs are included.
-- **exclude** specifies the log names to be excluded from this logger. For example, to exclude only HTTP access logs, you would exclude `http.log.access`. By default, no logs are excluded.
+- **include** specifies the log names to be included in this logger. For example, to include only logs emitted by the admin API, you would include `admin.api`. By default, this list is empty (i.e. all logs are included).
+- **exclude** specifies the log names to be excluded from this logger. For example, to exclude only HTTP access logs, you would exclude `http.log.access`. By default, this list is empty (i.e. no logs are excluded).
 
+The logger names that `include` and `exclude` accept depend on the modules used, and easiest way to discover them is from prior logs.
+
+Here is an example logging as json all http access logs and admin logs to stdout:
+
+```caddy
+log default {
+	output stdout
+	format json
+	include http.log.access admin.api
+}
+```
 
 ##### `grace_period`
 Defines the grace period for shutting down HTTP servers during config changes. During the grace period, no new connections are accepted, idle connections are closed, and active connections are impatiently waited upon to finish their requests. If clients do not finish their requests within the grace period, the server will be forcefully terminated to allow the reload to complete and free up resources. By default, no grace period is set.
