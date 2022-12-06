@@ -115,9 +115,10 @@ Possible options are:
 	# PKI Options
 	pki {
 		ca [<id>] {
-			name            <name>
-			root_cn         <name>
-			intermediate_cn <name>
+			name                  <name>
+			root_cn               <name>
+			intermediate_cn       <name>
+			intermediate_lifetime <duration>
 			root {
 				format <format>
 				cert   <path>
@@ -445,6 +446,9 @@ The name to put in the CommonName field of the root certificate. Default: `{pki.
 
 ##### `intermediate_cn`
 The name to put in the CommonName field of the intermediate certificates. Default: `{pki.ca.name} - ECC Intermediate`
+
+##### `intermediate_lifetime`
+The [duration](/docs/conventions#durations) for which intermediate certificates are valid. This value must be less than the lifetime of the root cert (`3600d`). Default: `7d`. It is recommended not to change this unless absolutely necessary.
 
 ##### `root`
 A key pair (certificate and private key) to use as the root for the CA. If not specified, one will be generated and managed automatically.
