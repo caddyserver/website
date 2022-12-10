@@ -136,6 +136,15 @@ ExecReload=
 ExecReload=/usr/bin/caddy reload --config /etc/caddy/caddy.json
 ```
 
+Or, for example, if you'd like caddy to restart itself after 5s if it ever crashes unexpectedly:
+```systemd
+[Service]
+# Automatically restart caddy if it crashes except if the exit code was 1
+RestartPreventExitStatus=1
+Restart=on-failure
+RestartSec=5s
+```
+
 Then, save the file and exit the text editor, and restart the service for it to take effect:
 <pre><code class="cmd bash">sudo systemctl restart caddy</code></pre>
 
