@@ -8,14 +8,16 @@ header {
 }
 
 #logo-container {
+	align-items: flex-start;
+}
+
+#logo-docs-container {
 	display: flex;
 	align-items: center;
-	line-height: 0;
 }
 
 #logo {
-	height: 25px;
-	line-height: 0;
+	height: 35px;
 }
 
 #logo-docs {
@@ -28,9 +30,7 @@ header {
 }
 
 #zerossl-project {
-	font-size: 12px;
-	line-height: 1em;
-	padding-left: 1.5em;
+	padding-left: 2em;
 }
 
 #search {
@@ -878,12 +878,11 @@ td code {
 
 @media (max-width: 900px) {
 	#logo-container {
-		display: block;
+		align-items: center;
 	}
 
-	#zerossl-project {
-		text-align: center;
-		margin-bottom: 1em;
+	#logo {
+		height: 55px;
 	}
 
 	#logo-docs {
