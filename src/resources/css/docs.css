@@ -943,7 +943,7 @@ td code {
 	}
 
 	#logo {
-		filter: invert(1);
+		filter: invert(1) hue-rotate(180deg);
 	}
 	#zerossl-logo {
 		filter: invert(1) hue-rotate(180deg);
