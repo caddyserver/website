@@ -143,6 +143,8 @@ Static upstream addresses can take the form of a conventional [Caddy network add
 - `unix//var/php.sock`
 - `unix+h2c//var/grpc.sock`
 
+If no [`transport`](#transports) is configured, or no scheme is specified, then the request is proxied over HTTP, by default. Using `https://` as the scheme will use the [`http` transport](#the-http-transport) with [`tls`](#tls) enabled. Using `h2c://` as the scheme will use the [`http` transport](#the-http-transport) with [HTTP versions](#versions) set to allow cleartext HTTP/2 connections.
+
 Note: Schemes cannot be mixed, since they modify the common transport configuration (a TLS-enabled transport cannot carry both HTTPS and plaintext HTTP). Any explicit transport configuration will not be overwritten, and omitting schemes or using other ports will not assume a particular transport.
 
 Additionally, upstream addresses cannot contain paths or query strings, as that would imply simultaneous rewriting the request while proxying, which behavior is not defined or supported. You may use the [`rewrite`](/docs/caddyfile/directives/rewrite) directive should you need this.
