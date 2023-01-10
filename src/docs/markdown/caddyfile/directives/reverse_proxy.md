@@ -132,7 +132,7 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 
 #### Upstream addresses
 
-Static upstream addresses can take the form of a conventional [Caddy network address](/docs/conventions#network-addresses) or a URL that contains only scheme and host/port. Valid examples:
+Static upstream addresses can take the form of a URL that contains only scheme and host/port, or a conventional [Caddy network address](/docs/conventions#network-addresses). Valid examples:
 
 - `localhost:4000`
 - `127.0.0.1:4000`
@@ -143,15 +143,21 @@ Static upstream addresses can take the form of a conventional [Caddy network add
 - `unix//var/php.sock`
 - `unix+h2c//var/grpc.sock`
 
-If no [`transport`](#transports) is configured, or no scheme is specified, then the request is proxied over HTTP, by default. Using `https://` as the scheme will use the [`http` transport](#the-http-transport) with [`tls`](#tls) enabled. Using `h2c://` as the scheme will use the [`http` transport](#the-http-transport) with [HTTP versions](#versions) set to allow cleartext HTTP/2 connections.
+By default, connections are made to the upstream over plaintext HTTP. When using the URL form, a scheme can be used to set some [`transport`](#transports) defaults as a shorthand.
+- Using `https://` as the scheme will use the [`http` transport](#the-http-transport) with [`tls`](#tls) enabled.
 
-Note: Schemes cannot be mixed, since they modify the common transport configuration (a TLS-enabled transport cannot carry both HTTPS and plaintext HTTP). Any explicit transport configuration will not be overwritten, and omitting schemes or using other ports will not assume a particular transport.
+  Additionally, you may need to override the `Host` header such that it matches the TLS SNI value, which is used by servers for routing and certificate selection. See the [HTTPS](#https) section below for more details.
 
-Additionally, upstream addresses cannot contain paths or query strings, as that would imply simultaneous rewriting the request while proxying, which behavior is not defined or supported. You may use the [`rewrite`](/docs/caddyfile/directives/rewrite) directive should you need this.
+- Using `h2c://` as the scheme will use the [`http` transport](#the-http-transport) with [HTTP versions](#versions) set to allow cleartext HTTP/2 connections.
+- Using `http://` as the scheme is identical to having omitted the scheme, since HTTP is already the default. This syntax is included for symmetry with the other scheme shortcuts.
 
-If the address is not a URL (i.e. does not have a scheme), then placeholders can be used, but this makes the upstream _dynamically static_, meaning that potentially many different backends act as a single, static upstream in terms of health checks and load balancing.
+Schemes cannot be mixed, since they modify the common transport configuration (a TLS-enabled transport cannot carry both HTTPS and plaintext HTTP). Any explicit transport configuration will not be overwritten, and omitting schemes or using other ports will not assume a particular transport.
 
-When proxying over HTTPS, you may need to override the `Host` header such that it matches the TLS SNI value, which is used by servers for routing and certificate selection. See the [HTTPS](#https) section below for more details.
+When using the [network address](/docs/conventions#network-addresses) form, the network type is specified as a prefix to the upstream address. This cannot be combined with a URL scheme. As a special case, `unix+h2c/` is supported as a shortcut for the `unix/` network plus the same effects as the `h2c://` scheme.
+
+Upstream addresses _cannot_ contain paths or query strings, as that would imply simultaneous rewriting the request while proxying, which behavior is not defined or supported. You may use the [`rewrite`](/docs/caddyfile/directives/rewrite) directive should you need this.
+
+If the address is not a URL (i.e. does not have a scheme), then placeholders can be used, but this makes the upstream _dynamically static_, meaning that potentially many different backends act as a single, static upstream in terms of health checks and load balancing. We recommend using a [dynamic upstreams](#dynamic-upstreams) module instead, if possible.
 
 
 #### Dynamic upstreams
