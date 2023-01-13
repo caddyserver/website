@@ -37,7 +37,7 @@ You will probably be asked for your password, because Caddy serves all sites -- 
 	For local HTTPS, Caddy automatically generates certificates and unique private keys for you. The root certificate is added to your system's trust store, which is why the password prompt is necessary. It allows you to develop locally over HTTPS without certificate errors.
 </aside>
 
-(If you get permission errors, you may need to run with elevated privileges or choose a port higher than 1024.)
+(If you get permission errors, you may need to run with elevated privileges or choose a port higher than 1023.)
 
 Either open your browser to [localhost](http://localhost) or `curl` it:
 
