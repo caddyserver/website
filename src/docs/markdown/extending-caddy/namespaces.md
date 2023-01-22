@@ -15,6 +15,7 @@ Documentation for non-standard module namespaces can be found with the documenta
 Namespace | Expected Type | Description | Notes
 --------- | ------------- | ----------- | ----------
 |         | [`caddy.App`](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#App) | Caddy app
+caddy.config_loaders | [`caddy.ConfigLoader`](https://pkg.go.dev/github.com/caddyserver/caddy/v2#ConfigLoader) | Loads a config | <i>⚠️ Experimental</i>
 caddy.fs  | [`fs.FS`](https://pkg.go.dev/io/fs#FS) | Virtual file system |  <i>⚠️ Experimental</i>
 caddy.listeners | [`caddy.ListenerWrapper`](https://pkg.go.dev/github.com/caddyserver/caddy/v2#ListenerWrapper) | Wrap network listeners
 caddy.logging.encoders | [`zapcore.Encoder`](https://pkg.go.dev/go.uber.org/zap/zapcore#Encoder) | Log entry encoder
@@ -28,12 +29,14 @@ http.authentication.providers | [`caddyauth.Authenticator`](https://pkg.go.dev/g
 http.encoders | [`encode.Encoder`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddyhttp/encode#Encoder) | Usually, compression
 http.handlers | [`caddyhttp.MiddlewareHandler`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddyhttp?tab=doc#MiddlewareHandler) | HTTP handlers
 http.matchers | [`caddyhttp.RequestMatcher`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddyhttp?tab=doc#RequestMatcher) | HTTP request matchers
+http.precompressed | [`encode.Precompressed`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddyhttp/encode#Precompressed) | Supported precompress mappings
 http.reverse_proxy.circuit_breakers | [`reverseproxy.CircuitBreaker`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddyhttp/reverseproxy?tab=doc#CircuitBreaker) | Reverse proxy circuit breakers
 http.reverse_proxy.selection_policies | [`reverseproxy.Selector`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddyhttp/reverseproxy?tab=doc#Selector) | Load balancing selection policies
 http.reverse_proxy.transport | [`http.RoundTripper`](https://pkg.go.dev/net/http?tab=doc#RoundTripper) | HTTP reverse proxy transports
 http.reverse_proxy.upstreams | [`reverseproxy.UpstreamSource`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddyhttp/reverseproxy?tab=doc#UpstreamSource) | Dynamic upstream source | <i>⚠️ Experimental</i>
-tls.certificates | [`caddytls.CertificateLoader`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddytls?tab=doc#CertificateLoader) | TLS certificate source</i>
-tls.handshake_match | [`caddytls.ConnectionMatcher`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddytls?tab=doc#ConnectionMatcher) | TLS connection matcher</i>
+tls.certificates | [`caddytls.CertificateLoader`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddytls?tab=doc#CertificateLoader) | TLS certificate source
+tls.client_auth | [`caddytls.ClientCertificateVerifier`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddytls#ClientCertificateVerifier) | Verifies client certificates
+tls.handshake_match | [`caddytls.ConnectionMatcher`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddytls?tab=doc#ConnectionMatcher) | TLS connection matcher
 tls.issuance | [`certmagic.Issuer`](https://pkg.go.dev/github.com/caddyserver/certmagic?tab=doc#Issuer) | TLS certificate issuer
 tls.get_certificate | [`certmagic.Manager`](https://pkg.go.dev/github.com/caddyserver/certmagic?tab=doc#Manager) | TLS certificate manager | <i>⚠️ Experimental</i>
 tls.stek | [`caddytls.STEKProvider`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddytls?tab=doc#STEKProvider) | TLS session ticket key source
