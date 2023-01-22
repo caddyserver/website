@@ -138,7 +138,7 @@ php_fastcgi /blog/* 127.0.0.1:9000
 When using php-fpm listening via a unix socket:
 
 ```caddy-d
-php_fastcgi unix//run/php/php7.4-fpm.sock
+php_fastcgi unix//run/php/php8.2-fpm.sock
 ```
 
 The [`root` directive](/docs/caddyfile/directives/root) is typically used to specify the directory containing the PHP scripts, and the [`file_server` directive](/docs/caddyfile/directives/file_server) to serve static files:
