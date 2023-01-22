@@ -7,6 +7,15 @@ title: Conventions
 The Caddy ecosystem adheres to a few conventions to make things consistent and intuitive across the platform.
 
 
+- [Network addresses](#network-addresses)
+- [Placeholders](#placeholders)
+- [File locations](#file-locations)
+  - [Data directory](#data-directory)
+  - [Configuration directory](#configuration-directory)
+- [Durations](#durations)
+
+
+
 ## Network addresses
 
 When specifying a network address to dial or bind, Caddy accepts a string in the following format:
