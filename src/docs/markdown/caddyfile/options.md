@@ -105,7 +105,7 @@ Possible options are:
 			write       <duration>
 			idle        <duration>
 		}
-		name main
+		name <name>
 		metrics
 		max_header_size <size>
 		log_credentials
