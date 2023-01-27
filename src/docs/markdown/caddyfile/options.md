@@ -105,6 +105,7 @@ Possible options are:
 			write       <duration>
 			idle        <duration>
 		}
+		name main
 		metrics
 		max_header_size <size>
 		log_credentials
@@ -408,6 +409,10 @@ Enables Prometheus metrics collection; necessary before scraping metrics. Note t
 
 The maximum size to parse from a client's HTTP request headers. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
 
+
+##### `name`
+
+A custom name to assign to this server. Usually helpful to identify a server by its name in logs and metrics. If not set, Caddy will define it dynamically using a `srvX` pattern, where `X` starts with 0 and increments based on the number of servers in the config.
 
 ##### `log_credentials`
 
