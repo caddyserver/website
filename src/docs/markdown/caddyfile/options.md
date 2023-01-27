@@ -361,6 +361,30 @@ For example, to configure different options for the servers on ports `:80` and `
 }
 ```
 
+##### `name`
+
+A custom name to assign to this server. Usually helpful to identify a server by its name in logs and metrics. If not set, Caddy will define it dynamically using a `srvX` pattern, where `X` starts with 0 and increments based on the number of servers in the config.
+
+<aside class="tip">
+
+Keep in mind there's a caveat if you want to name your HTTP server and are using Auto-HTTPS. The server name config doesn't persist past adapting the config, and Auto-HTTPS happens at runtime, from the JSON config. 
+To overcome this, you'll need to create an empty `:80` or `http://` site block and rename it with `servers :80 { name http }` in the global options. With that Auto-HTTPS will add its redirect routes to that server.
+
+</aside>
+
+For example:
+
+```caddy
+{
+	servers :80 {
+		name http-auto-redirect
+	}
+}
+
+:80
+```
+
+
 ##### `listener_wrappers`
 
 Allows configuring [listener wrappers](/docs/json/apps/http/servers/listener_wrappers/), which can modify the behaviour of the socket listener. They are applied in the given order.
@@ -409,10 +433,6 @@ Enables Prometheus metrics collection; necessary before scraping metrics. Note t
 
 The maximum size to parse from a client's HTTP request headers. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
 
-
-##### `name`
-
-A custom name to assign to this server. Usually helpful to identify a server by its name in logs and metrics. If not set, Caddy will define it dynamically using a `srvX` pattern, where `X` starts with 0 and increments based on the number of servers in the config.
 
 ##### `log_credentials`
 
