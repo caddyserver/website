@@ -573,7 +573,7 @@ If you're trying to serve a modern PHP application, you may be looking for the [
 
 The reverse proxy can be configured to intercept responses from the backend. To facilitate this, response matchers can be defined (similar to the syntax for request matchers) and the first matching `handle_response` route will be invoked.
 
-When a response handler is invoked, the response from the backend is not written to the client, and the configured `handle_response` route will be executed instead, and it is up to that route to write a response. If the route does _not_ write a response, then request handling will continue with any handlers that are ordered after this `reverse_proxy`.
+When a response handler is invoked, the response from the backend is not written to the client, and the configured `handle_response` route will be executed instead, and it is up to that route to write a response. If the route does _not_ write a response, then request handling will continue with any handlers that are [ordered after](/docs/caddyfile/directives#directive-order) this `reverse_proxy`.
 
 - **@name** is the name of a [response matcher](#response-matcher). As long as each response matcher has a unique name, multiple matchers can be defined. A response can be matched on the status code and presence or value of a response header.
 - **replace_status** <span id="replace_status"/> simply changes the status code of response when matched by the given matcher.

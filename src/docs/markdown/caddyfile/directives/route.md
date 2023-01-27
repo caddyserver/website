@@ -6,7 +6,7 @@ title: route (Caddyfile directive)
 
 Evaluates a group of directives literally and as a single unit.
 
-Directives contained in a route block will not be reordered internally. Only HTTP handler directives (directives which add handlers or middleware to the chain) can be used in a route block.
+Directives contained in a route block will not be [reordered internally](/docs/caddyfile/directives#directive-order). Only HTTP handler directives (directives which add handlers or middleware to the chain) can be used in a route block.
 
 This directive is a special case in that its subdirectives are also regular directives.
 
