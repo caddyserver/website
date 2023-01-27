@@ -96,6 +96,7 @@ Possible options are:
 
 	# Server Options
 	servers [<listener_address>] {
+		name <name>
 		listener_wrappers {
 			<listener_wrappers...>
 		}
@@ -105,7 +106,6 @@ Possible options are:
 			write       <duration>
 			idle        <duration>
 		}
-		name <name>
 		metrics
 		max_header_size <size>
 		log_credentials
@@ -368,7 +368,7 @@ A custom name to assign to this server. Usually helpful to identify a server by 
 <aside class="tip">
 
 Keep in mind there's a caveat if you want to name your HTTP server and are using Auto-HTTPS. The server name config doesn't persist past adapting the config, and Auto-HTTPS happens at runtime, from the JSON config. 
-To overcome this, you'll need to create an empty `:80` or `http://` site block and rename it with `servers :80 { name http }` in the global options. With that Auto-HTTPS will add its redirect routes to that server.
+To overcome this, you'll need to create an empty `:80` or `http://` site block and set this option. With that Auto-HTTPS will add its redirect routes to that server.
 
 </aside>
 
@@ -376,12 +376,20 @@ For example:
 
 ```caddy
 {
+	servers :443 {
+		name https
+	}
+	
 	servers :80 {
-		name http-auto-redirect
+		name http
 	}
 }
 
-:80
+example.com {
+}
+
+http:// {
+}
 ```
 
 
