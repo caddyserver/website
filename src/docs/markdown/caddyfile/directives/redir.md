@@ -6,7 +6,7 @@ title: redir (Caddyfile directive)
 
 Issues an HTTP redirect to the client.
 
-This directive implies that a matched request is to be rejected. It is ordered very early in the handler chain (before [`rewrite`](/docs/caddyfile/directives/rewrite)).
+This directive implies that a matched request is to be rejected. It is ordered very early in the [handler chain](/docs/caddyfile/directives#directive-order) (before [`rewrite`](/docs/caddyfile/directives/rewrite)).
 
 
 ## Syntax
