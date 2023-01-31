@@ -21,6 +21,7 @@ The following config adapters are currently available (some are third-party proj
 - [**toml**](https://github.com/awoodbeck/caddy-toml-adapter)
 - [**hcl**](https://github.com/francislavoie/caddy-hcl)
 - [**dhall**](https://github.com/mholt/dhall-adapter)
+- [**mysql**](https://github.com/zhangjiayin/caddy-mysql-adapter)
 
 ## Using config adapters
 
