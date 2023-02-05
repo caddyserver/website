@@ -231,7 +231,7 @@ Obtains certificates from an internal certificate authority.
 
 - **ca** <span id="ca"/> is the name of the internal CA to use. Default: `local`. See the [PKI app global options](/docs/caddyfile/options#pki-options) to configure alternate CAs.
 
-- **lifetime** <span id="lifetime"/> is a [duration value](/docs/conventions#durations) that sets the validity period for interally issued leaf certificates. Default: 12h. It is NOT recommended to not change this, unless absolutely necessary.
+- **lifetime** <span id="lifetime"/> is a [duration value](/docs/conventions#durations) that sets the validity period for interally issued leaf certificates. Default: 12h. It is NOT recommended to change this, unless absolutely necessary.
 
 - **sign_with_root** <span id="sign_with_root"/> forces the root to be the issuer instead of the intermediate. This is NOT recommended and should only be used when devices/clients do not properly validate certificate chains (very uncommon).
 
