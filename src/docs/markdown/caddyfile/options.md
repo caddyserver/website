@@ -96,6 +96,7 @@ Possible options are:
 
 	# Server Options
 	servers [<listener_address>] {
+		name <name>
 		listener_wrappers {
 			<listener_wrappers...>
 		}
@@ -359,6 +360,38 @@ For example, to configure different options for the servers on ports `:80` and `
 	}
 }
 ```
+
+##### `name`
+
+A custom name to assign to this server. Usually helpful to identify a server by its name in logs and metrics. If not set, Caddy will define it dynamically using a `srvX` pattern, where `X` starts with 0 and increments based on the number of servers in the config.
+
+<aside class="tip">
+
+Keep in mind there's a caveat if you want to name your HTTP server and are using Auto-HTTPS. The server name config doesn't persist past adapting the config, and Auto-HTTPS happens at runtime, from the JSON config. 
+To overcome this, you'll need to create an empty `:80` or `http://` site block and set this option. With that Auto-HTTPS will add its redirect routes to that server.
+
+</aside>
+
+For example:
+
+```caddy
+{
+	servers :443 {
+		name https
+	}
+	
+	servers :80 {
+		name http
+	}
+}
+
+example.com {
+}
+
+http:// {
+}
+```
+
 
 ##### `listener_wrappers`
 
