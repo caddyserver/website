@@ -8,6 +8,8 @@ Caddy is configured through an administration endpoint which can be accessed via
 
 **Default address: `localhost:2019`**
 
+The default address can be changed by setting the `CADDY_ADMIN` environment variable. Some installation methods may set this to something different. The address in the Caddy config always takes precedence over the default.
+
 <aside class="tip">
 	If you are running untrusted code on your server (yikes 😬), make sure you protect your admin endpoint by isolating processes, patching vulnerable programs, and configuring the endpoint to bind to a permissioned unix socket instead.
 </aside>

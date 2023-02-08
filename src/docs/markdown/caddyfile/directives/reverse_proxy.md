@@ -390,11 +390,11 @@ By default, Caddy passes thru incoming headers&mdash;including `Host`&mdash;to t
 - It sets the [`X-Forwarded-Proto`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Proto) header field.
 - It sets the [`X-Forwarded-Host`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Host) header field.
 
-<span id="trusted_proxies"/> For these `X-Forwarded-*` headers, by default, Caddy will ignore their values from incoming requests, to prevent spoofing. If Caddy is not the first server being connected to by your clients (for example when a CDN is in front of Caddy), you may configure `trusted_proxies` with a list of IP ranges (CIDRs) from which incoming requests are trusted to have sent good values for these headers. As a shortcut, `private_ranges` may be configured to trust all private IP ranges.
+<span id="trusted_proxies"/> For these `X-Forwarded-*` headers, by default, the proxy will ignore their values from incoming requests, to prevent spoofing.
 
-```caddy-d
-trusted_proxies private_ranges
-```
+If Caddy is not the first server being connected to by your clients (for example when a CDN is in front of Caddy), you may configure `trusted_proxies` with a list of IP ranges (CIDRs) from which incoming requests are trusted to have sent good values for these headers.
+
+It is recommended that you configure this via the [`servers > trusted_proxies` global option](/docs/caddyfile/options#trusted_proxies) so that this applies to all proxy handlers in your server, without repetition.
 
 <aside class="tip">
 
@@ -402,7 +402,8 @@ If you're using Cloudflare in front of Caddy, be aware that you may be vulnerabl
 
 </aside>
 
-Additionally, when using the [`http` transport](#the-http-transport), the `Accept-Encoding: gzip` header will be set, if it is missing in the request from the client. This behavior can be disabled with [`compression off`](#compression) on the transport.
+Additionally, when using the [`http` transport](#the-http-transport), the `Accept-Encoding: gzip` header will be set, if it is missing in the request from the client. This allows the upstream to serve compressed content if it can. This behavior can be disabled with [`compression off`](#compression) on the transport.
+
 
 #### HTTPS
 
@@ -674,15 +675,6 @@ Replace a path prefix before proxying:
 handle_path /old-prefix/* {
 	rewrite * /new-prefix{path}
 	reverse_proxy localhost:9000
-}
-```
-
-
-When Caddy is behind another proxy or load balancer whose IP is `123.123.123.123`, which may set `X-Forwarded-*` headers to identify details about the original client request, that downstream proxy must be listed as trusted, otherwise Caddy will ignore those incoming headers:
-
-```caddy-d
-reverse_proxy localhost:8080 {
-	trusted_proxies 123.123.123.123
 }
 ```
 

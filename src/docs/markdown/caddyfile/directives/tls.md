@@ -31,6 +31,9 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 	ca_root   <pem_file>
 	key_type  ed25519|p256|p384|rsa2048|rsa4096
 	dns       <provider_name> [<params...>]
+	propagation_timeout <duration>
+	propagation_delay   <duration>
+	dns_ttl             <duration>
 	dns_challenge_override_domain <domain>
 	resolvers <dns_servers...>
 	eab       <key_id> <mac_key>
@@ -95,6 +98,12 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 
 - **dns** <span id="dns"/> enables the [DNS challenge](/docs/automatic-https#dns-challenge) using the specified provider plugin, which must be plugged in from one of the [`caddy-dns`](https://github.com/caddy-dns) repositories. Each provider plugin may have their own syntax following their name; refer to their docs for details. Maintaining support for each DNS provider is a community effort. [Learn how to enable the DNS challenge for your provider at our wiki.](https://caddy.community/t/how-to-use-dns-provider-modules-in-caddy-2/8148)
 
+- **propagation_timeout** <span id="propagation_timeout"/> is a [duration value](/docs/conventions#durations) that sets the maximum time to wait for the DNS TXT records to appear when using the DNS challenge. Set to `-1` to disable propagation checks. Default 2 minutes.
+
+- **propagation_delay** <span id="propagation_delay"/> is a [duration value](/docs/conventions#durations) that sets how long to wait before starting DNS TXT records propagation checks when using the DNS challenge. Default 0 (no wait).
+
+- **dns_ttl** <span id="dns_ttl"/> is a [duration value](/docs/conventions#durations) that sets the TTL of the TXT record used for the DNS challenge.
+
 - **dns_challenge_override_domain** <span id="dns_challenge_override_domain"/> overrides the domain to use for the DNS challenge. This is to delegate the challenge to a different domain, e.g. one whose DNS provider has a [`caddy-dns`](https://github.com/caddy-dns) plugin.
 
 - **resolvers** <span id="resolvers"/> customizes the DNS resolvers used when performing the DNS challenge; these take precedence over system resolvers or any default ones. If set here, the resolvers will propagate to all configured certificate issuers.
@@ -154,7 +163,9 @@ Obtains certificates using the ACME protocol.
 	trusted_roots <pem_files...>
 	dns <provider_name> [<options>]
 	propagation_timeout <duration>
-	propagation_delay <duration>
+	propagation_delay   <duration>
+	dns_ttl             <duration>
+	dns_challenge_override_domain <domain>
 	resolvers <dns_servers...>
 	preferred_chains [smallest] {
 		root_common_name <common_names...>
@@ -188,6 +199,10 @@ Obtains certificates using the ACME protocol.
 - **propagation_timeout** <span id="propagation_timeout"/> is a [duration value](/docs/conventions#durations) that sets the maximum time to wait for the DNS TXT records to appear when using the DNS challenge. Set to `-1` to disable propagation checks. Default 2 minutes.
 
 - **propagation_delay** <span id="propagation_delay"/> is a [duration value](/docs/conventions#durations) that sets how long to wait before starting DNS TXT records propagation checks when using the DNS challenge. Default 0 (no wait).
+
+- **dns_ttl** <span id="dns_ttl"/> is a [duration value](/docs/conventions#durations) that sets the TTL of the TXT record used for the DNS challenge.
+
+- **dns_challenge_override_domain** <span id="dns_challenge_override_domain"/> overrides the domain to use for the DNS challenge. This is to delegate the challenge to a different domain, e.g. one whose DNS provider has a [`caddy-dns`](https://github.com/caddy-dns) plugin.
 
 - **resolvers** <span id="resolvers"/> customizes the DNS resolvers used when performing the DNS challenge; these take precedence over system resolvers or any default ones.
 

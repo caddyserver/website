@@ -208,7 +208,7 @@ This command disables the admin API, making it easier to run multiple instances 
 
 <pre><code class="cmd bash">caddy fmt [--overwrite] [--diff] [&lt;path&gt;]</code></pre>
 
-Formats or prettifies a Caddyfile, then exits. The result is printed to stdout unless `--overwrite` is used.
+Formats or prettifies a Caddyfile, then exits. The result is printed to stdout unless `--overwrite` is used, and will exit with code `1` if there are any differences.
 
 `<path>` specifies the path to the Caddyfile. If `-`, the input is read from stdin. If omitted, a file named Caddyfile in the current directory is assumed instead.
 
@@ -376,6 +376,7 @@ Pipe in a maintenance page:
 	[--from &lt;addr&gt;]
 	--to &lt;addr&gt;
 	[--change-host-header]
+	[--disable-redirects]
 	[--internal-certs]
 	[--debug]</code></pre>
 
@@ -386,6 +387,8 @@ Spins up a simple but production-ready HTTP(S) reverse proxy.
 `--to` is the address(es) to proxy to. Can be repeated to load balance between multiple upstreams.
 
 `--change-host-header` will cause Caddy to change the Host header from the incoming value to the address of the upstream.
+
+`--disable-redirects` prevents Automatic HTTPS from enabling the HTTP->HTTPS redirects, if the `--from` address would enable HTTPS.
 
 `--internal-certs` will cause Caddy to issue certificates using its internal issuer (effectively self-signed) for the domain specified in the `--from` address.
 
@@ -548,13 +551,16 @@ Similarly to `caddy upgrade`, replaces the current Caddy binary with the latest 
 
 <pre><code class="cmd bash">caddy validate
 	[--config &lt;path&gt;]
-	[--adapter &lt;name&gt;]</code></pre>
+	[--adapter &lt;name&gt;]
+	[--envfile &lt;file&gt;]</code></pre>
 
 Validates a configuration file, then exits. This command deserializes the config, then loads and provisions all of its modules as if to start the config, but the config is not actually started. This exposes errors in a configuration that arise during loading or provisioning phases and is a stronger error check than merely serializing a config as JSON.
 
 `--config` is the config file to validate. If `-`, the config is read from stdin. Default is the `Caddyfile` in the current directory, if any.
 
 `--adapter` is the name of the config adapter to use, if the config file is not in Caddy's native JSON format. If the config file starts with `Caddyfile`, the `caddyfile` adapter is used by default.
+
+`--envfile` loads environment variables from the specified file, in `KEY=VALUE` format. Comments starting with `#` are supported; keys may be prefixed with `export`; values may be double-quoted (double-quotes within can be escaped); multi-line values are supported.
 
 
 

@@ -20,7 +20,9 @@ tracing {
 }
 ```
 
-- **&lt;span_name&gt;** - is a span name. Please see span naming [guidelines](https://github.com/open-telemetry/opentelemetry-specification/blob/v1.7.0/specification/trace/api.md).
+- **&lt;span_name&gt;** is a span name. Please see span [naming guidelines](https://github.com/open-telemetry/opentelemetry-specification/blob/v1.7.0/specification/trace/api.md).
+
+  [Placeholders](/docs/caddyfile/concepts#placeholders) may be used in span names; keep in mind that tracing happens as early as possible, so only request placeholders may be used, and not response placeholders.
 
 ## Configuration
 
@@ -43,10 +45,10 @@ export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://my-otlp-endpoint:55680
 
 Here is a **Caddyfile** example:
 
-```
-handle /myHandler {
+```caddy-d
+handle /example* {
 	tracing {
-		span my-span
+		span example
 	}
 	reverse_proxy 127.0.0.1:8081
 }

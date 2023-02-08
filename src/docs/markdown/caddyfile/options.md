@@ -61,6 +61,7 @@ Possible options are:
 		origins <origins...>
 		enforce_origin
 	}
+	persist_config off
 	log [name] {
 		output  <writer_module> ...
 		format  <encoder_module> ...
@@ -106,6 +107,7 @@ Possible options are:
 			write       <duration>
 			idle        <duration>
 		}
+		trusted_proxies <module> ...
 		metrics
 		max_header_size <size>
 		log_credentials
@@ -214,6 +216,12 @@ Customizes the [admin API endpoint](/docs/api). Accepts placeholders. If `off`, 
 - **origins** configures the list of remotes/origins that are allowed to connect to the endpoint.
 
 - **enforce_origin** enables enforcement of the Origin header. (This is different from enforcing origins generally, which is always done.)
+
+
+##### `persist_config`
+
+Controls whether the current JSON config should be persisted to the [configuration directory](/docs/conventions#configuration-directory), to avoid losing config changes performed via the admin API. Currently, only the `off` option is supported. By default, the config is persisted.
+
 
 
 ##### `log`
@@ -430,6 +438,37 @@ listener_wrappers {
 - **write** is a [duration value](/docs/conventions#durations) that sets how long to allow a write to a client. Note that setting this to a small value when serving large files may negatively affect legitimately slow clients. Defaults to no timeout.
 
 - **idle** is a [duration value](/docs/conventions#durations) that sets the maximum time to wait for the next request when keep-alives are enabled. Defaults to 5 minutes to help avoid resource exhaustion.
+
+
+
+##### `trusted_proxies`
+
+Allows configuring IP ranges (CIDRs) of proxy servers from which requests should be trusted. By default, no proxies are trusted.
+
+On its own, this configuration will not do anything, but it can be used to signal to handlers or matchers in HTTP routes that the request is trusted. See the [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy#defaults) handler for example, which uses this to trust sensitive incoming `X-Forwarded-*` headers.
+
+Currently, only the `static` [IP source module](/docs/json/apps/http/servers/trusted_proxies) is included with the standard distribution of Caddy, but this can be [extended](/docs/extending-caddy) with plugins to maintain a dynamic list of IP ranges.
+
+###### `static`
+
+Takes a static (unchanging) list of IP ranges (CIDRs) to trust.
+
+As a shortcut, `private_ranges` can be used to match all private IPv4 and IPv6 ranges. It's the same as specifying all of these ranges: `192.168.0.0/16 172.16.0.0/12 10.0.0.0/8 127.0.0.1/8 fd00::/8 ::1`
+
+```caddy-d
+trusted_proxies static [private_ranges] <ranges...>
+```
+
+Here's a complete example, trusting an example IPv4 range and an IPv6 range:
+
+```caddy
+{
+	servers {
+		trusted_proxies static 12.34.56.0/24 1200:ab00::/32
+	}
+}
+```
+
 
 
 ##### `metrics`
