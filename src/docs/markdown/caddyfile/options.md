@@ -410,11 +410,13 @@ For example:
 
 ```caddy
 {
-	servers :8080 {  <--- THIS WILL NOT MATCH ANY LISTENER
+	# This will NOT match any listener
+	servers :8080 {
 		name private
 	}
 	
-	servers 192.168.1.2:8080 {  <--- THIS WILL WORK BECAUSE IS AN EXACT MATCH 
+	# This will work because it's an exact match
+	servers 192.168.1.2:8080 { 
 		name public
 	}
 }
