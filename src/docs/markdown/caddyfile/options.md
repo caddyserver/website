@@ -400,6 +400,33 @@ http:// {
 }
 ```
 
+<aside class="tip">
+
+If you are defining the [`bind` directive](/docs/caddyfile/directives/bind) inside a site or the [`default_bind` global option](/docs/caddyfile/options#default_bind), the `servers [<listener_address>]` block *MUST* match the address defined on either directives, otherwise the settings won't be applied.
+
+</aside>
+	
+For example:
+
+```caddy
+{
+	servers :8080 {  <--- THIS WILL NOT MATCH ANY LISTENER
+		name private
+	}
+	
+	servers 192.168.1.2:8080 {  <--- THIS WILL WORK BECAUSE IS AN EXACT MATCH 
+		name public
+	}
+}
+
+:8080 {
+	bind 127.0.0.1
+}
+
+:8080 {
+	bind 192.168.1.2
+}
+```
 
 ##### `listener_wrappers`
 
