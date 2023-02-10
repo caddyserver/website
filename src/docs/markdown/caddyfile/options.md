@@ -369,6 +369,37 @@ For example, to configure different options for the servers on ports `:80` and `
 }
 ```
 
+
+<aside class="tip">
+
+If you are using the [`bind` directive](/docs/caddyfile/directives/bind) or the [`default_bind` global option](/docs/caddyfile/options#default_bind), the `listener_address` *MUST* match the address bind address combined with the port of the site block, otherwise the settings won't be applied. For example:
+
+```caddy
+{
+	# This will NOT match the server, bind address missing
+	servers :8080 {
+		name private
+	}
+	
+	# This will work because it's an exact match
+	servers 192.168.1.2:8080 { 
+		name public
+	}
+}
+
+:8080 {
+	bind 127.0.0.1
+}
+
+:8080 {
+	bind 192.168.1.2
+}
+```
+
+</aside>
+
+
+
 ##### `name`
 
 A custom name to assign to this server. Usually helpful to identify a server by its name in logs and metrics. If not set, Caddy will define it dynamically using a `srvX` pattern, where `X` starts with 0 and increments based on the number of servers in the config.
@@ -376,11 +407,7 @@ A custom name to assign to this server. Usually helpful to identify a server by 
 <aside class="tip">
 
 Keep in mind there's a caveat if you want to name your HTTP server and are using Auto-HTTPS. The server name config doesn't persist past adapting the config, and Auto-HTTPS happens at runtime, from the JSON config. 
-To overcome this, you'll need to create an empty `:80` or `http://` site block and set this option. With that Auto-HTTPS will add its redirect routes to that server.
-
-</aside>
-
-For example:
+To overcome this, you'll need to create an empty `:80` or `http://` site block and set this option. With that Auto-HTTPS will add its redirect routes to that server. For example:
 
 ```caddy
 {
@@ -399,6 +426,9 @@ example.com {
 http:// {
 }
 ```
+
+</aside>
+
 
 
 ##### `listener_wrappers`
