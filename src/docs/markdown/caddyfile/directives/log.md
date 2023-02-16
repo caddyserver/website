@@ -354,21 +354,22 @@ log {
 }
 ```
 
-Delete the Authorization request header from the logs:
+
+Delete the `User-Agent` request header from the logs:
 
 ```caddy-d
 log {
 	format filter {
 		wrap console
 		fields {
-			request>headers>Authorization delete
+			request>headers>User-Agent delete
 		}
 	}
 }
 ```
 
 
-Redact multiple sensitive cookies:
+Redact multiple sensitive cookies. (Note that some sensitive headers are logged with empty values by default; see the [`log_credentials` global option](/docs/caddyfile/options#log-credentials) to enable logging `Cookie` header values):
 
 ```caddy-d
 log {
