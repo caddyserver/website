@@ -84,9 +84,8 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 
 	# streaming
 	flush_interval <duration>
-	buffer_requests
-	buffer_responses
-	max_buffer_size <size>
+	request_buffers <size>
+	response_buffers <size>
 
 	# request/header manipulation
 	trusted_proxies [private_ranges] <ranges...>
@@ -332,11 +331,9 @@ By default, the proxy partially buffers the response for wire efficiency:
 	- `Content-Length` is unknown
 	- HTTP/2 on both sides of the proxy, `Content-Length` is unknown, and `Accept-Encoding` is either not set or is "identity"
 
-- **buffer_requests** <span id="buffer_requests"/> will cause the proxy to read the entire request body into a buffer before sending it upstream. This is very inefficient and should only be done if the upstream requires reading request bodies without delay (which is something the upstream application should fix).
+- **request_buffers** <span id="request_buffers"/> will cause the proxy to read up to `<size>` amount of bytes from the request body into a buffer before sending it upstream. This is very inefficient and should only be done if the upstream requires reading request bodies without delay (which is something the upstream application should fix). This accepts all size formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
 
-- **buffer_responses** <span id="buffer_responses"/> will cause the entire response body to be read and buffered in memory before being proxied to the client. This should be avoided if at all possible for performance reasons, but could be useful if the backend has tighter memory constraints.
-
-- **max_buffer_size** <span id="max_buffer_size"/> if body buffering is enabled, this sets the maximum size of the buffers used for the requests and responses. This accepts all size formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
+- **response_buffers** <span id="response_buffers"/> will cause the proxy to read up to `<size>` amount of bytes from the response body to be read into a buffer before being returned to the client. This should be avoided if at all possible for performance reasons, but could be useful if the backend has tighter memory constraints. This accepts all size formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
 
 
 
