@@ -25,7 +25,7 @@ rewrite [<matcher>] <to>
 Rewrite all requests to `foo.html`, leaving any query string unchanged:
 
 ```caddy-d
-rewrite * /foo.html
+rewrite .* /foo.html
 ```
 
 Replace the query string on API requests with `a=b`, leaving the path unchanged:
