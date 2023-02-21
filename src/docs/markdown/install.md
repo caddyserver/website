@@ -29,6 +29,7 @@ Our [official packages](https://github.com/caddyserver/dist) come only with the 
 - [Ansible](#ansible)
 - [Scoop](#scoop)
 - [Termux](#termux)
+- [Nix/Nixpkgs/NixOS](#nixnixpkgsnixos)
 
 
 ## Static binaries
@@ -169,3 +170,12 @@ _Note: This is a community-maintained installation method._
 
 [**View the Termux build.sh file**](https://github.com/termux/termux-packages/blob/master/packages/caddy/build.sh)
 
+
+## Nix/Nixpkgs/NixOS
+
+_Note: This is a community-maintained installation method._
+
+- Package name: [`caddy`](https://search.nixos.org/packages?channel=unstable&show=caddy&query=caddy)
+- NixOS module: [`services.caddy`](https://search.nixos.org/options?channel=unstable&show=services.caddy.enable&query=services.caddy)
+
+[**View Caddy in the Nixpkgs search**](https://search.nixos.org/packages?channel=unstable&show=caddy&query=caddy) and [**the NixOS options search**](https://search.nixos.org/options?channel=unstable&show=services.caddy.enable&query=services.caddy)
