@@ -477,7 +477,7 @@ Allows configuring IP ranges (CIDRs) of proxy servers from which requests should
 
 On its own, this configuration will not do anything, but it can be used to signal to handlers or matchers in HTTP routes that the request is trusted. See the [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy#defaults) handler for example, which uses this to trust sensitive incoming `X-Forwarded-*` headers.
 
-Currently, only the `static` [IP source module](/docs/json/apps/http/servers/trusted_proxies) is included with the standard distribution of Caddy, but this can be [extended](/docs/extending-caddy) with plugins to maintain a dynamic list of IP ranges.
+Currently, only the `static` [IP source module](/docs/json/apps/http/servers/trusted_proxies/) is included with the standard distribution of Caddy, but this can be [extended](/docs/extending-caddy) with plugins to maintain a dynamic list of IP ranges.
 
 ###### `static`
 
