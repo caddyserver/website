@@ -372,7 +372,7 @@ For example, to configure different options for the servers on ports `:80` and `
 
 <aside class="tip">
 
-If you are using the [`bind` directive](/docs/caddyfile/directives/bind) or the [`default_bind` global option](/docs/caddyfile/options#default_bind), the `listener_address` *MUST* match the address bind address combined with the port of the site block, otherwise the settings won't be applied. For example:
+If you are using the [`bind` directive](/docs/caddyfile/directives/bind) or the [`default_bind` global option](/docs/caddyfile/options#default_bind), the `listener_address` *MUST* match the bind address combined with the port of the site block, otherwise the settings won't be applied. For example:
 
 ```caddy
 {
