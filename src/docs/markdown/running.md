@@ -213,7 +213,7 @@ You can now install the service using:
 You might want to start the Windows Services Console to see if the service is runnnig correctly:
 <pre><code class="cmd bash">services.msc</code></pre>
 
-Be aware that Windows services cannot be reloaded, so you have to tell caddy directly to relaod:
+Be aware that Windows services cannot be reloaded, so you have to tell caddy directly to reload:
 <pre><code class="cmd bash">caddy reload</code></pre>
 
 Restarting is possible via the normal Windows services commands, for example via the Task Manager's "Services" tab.
