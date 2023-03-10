@@ -2,6 +2,18 @@ body {
 	background-color: #f0f6f9;
 }
 
+.notice {
+	border: 1px solid hsl(42.1, 100%, 46.7%);
+	line-height: 1.5;
+	background: hsl(23.2, 100%, 93.9%);
+	border-radius: 5px;
+	padding: 1em 2em;
+}
+
+.notice code {
+	padding: 0
+}
+
 .download-bar {
 	display: flex;
 	justify-content: space-between;
