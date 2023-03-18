@@ -391,7 +391,7 @@ By default, Caddy passes thru incoming headers&mdash;including `Host`&mdash;to t
 
 If Caddy is not the first server being connected to by your clients (for example when a CDN is in front of Caddy), you may configure `trusted_proxies` with a list of IP ranges (CIDRs) from which incoming requests are trusted to have sent good values for these headers.
 
-It is recommended that you configure this via the [`servers > trusted_proxies` global option](/docs/caddyfile/options#trusted_proxies) so that this applies to all proxy handlers in your server, without repetition.
+It is recommended that you configure this via the [`servers > trusted_proxies` global option](/docs/caddyfile/options#trusted-proxies) so that this applies to all proxy handlers in your server, without repetition.
 
 <aside class="tip">
 
