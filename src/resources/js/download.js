@@ -174,45 +174,8 @@ $(function() {
 // autoPlatform chooses the platform in the list that best
 // matches the user's browser, if it's available.
 function autoPlatform() {
-	// assume 32-bit linux, then change OS and architecture if justified
-	var os = "linux", arch = "amd64", arm = "";
-
-	// change os
-	if (/Macintosh/i.test(navigator.userAgent)) {
-		os = "darwin";
-	} else if (/Windows/i.test(navigator.userAgent)) {
-		os = "windows";
-	} else if (/FreeBSD/i.test(navigator.userAgent)) {
-		os = "freebsd";
-	} else if (/OpenBSD/i.test(navigator.userAgent)) {
-		os = "openbsd";
-	}
-
-	// change architecture
-	if (os == "darwin" || /amd64|x64|x86_64|Win64|WOW64|i686|64-bit/i.test(navigator.userAgent)) {
-		arch = "amd64";
-	} else if (/arm64/.test(navigator.userAgent)) {
-		arch = "arm64";
-	} else if (/ ARM| armv/.test(navigator.userAgent)) {
-		arch = "arm";
-	}
-
-	// change arm version
-	if (arch == "arm") {
-		arm = "7"; // assume version 7 by default
-		if (/armv6/.test(navigator.userAgent)) {
-			arm = "6";
-		} else if (/armv5/.test(navigator.userAgent)) {
-			arm = "5";
-		}
-	}
-
-	var selString = os+"-"+arch;
-	if (arm != "") {
-		selString += "-"+arm;
-	}
-
-	$('#platform').val(selString);
+	var [os, arch] = detectPlatform();
+	$('#platform').val(os+"-"+arch);
 	updatePage();
 }
 

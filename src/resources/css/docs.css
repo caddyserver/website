@@ -789,7 +789,49 @@ td code {
 
 
 
+.tabs .tab-buttons {
+	display: flex;
+	font-size: 0;
+	border-bottom: 2px solid #ccc;
+	border-radius: 0.5em;
+	margin: 0 16px 0 16px;
+}
+.tabs .tab-buttons button {
+	font-family: inherit;
+	border-radius: 0.5em 0.5em 0 0;
+	background-color: transparent;
+	border: 2px solid;
+	border-color: transparent;
+	font-size: 16px;
+	margin-bottom: 0;
+	margin-right: 8px;
+	margin-bottom: -2px;
+	transition: unset;
+	transform: unset;
+}
+.tabs .tab-buttons button:hover {
+	border-color: #ddd;
+	border-bottom-color: #ccc;
+}
+.tabs .tab-buttons button.active {
+	border-color: #ccc;
+	border-bottom-color: white;
+}
 
+.tabs .tab {
+	border-style: solid;
+	border-color: #ccc;
+	border-width: 0;
+	padding: 1.5rem 16px 0 20px;
+	margin-top: -2px;
+}
+.tabs .tab pre {
+	padding: 0;
+}
+.tabs .tab.bordered {
+	border-width: 2px;
+	border-radius: 8px;
+}
 
 
 
@@ -1026,5 +1068,23 @@ td code {
 	th,
 	td {
 		border-bottom-color: #233444;
+	}
+
+	.tabs .tab-buttons {
+		border-color: #33659a;
+	}
+	.tabs .tab-buttons button {
+		color: #bdd6f7;
+	}
+	.tabs .tab-buttons button:hover {
+		border-color: #284c71;
+		border-bottom-color: #33659a;
+	}
+	.tabs .tab-buttons button.active {
+		border-color: #33659a;
+		border-bottom-color: #051628;
+	}
+	.tabs .tab {
+		border-color: #33659a;
 	}
 }
