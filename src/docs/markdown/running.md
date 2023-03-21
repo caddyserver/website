@@ -14,6 +14,8 @@ While Caddy can be run directly with its [command line interface](/docs/command-
   - [Overrides](#overrides)
 - [Windows Service](#windows-service)
 - [Docker Compose](#docker-compose)
+  - [Setup](#setup)
+  - [Usage](#usage)
 
 
 ## Linux Service
@@ -105,7 +107,9 @@ You can stop the service with:
 <pre><code class="cmd bash">sudo systemctl stop caddy</code></pre>
 
 <aside class="advice">
-	Do not stop the service to change Caddy's configuration. Stopping the server will incur downtime. Use the reload command instead.
+
+Do not stop the service to change Caddy's configuration. Stopping the server will incur downtime. Use the reload command instead.
+
 </aside>
 
 The Caddy process will run as the `caddy` user, which has its `$HOME` set to `/var/lib/caddy`. This means that:
@@ -223,12 +227,20 @@ For customizing the service wrapper, see the [WinSW documentation](https://githu
 
 ## Docker Compose
 
-The simplest way to get up and running with Docker is to use Docker Compose. _The below is only an excerpt. See the docs on [Docker Hub](https://hub.docker.com/_/caddy) for more details_.
+The simplest way to get up and running with Docker is to use Docker Compose. See the docs on [Docker Hub](https://hub.docker.com/_/caddy) for more additional details about the official Caddy Docker image.
+
+<aside class="tip">
+
+This assumes you're using [Docker Compose V2](https://docs.docker.com/compose/reference/), where the command is now `docker compose` (space). instead of V1's `docker-compose` (hyphen).
+
+</aside>
+
+### Setup
 
 First, create a file `docker-compose.yml` (or add this service to your existing file):
 
 ```yaml
-version: "3.7"
+version: "3.9"
 
 services:
   caddy:
@@ -249,18 +261,64 @@ volumes:
   caddy_config:
 ```
 
-Make sure to fill in `<version>` with the latest version number, which you can find listed on [Docker Hub](https://hub.docker.com/_/caddy) under the "Tags" section.
+Make sure to fill in the image `<version>` with the latest version number, which you can find listed on [Docker Hub](https://hub.docker.com/_/caddy) under the "Tags" section.
+
+What this does:
+
+- Uses the `unless-stopped` restart policy to make sure the Caddy container is restarted automatically when your machine is rebooted.
+- Binds to ports `80` and `443` for HTTP and HTTPS respectively, plus `443/udp` for HTTP/3.
+- Bind mounts the `Caddyfile` file which is your Caddy configuration.
+- Bind mounts the `site` directory to serve your site's static files from `/srv`.
+- Named volumes for `/data` and `/config` to [persist important information](/docs/conventions#file-locations).
 
 Then, create a file named `Caddyfile` beside the `docker-compose.yml`, and write your [Caddyfile](/docs/caddyfile/concepts) configuration.
 
-If you have static files to serve, you may place them in a `site/` directory beside the configs, then set the [`root` directive](/docs/caddyfile/directives/root) to `/srv/`. If you don't, then you may remove the `/srv` volume mount.
+If you have static files to serve, you may place them in a `site/` directory beside the configs, then set the [`root`](/docs/caddyfile/directives/root) using `root * /srv`. If you don't, then you may remove the `/srv` volume mount.
+
+<aside class="tip">
+
+If you're using Caddy to [reverse proxy](/docs/caddyfile/directives/reverse_proxy) to another container, remember that in Docker networking, `localhost` means "this container", not "this machine". So for example, do not use `reverse_proxy localhost:8080`, instead use `reverse_proxy other-container:8080` 
+
+</aside>
+
+### Usage
 
 Then, you can start the container:
-<pre><code class="cmd bash">docker-compose up -d</code></pre>
+<pre><code class="cmd bash">docker compose up -d</code></pre>
 
 To reload Caddy after making changes to your Caddyfile:
-<pre><code class="cmd bash">docker-compose exec -w /etc/caddy caddy caddy reload</code></pre>
+<pre><code class="cmd bash">docker compose exec -w /etc/caddy caddy caddy reload</code></pre>
 
-To see Caddy's logs:
-<pre><code class="cmd bash">docker-compose logs caddy</code></pre>
+To see Caddy's 1000 most recent logs, and `f`ollow to see new ones streaming in:
+<pre><code class="cmd bash">docker compose logs caddy -n=1000 -f</code></pre>
 
+When using Docker for local development with HTTPS, you might use a [hostname](/docs/caddyfile/concepts#addresses) like `localhost` or `app.localhost`. This enables [Local HTTPS](/docs/automatic-https#local-https) using Caddy's local CA to issue certificates. This means that HTTP clients outside the container will not trust the TLS certificate served by Caddy. To solve this, you may install Caddy's root CA cert on your host machine's trust store:
+
+<div x-data="{ os: $persist(defaultOS(['linux', 'mac', 'windows'], 'linux')) }" class="tabs">
+<div class="tab-buttons">
+	<button x-on:click="os = 'linux'" x-bind:class="{ active: os === 'linux' }">Linux</button>
+	<button x-on:click="os = 'mac'" x-bind:class="{ active: os === 'mac' }">Mac</button>
+	<button x-on:click="os = 'windows'" x-bind:class="{ active: os === 'windows' }">Windows</button>
+</div>
+
+<div x-show="os === 'linux'" class="tab bordered">
+
+<pre><code class="cmd bash">docker compose cp caddy:/data/caddy/pki/authorities/local/root.crt /usr/local/share/ca-certificates/root.crt \
+	&& sudo update-ca-certificates</code></pre>
+
+</div>
+	
+<div x-show="os === 'mac'" class="tab bordered">
+
+<pre><code class="cmd bash">docker compose cp caddy:/data/caddy/pki/authorities/local/root.crt /tmp/root.crt \
+	&& sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain /tmp/root.crt</code></pre>
+
+</div>
+
+<div x-show="os === 'windows'" class="tab bordered">
+
+<pre><code class="cmd bash">docker compose cp caddy:/data/caddy/pki/authorities/local/root.crt %TEMP%/root.crt \
+	&& certutil -addstore -f "ROOT" %TEMP%/root.crt</code></pre>
+
+</div>
+</div>
