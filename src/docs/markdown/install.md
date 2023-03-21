@@ -23,9 +23,9 @@ Our [official packages](https://github.com/caddyserver/dist) come only with the 
 
 **Community-maintained:**
 
-- [Homebrew (Mac)](#homebrew)
-- [Chocolatey (Windows)](#chocolatey)
-- [Scoop (Windows)](#scoop)
+- [Homebrew (Mac)](#homebrew-mac)
+- [Chocolatey (Windows)](#chocolatey-windows)
+- [Scoop (Windows)](#scoop-windows)
 - [Webi](#webi)
 - [Ansible](#ansible)
 - [Termux](#termux)
@@ -114,7 +114,7 @@ See our [recommended Docker Compose configuration](/docs/running#docker-compose)
 
 
 
-## Homebrew
+## Homebrew (Mac)
 
 _Note: This is a community-maintained installation method._
 
