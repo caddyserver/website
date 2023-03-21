@@ -23,11 +23,11 @@ Our [official packages](https://github.com/caddyserver/dist) come only with the 
 
 **Community-maintained:**
 
-- [Homebrew](#homebrew)
+- [Homebrew (Mac)](#homebrew)
+- [Chocolatey (Windows)](#chocolatey)
+- [Scoop (Windows)](#scoop)
 - [Webi](#webi)
-- [Chocolatey](#chocolatey)
 - [Ansible](#ansible)
-- [Scoop](#scoop)
 - [Termux](#termux)
 - [Nix/Nixpkgs/NixOS](#nixnixpkgsnixos)
 
@@ -53,6 +53,8 @@ You can upgrade static binaries by replacing them with newer versions and restar
 
 Installing this package automatically starts and runs Caddy as a [systemd service](/docs/running#linux-service) named `caddy`. It also comes with an optional `caddy-api` service which is _not_ enabled by default, but should be used if you primarily configure Caddy via its API instead of config files.
 
+After installing, please read the [service usage instructions](/docs/running#using-the-service).
+
 **Stable releases:**
 
 <pre><code class="cmd"><span class="bash">sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https</span>
@@ -76,7 +78,7 @@ If you wish to use the packaged support files (systemd services, bash completion
 
 ## Fedora, RedHat, CentOS
 
-This package comes with both of Caddy's [systemd service](/docs/running#linux-service) unit files, but does not enable them by default.
+This package comes with both of Caddy's [systemd service](/docs/running#linux-service) unit files, but does not enable them by default. Using the service is recommended. If you do, please read the [service usage instructions](/docs/running#using-the-service).
 
 Fedora or RHEL/CentOS 8:
 
@@ -108,6 +110,9 @@ Those modifications include a custom start/stop behavior and additional sandboxi
 
 [**View on Docker Hub**](https://hub.docker.com/_/caddy)
 
+See our [recommended Docker Compose configuration](/docs/running#docker-compose) and usage instructions.
+
+
 
 ## Homebrew
 
@@ -116,6 +121,27 @@ _Note: This is a community-maintained installation method._
 <pre><code class="cmd bash">brew install caddy</code></pre>
 
 [**View the Homebrew formula**](https://formulae.brew.sh/formula/caddy)
+
+
+
+## Chocolatey (Windows)
+
+_Note: This is a community-maintained installation method._
+
+<pre><code class="cmd">choco install caddy</code></pre>
+
+[**View the Chocolatey package**](https://chocolatey.org/packages/caddy)
+
+
+
+## Scoop (Windows)
+
+_Note: This is a community-maintained installation method._
+
+<pre><code class="cmd">scoop install caddy</code></pre>
+
+[**View the Scoop manifest**](https://github.com/ScoopInstaller/Main/blob/master/bucket/caddy.json)
+
 
 
 ## Webi
@@ -135,14 +161,6 @@ You may need to adjust the Windows firewall rules to allow non-localhost incomin
 [**View on Webi**](https://webinstall.dev/caddy)
 
 
-## Chocolatey
-
-_Note: This is a community-maintained installation method._
-
-<pre><code class="cmd">choco install caddy</code></pre>
-
-[**View the Chocolatey package**](https://chocolatey.org/packages/caddy)
-
 
 ## Ansible
 
@@ -153,14 +171,6 @@ _Note: This is a community-maintained installation method._
 [**View the Ansible role repository**](https://github.com/nvjacobo/caddy)
 
 
-## Scoop
-
-_Note: This is a community-maintained installation method._
-
-<pre><code class="cmd">scoop install caddy</code></pre>
-
-[**View the Scoop manifest**](https://github.com/ScoopInstaller/Main/blob/master/bucket/caddy.json)
-
 
 ## Termux
 
@@ -169,6 +179,7 @@ _Note: This is a community-maintained installation method._
 <pre><code class="cmd">pkg install caddy</code></pre>
 
 [**View the Termux build.sh file**](https://github.com/termux/termux-packages/blob/master/packages/caddy/build.sh)
+
 
 
 ## Nix/Nixpkgs/NixOS
