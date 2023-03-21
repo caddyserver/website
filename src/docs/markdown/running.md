@@ -303,22 +303,29 @@ When using Docker for local development with HTTPS, you might use a [hostname](/
 
 <div x-show="os === 'linux'" class="tab bordered">
 
-<pre><code class="cmd bash">docker compose cp caddy:/data/caddy/pki/authorities/local/root.crt /usr/local/share/ca-certificates/root.crt \
-	&& sudo update-ca-certificates</code></pre>
+<pre><code class="cmd bash">docker compose cp \
+    caddy:/data/caddy/pki/authorities/local/root.crt \
+	/usr/local/share/ca-certificates/root.crt \
+    && sudo update-ca-certificates</code></pre>
 
 </div>
 	
 <div x-show="os === 'mac'" class="tab bordered">
 
-<pre><code class="cmd bash">docker compose cp caddy:/data/caddy/pki/authorities/local/root.crt /tmp/root.crt \
-	&& sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain /tmp/root.crt</code></pre>
+<pre><code class="cmd bash">docker compose cp \
+    caddy:/data/caddy/pki/authorities/local/root.crt \
+	/tmp/root.crt \
+    && sudo security add-trusted-cert -d -r trustRoot \
+      -k /Library/Keychains/System.keychain /tmp/root.crt</code></pre>
 
 </div>
 
 <div x-show="os === 'windows'" class="tab bordered">
 
-<pre><code class="cmd bash">docker compose cp caddy:/data/caddy/pki/authorities/local/root.crt %TEMP%/root.crt \
-	&& certutil -addstore -f "ROOT" %TEMP%/root.crt</code></pre>
+<pre><code class="cmd bash">docker compose cp \
+    caddy:/data/caddy/pki/authorities/local/root.crt \
+	%TEMP%/root.crt \
+    && certutil -addstore -f "ROOT" %TEMP%/root.crt</code></pre>
 
 </div>
 </div>
