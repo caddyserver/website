@@ -31,6 +31,10 @@ title: Caddyfile Directives
 
 Directives are functional keywords that appear within site [blocks](/docs/caddyfile/concepts#blocks). Sometimes, they may open blocks of their own which can contain _subdirectives_, but directives **cannot** be used within other directives unless noted. For example, you can't use `basicauth` inside a `file_server` block, because `file_server` does not know how to do authentication. However, you _may_ use some directives within special directive blocks like `handle` and `route` because they are specifically designed to group HTTP handler directives.
 
+- [Syntax](#syntax)
+- [Directive Order](#directive-order)
+- [Sorting Algorithm](#sorting-algorithm)
+
 The following directives come standard with Caddy, and can be used in the HTTP Caddyfile:
 
 <div id="directive-table">
@@ -90,25 +94,25 @@ The`[brackets]` indicate optional parameters.
 
 The ellipses `...` indicates a continuation, i.e. one or more parameters or lines.
 
-Subdirectives are always optional unless documented otherwise, even though they don't appear in `[brackets]`.
+Subdirectives are typically optional unless documented otherwise, even though they don't appear in `[brackets]`.
 
 
 ### Matchers
 
-Most---but not all---directives accept [matcher tokens](/docs/caddyfile/matchers#syntax), which let you filter requests. Matcher tokens are usually optional. If you see this in a directive's syntax:
+Most—but not all—directives accept [matcher tokens](/docs/caddyfile/matchers#syntax), which let you filter requests. Matcher tokens are usually optional. Directives support matchers if you see this in a directive's syntax:
 
 ```caddy-d
 [<matcher>]
 ```
 
-then the directive accepts a matcher token, letting you filter which requests the directive applies to.
-
-Because matcher tokens all work the same, the various possibilities for the matcher token will not be described on every page, to reduce duplication. Instead, refer to the centralized [matcher documentation](/docs/caddyfile/matchers).
+Because matcher tokens all work the same, the various possibilities for the matcher token will not be described on every page, to reduce duplication. Instead, refer to the [matcher documentation](/docs/caddyfile/matchers) for a detailed explanation of the syntax.
 
 
 ## Directive order
 
-Many directives manipulate the HTTP handler chain. The order in which those directives are evaluated matters, so a default ordering is hard-coded into Caddy:
+Many directives manipulate the HTTP handler chain. The order in which those directives are evaluated matters, so a default ordering is hard-coded into Caddy.
+
+You can override/customize this ordering by using the [`order` global option](/docs/caddyfile/options#order) or the [`route` directive](/docs/caddyfile/directives/route).
 
 ```caddy-d
 tracing
@@ -155,4 +159,33 @@ file_server
 acme_server
 ```
 
-You can override/customize this ordering by using the [`order` global option](/docs/caddyfile/options) or the [`route` directive](/docs/caddyfile/directives/route).
+
+
+## Sorting algorithm
+
+For ease of use, the Caddyfile adapter sorts directives according to the following rules:
+
+- Differently named directives are sorted by their position in the [default order](#directive-order#order). The default order can be overridden with the [`order` global option](/docs/caddyfile/options).
+
+- Same-named directives are sorted according to their [matchers](/docs/caddyfile/matchers#syntax).
+
+  - The highest priority is a directive with a single [path matcher](/docs/caddyfile/matchers#path-matchers).
+
+    Path matchers are sorted by specificity, from most specific to least specific.
+	
+	In general, this is performed by sorting by the length of the path matcher. There is one exception where if the path ends in a `*` and the paths of the two matchers are otherwise the same, the matcher with no `*` is considered more specific and sorted higher.
+
+    For example:
+    - `/foobar` is more specific than `/foo`
+    - `/foo` is more specific than `/foo*`
+    - `/foo/*` is more specific than `/foo*`
+
+  - A directive with any other matcher is sorted next, in the order it appears in the Caddyfile.
+
+    This includes path matchers with multiple values, and [named matchers](/docs/caddyfile/matchers#named-matchers).
+
+  - A directive with no matcher (i.e. matching all requests) is sorted last.
+
+- The [`vars`](/docs/caddyfile/directives/vars) directive has its ordering by matcher reversed, because it involves setting values which can overwrite eachother, so the most specific matcher should be evaluated last.
+
+- The contents of the [`route`](/docs/caddyfile/directives/route) directive ignores all the above rules, and preserves the order the directives appear within.
