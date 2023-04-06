@@ -113,26 +113,26 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 - **on_demand** <span id="on_demand"/> enables [On-Demand TLS](/docs/automatic-https#on-demand-tls) for the hostnames given in the site block's address(es). **Security warning:** Doing so in production is insecure unless you also configure the [`on_demand_tls` global option](https://caddyserver.com/docs/caddyfile/options#on-demand-tls) to mitigate abuse.
 
 - **client_auth** <span id="client_auth"/> enables and configures TLS client authentication:
-	- **mode** <span id="mode"/> is the mode for authenticating the client. Allowed values are:
+  - **mode** <span id="mode"/> is the mode for authenticating the client. Allowed values are:
 
-		| Mode               | Description                                                                              |
-		|--------------------|------------------------------------------------------------------------------------------|
-		| request            | Ask clients for a certificate, but allow even if there isn't one; do not verify it       |
-		| require            | Require clients to present a certificate, but do not verify it                           |
-		| verify_if_given    | Ask clients for a certificate; allow even if there isn't one, but verify it if there is  |
-		| require_and_verify | Require clients to present a valid certificate that is verified                          |
+    | Mode | Description |
+    | --- | --- |
+    | request | Ask clients for a certificate, but allow even if there isn't one; do not verify it |
+    | require | Require clients to present a certificate, but do not verify it |
+    | verify_if_given | Ask clients for a certificate; allow even if there isn't one, but verify it if there is |
+    | require_and_verify | Require clients to present a valid certificate that is verified |
 
-	Default: `require_and_verify` if any `trusted_ca_cert` or `trusted_leaf_cert` are provided; otherwise, `require`.
+    Default: `require_and_verify` if any `trusted_ca_cert` or `trusted_leaf_cert` are provided; otherwise, `require`.
 	
-	- **trusted_ca_cert** <span id="trusted_ca_cert"/> is a base64 DER-encoded CA certificate against which to validate client certificates.
+  - **trusted_ca_cert** <span id="trusted_ca_cert"/> is a base64 DER-encoded CA certificate against which to validate client certificates.
 
-	- **trusted_ca_cert_file** <span id="trusted_ca_cert_file"/> is a path to a PEM CA certificate file against which to validate client certificates.
+  - **trusted_ca_cert_file** <span id="trusted_ca_cert_file"/> is a path to a PEM CA certificate file against which to validate client certificates.
 
-	- **trusted_leaf_cert** <span id="trusted_leaf_cert"/> is a base64 DER-encoded client leaf certificate to accept.
+  - **trusted_leaf_cert** <span id="trusted_leaf_cert"/> is a base64 DER-encoded client leaf certificate to accept.
 
-	- **trusted_leaf_cert_file** <span id="trusted_leaf_cert_file"/> is a path to a PEM CA certificate file against which to validate client certificates.
+  - **trusted_leaf_cert_file** <span id="trusted_leaf_cert_file"/> is a path to a PEM CA certificate file against which to validate client certificates.
 
-	Multiple `trusted_*` directives may be used to specify multiple CA or leaf certificates. Client certificates which are not listed as one of the leaf certificates or signed by any of the specified CAs will be rejected according to the **mode**.
+    Multiple `trusted_*` directives may be used to specify multiple CA or leaf certificates. Client certificates which are not listed as one of the leaf certificates or signed by any of the specified CAs will be rejected according to the **mode**.
 
 - **issuer** <span id="issuer"/> configures a custom certificate issuer, or a source from which to obtain certificates. Which issuer is used and the options that follow in this segment depend on the issuer modules that are available (see below for the standard issuers; plugins may add others). Some of the other subdirectives such as `ca` and `dns` are actually shortcuts for configuring the `acme` issuer (and this subdirective was added later), so specifying this directive and some of the others is confusing and thus prohibited. This subdirective can be specified multiple times to configure multiple, redundant issuers; if one fails to issue a cert, the next one will be tried.
 
