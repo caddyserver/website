@@ -1,0 +1,10 @@
+.hero {
+	background-color: hsla(201,63%,15%,1);
+	background-image:
+		radial-gradient(at 50% 96%, hsla(0,100%,20%,0.35) 0px, transparent 50%),
+		radial-gradient(at 5% 30%, hsla(136,95%,15%,1) 0px, transparent 50%),
+		radial-gradient(at 91% 0%, hsla(214,83%,25%,1) 0px, transparent 50%),
+		radial-gradient(at 82% 73%, hsla(265,72%,20%,1) 0px, transparent 50%);
+	
+	min-height: 800px;
+}
