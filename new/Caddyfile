@@ -1,0 +1,6 @@
+localhost
+
+file_server
+templates
+
+try_files {path}.html {path}
