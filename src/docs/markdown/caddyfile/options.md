@@ -295,6 +295,7 @@ Skips the attempts to install the local CA's root into the system trust store, a
 ##### `acme_ca`
 Specifies the URL to the ACME CA's directory. It is strongly recommended to set this to Let's Encrypt's [staging endpoint](https://letsencrypt.org/docs/staging-environment/) for testing or development. Default: ZeroSSL and Let's Encrypt's production endpoints.
 
+Note that the [hostname requirements](/docs/automatic-https#hostname-requirements) apply, and ACME CA directory will not be used for IP addresses, `localhost` and hostnames with a `.local` TLD.
 
 ##### `acme_ca_root`
 Specifies a PEM file that contains a trusted root certificate for ACME CA endpoints, if not in the system trust store.
