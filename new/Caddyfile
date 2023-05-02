@@ -1,6 +1,23 @@
-localhost
+{
+	debug
+}
 
-file_server
-templates
+localhost {
+	file_server
+	templates
 
-try_files {path}.html {path}
+	try_files {path}.html {path}
+
+	handle_path /temporary-markdown-proxy/* {
+		reverse_proxy 127.0.0.1:10434
+	}
+}
+
+:10434 {
+	log
+	bind 127.0.0.1
+	root ../src/docs/markdown
+	uri strip_prefix /docs
+	try_files {path}.md {path}
+	file_server
+}
