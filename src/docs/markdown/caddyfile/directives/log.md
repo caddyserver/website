@@ -124,11 +124,13 @@ A network socket. If the socket goes down, it will dump logs to stderr while it 
 ```caddy-d
 output net <address> {
 	dial_timeout <duration>
+	soft_start
 }
 ```
 
 - **&lt;address&gt;** is the [address](/docs/conventions#network-addresses) to write logs to.
 - **dial_timeout** is how long to wait for a successful connection to the log socket. Log emissions may be blocked for up to this long if the socket goes down.
+- **soft_start** will ignore errors when connecting to the socket, allowing you to load your config even if the remote log service is down. Logs will be emitted to stderr instead.
 
 
 

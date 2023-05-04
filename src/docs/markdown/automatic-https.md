@@ -202,7 +202,7 @@ DNS provider support is a community effort. [Learn how to enable the DNS challen
 
 ## On-Demand TLS
 
-Caddy pioneered a new technology we call **On-Demand TLS**, which dynamically obtains a new certificate during the first TLS handshake that requires it, rather than at config load. Crucially, this does not require specifying the domain names in your configuration ahead of time.
+Caddy pioneered a new technology we call **On-Demand TLS**, which dynamically obtains a new certificate during the first TLS handshake that requires it, rather than at config load. Crucially, this does **not** require hard-coding the domain names in your configuration ahead of time.
 
 Many businesses rely on this unique feature to scale their TLS deployments at lower cost and without operational headaches when serving tens of thousands of sites.
 
@@ -216,17 +216,17 @@ When on-demand TLS is enabled, you do not need to specify the domain names in yo
 
 ### Using On-Demand TLS
 
-**In production environments, on-demand TLS must be both enabled and restricted. Enabling without restricting opens your server to attack.**
+**On-demand TLS must be both enabled and restricted to prevent abuse.**
 
 Enabling on-demand TLS happens in [TLS automation policies](/docs/json/apps/tls/automation/policies/) if using the JSON config, or [in site blocks with the `tls` directive](/docs/caddyfile/directives/tls) if using the Caddyfile.
 
 To prevent abuse of this feature, you must configure restrictions. This is done in the [`automation` object of the JSON config](/docs/json/apps/tls/automation/on_demand/), or the [`on_demand_tls` global option](/docs/caddyfile/options#on-demand-tls) of the Caddyfile. Restrictions are "global" and aren't configurable per-site or per-domain. The primary restriction is an "ask" endpoint to which Caddy will send an HTTP request to ask if it has permission to obtain and manage a certificate for the domain in the handshake. This means you will need some internal backend that can, for example, query the accounts table of your database and see if a customer has signed up with that domain name.
 
-You can also configure rate limits as restrictions, though rate limits alone are not a sufficient protection.
+You can also configure rate limits as restrictions, though rate limits alone are not a sufficient protection; the "ask" endpoint is required.
 
 Be mindful of how quickly your CA is able to issue certificates. If it takes more than a few seconds, this will negatively impact the user experience (for the first client only).
 
-Due to its deferred nature and potential for abuse (if not mitigated through proper configuration), we recommend enabling on-demand TLS only when your actual use case is described above.
+Due to its deferred nature and the extra configuration required to prevent abuse, we recommend enabling on-demand TLS only when your actual use case is described above.
 
 [See our wiki article for more information about using on-demand TLS effectively.](https://caddy.community/t/serving-tens-of-thousands-of-domains-over-https-with-caddy/11179)
 
