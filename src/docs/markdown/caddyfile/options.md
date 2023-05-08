@@ -248,7 +248,7 @@ log default {
 ```
 
 ##### `grace_period`
-Defines the grace period for shutting down HTTP servers during config changes. During the grace period, no new connections are accepted, idle connections are closed, and active connections are impatiently waited upon to finish their requests. If clients do not finish their requests within the grace period, the server will be forcefully terminated to allow the reload to complete and free up resources. By default, no grace period is set.
+Defines the grace period for shutting down HTTP servers (i.e. during config changes or when Caddy is stopping). During the grace period, no new connections are accepted, idle connections are closed, and active connections are impatiently waited upon to finish their requests. If clients do not finish their requests within the grace period, the server will be forcefully terminated to allow the reload to complete and free up resources. Accepts [duration values](/docs/conventions#durations). By default, no grace period is set, so all active connections are closed immediately.
 
 
 ##### `shutdown_delay`
