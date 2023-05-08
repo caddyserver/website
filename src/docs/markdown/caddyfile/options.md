@@ -211,7 +211,7 @@ How often to check if OCSP staples need updating. Default: `1h`.
 
 
 ##### `admin`
-Customizes the [admin API endpoint](/docs/api). Accepts placeholders. If `off`, then the admin endpoint will be disabled. If disabled, config changes will be impossible without stopping and starting the server.
+Customizes the [admin API endpoint](/docs/api). Accepts placeholders. If `off`, then the admin endpoint will be disabled. If disabled, config changes will be impossible without stopping and starting the server. Remember to use the `--address` CLI flag to specify the current admin endpoint when changing this value if the currently-running admin endpoint is not at the default address.
 
 - **origins** configures the list of remotes/origins that are allowed to connect to the endpoint.
 
