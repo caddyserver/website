@@ -684,6 +684,7 @@ reverse_proxy localhost:8080 {
 	handle_response @accel {
 		root    * /path/to/private/files
 		rewrite * {rp.header.X-Accel-Redirect}
+		method  * GET
 		file_server
 	}
 }
