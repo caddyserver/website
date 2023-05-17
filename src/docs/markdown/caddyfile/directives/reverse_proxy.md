@@ -141,6 +141,7 @@ Static upstream addresses can take the form of a URL that contains only scheme a
 - `example.com`
 - `unix//var/php.sock`
 - `unix+h2c//var/grpc.sock`
+- `localhost:8001-8006`
 
 By default, connections are made to the upstream over plaintext HTTP. When using the URL form, a scheme can be used to set some [`transport`](#transports) defaults as a shorthand.
 - Using `https://` as the scheme will use the [`http` transport](#the-http-transport) with [`tls`](#tls) enabled.
@@ -152,7 +153,7 @@ By default, connections are made to the upstream over plaintext HTTP. When using
 
 Schemes cannot be mixed, since they modify the common transport configuration (a TLS-enabled transport cannot carry both HTTPS and plaintext HTTP). Any explicit transport configuration will not be overwritten, and omitting schemes or using other ports will not assume a particular transport.
 
-When using the [network address](/docs/conventions#network-addresses) form, the network type is specified as a prefix to the upstream address. This cannot be combined with a URL scheme. As a special case, `unix+h2c/` is supported as a shortcut for the `unix/` network plus the same effects as the `h2c://` scheme.
+When using the [network address](/docs/conventions#network-addresses) form, the network type is specified as a prefix to the upstream address. This cannot be combined with a URL scheme. As a special case, `unix+h2c/` is supported as a shortcut for the `unix/` network plus the same effects as the `h2c://` scheme. Port ranges are supported as a shortcut, which expands to multiple upstreams with the same host.
 
 Upstream addresses _cannot_ contain paths or query strings, as that would imply simultaneous rewriting the request while proxying, which behavior is not defined or supported. You may use the [`rewrite`](/docs/caddyfile/directives/rewrite) directive should you need this.
 
@@ -203,6 +204,7 @@ Retrieves upstreams from A/AAAA DNS records.
 		resolvers <ip...>
 		dial_timeout        <duration>
 		dial_fallback_delay <duration>
+		versions ipv4|ipv6
 	}
 ```
 
@@ -212,6 +214,7 @@ Retrieves upstreams from A/AAAA DNS records.
 - **resolvers** is the list of DNS resolvers to override system resolvers.
 - **dial_timeout** is the timeout for dialing the query.
 - **dial_fallback_delay** is how long to wait before spawning an RFC 6555 Fast Fallback connection. Default: `300ms`
+- **versions** is the list of IP versions to resolve for. Default: `ipv4 ipv6` which correspond to both A and AAAA records respectively.
 
 
 ##### Multi
@@ -237,25 +240,31 @@ Load balancing is used whenever more than one upstream is defined.
 
   For policies that involve hashing, the [highest-random-weight (HRW)](https://en.wikipedia.org/wiki/Rendezvous_hashing) algorithm is used to ensure that a client or request with the same hash key is mapped to the same upstream, even if the list of upstreams change.
 
+  Some policies support fallback as an option, if noted, in which case they take a [block](/docs/caddyfile/concepts#blocks) with `fallback <policy>` which takes another load balancing policy. For those policies, the default fallback is `random`. Configuring a fallback allows using a secondary policy if the primary does not select one, allowing for powerful combinations. Fallbacks can be nested multiple times if desired. For example, `header` can be used as primary to allow for developers to choose a specific upstream, with a fallback of `first` for all other connections to implement primary/secondary failover.
+
 	- `random` randomly chooses an upstream
 
 	- `random_choose <n>` selects two or more upstreams randomly, then chooses one with least load (`n` is usually 2)
 
-	- `first` chooses the first available upstream, from the order they are defined in the config
+	- `first` chooses the first available upstream, from the order they are defined in the config, allowing for primary/secondary failover; remember to enable health checks along with this, otherwise failover will not occur
 
 	- `round_robin` iterates each upstream in turn
 
 	- `least_conn` choose upstream with fewest number of current requests; if more than one host has the least number of requests, then one of those hosts is chosen at random
 
-	- `ip_hash` maps the client IP to a sticky upstream
+	- `ip_hash` maps the remote IP (the immediate peer) to a sticky upstream
+
+	- `client_ip_hash` maps the client IP to a sticky upstream; this is best paired with the [`servers > trusted_proxies` global option](/docs/caddyfile/options#trusted-proxies) which enables real client IP parsing, otherwise it behaves the same as `ip_hash`
 
 	- `uri_hash` maps the request URI (path and query) to a sticky upstream
 
-	- `header [field]` maps a request header to a sticky upstream, by hashing the header value; if the specified header field is not present, a random upstream is selected
+	- `query [key]` maps a request query to a sticky upstream, by hashing the query value; if the specified key is not present, the fallback policy will be used to select an upstream (`random` by default)
 
-	- `cookie [<name> [<secret>]]` on the first request from a client (when there's no cookie), a random upstream is selected, and a `Set-Cookie` header is added to the response (default cookie name is `lb` if not specified). The cookie value is the upstream dial address of the chosen upstream, hashed with HMAC-SHA256 (using `<secret>` as the shared secret, empty string if not specified).
+	- `header [field]` maps a request header to a sticky upstream, by hashing the header value; if the specified header field is not present, the fallback policy will be used to select an upstream (`random` by default)
+
+	- `cookie [<name> [<secret>]]` on the first request from a client (when there's no cookie), the fallback policy will be used to select an upstream (`random` by default), and a `Set-Cookie` header is added to the response (default cookie name is `lb` if not specified). The cookie value is the upstream dial address of the chosen upstream, hashed with HMAC-SHA256 (using `<secret>` as the shared secret, empty string if not specified).
 	
-	  On subsequent requests where the cookie is present, the cookie value will be mapped to the same upstream if it's available; if not available or not found, a new random upstream is selected and the cookie is added to the response.
+	  On subsequent requests where the cookie is present, the cookie value will be mapped to the same upstream if it's available; if not available or not found, a new upstream is selected with the fallback policy, and the cookie is added to the response.
 
 	  If you wish to use a particular upstream for debugging purposes, you may hash the upstream address with the secret, and set the cookie in your HTTP client (browser or otherwise). For example, with PHP, you could run the following to compute the cookie value, where `10.1.0.10:8080` is the address of one of your upstreams, and `secret` is your configured secret.
 	  ```php
@@ -364,10 +373,16 @@ To delete a request header, preventing it from reaching the backend:
 header_up -Some-Header
 ```
 
-To delete all matching request, using a suffix match:
+To delete all matching request headers, using a suffix match:
 
 ```caddy-d
 header_up -Some-*
+```
+
+To delete _all_ request headers, to be able to individually add the ones you want (not recommended):
+
+```caddy-d
+header_up -*
 ```
 
 To perform a regular expression replacement on a request header:
@@ -391,7 +406,7 @@ By default, Caddy passes thru incoming headers&mdash;including `Host`&mdash;to t
 
 If Caddy is not the first server being connected to by your clients (for example when a CDN is in front of Caddy), you may configure `trusted_proxies` with a list of IP ranges (CIDRs) from which incoming requests are trusted to have sent good values for these headers.
 
-It is recommended that you configure this via the [`servers > trusted_proxies` global option](/docs/caddyfile/options#trusted-proxies) so that this applies to all proxy handlers in your server, without repetition.
+It is strongly recommended that you configure this via the [`servers > trusted_proxies` global option](/docs/caddyfile/options#trusted-proxies) instead of in the proxy, so that this applies to all proxy handlers in your server, and this has the benefit of enabling client IP parsing.
 
 <aside class="tip">
 
@@ -446,6 +461,7 @@ transport http {
 	read_buffer             <size>
 	write_buffer            <size>
 	max_response_header     <size>
+	proxy_protocol          v1|v2
 	dial_timeout            <duration>
 	dial_fallback_delay     <duration>
 	response_header_timeout <duration>
@@ -474,6 +490,8 @@ transport http {
 - **write_buffer** <span id="write_buffer"/> is the size of the write buffer in bytes. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). Default: `4KiB`.
 
 - **max_response_header** <span id="max_response_header"/> is the maximum amount of bytes to read from response headers. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). Default: `10MiB`.
+
+- **proxy_protocol** <span id="proxy_protocol"/> enables [PROXY protocol](https://www.haproxy.org/download/1.8/doc/proxy-protocol.txt) (popularized by HAProxy) on the connection to the upstream, prepending the real client IP data. This is best paired with the [`servers > trusted_proxies` global option](/docs/caddyfile/options#trusted-proxies) if Caddy is behind another proxy. Versions `v1` and `v2` are supported. This should only be used if you know the upstream server is able to parse PROXY protocol. By default, this is disabled.
 
 - **dial_timeout** <span id="dial_timeout"/> is the maximum [duration](/docs/conventions#durations) to wait when connecting to the upstream socket. Default: `3s`.
 

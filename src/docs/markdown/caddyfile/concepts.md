@@ -7,6 +7,9 @@ title: Caddyfile Concepts
 This document will help you learn about the HTTP Caddyfile in detail.
 
 1. [Structure](#structure)
+	- [Blocks](#blocks)
+	- [Directives](#directives)
+	- [Tokens and quotes](#tokens-and-quotes)
 2. [Addresses](#addresses)
 3. [Matchers](#matchers)
 4. [Placeholders](#placeholders)
@@ -156,6 +159,25 @@ directive "first line
 	second line"
 ```
 
+Heredocs <span id="heredocs"/> are also supported:
+
+```caddy
+example.com {
+	respond <<HTML
+		<html>
+		  <head><title>Foo</title></head>
+		  <body>Foo</body>
+		</html>
+		HTML 200
+}
+```
+
+The opening heredoc marker must start with `<<`, followed by any text (uppercase letters recommended). The closing heredoc marker must be the same text (in the above example, `HTML`).
+
+The closing marker can be indented, which causes every line of text to have that much indentation stripped (inspired by [PHP](https://www.php.net/manual/en/language.types.string.php#language.types.string.syntax.heredoc)) which is nice for readability inside [blocks](#blocks) while giving great control of the whitespace in the token text. The trailing newline is also stripped, but can be retained by adding an extra blank line before the closing marker.
+
+Additional tokens may follow the closing marker as arguments to the directive (such as in the example above, the status code `200`).
+
 
 
 ## Addresses
@@ -236,6 +258,7 @@ You can use any [Caddy placeholders](/docs/conventions#placeholders) in the Cadd
 | Shorthand       | Replaces                          |
 |-----------------|-----------------------------------|
 | `{cookie.*}`    | `{http.request.cookie.*}`         |
+| `{client_ip}`   | `{http.vars.client_ip}`           |
 | `{dir}`         | `{http.request.uri.path.dir}`     |
 | `{err.*}`       | `{http.error.*}` |
 | `{file_match.*}` | `{http.matchers.file.*}` |
@@ -297,7 +320,7 @@ You can pass arguments to imported configuration and use them like so:
 
 ```caddy
 (snippet) {
-  respond "Yahaha! You found {args.0}!"
+  respond "Yahaha! You found {args[0]}!"
 }
 
 a.example.com {

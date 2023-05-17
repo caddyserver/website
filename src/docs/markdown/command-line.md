@@ -12,7 +12,7 @@ caddy <command> [<args...>]
 
 The `<carets>` indicate parameters that get replaced by your input.
 
-The`[brackets]` indicate optional parameters.
+The`[brackets]` indicate optional parameters. The`(brackets)` indicate required parameters.
 
 The ellipses `...` indicates a continuation, i.e. one or more parameters.
 
@@ -101,9 +101,9 @@ The ellipses `...` indicates a continuation, i.e. one or more parameters.
 ### `caddy adapt`
 
 <pre><code class="cmd bash">caddy adapt
-	[--config &lt;path&gt;]
-	[--adapter &lt;name&gt;]
-	[--pretty]
+	[-c, --config &lt;path&gt;]
+	[-a, --adapter &lt;name&gt;]
+	[-p, --pretty]
 	[--validate]</code></pre>
 
 Adapts a configuration to Caddy's native JSON config structure and writes the output to stdout, along with any warnings to stderr, then exits.
@@ -175,13 +175,13 @@ Prints the environment as seen by caddy, then exits. Can be useful when debuggin
 ### `caddy file-server`
 
 <pre><code class="cmd bash">caddy file-server
-	[--root &lt;path&gt;]
+	[-r, --root &lt;path&gt;]
 	[--listen &lt;addr&gt;]
-	[--domain &lt;example.com&gt;]
-	[--browse]
-	[--templates]
+	[-d, --domain &lt;example.com&gt;]
+	[-b, --browse]
+	[-t, --templates]
 	[--access-log]
-	[--debug]</code></pre>
+	[-v, --debug]</code></pre>
 
 Spins up a simple but production-ready static file server.
 
@@ -206,7 +206,9 @@ This command disables the admin API, making it easier to run multiple instances 
 
 ### `caddy fmt`
 
-<pre><code class="cmd bash">caddy fmt [--overwrite] [--diff] [&lt;path&gt;]</code></pre>
+<pre><code class="cmd bash">caddy fmt [&lt;path&gt;]
+	[-w, --overwrite]
+	[-d, --diff]</code></pre>
 
 Formats or prettifies a Caddyfile, then exits. The result is printed to stdout unless `--overwrite` is used, and will exit with code `1` if there are any differences.
 
@@ -222,17 +224,19 @@ Formats or prettifies a Caddyfile, then exits. The result is printed to stdout u
 ### `caddy hash-password`
 
 <pre><code class="cmd bash">caddy hash-password
-	[--plaintext &lt;password&gt;]
-	[--algorithm &lt;name&gt;]
-	[--salt &lt;string&gt;]</code></pre>
+	[-p, --plaintext &lt;password&gt;]
+	[-a, --algorithm &lt;name&gt;]
+	[-s, --salt &lt;string&gt;]</code></pre>
 
-Hashes a password and writes the output to stdout, then exits.
+Convenient way to hash a plaintext password. The resulting hash is written to stdout as a format usable directly in your Caddy config.
 
 `--plaintext` is the plaintext form of the password. If omitted, interactive mode will be assumed and the user will be shown a prompt to enter the password manually.
 
-`--algorithm` may be bcrypt or any installed hash algorithm. Default is bcrypt.
+`--algorithm` may be `bcrypt` or any installed hash algorithm. Default is `bcrypt`.
 
-`--salt` is used only if the algorithm requires an external salt (like scrypt).
+`--salt` is used only if the algorithm requires an external salt (like `scrypt`).
+
+Note that `scrypt` is deprecated. Please use `bcrypt` instead.
 
 
 
@@ -250,7 +254,7 @@ Prints CLI help text, optionally for a specific subcommand, then exits.
 <pre><code class="cmd bash">caddy list-modules
 	[--packages]
 	[--versions]
-	[--skip-standard]</code></pre>
+	[-s, --skip-standard]</code></pre>
 
 Prints the Caddy modules that are installed, optionally with package and/or version information from their associated Go modules, then exits.
 
@@ -263,7 +267,7 @@ NOTE: Due to [a bug in Go](https://github.com/golang/go/issues/29228), version i
 ### `caddy manpage`
 
 <pre><code class="cmd bash">caddy manpage
-	--directory &lt;path&gt;</code></pre>
+	(-o, --directory &lt;path&gt;)</code></pre>
 
 Generates manual/documentation pages for Caddy commands and writes them to the directory at the specified path. The output of this command can be read by the `man` command.
 
@@ -283,13 +287,14 @@ Manual pages are separate documentation from what is on our website. Our website
 
 
 
+
 ### `caddy reload`
 
 <pre><code class="cmd bash">caddy reload
-	[--config &lt;path&gt;]
-	[--adapter &lt;name&gt;]
+	[-c, --config &lt;path&gt;]
+	[-a, --adapter &lt;name&gt;]
 	[--address &lt;interface&gt;]
-	[--force]</code></pre>
+	[-f, --force]</code></pre>
 
 Gives the running Caddy instance a new configuration. This has the same effect as POSTing a document to the [/load endpoint](/docs/api#post-load), but this command is convenient for simple workflows revolving around config files. Compared to the `stop`, `start`, and `run` commands, this single command is the correct, semantic way to change/reload the running configuration.
 
@@ -304,15 +309,17 @@ Because this command uses the API, the admin endpoint must not be disabled.
 `--force` will cause a reload to happen even if the specified config is the same as what Caddy is already running. Can be useful to force Caddy to reprovision its modules, which can have side-effects, for example: reloading manually-loaded TLS certificates.
 
 
+
+
 ### `caddy respond`
 
 <pre><code class="cmd bash">caddy respond
-	[--status &lt;code&gt;]
-	[--header "&lt;Field&gt;: &lt;value&gt;"]
-	[--body &lt;content&gt;]
-	[--listen &lt;addr&gt;]
+	[-s, --status &lt;code&gt;]
+	[-H, --header "&lt;Field&gt;: &lt;value&gt;"]
+	[-b, --body &lt;content&gt;]
+	[-l, --listen &lt;addr&gt;]
+	[-v, --debug]
 	[--access-log]
-	[--debug]
 	[&lt;status|body&gt;]</code></pre>
 
 
@@ -326,9 +333,9 @@ Starts one or more simple, hard-coded HTTP servers that are useful for developme
 
 `--listen` is the listener address, which can be any [network address](/docs/conventions#network-addresses) recognized by Caddy, and may include a port range to start multiple servers.
 
-`--access-log` enables access/request logging.
+`--debug` enables verbose debug logging.
 
-`--debug` enables more verbose debug logging.
+`--access-log` enables access/request logging.
 
 With no options specified, this command listens on a random available port and answers HTTP requests with an empty 200 response. The listen address can be customized with the `--listen` flag and will always be printed to stdout. If the listen address includes a port range, multiple servers will be started.
 
@@ -370,45 +377,62 @@ Pipe in a maintenance page:
 	--header "Content-Type: text/html"</code></pre>
 
 
+
+
 ### `caddy reverse-proxy`
 
 <pre><code class="cmd bash">caddy reverse-proxy
-	[--from &lt;addr&gt;]
-	--to &lt;addr&gt;
-	[--change-host-header]
-	[--disable-redirects]
-	[--internal-certs]
-	[--debug]</code></pre>
+	[-f, --from &lt;addr&gt;]
+	(-t, --to &lt;addr&gt;)
+	[-H, --header-up "&lt;Field&gt;: &lt;value&gt;"]
+	[-d, --header-down "&lt;Field&gt;: &lt;value&gt;"]
+	[-c, --change-host-header]
+	[-r, --disable-redirects]
+	[-i, --internal-certs]
+	[-v, --debug]
+	[--access-log]
+	[--insecure]</code></pre>
 
-Spins up a simple but production-ready HTTP(S) reverse proxy.
+A simple but production-ready reverse proxy. Useful for quick deployments, demos, and development.
 
-`--from` is the address to proxy from.
+Simply shuttles HTTP(S) traffic from the `--from` address to the `--to` address. Multiple `--to` addresses may be specified by repeating the flag. At least one `--to` address is required. The `--to` address may have a port range as a shortcut to expand to multiple upstreams.
 
-`--to` is the address(es) to proxy to. Can be repeated to load balance between multiple upstreams.
+Unless otherwise specified in the addresses, the `--from` address will be assumed to be HTTPS if a hostname is given, and the `--to` address will be assumed to be HTTP.
 
-`--change-host-header` will cause Caddy to change the Host header from the incoming value to the address of the upstream.
+If the `--from` address has a host or IP, Caddy will attempt to serve the proxy over HTTPS with a certificate (unless overridden by the HTTP scheme or port).
 
-`--disable-redirects` prevents Automatic HTTPS from enabling the HTTP->HTTPS redirects, if the `--from` address would enable HTTPS.
+If serving HTTPS: 
+  - `--disable-redirects` can be used to avoid binding to the HTTP port.
 
-`--internal-certs` will cause Caddy to issue certificates using its internal issuer (effectively self-signed) for the domain specified in the `--from` address.
+  - `--internal-certs` can be used to force issuance certs using the internal CA instead of attempting to issue a public certificate.
 
-`--debug` enables verbose logging.
+For proxying:
+  - `--header-up` can be used to set a request header to send to the upstream.
+  
+  - `--header-down` can be used to set a response header to send back to the client.
+  
+  - `--change-host-header` sets the Host header on the request to the address of the upstream, instead of defaulting to the incoming Host header.
 
-Both `--from` and `--to` parameters can be URLs, as scheme and domain name will be inferred from the provided URL (paths and query strings ignored). Or they can be a simple network address and not a complete URL.
+    This is a shortcut for `--header-up "Host: {http.reverse_proxy.upstream.hostport}"`
+  
+  - `--insecure` disables TLS verification with the upstream. WARNING: THIS DISABLES SECURITY BY NOT VERIFYING THE UPSTREAM'S CERTIFICATE.
+  
+  - `--debug` enables verbose logging.
 
 This command disables the admin API so it is easier to run multiple instances on a local development machine.
+
 
 
 ### `caddy run`
 
 <pre><code class="cmd bash">caddy run
-	[--config &lt;path&gt;]
-	[--adapter &lt;name&gt;]
+	[-c, --config &lt;path&gt;]
+	[-a, --adapter &lt;name&gt;]
 	[--pidfile &lt;file&gt;]
-	[--environ]
+	[-e, --environ]
 	[--envfile &lt;file&gt;]
-	[--resume]
-	[--watch]</code></pre>
+	[-r, --resume]
+	[-w, --watch]</code></pre>
 
 Runs Caddy and blocks indefinitely; i.e. "daemon" mode.
 
@@ -435,15 +459,15 @@ Runs Caddy and blocks indefinitely; i.e. "daemon" mode.
 ### `caddy start`
 
 <pre><code class="cmd bash">caddy start
-	[--config &lt;path&gt;]
-	[--adapter &lt;name&gt;]
+	[-c, --config &lt;path&gt;]
+	[-a, --adapter &lt;name&gt;]
 	[--envfile &lt;file&gt;]
 	[--pidfile &lt;file&gt;]
-	[--watch]</code></code></pre>
+	[-w, --watch]</code></code></pre>
 
 Same as [`caddy run`](#caddy-run), but in the background. This command only blocks until the background process is running successfully (or fails to run), then returns.
 
-Note: the flag `--config` doesn't support `-` to read the config from stdin.
+Note: the flag `--config` does _not_ support `-` to read the config from stdin.
 
 Use of this command is discouraged with system services or on Windows. On Windows, the child process will remain attached to the terminal, so closing the window will forcefully stop Caddy, which is not obvious. Consider running Caddy [as a service](/docs/running) instead.
 
@@ -455,7 +479,7 @@ Once started, you can use [`caddy stop`](#caddy-stop) or the [`POST /stop`](/doc
 
 <pre><code class="cmd bash">caddy stop
 	[--address &lt;interface&gt;]
-	[--config &lt;path&gt; [--adapter &lt;name&gt;]]</code></pre>
+	[-c, --config &lt;path&gt; [-a, --adapter &lt;name&gt;]]</code></pre>
 
 <aside class="tip">
 
@@ -476,7 +500,7 @@ If you want to stop the current configuration but do not want to exit the proces
 <pre><code class="cmd bash">caddy trust
 	[--ca &lt;id&gt;]
 	[--address &lt;interface&gt;]
-	[--config &lt;path&gt; [--adapter &lt;name&gt;]]</code></pre>
+	[-c, --config &lt;path&gt; [-a, --adapter &lt;name&gt;]]</code></pre>
 
 Installs a root certificate for a CA managed by Caddy's [PKI app](/docs/json/apps/pki/) into local trust stores. 
 
@@ -492,10 +516,10 @@ You may also use the `caddy` binary with this command to install certificates on
 ### `caddy untrust`
 
 <pre><code class="cmd bash">caddy untrust
-	[--cert &lt;path&gt;]
+	[-p, --cert &lt;path&gt;]
 	[--ca &lt;id&gt;]
 	[--address &lt;interface&gt;]
-	[--config &lt;path&gt; [--adapter &lt;name&gt;]]</code></pre>
+	[-c, --config &lt;path&gt; [-a, --adapter &lt;name&gt;]]</code></pre>
 
 Untrusts a root certificate from the local trust store(s).
 
@@ -513,7 +537,7 @@ If the admin API is used, then the CA ID defaults to "local". You may specify th
 ### `caddy upgrade`
 
 <pre><code class="cmd bash">caddy upgrade
-	[--keep-backup]</code></pre>
+	[-k, --keep-backup]</code></pre>
 
 Replaces the current Caddy binary with the latest version from [our download page](https://caddyserver.com/download) with the same modules installed, including all third-party plugins that are registered on the Caddy website.
 
@@ -528,7 +552,7 @@ This command may require elevated privileges if your user does not have permissi
 ### `caddy add-package`
 
 <pre><code class="cmd bash">caddy add-package &lt;packages...&gt;
-	[--keep-backup]</code></pre>
+	[-k, --keep-backup]</code></pre>
 
 Similarly to `caddy upgrade`, replaces the current Caddy binary with the latest version with the same modules installed, _plus_ the packages listed as arguments included in the new binary. Find the list of packages you can install from [our download page](https://caddyserver.com/download). Each argument should be the full package name.
 
@@ -541,7 +565,7 @@ For example:
 ### `caddy remove-package`
 
 <pre><code class="cmd bash">caddy remove-package &lt;packages...&gt;
-	[--keep-backup]</code></pre>
+	[-k, --keep-backup]</code></pre>
 
 Similarly to `caddy upgrade`, replaces the current Caddy binary with the latest version with the same modules installed, but _without_ the packages listed as arguments, if they existed in the current binary. Run `caddy list-modules --packages` to see the list of package names of non-standard modules included in the current binary.
 
@@ -550,8 +574,8 @@ Similarly to `caddy upgrade`, replaces the current Caddy binary with the latest 
 ### `caddy validate`
 
 <pre><code class="cmd bash">caddy validate
-	[--config &lt;path&gt;]
-	[--adapter &lt;name&gt;]
+	[-c, --config &lt;path&gt;]
+	[-a, --adapter &lt;name&gt;]
 	[--envfile &lt;file&gt;]</code></pre>
 
 Validates a configuration file, then exits. This command deserializes the config, then loads and provisions all of its modules as if to start the config, but the config is not actually started. This exposes errors in a configuration that arise during loading or provisioning phases and is a stronger error check than merely serializing a config as JSON.

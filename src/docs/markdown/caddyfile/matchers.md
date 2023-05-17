@@ -39,6 +39,7 @@ $(function() {
 	- [Path matchers](#path-matchers)
 	- [Named matchers](#named-matchers)
 - [Standard matchers](#standard-matchers)
+	- [client_ip](#client-ip)
 	- [expression](#expression)
 	- [file](#file)
 	- [header](#header)
@@ -183,6 +184,41 @@ Multiple matchers of the same type may be unioned (e.g. multiple `path` matchers
 Full matcher documentation can be found [in each respective matcher module's docs](/docs/json/apps/http/servers/routes/match/).
 
 Requests can be matched the following ways:
+
+
+
+### client_ip
+
+```caddy-d
+client_ip <ranges...>
+
+expression client_ip('<ranges...>')
+```
+
+By the client IP address. Accepts exact IPs or CIDR ranges. IPv6 zones are supported.
+
+This matcher is best used when the [`trusted_proxies`](/docs/caddyfile/options#trusted-proxies) global option is configured, otherwise it acts identically to the [`remote_ip`](#remote-ip) matcher. Only requests from trusted proxies will have their client IP parsed at the start of the request; untrusted requests will use the remote IP address of the immediate peer.
+
+As a shortcut, `private_ranges` can be used to match all private IPv4 and IPv6 ranges. It's the same as specifying all of these ranges: `192.168.0.0/16 172.16.0.0/12 10.0.0.0/8 127.0.0.1/8 fd00::/8 ::1`
+
+There can be multiple `client_ip` matchers per named matcher, and their ranges will be merged and OR'ed together.
+
+#### Example:
+
+Match requests from private IPv4 addresses:
+
+```caddy-d
+client_ip 192.168.0.0/16 172.16.0.0/12 10.0.0.0/8 127.0.0.1/8
+```
+
+This matcher is commonly paired with the [`not`](#not) matcher to invert the match. For example, to abort all connections from _public_ IPv4 and IPv6 addresses (which is the inverse of all private ranges):
+
+```caddy-d
+@denied not client_ip private_ranges
+abort @denied
+```
+
+
 
 ### expression
 
@@ -599,9 +635,11 @@ expression remote_ip('<ranges...>')
 expression remote_ip('forwarded', '<ranges...>')
 ```
 
-By remote (client) IP address. Accepts exact IPs or CIDR ranges. If the first argument is `forwarded`, then the first IP in the `X-Forwarded-For` request header, if present, will be preferred as the reference IP, rather than the immediate peer's IP, which is the default. IPv6 zones are supported.
+By remote IP address (i.e. the IP address of the immediate peer). Accepts exact IPs or CIDR ranges. IPv6 zones are supported.
 
 As a shortcut, `private_ranges` can be used to match all private IPv4 and IPv6 ranges. It's the same as specifying all of these ranges: `192.168.0.0/16 172.16.0.0/12 10.0.0.0/8 127.0.0.1/8 fd00::/8 ::1`
+
+⚠️ The `forwarded` option is deprecated, and will be removed in a future version. Its implementation is insecure. Use the [`client_ip`](#client-ip) matcher instead, which allows for securely matching the real client IP if parsed from an HTTP header. If enabled, then the first IP in the `X-Forwarded-For` request header, if present, will be preferred as the reference IP, rather than the immediate peer's IP, which is the default.
 
 There can be multiple `remote_ip` matchers per named matcher, and their ranges will be merged and OR'ed together.
 

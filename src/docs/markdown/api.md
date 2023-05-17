@@ -334,7 +334,7 @@ Returns the current status of the configured reverse proxy upstreams (backends) 
 
 Each entry in the JSON array is a configured [upstream](/docs/json/apps/http/servers/routes/handle/reverse_proxy/upstreams/) stored in the global upstream pool.
 
-- **address** is the dial address of the upstream. For SRV upstreams, this is the `lookup_srv` DNS name.
+- **address** is the dial address of the upstream.
 - **num_requests** is the amount of active requests currently being handled by the upstream.
 - **fails** the current number of failed requests remembered, as configured by passive health checks.
 
