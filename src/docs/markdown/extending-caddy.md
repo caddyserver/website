@@ -294,6 +294,10 @@ Notice how the loaded module is type-asserted: `g.Gadget = val.(Gadgeter)` - thi
 
 If your host module defines a new namespace, be sure to document both that namespace and its Go type(s) for developers [like we have done here](/docs/extending-caddy/namespaces).
 
+## Module Documentation
+
+Register the module to make a new Caddy module show up in the module documentation and be available in http://caddyserver.com/download. The registration is available at http://caddyserver.com/account. Create a new account if you don't have one already and click on "Register package".
+
 ## Complete Example
 
 Let's suppose we want to write an HTTP handler module. This will be a contrived middleware for demonstration purposes which prints the visitor's IP address to a stream on every HTTP request.
