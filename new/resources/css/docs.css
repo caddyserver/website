@@ -1,3 +1,37 @@
+:root, .light {
+	--header-bg: white;
+	--button-secondary-color: rgb(64, 131, 153);
+	--button-secondary-border-color: rgb(198, 217, 223);
+	--button-secondary-color-hover: rgb(7, 86, 134);
+	--button-secondary-border-color-hover: rgb(155, 191, 213);
+	--nav-current-bg: linear-gradient(to right, #ecf1f3, transparent);
+	--nav-link-hover-shadow-color: rgba(0, 0, 0, 0.15);
+	--nav-link-hover-before-bg: #d2e5e7;
+	--autonav-bg: #fff;
+	--pagenav-hover-bg: #f4f7f9;
+	--cmd-bg: #333;
+	--tip-color: #5c50bb;
+}
+
+.dark {
+	--header-bg: rgba(44, 130, 164, 0.11);
+	--button-secondary-color: rgb(36, 166, 208);
+	--button-secondary-border-color: rgb(38, 116, 140);
+	--button-secondary-color-hover: rgb(0, 194, 255);
+	--button-secondary-border-color-hover: rgb(0, 194, 255);
+	--nav-current-bg: linear-gradient(to right, #1a3c4d, transparent);
+	--nav-link-hover-shadow-color: rgba(255, 255, 255, 0.15);
+	--nav-link-hover-before-bg: #32494f;
+	--autonav-bg: #34404d;
+	--pagenav-hover-bg: #18262f;
+	--cmd-bg: black;
+	--tip-color: #a6b2f7;
+}
+
+
+
+
+
 html,
 body {
 	min-height: 100%;
@@ -5,14 +39,6 @@ body {
 
 .wrapper {
 	max-width: 1800px;
-}
-
-:root {
-	--header-bg: white;
-}
-
-.dark {
-	--header-bg: rgba(44, 130, 164, 0.11);
 }
 
 header {
@@ -30,12 +56,12 @@ header {
 	color: white;
 }
 .button.secondary {
-	color: rgb(64, 131, 153);
-	border: 1px solid rgb(226, 242, 247);
+	color: var(--button-secondary-color);
+	border: 1px solid var(--button-secondary-border-color);
 }
 .button.secondary:hover {
-	color: rgb(7, 86, 134);
-	border-color: rgb(155, 191, 213);
+	color: var(--button-secondary-color-hover);
+	border: 1px solid var(--button-secondary-border-color-hover);
 }
 
 
@@ -53,9 +79,6 @@ main {
 
 
 
-
-
-
 .docs {
 	display: flex;
 	font-size: 16px;
@@ -63,6 +86,7 @@ main {
 
 .docs nav {
 	flex: 1;
+	min-width: 250px;
 }
 
 
@@ -96,7 +120,7 @@ main nav li li::before {
 	position: absolute;
 	width: 1px;
 	height: 100%;
-	background-color: #d2e5e7;
+	background-color: var(--nav-link-hover-before-bg);
 	transition: .15s;
 }
 
@@ -135,7 +159,7 @@ main nav li:hover > a,
 
 main nav li:hover > a {
 	/* background: #f6fafc; */
-	box-shadow: -10px 0 10px -3px rgba(0, 0, 0, 0.15);
+	box-shadow: -10px 0 10px -3px var(--nav-link-hover-shadow-color);
 }
 
 main nav > ul > li > a::before {
@@ -155,7 +179,7 @@ main nav li a:hover::before {
 }
 
 main nav li a.current {
-	background: linear-gradient(to right, #ecf1f3, transparent);
+	background: var(--nav-current-bg);
 }
 
 main nav .heading {
@@ -208,8 +232,7 @@ article {
 	word-wrap: break-word;
 
 	max-width: 1100px;
-
-	/* color: #222; */
+	min-width: 0;
 }
 
 /*
@@ -281,6 +304,7 @@ article h6 {
 
 	font-family: Gantari;
 	font-weight: 800;
+	color: var(--heading-color);
 }
 
 article h1,
@@ -359,7 +383,7 @@ code {
 }
 
 code.cmd {
-	background-color: #333;
+	background-color: var(--cmd-bg);
 	color: #eaeaea;
 }
 
@@ -481,8 +505,10 @@ article aside.advice::before {
 }
 
 article aside.tip {
-	color: #706b95;
+	color: var(--tip-color);
 }
+
+
 article aside.advice {
 	color: #826848;
 }
@@ -556,7 +582,7 @@ td code {
 	visibility: hidden;
 	left: 75%;
 	top: 0;
-	background: #fff;
+	background: var(--autonav-bg);
 	box-shadow: 0 10px 40px rgb(0 0 0 / .2);
 	border-radius: 10px;
 	border-top-left-radius: 0;
@@ -604,67 +630,10 @@ main nav > ul > li:hover #autonav {
 }
 
 #pagenav a:hover {
-	background: #f4f7f9;
+	background: var(--pagenav-hover-bg);
 }
 
 @keyframes fadeIn {
 	0%   { opacity: 0; transform: translateY(2em); }
 	100% { opacity: 1; transform: translateY(0); }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.dark main nav li a.current {
-	background: linear-gradient(to right, #1a3c4d, transparent);
-}
-
-.dark main nav a {
-	color: #7d8e93;
-}
-
-.dark main nav li:hover > a {
-	box-shadow: -10px 0 10px -3px rgba(255, 255, 255, 0.15);
-}
-
-.dark main nav li li::before {
-	background-color: #32494f
-}
-
-.dark #autonav {
-	background: #36383a;
-}
-
-.dark #pagenav a:hover {
-	background: #18262f;
-}
-
-.dark code.cmd {
-	background: black;
 }

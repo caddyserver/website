@@ -127,6 +127,9 @@ function getTheme() {
 
 // setTheme changes the configured theme to light, dark, or system and applies it.
 function setTheme(theme) {
+	if (theme !== "light" && theme !== "dark" && theme !== "system") {
+		theme = "system";
+	}
 	localStorage.setItem("theme", theme);
 	$('#current-theme').innerText = theme;
 	if (theme == "system") {
@@ -139,10 +142,8 @@ function setTheme(theme) {
 function applyTheme(lightOrDark) {
 	if (lightOrDark == "dark") {
 		$('html').classList.add('dark');
-		$('#logo').src = '/resources/images/logo-dark.svg';
 	} else {
 		$('html').classList.remove('dark');
-		$('#logo').src = '/resources/images/logo-light.svg';
 	}
 }
 
@@ -158,3 +159,23 @@ function nextTheme() {
 	}
 	setTheme(theme);
 }
+
+// hoversplash effect!
+on('mouseover', '.button', (e) => {
+	const elem = document.createElement('span');
+	elem.classList.add('hover-splash');
+
+	// get coordinates relative to container
+	const rect = e.target.getBoundingClientRect();
+	const x = e.clientX - rect.left;
+	const y = e.clientY - rect.top;
+
+	elem.style.left = `${x}px`;
+	elem.style.top = `${y}px`;
+
+	e.target.append(elem);
+
+	setTimeout(function() {
+		elem.remove();
+	}, 1000);
+});
