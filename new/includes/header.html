@@ -1,4 +1,4 @@
-<header>
+<header class="{{index .Args 0}}">
 	<div class="topbar">
 		<div class="wrapper">
 			<div style="flex: 1;"></div>
@@ -23,7 +23,11 @@
 		</div>
 	</div>
 	<div class="navbar wrapper">
-		<a href="/"><img src="/resources/images/{{index .Args 0}}" id="logo" alt="Caddy"></a>
+		<a href="/">
+			<img src="/resources/images/logo-light.svg" class="logo" id="logo-light" alt="Caddy web server">
+			<img src="/resources/images/logo-dark.svg" class="logo" id="logo-dark" alt="Caddy web server">
+		</a>
+		
 
 		<nav role="navigation">
 			<ul>
