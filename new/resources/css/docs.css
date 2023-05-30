@@ -580,7 +580,7 @@ td code {
 #autonav {
 	position: absolute;
 	visibility: hidden;
-	left: 75%;
+	left: 80%;
 	top: 0;
 	background: var(--autonav-bg);
 	box-shadow: 0 10px 40px rgb(0 0 0 / .2);
@@ -636,4 +636,22 @@ main nav > ul > li:hover #autonav {
 @keyframes fadeIn {
 	0%   { opacity: 0; transform: translateY(2em); }
 	100% { opacity: 1; transform: translateY(0); }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 1400px) {
+	#pagenav {
+		display: none;
+	}
 }

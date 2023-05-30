@@ -178,6 +178,11 @@ header nav>ul {
 	gap: 2em;
 }
 
+.navbar .actions,
+.navbar nav ul {
+	flex-wrap: wrap;
+}
+
 header nav ul {
 	list-style: none;
 	margin: 0;
@@ -455,4 +460,22 @@ header nav ul {
 
 #current-theme {
 	text-transform: capitalize;
+}
+
+
+
+
+
+
+
+
+@media (max-width: 1150px) {
+	.dropdown {
+		display: none;
+	}
+
+	.wrapper {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
 }
