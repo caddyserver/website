@@ -11,6 +11,7 @@
 	--pagenav-hover-bg: #f4f7f9;
 	--cmd-bg: #333;
 	--tip-color: #5c50bb;
+	--menu-toggle-bg: #e4f1f2;
 }
 
 .dark {
@@ -26,6 +27,7 @@
 	--pagenav-hover-bg: #18262f;
 	--cmd-bg: black;
 	--tip-color: #a6b2f7;
+	--menu-toggle-bg: #274d5c;
 }
 
 
@@ -89,7 +91,12 @@ main {
 	min-width: 250px;
 }
 
-
+#docs-menu {
+	background: var(--menu-toggle-bg);
+	padding: 1em;
+	cursor: pointer;
+	display: none;
+}
 
 
 
@@ -189,7 +196,7 @@ main nav .heading {
 	letter-spacing: 1px;
 }
 
-main nav .heading:not(:first-child) {
+main nav ul:not(:first-child) > .heading {
 	margin-top: 2.5em;
 }
 
@@ -359,9 +366,9 @@ article h5 {
 	font-size: .6em;
 	border-radius: 10px;
 	padding: .3em .5em;
-	margin-left: .25em;
 	position: absolute;
 	top: 5px;
+	left: 0;
 	text-decoration: none;
 }
 
@@ -579,7 +586,7 @@ td code {
 
 #autonav {
 	position: absolute;
-	visibility: hidden;
+	display: none;
 	left: 80%;
 	top: 0;
 	background: var(--autonav-bg);
@@ -597,8 +604,8 @@ td code {
 	font-size: 14px;
 }
 
-main nav > ul > li:hover #autonav {
-	visibility: visible;
+main nav ul > li:hover #autonav {
+	display: block;
 }
 
 #autonav .heading {
@@ -653,5 +660,36 @@ main nav > ul > li:hover #autonav {
 @media (max-width: 1400px) {
 	#pagenav {
 		display: none;
+	}
+}
+
+@media (max-width: 950px) {
+	#autonav {
+		display: none !important;
+	}
+
+	.docs {
+		flex-direction: column;
+	}
+
+	#docs-menu {
+		display: block;
+	}
+
+	#docs-menu-container {
+		height: 0;
+		overflow: hidden;
+		transition: height 250ms ease-out;
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	.docs nav ul {
+		min-width: 250px;
+		flex: 1;
+	}
+
+	main nav ul .heading {
+		margin-top: 2.5em !important;
 	}
 }
