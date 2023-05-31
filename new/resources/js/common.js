@@ -53,65 +53,8 @@ ready(function() {
 	// on page load, immediately set the configured theme
 	setTheme(getTheme());
 
-	const autonav = $('#autonav');
-
-	// when a left-side-nav-link is hovered, show the in-page nav in a popout to the side
-	on('mouseover', 'main nav li a:not(#autonav a)', async e => {
-		const response = await fetch("/temporary-markdown-proxy"+e.target.getAttribute('href'));
-		const markdown = await response.text();
-		const tokens = marked.lexer(markdown);
-
-		autonav.replaceChildren();
-		
-		let seenH1 = false;
-		for (const tkn of tokens) {
-			if (tkn.type != "heading") continue;
-			if (tkn.depth == 1) {
-				seenH1 = true;
-			}
-			if (!seenH1 || tkn.depth != 2) continue;
-
-			// this includes HTML entities like &lt; (i.e. not user-facing text), but
-			// that's how the server-side markdown renderer does it too ¯\_(ツ)_/¯
-			const anchor = anchorID(tkn.text);
-
-			const a = document.createElement('a');
-			a.classList.add('autonav-link');
-			a.innerHTML = marked.parseInline(tkn.text);
-			a.href = `${e.target.href}#${anchor}`;
-			autonav.append(a);
-		}
-		
-		if ($('#autonav *')) {
-			const sections = document.createElement('div')
-			sections.classList.add('heading');
-			sections.innerText = 'Sections';
-			autonav.prepend(sections);
-			e.target.closest('li').append(autonav);
-		} else {
-			// no links, so remove it from nav so as not to display an empty box
-			$('body').append(autonav);
-		}
-
-	});
-
-	const spacingMS = 50;
-	let delay = spacingMS;
-	$$('main article h2').forEach(elem => {
-		const a = document.createElement('a');
-		a.innerText = elem.innerText;
-		a.href = `#${elem.id}`;
-		setTimeout(function() {
-			$('#pagenav').append(a);
-		}, delay);
-		delay += spacingMS;
-	});
+	
 });
-
-function anchorID(text) {
-	return text.trim().toLowerCase().replace(/\s/g, '-').replace(/[^\w-]/g, '');
-}
-
 
 // when the system theme changes, apply that to our site if system theme is configured
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ({ matches }) => {
