@@ -18,59 +18,77 @@
 		<main>
 			<div class="docs wrapper">
 				<nav>
-					<ul>
-						<li class="heading">Get Caddy</li>
-						<li>
-							<a href="/docs/install" class="current">Install</a>
-							<ul>
-								<li><a href="/docs/install/packages">OS packages</a></li>
-								<li><a href="/docs/install/downloads">Static binaries</a></li>
-								<li><a href="/docs/install/plugins">With plugins</a></li>
-							</ul>
-						</li>
-						<li><a href="/docs/build">Build from source</a></li>
-				
-						<li class="heading">Tutorials</li>
-						<li><a href="/docs/basics">Caddy basics</a></li>
-						<li><a href="/docs/troubleshooting">How to fix problems</a></li>
-						<li><a href="/docs/static-files">Static files</a></li>
-						<li><a href="/docs/reverse-proxy">Reverse proxy</a></li>
-						<li><a href="/docs/reverse-proxy">Custom domains</a></li>
-						<li><a href="/docs/reverse-proxy">Automate mTLS</a></li>
-				
-						<li class="heading">Reference</li>
-						<li><a href="/docs/command-line">Command line</a></li>
-						<li><a href="/docs/api">API</a></li>
-						<li><a href="/docs/json/">JSON config</a></li>
-						<li>
-							<a href="/docs/caddyfile">Caddyfile</a>
-							<ul>
-								<li><a href="/docs/caddyfile/concepts">Concepts</a></li>
-								<li><a href="/docs/caddyfile/directives">Directives</a></li>
-								<li><a href="/docs/caddyfile/matchers">Request matchers</a></li>
-								<li><a href="/docs/caddyfile/options">Global options</a></li>
-								<li><a href="/docs/caddyfile/patterns">Common patterns</a></li>
-							</ul>
-						</li>
-						<!-- <li><a href="/docs/caddyfile">Caddyfile</a></li> -->
-						<li><a href="/docs/automatic-https">Automatic HTTPS</a></li>
-						<li><a href="/docs/automatic-https">Modules</a></li>
+					<div id="docs-menu">
+						<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-menu-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+							<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+							<path d="M4 6l16 0"></path>
+							<path d="M4 12l16 0"></path>
+							<path d="M4 18l16 0"></path>
+						</svg>
+						Pages
+					</div>
+					<div id="docs-menu-container">
+						<ul>
+							<li class="heading">Get Caddy</li>
+							<li>
+								<a href="/docs/install" class="current">Install</a>
+								<ul>
+									<li><a href="/docs/install/packages">OS packages</a></li>
+									<li><a href="/docs/install/downloads">Static binaries</a></li>
+									<li><a href="/docs/install/plugins">With plugins</a></li>
+								</ul>
+							</li>
+							<li><a href="/docs/build">Build from source</a></li>
+						</ul>
 						
-						<li class="heading">Articles</li>
-						<!-- <li><a href="/docs/v2-upgrade">Upgrading to Caddy 2</a></li> -->
-						<li><a href="/docs/conventions">Conventions</a></li>
-						<li><a href="/docs/config-adapters">Config Adapters</a></li>
-						<li><a href="/docs/logging">How Logging Works</a></li>
-						<li><a href="/docs/metrics">Monitoring Caddy</a></li>
-						<li><a href="/docs/architecture">Caddy Architecture</a></li>
-						<li><a href="/docs/running">Keep Caddy Running</a></li>
-						<li><a href="/docs/signature-verification">Verifying Asset Signatures</a></li>
-				
-						<li class="heading">Develop</li>
-						<li><a href="/docs/architecture">Caddy architecture</a></li>
-						<li><a href="/docs/contribute">Contribute</a></li>
-						<li><a href="/docs/extend">Write a module</a></li>
-						
+						<ul>
+							<li class="heading">Tutorials</li>
+							<li><a href="/docs/basics">Caddy basics</a></li>
+							<li><a href="/docs/troubleshooting">How to fix problems</a></li>
+							<li><a href="/docs/static-files">Static files</a></li>
+							<li><a href="/docs/reverse-proxy">Reverse proxy</a></li>
+							<li><a href="/docs/reverse-proxy">Custom domains</a></li>
+							<li><a href="/docs/reverse-proxy">Automate mTLS</a></li>
+						</ul>
+
+						<ul>
+							<li class="heading">Reference</li>
+							<li><a href="/docs/command-line">Command line</a></li>
+							<li><a href="/docs/api">API</a></li>
+							<li><a href="/docs/json/">JSON config</a></li>
+							<li>
+								<a href="/docs/caddyfile">Caddyfile</a>
+								<ul>
+									<li><a href="/docs/caddyfile/concepts">Concepts</a></li>
+									<li><a href="/docs/caddyfile/directives">Directives</a></li>
+									<li><a href="/docs/caddyfile/matchers">Request matchers</a></li>
+									<li><a href="/docs/caddyfile/options">Global options</a></li>
+									<li><a href="/docs/caddyfile/patterns">Common patterns</a></li>
+								</ul>
+							</li>
+							<!-- <li><a href="/docs/caddyfile">Caddyfile</a></li> -->
+							<li><a href="/docs/automatic-https">Automatic HTTPS</a></li>
+							<li><a href="/docs/automatic-https">Modules</a></li>
+						</ul>
+
+						<ul>
+							<li class="heading">Articles</li>
+							<!-- <li><a href="/docs/v2-upgrade">Upgrading to Caddy 2</a></li> -->
+							<li><a href="/docs/conventions">Conventions</a></li>
+							<li><a href="/docs/config-adapters">Config Adapters</a></li>
+							<li><a href="/docs/logging">How Logging Works</a></li>
+							<li><a href="/docs/metrics">Monitoring Caddy</a></li>
+							<li><a href="/docs/architecture">Caddy Architecture</a></li>
+							<li><a href="/docs/running">Keep Caddy Running</a></li>
+							<li><a href="/docs/signature-verification">Verifying Asset Signatures</a></li>
+						</ul>
+
+						<ul>
+							<li class="heading">Develop</li>
+							<li><a href="/docs/architecture">Caddy architecture</a></li>
+							<li><a href="/docs/contribute">Contribute</a></li>
+							<li><a href="/docs/extend">Write a module</a></li>
+						</ul>
 					</ul>
 				</nav>
 

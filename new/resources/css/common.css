@@ -4,6 +4,8 @@
 	--text-color: #222;
 	--header-bg: rgba(118, 179, 194, 0.11);
 	--header-border-color: #ebf0f2;
+	--topbar-link-color-hover: black;
+	--topbar-link-bg-hover: rgb(244, 249, 251);
 	--main-nav-link-color: #546c75;
 	--main-nav-link-hover-color: #01324b;
 	--link-color: #0097f2;
@@ -27,6 +29,8 @@
 	--text-color: #cbe2e4; /* #a4c0c2 */
 	--header-bg: rgba(44, 130, 164, 0.11);
 	--header-border-color: transparent;
+	--topbar-link-color-hover: white;
+	--topbar-link-bg-hover: rgb(255 255 255 / .1);
 	--main-nav-link-color: #86a7b1;
 	--main-nav-link-hover-color: #e2e9ec;
 	--link-color: #34a1e4;
@@ -168,8 +172,8 @@ header nav>ul {
 }
 
 .topbar a:hover {
-	background: rgb(0 0 0 / .05);
-	color: black;
+	background: var(--topbar-link-bg-hover);
+	color: var(--topbar-link-color-hover);
 }
 
 .navbar {
@@ -477,5 +481,40 @@ header nav ul {
 	.wrapper {
 		padding-left: 20px;
 		padding-right: 20px;
+	}
+}
+
+@media (max-width: 950px) {
+	header nav ul {
+		justify-content: space-evenly;
+	}
+
+	.topbar .wrapper {
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: 0;
+	}
+
+	.logo {
+		height: 3em;
+	}
+
+	.navbar {
+		flex-direction: column;
+		gap: 0;
+		padding: 1em 0;
+	}
+
+	.navbar nav {
+		margin: .5em 0;
+	}
+
+	.navbar .actions {
+		margin: 0 auto;
+	}
+
+	.navbar nav > ul > li > a {
+		padding-top: 10px;
+		padding-bottom: 10px;
 	}
 }
