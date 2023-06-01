@@ -49,12 +49,12 @@ function cloneTemplate(tplSelector) {
 	// return document.importNode(elem.content, true);
 }
 
-ready(function() {
-	// on page load, immediately set the configured theme
-	setTheme(getTheme());
 
-	
-});
+
+
+
+
+
 
 // when the system theme changes, apply that to our site if system theme is configured
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ({ matches }) => {
@@ -74,11 +74,12 @@ function setTheme(theme) {
 		theme = "system";
 	}
 	localStorage.setItem("theme", theme);
-	$('#current-theme').innerText = theme;
-	if (theme == "system") {
-		theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "light";	
+	ready(function() { $('#current-theme').innerText = theme; });
+	let lightOrDarkTheme = theme;
+	if (lightOrDarkTheme == "system") {
+		lightOrDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "light";	
 	}
-	applyTheme(theme);
+	applyTheme(lightOrDarkTheme);
 }
 
 // applyTheme simply adds or removes the 'dark' class to the HTML.
@@ -122,3 +123,8 @@ on('mouseover', '.button', (e) => {
 		elem.remove();
 	}, 1000);
 });
+
+
+
+// immediately set the configured theme to avoid flash
+setTheme(getTheme());
