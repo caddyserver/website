@@ -100,7 +100,7 @@ RHEL/CentOS 7:
 This package comes with heavily modified versions of both of Caddy's [systemd service](/docs/running#linux-service) unit files, but does not enable them by default.
 Those modifications include a custom start/stop behavior and additional sandboxing flags which are explained in [systemd's exec documentation](https://www.freedesktop.org/software/systemd/man/systemd.exec.html#Sandboxing), which may lead to certain host directories not being available to the Caddy process. 
 
-<pre><code class="cmd"><span class="bash">pacman -Syu caddy</span></code></pre>
+<pre><code class="cmd"><span class="bash">pacman -Sy caddy</span></code></pre>
 
 [**View Caddy in the Arch Linux repositories**](https://archlinux.org/packages/community/x86_64/caddy/) and [**the Arch Linux Wiki**](https://wiki.archlinux.org/title/Caddy)
 
