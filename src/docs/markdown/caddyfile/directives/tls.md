@@ -295,7 +295,7 @@ Use locally-trusted certificates for all hosts on the current site block, rather
 tls internal
 ```
 
-Use locally-trusted certificates, but managed on-demand intead of in the background:
+Use locally-trusted certificates, but managed on-demand instead of in the background:
 
 ```caddy-d
 tls internal {
