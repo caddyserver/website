@@ -234,7 +234,7 @@ Append the results of multiple dynamic upstream modules. Useful if you want redu
 
 ### Load balancing
 
-Load balancing is used whenever more than one upstream is defined.
+Load balancing is used whenever more than one upstream is defined. This is enabled by default, with the `random` load balancing policy.
 
 - **lb_policy** <span id="lb_policy"/> is the name of the load balancing policy, along with any options. Default: `random`.
 
@@ -295,13 +295,13 @@ Load balancing is used whenever more than one upstream is defined.
 
 #### Active health checks
 
-Active health checks perform health checking in the background on a timer:
+Active health checks perform health checking in the background on a timer. To enable this, `health_uri` or `health_port` are required.
 
 - **health_uri** <span id="health_uri"/> is the URI path (and optional query) for active health checks.
 
 - **health_port** <span id="health_port"/> is the port to use for active health checks, if different from the upstream's port.
 
-- **health_interval** <span id="health_interval"/> is a [duration value](/docs/conventions#durations) that defines how often to perform active health checks.
+- **health_interval** <span id="health_interval"/> is a [duration value](/docs/conventions#durations) that defines how often to perform active health checks. Default: `30s`.
 
 - **health_timeout** <span id="health_timeout"/> is a [duration value](/docs/conventions#durations) that defines how long to wait for a reply before marking the backend as down.
 
@@ -315,7 +315,7 @@ Active health checks perform health checking in the background on a timer:
 
 #### Passive health checks
 
-Passive health checks happen inline with actual proxied requests:
+Passive health checks happen inline with actual proxied requests. To enable this, `fail_duration` is required.
 
 - **fail_duration** <span id="fail_duration"/>  is a [duration value](/docs/conventions#durations) that defines how long to remember a failed request. A duration > `0` enables passive health checking; the default is `0` (off). A reasonable starting point might be `30s` to balance error rates with responsiveness when bringing an unhealthy upstream back online; but feel free to experiment to find the right balance for your usecase.
 

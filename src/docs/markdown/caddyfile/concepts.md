@@ -14,9 +14,10 @@ This document will help you learn about the HTTP Caddyfile in detail.
 3. [Matchers](#matchers)
 4. [Placeholders](#placeholders)
 5. [Snippets](#snippets)
-6. [Comments](#comments)
-7. [Environment variables](#environment-variables)
-8. [Global options](#global-options)
+6. [Named Routes](#named-routes)
+7. [Comments](#comments)
+8. [Environment variables](#environment-variables)
+9. [Global options](#global-options)
 
 
 ## Structure
@@ -28,6 +29,7 @@ The Caddyfile's structure can be described visually:
 Key points:
 
 - An optional [**global options block**](#global-options) can be the very first thing in the file.
+- [Snippets](#snippets) or [named routes](#named-routes) may optionally appear next.
 - Otherwise, the first line of the Caddyfile is **always** the [address(es)](#addresses) of the site to serve.
 - All [directives](#directives) and [matchers](#matchers) **must** go in a site block. There is no global scope or inheritance across site blocks.
 - If there is only one site block, its curly braces `{ }` are optional.
@@ -88,17 +90,17 @@ If a request matches multiple site blocks, the site block with the most specific
 [**Directives**](/docs/caddyfile/directives) are functional keywords which customize how the site is served. They **must** appear within site blocks. For example, a complete file server config might look like this:
 
 ```caddy
-localhost
-
-file_server
+localhost {
+	file_server
+}
 ```
 
 Or a reverse proxy:
 
 ```caddy
-localhost
-
-reverse_proxy localhost:9000
+localhost {
+	reverse_proxy localhost:9000
+}
 ```
 
 In these examples, [`file_server`](/docs/caddyfile/directives/file_server) and [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy) are directives. Directives are the first word on a line in a site block.
@@ -108,10 +110,10 @@ In the second example, `localhost:9000` is an **argument** because it appears on
 Sometimes directives can open their own blocks. **Subdirectives** appear on the beginning of each line within directive blocks:
 
 ```caddy
-localhost
-
-reverse_proxy localhost:9000 localhost:9001 {
-	lb_policy first
+localhost {
+	reverse_proxy localhost:9000 localhost:9001 {
+		lb_policy first
+	}
 }
 ```
 
@@ -331,6 +333,27 @@ b.example.com {
 	import snippet "Example B"
 }
 ```
+
+
+## Named Routes
+
+Named routes use syntax similar to [snippets](#snippets); they're a special block defined outside of site blocks, prefixed with `&(` and ending in `)` with the name in between.
+
+```caddy
+&(app-proxy) {
+	reverse_proxy app-01:8080 app-02:8080 app-03:8080
+}
+```
+
+And then you can reuse this named route within any site:
+
+```caddy-d
+invoke app-proxy
+```
+
+This is particularly useful to reduce memory usage if the same route is needed in many different sites, or if multiple different matcher conditions are needed to invoke the same route.
+
+See the [`invoke` directive](/docs/caddyfile/directives/invoke) documentation for more details.
 
 
 ## Comments

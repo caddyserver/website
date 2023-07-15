@@ -54,6 +54,7 @@ Directive | Description
 **[handle_path](/docs/caddyfile/directives/handle_path)** | Like handle, but strips path prefix
 **[header](/docs/caddyfile/directives/header)** | Sets or removes response headers
 **[import](/docs/caddyfile/directives/import)** | Include snippets or files
+**[invoke](/docs/caddyfile/directives/invoke)** | Invoke a named route
 **[log](/docs/caddyfile/directives/log)** | Enables access/request logging
 **[map](/docs/caddyfile/directives/map)** | Maps an input value to one or more outputs
 **[method](/docs/caddyfile/directives/method)** | Change the HTTP method internally
@@ -143,6 +144,7 @@ push
 templates
 
 # special routing & dispatching directives
+invoke
 handle
 handle_path
 route
