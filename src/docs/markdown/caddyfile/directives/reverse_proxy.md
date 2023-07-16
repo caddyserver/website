@@ -83,9 +83,11 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 	unhealthy_request_count <num>
 
 	# streaming
-	flush_interval <duration>
-	request_buffers <size>
-	response_buffers <size>
+	flush_interval     <duration>
+	request_buffers    <size>
+	response_buffers   <size>
+	stream_timeout     <duration>
+	stream_close_delay <duration>
 
 	# request/header manipulation
 	trusted_proxies [private_ranges] <ranges...>
@@ -250,6 +252,8 @@ Load balancing is used whenever more than one upstream is defined. This is enabl
 
 	- `round_robin` iterates each upstream in turn
 
+	- `weighted_round_robin <weights...>` iterates each upstream in turn, respecting the weights provided. The amount of weight arguments should match the amount of upstreams configured. Weights should be non-zero positive integers. For example with two upstreams and weights `5 1`, the first upstream would be selected 5 times in a row before the second upstream is selected once, then the cycle repeats.
+
 	- `least_conn` choose upstream with fewest number of current requests; if more than one host has the least number of requests, then one of those hosts is chosen at random
 
 	- `ip_hash` maps the remote IP (the immediate peer) to a sticky upstream
@@ -333,7 +337,15 @@ Passive health checks happen inline with actual proxied requests. To enable this
 
 ### Streaming
 
-By default, the proxy partially buffers the response for wire efficiency:
+By default, the proxy partially buffers the response for wire efficiency.
+
+The proxy also supports WebSocket connections, performing the HTTP upgrade request then transitioning the connection to a bidirectional tunnel.
+
+<aside class="tip">
+
+By default, WebSocket connections are forcibly closed (with a Close control message sent to both the client and upstream) when the config is reloaded. Each request holds a reference to the config, so closing old connections is necessary to keep memory usage in check. This closing behaviour can be customized with the [`stream_timeout`](#stream_timeout) and [`stream_close_delay`](#stream_close_delay) options.
+
+</aside>
 
 - **flush_interval** <span id="flush_interval"/> is a [duration value](/docs/conventions#durations) that adjusts how often Caddy should flush the response buffer to the client. By default, no periodic flushing is done. A negative value (typically -1) suggests "low-latency mode" which disables response buffering completely and flushes immediately after each write to the client, and does not cancel the request to the backend even if the client disconnects early. This option is ignored and responses are flushed immediately to the client if one of the following applies from the response:
 	- `Content-Type: text/event-stream`
@@ -343,6 +355,10 @@ By default, the proxy partially buffers the response for wire efficiency:
 - **request_buffers** <span id="request_buffers"/> will cause the proxy to read up to `<size>` amount of bytes from the request body into a buffer before sending it upstream. This is very inefficient and should only be done if the upstream requires reading request bodies without delay (which is something the upstream application should fix). This accepts all size formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
 
 - **response_buffers** <span id="response_buffers"/> will cause the proxy to read up to `<size>` amount of bytes from the response body to be read into a buffer before being returned to the client. This should be avoided if at all possible for performance reasons, but could be useful if the backend has tighter memory constraints. This accepts all size formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
+
+- **stream_timeout** <span id="stream_timeout"/> is a [duration value](/docs/conventions#durations) after which streaming requests such as WebSockets will be forcibly closed atthe end of the timeout. This essentially cancels connections if they stay open too long. A reasonable starting point might be `24h` to cull connections older than a day. Default: no timeout.
+
+- **stream_close_delay** <span id="stream_close_delay"/> is a [duration value](/docs/conventions#durations) which delays streaming requests such as WebSockets from being forcibly closed when the config is unloaded; instead, the stream will remain open until the delay is complete. In other words, enabling this prevents streams from immediately closing when Caddy's config is reloaded. Enabling this may be a good idea to avoid a thundering herd of reconnecting clients which had their connections closed by the previous config closing. A reasonable starting point might be something like `5m` to allow users 5 minutes to leave the page naturally after a config reload. Default: no delay.
 
 
 
