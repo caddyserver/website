@@ -13,9 +13,6 @@ By default, header operations are performed immediately unless any of the header
 
 ```caddy-d
 header [<matcher>] [[+|-|?|>]<field> [<value>|<find>] [<replace>]] {
-	# Replace
-	<field> <find> <replace>
-
 	# Add
 	+<field> <value>
 
@@ -27,6 +24,12 @@ header [<matcher>] [[+|-|?|>]<field> [<value>|<find>] [<replace>]] {
 
 	# Delete
 	-<field>
+
+	# Replace
+	<field> <find> <replace>
+
+	# Replace with defer
+	><field> <find> <replace>
 
 	# Default
 	?<field> <value>
@@ -120,4 +123,10 @@ To override the cache expiration that a proxy upstream had set for paths startin
 ```caddy-d
 header /no-cache* >Cache-Control nocache
 reverse_proxy upstream:443
+```
+
+To perform a deferred update of a `Set-Cookie` header to add `SameSite=None`; a regexp capture is used to grab the existing value, and `$1` re-inserts it at the start with the additional option appended:
+
+```caddy-d
+header >Set-Cookie (.*) "$1; SameSite=None;"
 ```
