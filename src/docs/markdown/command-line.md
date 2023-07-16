@@ -12,9 +12,11 @@ caddy <command> [<args...>]
 
 The `<carets>` indicate parameters that get replaced by your input.
 
-The`[brackets]` indicate optional parameters. The`(brackets)` indicate required parameters.
+The`[brackets]` indicate optional parameters. The `(brackets)` indicate required parameters.
 
 The ellipses `...` indicates a continuation, i.e. one or more parameters.
+
+The `--flags` may have a single-letter shortcut like `-f`.
 
 **Quick start: `caddy`, `caddy help`, or `man caddy` (if installed)**
 
@@ -67,6 +69,12 @@ The ellipses `...` indicates a continuation, i.e. one or more parameters.
 
 - **[caddy stop](#caddy-stop)**
   Stops the running Caddy process
+
+- **[caddy storage export](#caddy-storage)**
+  Exports the contents of the configured storage to a tarball
+
+- **[caddy storage import](#caddy-storage)**
+  Imports a previously exported tarball to the configured storage
 
 - **[caddy trust](#caddy-trust)**
   Installs a certificate into local trust store(s)
@@ -493,6 +501,51 @@ Gracefully stops the running Caddy process (other than the process of the stop c
 The address of this request can be customized using the `--address` flag, or from the given `--config`, if the running instance's admin API is not using the default listen address.
 
 If you want to stop the current configuration but do not want to exit the process, use [`caddy reload`](#caddy-reload) with a blank config, or the [`DELETE /config/`](/docs/api#delete-configpath) endpoint.
+
+
+### `caddy storage`
+
+Allows export and import of the contents of Caddy's configured data storage.
+
+This is useful when needing to transition from one [storage module](/docs/json/storage/) to another, by exporting from your old one, updating your config, then importing into the new one.
+
+The following command can be used to do this all in one shot, using and old and new config with different configured storage modules, piping the export output into the 
+
+```
+$ caddy storage export -c Caddyfile.old -o- |
+  caddy storage import -c Caddyfile.new -i-
+```
+
+<aside class="advice">
+
+Please note that when using [filesystem storage](/docs/conventions#data-directory), you must run the export command as the same user that Caddy normally runs as, otherwise the wrong storage location may be used.
+
+For example, when running Caddy as a [systemd service](/docs/running#linux-service), it will run as the `caddy` user, so you should run the export or import commands as that user. This can typically be done with `sudo -u caddy <command>`.
+
+</aside>
+
+
+#### `caddy storage export`
+
+<pre><code class="cmd bash">caddy storage export
+	-c, --config &lt;path&gt;
+	[-o, --output &lt;path&gt;]</code></pre>
+
+`--config` is the config file load. This is required, so that the correct storage module is connected to.
+
+`--output` is the filename to write the tarball. If `-`, the output is written to stdout.
+
+
+
+#### `caddy storage import`
+
+<pre><code class="cmd bash">caddy storage import
+	-c, --config &lt;path&gt;
+	-i, --input &lt;path&gt;</code></pre>
+
+`--config` is the config file load. This is required, so that the correct storage module is connected to.
+
+`--input` is the filename of the tarball to read from. If `-`, the input is read from stdin.
 
 
 ### `caddy trust`
