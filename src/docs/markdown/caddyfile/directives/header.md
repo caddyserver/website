@@ -12,15 +12,24 @@ By default, header operations are performed immediately unless any of the header
 ## Syntax
 
 ```caddy-d
-header [<matcher>] [[+|-|?]<field> [<value>|<find>] [<replace>]] {
-	# Replace
-	<field> <find> <replace>
+header [<matcher>] [[+|-|?|>]<field> [<value>|<find>] [<replace>]] {
+	# Add
+	+<field> <value>
 
-	# Add or Set
-	[+]<field> <value>
+	# Set
+	<field> <value>
+
+	# Set with defer
+	><field> <value>
 
 	# Delete
 	-<field>
+
+	# Replace
+	<field> <find> <replace>
+
+	# Replace with defer
+	><field> <find> <replace>
 
 	# Default
 	?<field> <value>
@@ -37,13 +46,15 @@ header [<matcher>] [[+|-|?]<field> [<value>|<find>] [<replace>]] {
 
   Prefix with `?` to set a default value for the field. The field is only written if it doesn't yet exist.
 
+  Prefix with `>` to set the field, and enable `defer`, as a shortcut.
+
 - **&lt;value&gt;** is the header field value, if adding or setting a field.
 
 - **&lt;find&gt;** is the substring or regular expression to search for.
 
 - **&lt;replace&gt;** is the replacement value; required if performing a search-and-replace.
 
-- **defer** will force the header operations to be deferred until the response is being written out to the client. This is automatically enabled if any of the header fields are being deleted with `-`, or when setting a default value with `?`.
+- **defer** will force the header operations to be deferred until the response is being written out to the client. This is automatically enabled if any of the header fields are being deleted with `-`, when setting a default value with `?`, or when having used the `>` prefix.
 
 For multiple header manipulations, you can open a block and specify one manipulation per line in the same way.
 
@@ -105,4 +116,17 @@ Set a default cache expiration if upstream doesn't define one:
 ```caddy-d
 header ?Cache-Control "max-age=3600"
 reverse_proxy upstream:443
+```
+
+To override the cache expiration that a proxy upstream had set for paths starting with `/no-cache`; enabling `defer` is necessary to ensure the header is set _after_ the proxy writes its headers:
+
+```caddy-d
+header /no-cache* >Cache-Control nocache
+reverse_proxy upstream:443
+```
+
+To perform a deferred update of a `Set-Cookie` header to add `SameSite=None`; a regexp capture is used to grab the existing value, and `$1` re-inserts it at the start with the additional option appended:
+
+```caddy-d
+header >Set-Cookie (.*) "$1; SameSite=None;"
 ```

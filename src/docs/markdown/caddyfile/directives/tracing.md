@@ -12,6 +12,8 @@ It is based on [github.com/open-telemetry/opentelemetry-go](https://github.com/o
 
 It uses [gRPC](https://github.com/grpc/) as an exporter protocol and  W3C [tracecontext](https://www.w3.org/TR/trace-context/) and [baggage](https://www.w3.org/TR/baggage/) as propagators.
 
+The trace ID is added to [access logs](/docs/caddyfile/directives/log) as the standard `traceID` field.
+
 ## Syntax
 
 ```caddy-d

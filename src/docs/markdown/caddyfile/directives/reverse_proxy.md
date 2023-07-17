@@ -83,9 +83,11 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 	unhealthy_request_count <num>
 
 	# streaming
-	flush_interval <duration>
-	request_buffers <size>
-	response_buffers <size>
+	flush_interval     <duration>
+	request_buffers    <size>
+	response_buffers   <size>
+	stream_timeout     <duration>
+	stream_close_delay <duration>
 
 	# request/header manipulation
 	trusted_proxies [private_ranges] <ranges...>
@@ -141,6 +143,7 @@ Static upstream addresses can take the form of a URL that contains only scheme a
 - `example.com`
 - `unix//var/php.sock`
 - `unix+h2c//var/grpc.sock`
+- `localhost:8001-8006`
 
 By default, connections are made to the upstream over plaintext HTTP. When using the URL form, a scheme can be used to set some [`transport`](#transports) defaults as a shorthand.
 - Using `https://` as the scheme will use the [`http` transport](#the-http-transport) with [`tls`](#tls) enabled.
@@ -152,7 +155,7 @@ By default, connections are made to the upstream over plaintext HTTP. When using
 
 Schemes cannot be mixed, since they modify the common transport configuration (a TLS-enabled transport cannot carry both HTTPS and plaintext HTTP). Any explicit transport configuration will not be overwritten, and omitting schemes or using other ports will not assume a particular transport.
 
-When using the [network address](/docs/conventions#network-addresses) form, the network type is specified as a prefix to the upstream address. This cannot be combined with a URL scheme. As a special case, `unix+h2c/` is supported as a shortcut for the `unix/` network plus the same effects as the `h2c://` scheme.
+When using the [network address](/docs/conventions#network-addresses) form, the network type is specified as a prefix to the upstream address. This cannot be combined with a URL scheme. As a special case, `unix+h2c/` is supported as a shortcut for the `unix/` network plus the same effects as the `h2c://` scheme. Port ranges are supported as a shortcut, which expands to multiple upstreams with the same host.
 
 Upstream addresses _cannot_ contain paths or query strings, as that would imply simultaneous rewriting the request while proxying, which behavior is not defined or supported. You may use the [`rewrite`](/docs/caddyfile/directives/rewrite) directive should you need this.
 
@@ -203,6 +206,7 @@ Retrieves upstreams from A/AAAA DNS records.
 		resolvers <ip...>
 		dial_timeout        <duration>
 		dial_fallback_delay <duration>
+		versions ipv4|ipv6
 	}
 ```
 
@@ -212,6 +216,7 @@ Retrieves upstreams from A/AAAA DNS records.
 - **resolvers** is the list of DNS resolvers to override system resolvers.
 - **dial_timeout** is the timeout for dialing the query.
 - **dial_fallback_delay** is how long to wait before spawning an RFC 6555 Fast Fallback connection. Default: `300ms`
+- **versions** is the list of IP versions to resolve for. Default: `ipv4 ipv6` which correspond to both A and AAAA records respectively.
 
 
 ##### Multi
@@ -231,31 +236,39 @@ Append the results of multiple dynamic upstream modules. Useful if you want redu
 
 ### Load balancing
 
-Load balancing is used whenever more than one upstream is defined.
+Load balancing is used whenever more than one upstream is defined. This is enabled by default, with the `random` load balancing policy.
 
 - **lb_policy** <span id="lb_policy"/> is the name of the load balancing policy, along with any options. Default: `random`.
 
   For policies that involve hashing, the [highest-random-weight (HRW)](https://en.wikipedia.org/wiki/Rendezvous_hashing) algorithm is used to ensure that a client or request with the same hash key is mapped to the same upstream, even if the list of upstreams change.
 
+  Some policies support fallback as an option, if noted, in which case they take a [block](/docs/caddyfile/concepts#blocks) with `fallback <policy>` which takes another load balancing policy. For those policies, the default fallback is `random`. Configuring a fallback allows using a secondary policy if the primary does not select one, allowing for powerful combinations. Fallbacks can be nested multiple times if desired. For example, `header` can be used as primary to allow for developers to choose a specific upstream, with a fallback of `first` for all other connections to implement primary/secondary failover.
+
 	- `random` randomly chooses an upstream
 
 	- `random_choose <n>` selects two or more upstreams randomly, then chooses one with least load (`n` is usually 2)
 
-	- `first` chooses the first available upstream, from the order they are defined in the config
+	- `first` chooses the first available upstream, from the order they are defined in the config, allowing for primary/secondary failover; remember to enable health checks along with this, otherwise failover will not occur
 
 	- `round_robin` iterates each upstream in turn
 
+	- `weighted_round_robin <weights...>` iterates each upstream in turn, respecting the weights provided. The amount of weight arguments should match the amount of upstreams configured. Weights should be non-zero positive integers. For example with two upstreams and weights `5 1`, the first upstream would be selected 5 times in a row before the second upstream is selected once, then the cycle repeats.
+
 	- `least_conn` choose upstream with fewest number of current requests; if more than one host has the least number of requests, then one of those hosts is chosen at random
 
-	- `ip_hash` maps the client IP to a sticky upstream
+	- `ip_hash` maps the remote IP (the immediate peer) to a sticky upstream
+
+	- `client_ip_hash` maps the client IP to a sticky upstream; this is best paired with the [`servers > trusted_proxies` global option](/docs/caddyfile/options#trusted-proxies) which enables real client IP parsing, otherwise it behaves the same as `ip_hash`
 
 	- `uri_hash` maps the request URI (path and query) to a sticky upstream
 
-	- `header [field]` maps a request header to a sticky upstream, by hashing the header value; if the specified header field is not present, a random upstream is selected
+	- `query [key]` maps a request query to a sticky upstream, by hashing the query value; if the specified key is not present, the fallback policy will be used to select an upstream (`random` by default)
 
-	- `cookie [<name> [<secret>]]` on the first request from a client (when there's no cookie), a random upstream is selected, and a `Set-Cookie` header is added to the response (default cookie name is `lb` if not specified). The cookie value is the upstream dial address of the chosen upstream, hashed with HMAC-SHA256 (using `<secret>` as the shared secret, empty string if not specified).
+	- `header [field]` maps a request header to a sticky upstream, by hashing the header value; if the specified header field is not present, the fallback policy will be used to select an upstream (`random` by default)
+
+	- `cookie [<name> [<secret>]]` on the first request from a client (when there's no cookie), the fallback policy will be used to select an upstream (`random` by default), and a `Set-Cookie` header is added to the response (default cookie name is `lb` if not specified). The cookie value is the upstream dial address of the chosen upstream, hashed with HMAC-SHA256 (using `<secret>` as the shared secret, empty string if not specified).
 	
-	  On subsequent requests where the cookie is present, the cookie value will be mapped to the same upstream if it's available; if not available or not found, a new random upstream is selected and the cookie is added to the response.
+	  On subsequent requests where the cookie is present, the cookie value will be mapped to the same upstream if it's available; if not available or not found, a new upstream is selected with the fallback policy, and the cookie is added to the response.
 
 	  If you wish to use a particular upstream for debugging purposes, you may hash the upstream address with the secret, and set the cookie in your HTTP client (browser or otherwise). For example, with PHP, you could run the following to compute the cookie value, where `10.1.0.10:8080` is the address of one of your upstreams, and `secret` is your configured secret.
 	  ```php
@@ -286,13 +299,13 @@ Load balancing is used whenever more than one upstream is defined.
 
 #### Active health checks
 
-Active health checks perform health checking in the background on a timer:
+Active health checks perform health checking in the background on a timer. To enable this, `health_uri` or `health_port` are required.
 
 - **health_uri** <span id="health_uri"/> is the URI path (and optional query) for active health checks.
 
 - **health_port** <span id="health_port"/> is the port to use for active health checks, if different from the upstream's port.
 
-- **health_interval** <span id="health_interval"/> is a [duration value](/docs/conventions#durations) that defines how often to perform active health checks.
+- **health_interval** <span id="health_interval"/> is a [duration value](/docs/conventions#durations) that defines how often to perform active health checks. Default: `30s`.
 
 - **health_timeout** <span id="health_timeout"/> is a [duration value](/docs/conventions#durations) that defines how long to wait for a reply before marking the backend as down.
 
@@ -306,7 +319,7 @@ Active health checks perform health checking in the background on a timer:
 
 #### Passive health checks
 
-Passive health checks happen inline with actual proxied requests:
+Passive health checks happen inline with actual proxied requests. To enable this, `fail_duration` is required.
 
 - **fail_duration** <span id="fail_duration"/>  is a [duration value](/docs/conventions#durations) that defines how long to remember a failed request. A duration > `0` enables passive health checking; the default is `0` (off). A reasonable starting point might be `30s` to balance error rates with responsiveness when bringing an unhealthy upstream back online; but feel free to experiment to find the right balance for your usecase.
 
@@ -324,7 +337,15 @@ Passive health checks happen inline with actual proxied requests:
 
 ### Streaming
 
-By default, the proxy partially buffers the response for wire efficiency:
+By default, the proxy partially buffers the response for wire efficiency.
+
+The proxy also supports WebSocket connections, performing the HTTP upgrade request then transitioning the connection to a bidirectional tunnel.
+
+<aside class="tip">
+
+By default, WebSocket connections are forcibly closed (with a Close control message sent to both the client and upstream) when the config is reloaded. Each request holds a reference to the config, so closing old connections is necessary to keep memory usage in check. This closing behaviour can be customized with the [`stream_timeout`](#stream_timeout) and [`stream_close_delay`](#stream_close_delay) options.
+
+</aside>
 
 - **flush_interval** <span id="flush_interval"/> is a [duration value](/docs/conventions#durations) that adjusts how often Caddy should flush the response buffer to the client. By default, no periodic flushing is done. A negative value (typically -1) suggests "low-latency mode" which disables response buffering completely and flushes immediately after each write to the client, and does not cancel the request to the backend even if the client disconnects early. This option is ignored and responses are flushed immediately to the client if one of the following applies from the response:
 	- `Content-Type: text/event-stream`
@@ -334,6 +355,10 @@ By default, the proxy partially buffers the response for wire efficiency:
 - **request_buffers** <span id="request_buffers"/> will cause the proxy to read up to `<size>` amount of bytes from the request body into a buffer before sending it upstream. This is very inefficient and should only be done if the upstream requires reading request bodies without delay (which is something the upstream application should fix). This accepts all size formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
 
 - **response_buffers** <span id="response_buffers"/> will cause the proxy to read up to `<size>` amount of bytes from the response body to be read into a buffer before being returned to the client. This should be avoided if at all possible for performance reasons, but could be useful if the backend has tighter memory constraints. This accepts all size formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
+
+- **stream_timeout** <span id="stream_timeout"/> is a [duration value](/docs/conventions#durations) after which streaming requests such as WebSockets will be forcibly closed atthe end of the timeout. This essentially cancels connections if they stay open too long. A reasonable starting point might be `24h` to cull connections older than a day. Default: no timeout.
+
+- **stream_close_delay** <span id="stream_close_delay"/> is a [duration value](/docs/conventions#durations) which delays streaming requests such as WebSockets from being forcibly closed when the config is unloaded; instead, the stream will remain open until the delay is complete. In other words, enabling this prevents streams from immediately closing when Caddy's config is reloaded. Enabling this may be a good idea to avoid a thundering herd of reconnecting clients which had their connections closed by the previous config closing. A reasonable starting point might be something like `5m` to allow users 5 minutes to leave the page naturally after a config reload. Default: no delay.
 
 
 
@@ -364,10 +389,16 @@ To delete a request header, preventing it from reaching the backend:
 header_up -Some-Header
 ```
 
-To delete all matching request, using a suffix match:
+To delete all matching request headers, using a suffix match:
 
 ```caddy-d
 header_up -Some-*
+```
+
+To delete _all_ request headers, to be able to individually add the ones you want (not recommended):
+
+```caddy-d
+header_up -*
 ```
 
 To perform a regular expression replacement on a request header:
@@ -391,7 +422,7 @@ By default, Caddy passes thru incoming headers&mdash;including `Host`&mdash;to t
 
 If Caddy is not the first server being connected to by your clients (for example when a CDN is in front of Caddy), you may configure `trusted_proxies` with a list of IP ranges (CIDRs) from which incoming requests are trusted to have sent good values for these headers.
 
-It is recommended that you configure this via the [`servers > trusted_proxies` global option](/docs/caddyfile/options#trusted-proxies) so that this applies to all proxy handlers in your server, without repetition.
+It is strongly recommended that you configure this via the [`servers > trusted_proxies` global option](/docs/caddyfile/options#trusted-proxies) instead of in the proxy, so that this applies to all proxy handlers in your server, and this has the benefit of enabling client IP parsing.
 
 <aside class="tip">
 
@@ -446,6 +477,7 @@ transport http {
 	read_buffer             <size>
 	write_buffer            <size>
 	max_response_header     <size>
+	proxy_protocol          v1|v2
 	dial_timeout            <duration>
 	dial_fallback_delay     <duration>
 	response_header_timeout <duration>
@@ -474,6 +506,8 @@ transport http {
 - **write_buffer** <span id="write_buffer"/> is the size of the write buffer in bytes. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). Default: `4KiB`.
 
 - **max_response_header** <span id="max_response_header"/> is the maximum amount of bytes to read from response headers. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). Default: `10MiB`.
+
+- **proxy_protocol** <span id="proxy_protocol"/> enables [PROXY protocol](https://www.haproxy.org/download/1.8/doc/proxy-protocol.txt) (popularized by HAProxy) on the connection to the upstream, prepending the real client IP data. This is best paired with the [`servers > trusted_proxies` global option](/docs/caddyfile/options#trusted-proxies) if Caddy is behind another proxy. Versions `v1` and `v2` are supported. This should only be used if you know the upstream server is able to parse PROXY protocol. By default, this is disabled.
 
 - **dial_timeout** <span id="dial_timeout"/> is the maximum [duration](/docs/conventions#durations) to wait when connecting to the upstream socket. Default: `3s`.
 

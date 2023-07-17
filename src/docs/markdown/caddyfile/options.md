@@ -76,6 +76,7 @@ Possible options are:
 	auto_https off|disable_redirects|ignore_loaded_certs|disable_certs
 	email <yours>
 	default_sni <name>
+	fallback_sni <name>
 	local_certs
 	skip_install_trust
 	acme_ca <directory_url>
@@ -108,6 +109,7 @@ Possible options are:
 			idle        <duration>
 		}
 		trusted_proxies <module> ...
+		client_ip_headers <headers...>
 		metrics
 		max_header_size <size>
 		log_credentials
@@ -284,6 +286,10 @@ Your email address. Mainly used when creating an ACME account with your CA, and 
 Sets a default TLS ServerName for when clients do not use SNI in their ClientHello.
 
 
+##### `fallback_sni`
+If configured, the fallback becomes the TLS ServerName in the ClientHello if the original ServerName doesn't match any certificates in the cache. The uses for this are very niche; typically if a client is a CDN and passes through the ServerName of the downstream handshake but can accept a certificate with the origin's hostname instead, then you would set this as your origin's hostname. Note that Caddy must be managing a certificate for this name. <i>⚠️ Experimental</i>
+
+
 ##### `local_certs`
 Causes all certificates to be issued internally by default, rather than through a (public) ACME CA such as Let's Encrypt. This is useful in development environments.
 
@@ -447,7 +453,7 @@ listener_wrappers {
 }
 ```
 
-Another example, assuming you have the [`proxy_protocol`](/docs/json/apps/http/servers/listener_wrappers/proxy_protocol/) plugin installed, which must be used _before_ the `tls` listener wrapper:
+Also included is the [`proxy_protocol`](/docs/json/apps/http/servers/listener_wrappers/proxy_protocol/) listener wrapper (prior to v2.7.0 it was only available via a plugin), which enables [PROXY protocol](https://www.haproxy.org/download/1.8/doc/proxy-protocol.txt) parsing (popularized by HAProxy). This must be used _before_ the `tls` listener wrapper since it parses plaintext data at the start of the connection:
 
 ```caddy-d
 listener_wrappers {
@@ -476,9 +482,12 @@ listener_wrappers {
 
 Allows configuring IP ranges (CIDRs) of proxy servers from which requests should be trusted. By default, no proxies are trusted.
 
-On its own, this configuration will not do anything, but it can be used to signal to handlers or matchers in HTTP routes that the request is trusted. See the [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy#defaults) handler for example, which uses this to trust sensitive incoming `X-Forwarded-*` headers.
+Enabling this causes trusted requests to have the _real_ client IP parsed from HTTP headers (by default, `X-Forwarded-For`; see [`client_ip_headers`](#client-ip-headers) to configure other headers). If trusted, the client IP is added to [access logs](/docs/caddyfile/directives/log), is available as a `{client_ip}` [placeholder](/docs/caddyfile/concepts#placeholders), and allows the use of the [`client_ip` matcher](/docs/caddyfile/matchers#client-ip). If the request is not from a trusted proxy, then the client IP is set to the remote IP address of the direct incoming connection.
+
+Some matchers or handlers may use the trust status of the request to make additional decisions. For example, if trusted, the [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy#defaults) handler will proxy and augment the sensitive `X-Forwarded-*` request headers.
 
 Currently, only the `static` [IP source module](/docs/json/apps/http/servers/trusted_proxies/) is included with the standard distribution of Caddy, but this can be [extended](/docs/extending-caddy) with plugins to maintain a dynamic list of IP ranges.
+
 
 ###### `static`
 
@@ -499,6 +508,11 @@ Here's a complete example, trusting an example IPv4 range and an IPv6 range:
 	}
 }
 ```
+
+
+##### `client_ip_headers`
+
+Pairing with [`trusted_proxies`](#trusted-proxies), allows configuring which headers to use to determine the client's IP address. By default, only `X-Forwarded-For` is considered. Multiple header fields can be specified, in which case the first non-empty header value is used.
 
 
 

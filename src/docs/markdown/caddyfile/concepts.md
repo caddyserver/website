@@ -7,13 +7,17 @@ title: Caddyfile Concepts
 This document will help you learn about the HTTP Caddyfile in detail.
 
 1. [Structure](#structure)
+	- [Blocks](#blocks)
+	- [Directives](#directives)
+	- [Tokens and quotes](#tokens-and-quotes)
 2. [Addresses](#addresses)
 3. [Matchers](#matchers)
 4. [Placeholders](#placeholders)
 5. [Snippets](#snippets)
-6. [Comments](#comments)
-7. [Environment variables](#environment-variables)
-8. [Global options](#global-options)
+6. [Named Routes](#named-routes)
+7. [Comments](#comments)
+8. [Environment variables](#environment-variables)
+9. [Global options](#global-options)
 
 
 ## Structure
@@ -25,6 +29,7 @@ The Caddyfile's structure can be described visually:
 Key points:
 
 - An optional [**global options block**](#global-options) can be the very first thing in the file.
+- [Snippets](#snippets) or [named routes](#named-routes) may optionally appear next.
 - Otherwise, the first line of the Caddyfile is **always** the [address(es)](#addresses) of the site to serve.
 - All [directives](#directives) and [matchers](#matchers) **must** go in a site block. There is no global scope or inheritance across site blocks.
 - If there is only one site block, its curly braces `{ }` are optional.
@@ -85,17 +90,17 @@ If a request matches multiple site blocks, the site block with the most specific
 [**Directives**](/docs/caddyfile/directives) are functional keywords which customize how the site is served. They **must** appear within site blocks. For example, a complete file server config might look like this:
 
 ```caddy
-localhost
-
-file_server
+localhost {
+	file_server
+}
 ```
 
 Or a reverse proxy:
 
 ```caddy
-localhost
-
-reverse_proxy localhost:9000
+localhost {
+	reverse_proxy localhost:9000
+}
 ```
 
 In these examples, [`file_server`](/docs/caddyfile/directives/file_server) and [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy) are directives. Directives are the first word on a line in a site block.
@@ -105,10 +110,10 @@ In the second example, `localhost:9000` is an **argument** because it appears on
 Sometimes directives can open their own blocks. **Subdirectives** appear on the beginning of each line within directive blocks:
 
 ```caddy
-localhost
-
-reverse_proxy localhost:9000 localhost:9001 {
-	lb_policy first
+localhost {
+	reverse_proxy localhost:9000 localhost:9001 {
+		lb_policy first
+	}
 }
 ```
 
@@ -155,6 +160,25 @@ Inside quoted tokens, all other characters are treated literally, including spac
 directive "first line
 	second line"
 ```
+
+Heredocs <span id="heredocs"/> are also supported:
+
+```caddy
+example.com {
+	respond <<HTML
+		<html>
+		  <head><title>Foo</title></head>
+		  <body>Foo</body>
+		</html>
+		HTML 200
+}
+```
+
+The opening heredoc marker must start with `<<`, followed by any text (uppercase letters recommended). The closing heredoc marker must be the same text (in the above example, `HTML`).
+
+The closing marker can be indented, which causes every line of text to have that much indentation stripped (inspired by [PHP](https://www.php.net/manual/en/language.types.string.php#language.types.string.syntax.heredoc)) which is nice for readability inside [blocks](#blocks) while giving great control of the whitespace in the token text. The trailing newline is also stripped, but can be retained by adding an extra blank line before the closing marker.
+
+Additional tokens may follow the closing marker as arguments to the directive (such as in the example above, the status code `200`).
 
 
 
@@ -236,6 +260,7 @@ You can use any [Caddy placeholders](/docs/conventions#placeholders) in the Cadd
 | Shorthand       | Replaces                          |
 |-----------------|-----------------------------------|
 | `{cookie.*}`    | `{http.request.cookie.*}`         |
+| `{client_ip}`   | `{http.vars.client_ip}`           |
 | `{dir}`         | `{http.request.uri.path.dir}`     |
 | `{err.*}`       | `{http.error.*}` |
 | `{file_match.*}` | `{http.matchers.file.*}` |
@@ -297,7 +322,7 @@ You can pass arguments to imported configuration and use them like so:
 
 ```caddy
 (snippet) {
-  respond "Yahaha! You found {args.0}!"
+  respond "Yahaha! You found {args[0]}!"
 }
 
 a.example.com {
@@ -308,6 +333,27 @@ b.example.com {
 	import snippet "Example B"
 }
 ```
+
+
+## Named Routes
+
+Named routes use syntax similar to [snippets](#snippets); they're a special block defined outside of site blocks, prefixed with `&(` and ending in `)` with the name in between.
+
+```caddy
+&(app-proxy) {
+	reverse_proxy app-01:8080 app-02:8080 app-03:8080
+}
+```
+
+And then you can reuse this named route within any site:
+
+```caddy-d
+invoke app-proxy
+```
+
+This is particularly useful to reduce memory usage if the same route is needed in many different sites, or if multiple different matcher conditions are needed to invoke the same route.
+
+See the [`invoke` directive](/docs/caddyfile/directives/invoke) documentation for more details.
 
 
 ## Comments

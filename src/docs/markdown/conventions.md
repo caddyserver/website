@@ -92,6 +92,7 @@ Placeholder | Description
 `{system.arch}` | The system's architecture
 `{system.wd}` | The current working directory
 `{time.now}` | The current time as a Go Time struct
+`{time.now.http}` | The current time in the format used in [HTTP headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified)
 `{time.now.unix}` | The current time as a unix timestamp in seconds
 `{time.now.unix_ms}` | The current time as a unix timestamp in milliseconds
 `{time.now.common_log}` | The current time in Common Log Format

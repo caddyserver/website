@@ -56,6 +56,7 @@ Now compare an equivalent structured log message from Caddy, encoded as JSON and
 	"request": {
 		"remote_ip": "127.0.0.1",
 		"remote_port": "41342",
+		"client_ip": "127.0.0.1",
 		"proto": "HTTP/2.0",
 		"method": "GET",
 		"host": "localhost",
@@ -73,6 +74,7 @@ Now compare an equivalent structured log message from Caddy, encoded as JSON and
 			"server_name": "example.com"
 		}
 	},
+	"bytes_read": 0,
 	"user_id": "",
 	"duration": 0.000929675,
 	"size": 10900,
