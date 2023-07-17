@@ -35,6 +35,9 @@ The ellipses `...` indicates a continuation, i.e. one or more parameters.
 - **[caddy file-server](#caddy-file-server)**
   A simple but production-ready file server
 
+- **[caddy file-server export-template](#caddy-file-server-export-template)**
+  Auxilary command for the file server to export the default file browser template
+
 - **[caddy fmt](#caddy-fmt)**
   Formats a Caddyfile
 
@@ -202,7 +205,11 @@ Spins up a simple but production-ready static file server.
 This command disables the admin API, making it easier to run multiple instances on a local development machine.
 
 
+#### `caddy file-server export-template`
 
+<pre><code class="cmd bash">caddy file-server export-template</code></pre>
+
+Exports the default file browsing template to stdout
 
 ### `caddy fmt`
 
