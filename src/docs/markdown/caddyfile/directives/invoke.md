@@ -4,6 +4,8 @@ title: invoke (Caddyfile directive)
 
 # invoke
 
+<i>⚠️ Experimental</i>
+
 Invokes a [named route](/docs/caddyfile/concepts#named-routes).
 
 This is useful when paired with HTTP handler directives that have their own in-memory state, or if they are expensive to provision on load. If you have hundreds of sites or more, invoking a named route can help reduce memory usage.

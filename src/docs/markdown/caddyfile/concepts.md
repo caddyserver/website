@@ -337,6 +337,8 @@ b.example.com {
 
 ## Named Routes
 
+<i>⚠️ Experimental</i>
+
 Named routes use syntax similar to [snippets](#snippets); they're a special block defined outside of site blocks, prefixed with `&(` and ending in `)` with the name in between.
 
 ```caddy

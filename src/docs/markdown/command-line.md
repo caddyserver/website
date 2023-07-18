@@ -512,11 +512,13 @@ If you want to stop the current configuration but do not want to exit the proces
 
 ### `caddy storage`
 
+<i>⚠️ Experimental</i>
+
 Allows export and import of the contents of Caddy's configured data storage.
 
 This is useful when needing to transition from one [storage module](/docs/json/storage/) to another, by exporting from your old one, updating your config, then importing into the new one.
 
-The following command can be used to do this all in one shot, using and old and new config with different configured storage modules, piping the export output into the 
+The following command can be used to copy the storage between different modules in one shot, using old and new configs, piping the export command's output into the import command.
 
 ```
 $ caddy storage export -c Caddyfile.old -o- |
@@ -596,6 +598,8 @@ If the admin API is used, then the CA ID defaults to "local". You may specify th
 
 ### `caddy upgrade`
 
+<i>⚠️ Experimental</i>
+
 <pre><code class="cmd bash">caddy upgrade
 	[-k, --keep-backup]</code></pre>
 
@@ -611,6 +615,8 @@ This command may require elevated privileges if your user does not have permissi
 
 ### `caddy add-package`
 
+<i>⚠️ Experimental</i>
+
 <pre><code class="cmd bash">caddy add-package &lt;packages...&gt;
 	[-k, --keep-backup]</code></pre>
 
@@ -623,6 +629,8 @@ For example:
 
 
 ### `caddy remove-package`
+
+<i>⚠️ Experimental</i>
 
 <pre><code class="cmd bash">caddy remove-package &lt;packages...&gt;
 	[-k, --keep-backup]</code></pre>
