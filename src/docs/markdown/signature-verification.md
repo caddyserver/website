@@ -1,12 +1,38 @@
 ---
-title: Verifying Asset Signatures
+title: Asset Signature Verification
 ---
 
-# Signature Verification
+# Asset Signature Verification
 
 Artifact signing allows you to validate the artifact you have is the same one created by the project's workflow and was not modified by an unauthorized party (e.g. man-in-the-middle). The validation provides common ground, assurance, and knowledge that all parties are refering to the same artifact, collection of bytes, whether it is an executable, SBOM, or text file.
 
 As of Caddy v2.6.0, CI/CD release artifacts are signed using project [Sigstore](https://www.sigstore.dev/) technology, which issues certificates containing details about the subject to whom the certificate is issued. You can start by inspecting the certificate used to sign your artifact of choice. The certificates are base64-encoded, so you first have to base64-decode it to receive the PEM file. In this example, we'll work with the `caddy_2.6.0_checksums.txt` artifact and assume a Linux-like environment.
+
+<aside class="tip" id="tldr">
+
+tl;dr: The following code snippet will verify the signature of a Caddy release artifact, keeping in mind the necessity to accommodate the URLs and the subject artificat name:
+<pre><code class="cmd">
+<span class="bash">TAG="2.6.0"</span>
+<span class="bash">ARTIFACT="caddy_${TAG}_checksums.txt"</span>
+<span class="bash">SIG="${ARTIFACT}.sig"</span>
+<span class="bash">CERT="${ARTIFACT}.pem"</span>
+<span class="bash">URL_BASE="https://github.com/caddyserver/caddy/releases/download/v${TAG}"</span>
+<span class="bash">wget "${URL_BASE}/${ARTIFACT}"</span>
+<span class="bash">wget "${URL_BASE}/${SIG}"</span>
+<span class="bash">wget "${URL_BASE}/${CERT}"</span>
+
+<span class="bash">cosign verify-blob \
+--certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+--certificate-github-workflow-name "Release" \
+--certificate-github-workflow-ref refs/tags/v${TAG} \
+--certificate-identity-regexp caddyserver/caddy \
+--certificate ./${CERT} \
+--signature ./${SIG} \
+--verbose \
+./${ARTIFACT}</span>
+</code></pre>
+
+</aside>
 
 Start by downloading the the 3 files pertaining to your artifact of choice (i.e. `<the artifact>` which is the actual artifact whose companion signature and certs are to be verified, `<the artifact>.sig` which is the signature of the artifact, and `<the artifact>.pem` is the certificate descending from the root cert by Fulcio by Sigstore). Then base64 decode the downloaded `.pem` file to the armored version:
 
@@ -103,8 +129,15 @@ Notice the stated intended usage of the certificate, which is `Code Signing`. Th
 
 Now that we have the certificate, we can use `cosign` cli to validate the signature. We run the following command (notice it uses the undecoded cert):
 
-<pre><code class="cmd"><span class="bash">COSIGN_EXPERIMENTAL=1 cosign verify-blob --certificate ./caddy_2.6.0_checksums.txt.pem --signature ./caddy_2.6.0_checksums.txt.sig ./caddy_2.6.0_checksums.txt</span>
-tlog entry verified with uuid: 04deb84e5a73ba75ea69092c6d700eaeb869c29cae3e0cf98dbfef871361ed09 index: 3618623
+<pre><code class="cmd"><span class="bash">cosign verify-blob \
+--certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+--certificate-github-workflow-name "Release" \
+--certificate-github-workflow-ref refs/tags/v2.6.0 \
+--certificate-identity-regexp caddyserver/caddy \
+--certificate ./caddy_2.6.0_checksums.txt.pem \
+--signature ./caddy_2.6.0_checksums.txt.sig \
+--verbose \
+./caddy_2.6.0_checksums.txt</span>
 Verified OK
 </code></pre>
 
