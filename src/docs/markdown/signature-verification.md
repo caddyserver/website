@@ -10,7 +10,7 @@ As of Caddy v2.6.0, CI/CD release artifacts are signed using project [Sigstore](
 
 <aside class="tip" id="tldr">
 
-tl;dr: The following code snippet will verify the signature of a Caddy release artifact, keeping in mind the necessity to accommodate the URLs and the subject artificat name:
+tl;dr: The following code snippet will verify the signature of a Caddy release artifact, keeping in mind the necessity to accommodate the URLs and the subject artifact name:
 <pre><code class="cmd">
 <span class="bash">TAG="2.6.0"</span>
 <span class="bash">ARTIFACT="caddy_${TAG}_checksums.txt"</span>
