@@ -4,7 +4,7 @@ title: "API"
 
 # API
 
-Caddy is configured through an administration endpoint which can be accessed via HTTP using a [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) API. You can [configure this endpoint](/docs/json/admin/) in your Caddy config.
+Caddy is configured through an administration endpoint which can be accessed via HTTP using a [REST <img src="/resources/images/external-link.svg" class="external-link">](https://en.wikipedia.org/wiki/Representational_state_transfer) API. You can [configure this endpoint](/docs/json/admin/) in your Caddy config.
 
 **Default address: `localhost:2019`**
 
@@ -254,7 +254,7 @@ This section is for all `/config/` endpoints. It is experimental and subject to 
 </aside>
 
 
-Caddy's config API provides [ACID guarantees](https://en.wikipedia.org/wiki/ACID) for individual requests, but changes that involve more than a single request are subject to collisions or data loss if not properly synchronized.
+Caddy's config API provides [ACID guarantees <img src="/resources/images/external-link.svg" class="external-link">](https://en.wikipedia.org/wiki/ACID) for individual requests, but changes that involve more than a single request are subject to collisions or data loss if not properly synchronized.
 
 For example, two clients may `GET /config/foo` at the same time, make an edit within that scope (config path), then call `POST|PUT|PATCH|DELETE /config/foo/...` at the same time to apply their changes, resulting in a collision: either one will overwrite the other, or the second might leave the config in an unintended state since it was applied to a different version of the config than it was prepared against. This is because the changes are not aware of each other.
 

@@ -38,6 +38,7 @@ Proxies requests to one or more backends with configurable transport, load balan
 - [Load balancing](#load-balancing)
   - [Active health checks](#active-health-checks)
   - [Passive health checks](#passive-health-checks)
+  - [Events](#events)
 - [Streaming](#streaming)
 - [Headers](#headers)
 - [Rewrites](#rewrites)
@@ -332,6 +333,16 @@ Passive health checks happen inline with actual proxied requests. To enable this
 - **unhealthy_request_count** <span id="unhealthy_request_count"/> is the permissible number of simultaneous requests to a backend before marking it as down. In other words, if a particular backend is currently handling this many requests, then it's considered "overloaded" and other backends will be preferred instead.
 
   This should be a reasonably large number; configuring this means that the proxy will have a limit of `unhealthy_request_count × upstreams_count` total simultaneous requests, and any requests after that point will result in an error due to no upstreams being available.
+
+
+### Events
+
+When an upstream transitions from being healthy to unhealthy or vice-versa, [an event](/docs/caddyfile/options#event-options) is emitted. These events can be used to trigger other actions, such as sending a notification or logging a message. The events are as follows:
+
+- `healthy` is emitted when an upstream is marked healthy when it was previous unhealthy
+- `unhealthy` is emitted when an upstream is marked unhealthy when it was previous healthy
+
+In both cases, the `host` is included as metadata in the event to identify the upstream that changed state. It can be used as a placeholder with `{event.data.host}` with the `exec` event handler, for example.
 
 
 

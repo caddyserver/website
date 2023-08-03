@@ -58,7 +58,7 @@ header [<matcher>] [[+|-|?|>]<field> [<value>|<find>] [<replace>]] {
 
 For multiple header manipulations, you can open a block and specify one manipulation per line in the same way.
 
-When using the `?` prefix to set a default header value, it is recommended to separate this into its own `header` directive. [Under the hood](https://caddyserver.com/docs/modules/http.handlers.headers#response/require), using `?` configures a response matcher which applies to the directive's entire handler which only applies the header operations if the field is not yet set. For example, if in the same directive, you have these two manipulations: `-Hidden` and `?Foo default`, then the `Hidden` header is _only_ removed if `Foo` is empty, which is typically not the intended effect.
+When using the `?` prefix to set a default header value, it is recommended to separate this into its own `header` directive. [Under the hood](/docs/modules/http.handlers.headers#response/require), using `?` configures a response matcher which applies to the directive's entire handler which only applies the header operations if the field is not yet set. For example, if in the same directive, you have these two manipulations: `-Hidden` and `?Foo default`, then the `Hidden` header is _only_ removed if `Foo` is empty, which is typically not the intended effect.
 
 
 ## Examples

@@ -603,7 +603,7 @@ If the admin API is used, then the CA ID defaults to "local". You may specify th
 <pre><code class="cmd bash">caddy upgrade
 	[-k, --keep-backup]</code></pre>
 
-Replaces the current Caddy binary with the latest version from [our download page](https://caddyserver.com/download) with the same modules installed, including all third-party plugins that are registered on the Caddy website.
+Replaces the current Caddy binary with the latest version from [our download page](/download) with the same modules installed, including all third-party plugins that are registered on the Caddy website.
 
 Upgrades do not interrupt running servers; currently, the command only replaces the binary on disk. This might change in the future if we can figure out a good way to do it.
 
@@ -620,7 +620,7 @@ This command may require elevated privileges if your user does not have permissi
 <pre><code class="cmd bash">caddy add-package &lt;packages...&gt;
 	[-k, --keep-backup]</code></pre>
 
-Similarly to `caddy upgrade`, replaces the current Caddy binary with the latest version with the same modules installed, _plus_ the packages listed as arguments included in the new binary. Find the list of packages you can install from [our download page](https://caddyserver.com/download). Each argument should be the full package name.
+Similarly to `caddy upgrade`, replaces the current Caddy binary with the latest version with the same modules installed, _plus_ the packages listed as arguments included in the new binary. Find the list of packages you can install from [our download page](/download). Each argument should be the full package name.
 
 For example:
 

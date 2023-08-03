@@ -6,7 +6,7 @@ title: "Build from source"
 
 Requirements:
 
-- [Go](https://golang.org/doc/install) 1.19 or newer
+- [Go](https://golang.org/doc/install) 1.20 or newer
 
 Clone the repository:
 
@@ -76,7 +76,7 @@ This procedure aims to simplify running custom `caddy` binaries while keeping su
 This procedure allows users to take advantage of the default configuration, systemd service files and bash-completion from the official package.
 
 Requirements:
-- Install `caddy` package according to these [instructions](https://caddyserver.com/docs/install#debian-ubuntu-raspbian)
+- Install `caddy` package according to these [instructions](/docs/install#debian-ubuntu-raspbian)
 - Build your custom `caddy` binary according to the procedure listed in this document. (see above)
 - Your custom `caddy` binary should be located in the current directory.
 

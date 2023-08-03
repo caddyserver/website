@@ -61,7 +61,7 @@ unix//path/to/socket
 
 <aside class="tip">
 
-Caddy network addresses are not URLs. URLs couple the lower and higher layers of the [OSI model](https://en.wikipedia.org/wiki/OSI_model#Layer_architecture), but Caddy often uses network addresses independently of a specific application, so combining them would be problematic. In Caddy, network addresses refer precisely to resources that can be dialed or bound at L3-L5, but URLs combine L3-L7, which is too many. A network address requires a host+port and path to be mutually exclusive, but URLs do not. Network addresses sometimes support port ranges, but URLs do not.
+Caddy network addresses are not URLs. URLs couple the lower and higher layers of the [OSI model <img src="/resources/images/external-link.svg" class="external-link">](https://en.wikipedia.org/wiki/OSI_model#Layer_architecture), but Caddy often uses network addresses independently of a specific application, so combining them would be problematic. In Caddy, network addresses refer precisely to resources that can be dialed or bound at L3-L5, but URLs combine L3-L7, which is too many. A network address requires a host+port and path to be mutually exclusive, but URLs do not. Network addresses sometimes support port ranges, but URLs do not.
 
 </aside>
 
@@ -72,7 +72,7 @@ Caddy's configuration supports the use of _placeholders_ (variables). Using plac
 
 <aside class="tip">
 
-Placeholders are a similar idea to variables in other software. For example, [nginx has variables](https://nginx.org/en/docs/varindex.html) like `$uri` and `$document_root`.
+Placeholders are a similar idea to variables in other software. For example, [nginx has variables <img src="/resources/images/external-link.svg" class="external-link">](https://nginx.org/en/docs/varindex.html) like `$uri` and `$document_root`.
 
 </aside>
 
@@ -92,7 +92,7 @@ Placeholder | Description
 `{system.arch}` | The system's architecture
 `{system.wd}` | The current working directory
 `{time.now}` | The current time as a Go Time struct
-`{time.now.http}` | The current time in the format used in [HTTP headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified)
+`{time.now.http}` | The current time in the format used in [HTTP headers <img src="/resources/images/external-link.svg" class="external-link">](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified)
 `{time.now.unix}` | The current time as a unix timestamp in seconds
 `{time.now.unix_ms}` | The current time as a unix timestamp in milliseconds
 `{time.now.common_log}` | The current time in Common Log Format

@@ -73,7 +73,7 @@ After installing, please read the [service usage instructions](/docs/running#usi
 
 [**View the Cloudsmith repos**](https://cloudsmith.io/~caddy/repos/)
 
-If you wish to use the packaged support files (systemd services, bash completion and default configuration) with a custom Caddy build, instructions can be [found here](https://caddyserver.com/docs/build#package-support-files-for-custom-builds-for-debianubunturaspbian).
+If you wish to use the packaged support files (systemd services, bash completion and default configuration) with a custom Caddy build, instructions can be [found here](/docs/build#package-support-files-for-custom-builds-for-debianubunturaspbian).
 
 
 ## Fedora, RedHat, CentOS

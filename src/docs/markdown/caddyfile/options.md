@@ -112,6 +112,7 @@ Possible options are:
 		client_ip_headers <headers...>
 		metrics
 		max_header_size <size>
+		enable_full_duplex
 		log_credentials
 		protocols [h1|h2|h2c|h3]
 		strict_sni_host [on|insecure_off]
@@ -299,7 +300,7 @@ Skips the attempts to install the local CA's root into the system trust store, a
 
 
 ##### `acme_ca`
-Specifies the URL to the ACME CA's directory. It is strongly recommended to set this to Let's Encrypt's [staging endpoint](https://letsencrypt.org/docs/staging-environment/) for testing or development. Default: ZeroSSL and Let's Encrypt's production endpoints.
+Specifies the URL to the ACME CA's directory. It is strongly recommended to set this to Let's Encrypt's [staging endpoint <img src="/resources/images/external-link.svg" class="external-link">](https://letsencrypt.org/docs/staging-environment/) for testing or development. Default: ZeroSSL and Let's Encrypt's production endpoints.
 
 Note that a globally-configured ACME CA may not apply to all sites; see the [hostname requirements](/docs/automatic-https#hostname-requirements) for using the default ACME issuer(s).
 
@@ -523,7 +524,20 @@ Enables Prometheus metrics collection; necessary before scraping metrics. Note t
 
 ##### `max_header_size`
 
-The maximum size to parse from a client's HTTP request headers. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
+The maximum size to parse from a client's HTTP request headers. If the limit is exceeded, the server will respond with HTTP status `431 Request Header Fields Too Large`. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). By default, the limit is `1MB`.
+
+
+##### `enable_full_duplex`
+
+Enable full-duplex communication for HTTP/1 requests. Only has an effect if Caddy was built with Go 1.21 or later.
+
+For HTTP/1 requests, the Go HTTP server by default consumes any unread portion of the request body before beginning to write the response, preventing handlers from concurrently reading from the request and writing the response. Enabling this option disables this behavior and permits handlers to continue to read from the request while concurrently writing the response.
+
+For HTTP/2 requests, the Go HTTP server always permits concurrent reads and responses, so this option has no effect.
+
+Test thoroughly with your HTTP clients, as some older clients may not support full-duplex HTTP/1 which can cause them to deadlock. See [golang/go#57786](https://github.com/golang/go/issues/57786) for more info.
+
+⚠️ This is an experimental feature. Subject to change or removal.
 
 
 ##### `log_credentials`
@@ -591,13 +605,29 @@ A key pair (certificate and private key) to use as the intermediate for the CA. 
 
 ## Event Options
 
-Caddy modules emit events when interesting things happen (or are about to happen).
+Caddy modules emit events when interesting things happen (or are about to happen). 
+
+Events typically include a metadata payload. The best way to learn about events and their payloads is from each module's documentation, but you may also see the events and their data payloads by enabling the [`debug` global option](#debug) and reading the logs.
 
 ##### `on`
+
 Binds an event handler to the named event. Specify the name of the event handler module, followed by its configuration.
 
-For example, to run a command after a certificate is obtained ([third-party plugin <img src="/resources/images/external-link.svg" class="external-link">](https://github.com/mholt/caddy-events-exec) required):
+For example, to run a command after a certificate is obtained ([third-party plugin <img src="/resources/images/external-link.svg" class="external-link">](https://github.com/mholt/caddy-events-exec) required), with a part of the event payload being passed to the script using a placeholder:
 
-```caddy-d
-on cert_obtained exec systemctl reload mydaemon
+```caddy
+{
+	events {
+		on cert_obtained exec ./my-script.sh {event.data.certificate_path}
+	}
+}
 ```
+
+### Events
+
+These standard events are emitted by Caddy:
+
+- [`tls` events <img src="/resources/images/external-link.svg" class="external-link">](https://github.com/caddyserver/certmagic#events)
+- [`reverse_proxy` events](/docs/caddyfile/directives/reverse_proxy#events)
+
+Plugins may also emit events, so check their documentation for details.

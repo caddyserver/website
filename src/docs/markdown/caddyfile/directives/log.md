@@ -52,15 +52,22 @@ Since Caddy v2.5, by default, headers with potentially sensitive information (`C
 ## Syntax
 
 ```caddy-d
-log {
+log [<logger_name>] {
+	hostnames <hostnames...>
 	output <writer_module> ...
 	format <encoder_module> ...
 	level  <level>
 }
 ```
 
-- **output** configures where to write the logs. See [Output modules](#output-modules) below. Default: `stderr`
-- **format** describes how to encode, or format, the logs. See [Format modules](#format-modules) below. Default: `console` if `stdout` is detected to be a terminal, `json` otherwise.
+- **logger_name** is an optional override of the logger name for this site. By default, a logger name is generated automatically, e.g. `log0`, `log1`, and so on depending on the order of the sites in the Caddyfile. This is only useful if you wish to reliably refer to the output of this logger from another logger defined in global options. See [an example](#multiple-outputs) below.
+
+- **hostnames** overrides the hostnames that this logger applies to. By default, the logger applies to the hostnames of the site block it appears in, i.e. the site addresses. This is useful if you wish to define different loggers per subdomain in a [wildcard site block](/docs/caddyfile/patterns#wildcard-certificates). See [an example](#wildcard-logs) below.
+
+- **output** configures where to write the logs. See [Output modules](#output-modules) below. Default: `stderr`.
+
+- **format** describes how to encode, or format, the logs. See [Format modules](#format-modules) below. Default: `console` if `stderr` is detected to be a terminal, `json` otherwise.
+
 - **level** is the minimum entry level to log. Default: `INFO`. Note that access logs currently only emit `INFO` and `ERROR` level logs.
 
 
@@ -140,7 +147,7 @@ The **format** subdirective lets you customize how logs get encoded (formatted).
 
 <aside class="tip">
 
-**A note about Common Log Format (CLF):** CLF clashes with modern structured logs. To transform your access logs into the deprecated Common Log Format, please use the [`transform-encoder` plugin](https://github.com/caddyserver/transform-encoder).
+**A note about Common Log Format (CLF):** CLF clashes with modern structured logs. To transform your access logs into the deprecated Common Log Format, please use the [`transform-encoder` plugin <img src="/resources/images/external-link.svg" class="external-link">](https://github.com/caddyserver/transform-encoder).
 
 </aside>
 
@@ -259,7 +266,7 @@ Masks IP addresses in the field using a CIDR mask, i.e. the number of bits from 
 
 There is separate configuration for IPv4 and IPv6 addresses, since they have a different total number of bits.
 
-Most commonly, the fields to filter would be `request>remote_ip` for the directly connecting client, or `request>headers>X-Forwarded-For` if behind a reverse proxy.
+Most commonly, the fields to filter would be `request>remote_ip` for the directly connecting client, `request>client_ip` for the parsed "real client" when [`trusted_proxies`](/docs/caddyfile/options#trusted-proxies) is configured, or `request>headers>X-Forwarded-For` if behind a reverse proxy.
 
 ```caddy-d
 <field> ip_mask {
@@ -328,7 +335,9 @@ Useful to obscure the value if it's sensitive, while being able to notice whethe
 
 ## Examples
 
-Enable access logging (to the console):
+Enable access logging to the default logger.
+
+In other words, by default this logs to the console or stderr, but this can be changed by reconfiguring the default logger with the [`log` global option](/docs/caddyfile/options#log):
 
 ```caddy-d
 log
@@ -388,7 +397,9 @@ log {
 ```
 
 
-Mask the remote address from the request, keeping the first 16 bits (i.e. 255.255.0.0) for IPv4 addresses, and the first 32 bits from IPv6 addresses. (Note that prior to Caddy v2.5, the field was named `remote_addr`, but is now `remote_ip`):
+Mask the remote address from the request, keeping the first 16 bits (i.e. 255.255.0.0) for IPv4 addresses, and the first 32 bits from IPv6 addresses.
+
+Note that as of Caddy v2.7, both `remote_ip` and `client_ip` are logged, where `client_ip` is the "real IP" when [`trusted_proxies`](/docs/caddyfile/options#trusted-proxies) is configured:
 
 ```caddy-d
 log {
@@ -401,5 +412,54 @@ log {
 			}
 		}
 	}
+}
+```
+
+
+<span id="wildcard-logs" /> To write separate log files for each subdomain in a [wildcard site block](/docs/caddyfile/patterns#wildcard-certificates), by overriding `hostnames` for each logger:
+
+```caddy
+*.example.com {
+	log {
+		hostnames foo.example.com
+		output file /var/log/foo.example.com.log
+	}
+	@foo host foo.example.com  
+	handle @foo {
+		respond "foo"
+	}
+
+	log {
+		hostnames bar.example.com
+		output file /var/log/bar.example.com.log
+	}
+	@bar host bar.example.com
+	handle @bar {
+		respond "bar"
+	}
+}
+```
+
+<span id="multiple-outputs" /> To write the access logs for a particular subdomain to two different files, with different formats (one with [`transform-encoder` plugin <img src="/resources/images/external-link.svg" class="external-link">](https://github.com/caddyserver/transform-encoder) and the other with [`json`](#json)). 
+
+This works by overriding the logger name as `foo` in the site block, then including the access logs produced by that logger in the two loggers in global options with `include http.log.access.foo`:
+
+```caddy
+{
+	log access-formatted {
+		include http.log.access.foo
+		output file /var/log/access-foo.log
+		format transform "{common_log}"
+	}
+
+	log access-json {
+		include http.log.access.foo
+		output file /var/log/access-foo.json
+		format json
+	}
+}
+
+foo.example.com {
+	log foo
 }
 ```

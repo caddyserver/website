@@ -7,7 +7,7 @@ Upgrade Guide
 
 Caddy 2 is a whole new code base, written from scratch, to improve on Caddy 1. Caddy 2 is not backwards-compatible with Caddy 1. But don't worry, for most basic setups, not much is different. This guide will help you transition as easily as possible.
 
-This guide won't delve into the new features available -- which are really cool, by the way, you should [learn them](https://caddyserver.com/docs/getting-started) -- the goal here is to just get you up and running on Caddy 2 quickly.
+This guide won't delve into the new features available -- which are really cool, by the way, you should [learn them](/docs/getting-started) -- the goal here is to just get you up and running on Caddy 2 quickly.
 
 
 ### Menu
@@ -55,7 +55,7 @@ This guide won't delve into the new features available -- which are really cool,
 
 ## Steps
 
-1. Get familiar with Caddy 2 by doing our [Getting Started](https://caddyserver.com/docs/getting-started) tutorial.
+1. Get familiar with Caddy 2 by doing our [Getting Started](/docs/getting-started) tutorial.
 2. Do step 1 if you haven't yet. Seriously -- we can't stress how important it is to at least know how to use Caddy 2. (It's more fun!)
 3. Use the guide below to transition your `caddy` command(s).
 4. Use the guide below to transition your Caddyfile.
@@ -313,7 +313,7 @@ You may find the new [`route`](/docs/caddyfile/directives/route) and [`handle`](
 
 Because it accepts a matcher in v2, this means you can also change the site root depending on the request.
 
-Remember to add a [`file_server` directive](https://caddyserver.com/docs/caddyfile/directives/file_server) if serving static files, since Caddy 2 does not assume this by default, whereas in v1 always had it enabled.
+Remember to add a [`file_server` directive](/docs/caddyfile/directives/file_server) if serving static files, since Caddy 2 does not assume this by default, whereas in v1 always had it enabled.
 
 
 ### status
@@ -372,7 +372,7 @@ If you want to write a plugin for Caddy 2, [learn how to write a Caddy module](/
 
 ### Building Caddy 2 with plugins
 
-Caddy 2 can be downloaded with plugins at the [interactive download page](https://caddyserver.com/download). Alternatively, you can [build Caddy yourself](https://caddyserver.com/docs/build) using `xcaddy` and choose which plugins to include. `xcaddy` automates the instructions in Caddy's [main.go](https://github.com/caddyserver/caddy/blob/master/cmd/caddy/main.go) file.
+Caddy 2 can be downloaded with plugins at the [interactive download page](/download). Alternatively, you can [build Caddy yourself](/docs/build) using `xcaddy` and choose which plugins to include. `xcaddy` automates the instructions in Caddy's [main.go](https://github.com/caddyserver/caddy/blob/master/cmd/caddy/main.go) file.
 
 
 ## Getting help

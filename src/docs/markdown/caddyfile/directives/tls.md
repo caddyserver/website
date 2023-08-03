@@ -110,7 +110,7 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 
 - **eab** <span id="eab"/> configures ACME external account binding (EAB) for this site, using the key ID and MAC key provided by your CA.
 
-- **on_demand** <span id="on_demand"/> enables [On-Demand TLS](/docs/automatic-https#on-demand-tls) for the hostnames given in the site block's address(es). **Security warning:** Doing so in production is insecure unless you also configure the [`on_demand_tls` global option](https://caddyserver.com/docs/caddyfile/options#on-demand-tls) to mitigate abuse.
+- **on_demand** <span id="on_demand"/> enables [On-Demand TLS](/docs/automatic-https#on-demand-tls) for the hostnames given in the site block's address(es). **Security warning:** Doing so in production is insecure unless you also configure the [`on_demand_tls` global option](/docs/caddyfile/options#on-demand-tls) to mitigate abuse.
 
 - **client_auth** <span id="client_auth"/> enables and configures TLS client authentication:
   - **mode** <span id="mode"/> is the mode for authenticating the client. Allowed values are:
