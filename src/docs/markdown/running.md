@@ -12,6 +12,7 @@ While Caddy can be run directly with its [command line interface](/docs/command-
   - [Manual Installation](#manual-installation)
   - [Using the Service](#using-the-service)
   - [Overrides](#overrides)
+  - [SELinux System Considerations](#selinux-system-considerations)
 - [Windows Service](#windows-service)
 - [Docker Compose](#docker-compose)
   - [Setup](#setup)
@@ -151,6 +152,25 @@ RestartSec=5s
 
 Then, save the file and exit the text editor, and restart the service for it to take effect:
 <pre><code class="cmd bash">sudo systemctl restart caddy</code></pre>
+
+### SELinux System Considerations
+
+On SELinux enabled systems, systemd unit files and their executables will not be run unless labelled with `systemd_unit_file_t` and `bin_t` respectively.
+
+Moreover on some distros (Fedora), SELinux will not let you relabel files directly placed in `/etc/systemd/system`. Instead unit files inside `/etc/systemd/system/` are symlinks to `/usr/lib/systemd/system/`. 
+
+If that is the case, you could create the `caddy.service` file inside the `/usr/lib/` directory and symlink it to `/etc/systemd/system/caddy.service`.
+
+```shell
+### symlink the file if your selinux policy doesn't allow labelling files in /etc/systemd/
+ln -s /usr/lib/systemd/system/caddy.service /etc/systemd/system/caddy.service
+
+semanage fcontext -a -t systemd_unit_file_t PATH_TO_UNIT_FILE
+restorecon -Rv PATH_TO_UNIT_FILE
+
+semanage fcontext -a -t bin_t /usr/bin/caddy
+restorecon -Rv /usr/bin/caddy
+```
 
 
 ## Windows service
