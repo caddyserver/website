@@ -55,9 +55,10 @@ respond /secret/* "Access denied" 403 {
 }
 ```
 
-Write an HTML response, using [heredoc syntax](/docs/caddyfile/concepts#heredocs) to control whitespace:
+Write an HTML response, using [heredoc syntax](/docs/caddyfile/concepts#heredocs) to control whitespace, and also setting the `Content-Type` header to match the response body:
 
 ```caddy-d
+header Content-Type text/html
 respond <<HTML
 	<html>
 	  <head><title>Foo</title></head>
