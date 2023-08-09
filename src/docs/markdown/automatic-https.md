@@ -222,8 +222,6 @@ Enabling on-demand TLS happens in [TLS automation policies](/docs/json/apps/tls/
 
 To prevent abuse of this feature, you must configure restrictions. This is done in the [`automation` object of the JSON config](/docs/json/apps/tls/automation/on_demand/), or the [`on_demand_tls` global option](/docs/caddyfile/options#on-demand-tls) of the Caddyfile. Restrictions are "global" and aren't configurable per-site or per-domain. The primary restriction is an "ask" endpoint to which Caddy will send an HTTP request to ask if it has permission to obtain and manage a certificate for the domain in the handshake. This means you will need some internal backend that can, for example, query the accounts table of your database and see if a customer has signed up with that domain name.
 
-You can also configure rate limits as restrictions, though rate limits alone are not a sufficient protection; the "ask" endpoint is required.
-
 Be mindful of how quickly your CA is able to issue certificates. If it takes more than a few seconds, this will negatively impact the user experience (for the first client only).
 
 Due to its deferred nature and the extra configuration required to prevent abuse, we recommend enabling on-demand TLS only when your actual use case is described above.
