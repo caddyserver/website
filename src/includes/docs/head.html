@@ -8,3 +8,15 @@
 <script type="text/javascript">window.CaddyfileDirectives = {{$directives | toJson}};</script>
 <script src="/resources/js/jquery-3.4.1.min.js"></script>
 <script src="/resources/js/docs.js"></script>
+<script type="text/javascript">
+	$(function(){
+		var current = location.pathname;
+		$('header > nav a').each(function(){
+			var $this = $(this);
+			// if the current path is like this link, make it active
+			if (current.indexOf($this.attr('href')) !== -1) {
+				$this.addClass('current');
+			}
+		})
+	})
+</script>
