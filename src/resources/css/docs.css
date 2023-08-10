@@ -110,6 +110,14 @@ main > nav.sidebar {
 	font-size: 16px;
 }
 
+main > nav.sidebar > .toc-list {
+	position: sticky;
+	max-height: calc(100vh - env(safe-area-inset-bottom));
+	top: 0;
+	padding-top: 24px;
+	overflow-y: auto;
+}
+
 main nav li img,
 article li img,
 img.external-link {
@@ -1030,14 +1038,14 @@ td code {
 		background-color: #000;
 		color: #ccc;
 	}
-	
+
 	.json .key a:not([href]) {
 		color: #bdd6f7
 	}
 
 	#hovercard,
 	.arrow-box {
-		background-color: #0a192b; 
+		background-color: #0a192b;
 	}
 
 	.arrow-box:after {
