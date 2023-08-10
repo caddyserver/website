@@ -2,11 +2,12 @@
 <html>
 	<head>
 		<title>Download Caddy</title>
-		{{include "/includes/head.html"}}
-		<link rel="stylesheet" href="/resources/css/download.css">
+		{{import "/includes/head.html"}}
+		{{template "head"}}
+		<link rel="stylesheet" href="/resources/css/download.css{{template "cacheBust"}}">
 		<script src="/resources/js/jquery-3.4.1.min.js"></script>
 		<script src="/resources/js/sweetalert.min.js"></script>
-		<script src="/resources/js/download.js"></script>
+		<script src="/resources/js/download.js{{template "cacheBust"}}"></script>
 	</head>
 	<body>
 		<div class="wrapper">

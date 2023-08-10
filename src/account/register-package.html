@@ -2,8 +2,9 @@
 <html>
 	<head>
 		<title>Register Package - Caddy</title>
-		{{include "/includes/account/head.html"}}
-		<script src="/resources/js/account/register-package.js"></script>
+		{{import "/includes/account/head.html"}}
+		{{template "account-head"}}
+		<script src="/resources/js/account/register-package.js{{template "cacheBust"}}"></script>
 	</head>
 	<body>
 		<div class="container">
