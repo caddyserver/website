@@ -80,7 +80,7 @@ header nav .button {
 	text-decoration: none;
 }
 
-.breadcrumb-siblings a+a {
+.breadcrumb-siblings a + a {
 	padding-top: 10px;
 }
 
@@ -113,7 +113,7 @@ main > nav.sidebar {
 main nav li img,
 article li img,
 img.external-link {
-	max-height: .9em;
+	max-height: 0.9em;
 }
 
 main nav ul {
@@ -133,26 +133,24 @@ main nav li a {
 	color: #546c75;
 }
 
-
-
 main nav li a:hover {
 	color: #01324b;
 }
 
 main nav li a:before {
-	content: '\203A';
+	content: "\203A";
 	font-weight: bold;
 	font-size: 20px;
 	line-height: 1rem;
 	position: absolute;
 	opacity: 0;
 	left: 0;
-	transition: left .15s, opacity .15s;
+	transition: left 0.15s, opacity 0.15s;
 }
 
 main nav li a:hover:before {
 	opacity: 1;
-	left: .75em;
+	left: 0.75em;
 }
 
 main nav li li a:hover:before {
@@ -187,7 +185,7 @@ main nav li li a {
 
 	background: white;
 	border-radius: 4px;
-	box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, .15);
+	box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, 0.15);
 }
 
 #paper1,
@@ -258,8 +256,12 @@ article pre,
 article table {
 	margin-bottom: 1.5rem;
 }
-article > .fullwidth { margin-bottom: 1.5rem; }
-article > .fullwidth > * { margin-bottom: 0; }
+article > .fullwidth {
+	margin-bottom: 1.5rem;
+}
+article > .fullwidth > * {
+	margin-bottom: 0;
+}
 
 article > pre.chroma > code {
 	background: none;
@@ -292,7 +294,7 @@ article li {
 article li p,
 article li ul,
 article li ol {
-	margin-bottom: .5em;
+	margin-bottom: 0.5em;
 }
 
 h1,
@@ -341,10 +343,10 @@ h5 {
 
 .anchor-link {
 	opacity: 0;
-	font-size: .6em;
+	font-size: 0.6em;
 	border-radius: 10px;
-	padding: .3em .5em;
-	margin-left: .25em;
+	padding: 0.3em 0.5em;
+	margin-left: 0.25em;
 	position: absolute;
 	top: 5px;
 }
@@ -356,7 +358,7 @@ h5 {
 }
 
 .anchor-link:hover {
-	background-color: rgba(0, 0, 0, .075);
+	background-color: rgba(0, 0, 0, 0.075);
 }
 
 code {
@@ -384,25 +386,67 @@ article > pre {
 
 pre > code.cmd {
 	border-radius: 5px;
+	position: relative;
+}
+
+pre > code.cmd button {
+	position: relative;
+	margin-left: auto;
+	margin-block: 0;
+	aspect-ratio: 1;
+	width: 32px;
+	display: flex;
+	align-items: center;
+	background-color: #1a2c47;
+	color: #ffffff;
+	border-radius: 50%;
+	padding: 8px;
+}
+
+.copy-tooltip {
+	position: absolute;
+	right: 59px;
+	top: 13px;
+	color: #ffffff;
+	background: #1a2c47;
+	border: 1px solid transparent;
+	pointer-events: none;
+	opacity: 0;
+	font-size: 14px;
+	border-radius: 5px;
+	padding: 8px;
+}
+
+.copy-tooltip::before {
+	content: "";
+	display: block;
+	position: absolute;
+	right: -9px;
+	top: 13px;
+	border-left: 10px solid #1a2c47;
+	border-bottom: 8px solid transparent;
+	border-top: 8px solid transparent;
 }
 
 code.cmd.bash,
 code.cmd .bash,
 code.cmd.bash-continuation,
 code.cmd .bash-continuation {
+	display: flex;
+	align-items: center;
 	font-weight: bold;
 }
 
 code.cmd.bash::before,
 code.cmd .bash::before {
-	content: '$';
-	margin-right: .5rem;
+	content: "$";
+	margin-right: 0.5rem;
 }
 
 code.cmd.bash-continuation::before,
 code.cmd .bash-continuation::before {
-	content: '>';
-	margin-right: .5rem;
+	content: ">";
+	margin-right: 0.5rem;
 }
 
 dt:hover .inline-link {
@@ -419,10 +463,10 @@ dd {
 
 .field-name {
 	display: block;
-	font-family: 'Source Code Pro', monospace;
+	font-family: "Source Code Pro", monospace;
 	margin-top: 2em;
 	font-weight: bold;
-	margin-bottom: .5em;
+	margin-bottom: 0.5em;
 }
 
 .inline-link {
@@ -430,8 +474,8 @@ dd {
 	position: absolute;
 	margin-left: -1.5em;
 	/* margin-top: -.1em; */
-	padding-right: .3em;
-	padding-left: .2em;
+	padding-right: 0.3em;
+	padding-left: 0.2em;
 	visibility: hidden;
 }
 
@@ -499,37 +543,49 @@ iframe {
 	line-height: 1em;
 }
 
-
-
-
-
-
-
 .json {
 	line-height: 1.5em;
 }
-.json .qu { color: #5c91bf; }
-.json .key { color: #1c83dc; font-weight: bold; }
-.json .str { color: #2f8598; }
-.json .num { color: #038a3f; }
-.json .bool { color: #9b5e14; }
-.json .key a:not([href]) { color: #222; }
+.json .qu {
+	color: #5c91bf;
+}
+.json .key {
+	color: #1c83dc;
+	font-weight: bold;
+}
+.json .str {
+	color: #2f8598;
+}
+.json .num {
+	color: #038a3f;
+}
+.json .bool {
+	color: #9b5e14;
+}
+.json .key a:not([href]) {
+	color: #222;
+}
 article .json a {
 	text-decoration: none;
 	font-weight: bold;
 }
-.json .has-popup { border-bottom: 1px dashed #222; }
-.json a[href].has-popup { border-bottom-color: #1c82dc; }
-.json .has-popup.module { border-bottom: none; }
-
+.json .has-popup {
+	border-bottom: 1px dashed #222;
+}
+.json a[href].has-popup {
+	border-bottom-color: #1c82dc;
+}
+.json .has-popup.module {
+	border-bottom: none;
+}
 
 #hovercard {
 	max-width: 450px;
 	border-radius: 10px;
-	filter: drop-shadow(0 5px 5px rgba(0, 0, 0, .25));
+	filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.25));
 	position: absolute;
 	font-size: 16px;
-	transition: transform .25s ease-in-out, opacity .25s ease-in-out;
+	transition: transform 0.25s ease-in-out, opacity 0.25s ease-in-out;
 	/* TODO: This would be nice, but it breaks the arrow-box... */
 	/* max-height: 50%;
 	overflow-y: auto; */
@@ -539,6 +595,14 @@ article .json a {
 	opacity: 0;
 	display: none;
 	transform: translateY(0);
+}
+
+.hidden {
+	visibility: hidden;
+}
+
+.show {
+	visibility: visible;
 }
 
 .popup {
@@ -572,12 +636,12 @@ article .json a {
 	line-height: 1.4em;
 }
 
-#hovercard p+p {
+#hovercard p + p {
 	padding-top: 0;
 }
 
 #hovercard li {
-	margin: .25em;
+	margin: 0.25em;
 }
 
 #hovercard pre > code {
@@ -599,7 +663,7 @@ article .json a {
 	font-size: 18px;
 	line-height: 1em;
 	font-weight: bold;
-	padding: .5em 1em;
+	padding: 0.5em 1em;
 }
 
 #hovercard .module-link:hover {
@@ -614,7 +678,7 @@ article .json a {
 #hovercard .module-link-description {
 	font-size: 14px;
 	color: #555;
-	margin-left: .5em;
+	margin-left: 0.5em;
 	font-weight: normal;
 }
 
@@ -677,14 +741,14 @@ article aside.advice {
 }
 
 article aside.tip:nth-child(even)::before {
-	content: '💁‍♀️';
+	content: "💁‍♀️";
 }
 article aside.tip:nth-child(odd)::before {
-	content: '💁‍♂️';
+	content: "💁‍♂️";
 }
 
 article aside.advice::before {
-	content: '🤦';
+	content: "🤦";
 }
 
 article aside.complete {
@@ -696,14 +760,14 @@ article aside.complete {
 }
 
 article aside.complete::before {
-	content: '✅ complete';
+	content: "✅ complete";
 	color: #39c849;
 	text-transform: uppercase;
 	font-size: 14px;
 	font-weight: bold;
 	letter-spacing: 1px;
 	margin-right: 2em;
-	margin-bottom: .5em;
+	margin-bottom: 0.5em;
 }
 
 table {
@@ -716,7 +780,8 @@ article > table {
 	margin: 25px auto;
 }
 
-th, td {
+th,
+td {
 	border-bottom: 1px solid #ddd;
 	padding: 10px;
 	line-height: 1.4em;
@@ -733,11 +798,6 @@ td code {
 	font-size: 14px;
 	word-wrap: break-word;
 }
-
-
-
-
-
 
 #module-docs-container,
 #module-list-container,
@@ -763,7 +823,6 @@ td code {
 	font-size: 20px;
 }
 
-
 #module-multiple-repos {
 	display: none;
 	margin: 25px;
@@ -785,9 +844,6 @@ td code {
 .module-repo-selector-arrow {
 	margin: 10px;
 }
-
-
-
 
 .tabs .tab-buttons {
 	display: flex;
@@ -832,19 +888,6 @@ td code {
 	border-width: 2px;
 	border-radius: 8px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @media (max-width: 1400px) {
 	table {
@@ -953,8 +996,6 @@ td code {
 	}
 }
 
-
-
 @media (prefers-color-scheme: dark) {
 	body {
 		background-color: #060e17;
@@ -971,8 +1012,14 @@ td code {
 		--docsearch-searchbox-focus-background: rgb(28, 52, 79);
 		--docsearch-text-color: #bdd6f7;
 		--docsearch-muted-color: #96a9c4;
-		--docsearch-key-gradient: linear-gradient(-26.5deg, #060e17 0%, rgb(47, 62, 72) 100%);
-		--docsearch-key-shadow: inset 0 -2px 0 0 #4c4c56, inset 0 0 1px 1px rgb(70, 70, 70), 0 1px 2px 1px rgba(77, 79, 91, 0.4);
+		--docsearch-key-gradient: linear-gradient(
+			-26.5deg,
+			#060e17 0%,
+			rgb(47, 62, 72) 100%
+		);
+		--docsearch-key-shadow: inset 0 -2px 0 0 #4c4c56,
+			inset 0 0 1px 1px rgb(70, 70, 70),
+			0 1px 2px 1px rgba(77, 79, 91, 0.4);
 	}
 	/* End Algolia DocSearch */
 
@@ -1030,14 +1077,14 @@ td code {
 		background-color: #000;
 		color: #ccc;
 	}
-	
+
 	.json .key a:not([href]) {
-		color: #bdd6f7
+		color: #bdd6f7;
 	}
 
 	#hovercard,
 	.arrow-box {
-		background-color: #0a192b; 
+		background-color: #0a192b;
 	}
 
 	.arrow-box:after {
