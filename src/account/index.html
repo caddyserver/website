@@ -2,9 +2,10 @@
 <html>
 	<head>
 		<title>Dashboard - Caddy</title>
-		{{include "/includes/account/head.html"}}
-		<link rel="stylesheet" href="/resources/css/account/dashboard.css">
-		<script src="/resources/js/account/dashboard.js"></script>
+		{{import "/includes/account/head.html"}}
+		{{template "account-head"}}
+		<link rel="stylesheet" href="/resources/css/account/dashboard.css{{template "cacheBust"}}">
+		<script src="/resources/js/account/dashboard.js{{template "cacheBust"}}"></script>
 	</head>
 	<body>
 		<div class="container">

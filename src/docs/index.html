@@ -8,7 +8,8 @@
 <html>
 	<head>
 		<title>{{$title}} &mdash; Caddy Documentation</title>
-		{{include "/includes/docs/head.html"}}
+		{{import "/includes/docs/head.html"}}
+		{{template "docs-head"}}
 		<meta property="og:title" content="{{$title}} - Caddy Documentation">
 		<meta name="twitter:title" value="{{$title}} - Caddy Documentation">
 	</head>
