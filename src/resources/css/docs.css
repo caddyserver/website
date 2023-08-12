@@ -394,6 +394,7 @@ pre > code.cmd button {
 	margin-left: auto;
 	margin-block: 0;
 	aspect-ratio: 1;
+	height: min-content;
 	width: 32px;
 	display: flex;
 	align-items: center;
@@ -433,7 +434,6 @@ code.cmd .bash,
 code.cmd.bash-continuation,
 code.cmd .bash-continuation {
 	display: flex;
-	align-items: center;
 	font-weight: bold;
 }
 
