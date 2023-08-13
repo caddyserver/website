@@ -2,10 +2,11 @@
 <html>
 	<head>
 		<title>Caddy 2</title>
-		{{include "/includes/head.html"}}
+		{{import "/includes/head.html"}}
+		{{template "head"}}
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Dancing+Script:wght@700&display=swap">
 		<link rel="stylesheet" href="/resources/css/asciinema-player-2.6.1.css">
-		<link rel="stylesheet" href="/resources/css/v2-landing.css">
+		<link rel="stylesheet" href="/resources/css/v2-landing.css{{template "cacheBust"}}">
 		<meta property="og:title" content="Introducing Caddy 2 - The Ultimate Server with Automatic HTTPS">
 		<meta name="twitter:title" value="Introducing Caddy 2 - The Ultimate Server with Automatic HTTPS">
 	</head>

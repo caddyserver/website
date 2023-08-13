@@ -2,8 +2,9 @@
 <html>
 	<head>
 		<title>Create Account - Caddy</title>
-		{{include "/includes/account/head.html"}}
-		<script src="/resources/js/account/create.js"></script>
+		{{import "/includes/account/head.html"}}
+		{{template "account-head"}}
+		<script src="/resources/js/account/create.js{{template "cacheBust"}}"></script>
 	</head>
 	<body>
 		<form action="/api/create-account" class="card">
