@@ -12,7 +12,7 @@ While Caddy can be run directly with its [command line interface](/docs/command-
   - [Manual Installation](#manual-installation)
   - [Using the Service](#using-the-service)
   - [Overrides](#overrides)
-  - [SELinux System Considerations](#selinux-system-considerations)
+  - [SELinux Considerations](#selinux-considerations)
 - [Windows service](#windows-service)
   - [sc.exe](#scexe)
   - [WinSW](#winsw)
