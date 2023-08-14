@@ -12,7 +12,10 @@ While Caddy can be run directly with its [command line interface](/docs/command-
   - [Manual Installation](#manual-installation)
   - [Using the Service](#using-the-service)
   - [Overrides](#overrides)
-- [Windows Service](#windows-service)
+  - [SELinux System Considerations](#selinux-system-considerations)
+- [Windows service](#windows-service)
+  - [sc.exe](#scexe)
+  - [WinSW](#winsw)
 - [Docker Compose](#docker-compose)
   - [Setup](#setup)
   - [Usage](#usage)
@@ -152,6 +155,19 @@ RestartSec=5s
 Then, save the file and exit the text editor, and restart the service for it to take effect:
 <pre><code class="cmd bash">sudo systemctl restart caddy</code></pre>
 
+### SELinux Considerations
+
+On SELinux enabled systems you have two options:
+1. Install Caddy using the [COPR repo](https://copr.fedorainfracloud.org/coprs/g/caddy/caddy/). Your systemd file and caddy binary will be created and labelled correctly. If you wish to use a custom build of Caddy, you'll need to label the executable as described below.
+2. [Download Caddy from this site](https://caddyserver.com/download) or compile it with [`xcaddy`](https://github.com/caddyserver/xcaddy). In both cases you will need to label the files yourself.
+
+Systemd unit files and their executables will not be run unless labelled with `systemd_unit_file_t` and `bin_t` respectively.
+
+The `systemd_unit_file_t` is automatically applied to files created in `/etc/systemd/...`, so be sure to create your `caddy.service` file there.
+
+To tag the caddy binary, you can use the following commands:
+<pre><code class="cmd bash">semanage fcontext -a -t bin_t /usr/bin/caddy && restorecon -Rv /usr/bin/caddy
+</code></pre>
 
 ## Windows service
 
