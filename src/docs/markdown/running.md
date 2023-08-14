@@ -7,19 +7,18 @@ title: Keep Caddy Running
 While Caddy can be run directly with its [command line interface](/docs/command-line), there are numerous advantages to using a service manager to keep it running, such as ensuring it starts automatically when the system reboots and to capture stdout/stderr logs.
 
 
-- [Keep Caddy Running](#keep-caddy-running)
-  - [Linux Service](#linux-service)
-    - [Unit Files](#unit-files)
-    - [Manual Installation](#manual-installation)
-    - [Using the Service](#using-the-service)
-    - [Overrides](#overrides)
-    - [SELinux System Considerations](#selinux-system-considerations)
-  - [Windows service](#windows-service)
-    - [sc.exe](#scexe)
-    - [WinSW](#winsw)
-  - [Docker Compose](#docker-compose)
-    - [Setup](#setup)
-    - [Usage](#usage)
+- [Linux Service](#linux-service)
+  - [Unit Files](#unit-files)
+  - [Manual Installation](#manual-installation)
+  - [Using the Service](#using-the-service)
+  - [Overrides](#overrides)
+  - [SELinux System Considerations](#selinux-system-considerations)
+- [Windows service](#windows-service)
+  - [sc.exe](#scexe)
+  - [WinSW](#winsw)
+- [Docker Compose](#docker-compose)
+  - [Setup](#setup)
+  - [Usage](#usage)
 
 
 ## Linux Service
@@ -156,7 +155,7 @@ RestartSec=5s
 Then, save the file and exit the text editor, and restart the service for it to take effect:
 <pre><code class="cmd bash">sudo systemctl restart caddy</code></pre>
 
-### SELinux System Considerations
+### SELinux Considerations
 
 On SELinux enabled systems you have two options:
 1. Install Caddy using the [COPR repo](https://copr.fedorainfracloud.org/coprs/g/caddy/caddy/). Your systemd file and caddy binary will be created and labelled correctly. If you wish to use a custom build of Caddy, you'll need to label the executable as described below.
@@ -167,8 +166,7 @@ Systemd unit files and their executables will not be run unless labelled with `s
 The `systemd_unit_file_t` is automatically applied to files created in `/etc/systemd/...`, so be sure to create your `caddy.service` file there.
 
 To tag the caddy binary, you can use the following commands:
-<pre><code class="cmd bash">semanage fcontext -a -t bin_t /usr/bin/caddy
-restorecon -Rv /usr/bin/caddy
+<pre><code class="cmd bash">semanage fcontext -a -t bin_t /usr/bin/caddy && restorecon -Rv /usr/bin/caddy
 </code></pre>
 
 ## Windows service
