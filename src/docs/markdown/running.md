@@ -159,20 +159,17 @@ Then, save the file and exit the text editor, and restart the service for it to 
 ### SELinux System Considerations
 
 On SELinux enabled systems you have two options:
-1. Compile Caddy and label the files yourself
-2. Install Caddy using the [COPR repo](https://copr.fedorainfracloud.org/coprs/g/caddy/caddy/), your systemd file and caddy binary will be created and labelled correctly. NB: if you want to recompile Caddy with modules, you will have to label the executable as described bellow.
-   
+1. Install Caddy using the [COPR repo](https://copr.fedorainfracloud.org/coprs/g/caddy/caddy/), your systemd file and caddy binary will be created and labelled correctly. If you wish to use a custom build of Caddy, you'll need to label the executable as described below.
+2. [Download](https://caddyserver.com/download) Caddy from the site, or compile it with *xcaddy*. In both cases you will need to label the files yourself.
 
 Systemd unit files and their executables will not be run unless labelled with `systemd_unit_file_t` and `bin_t` respectively.
 
 The `systemd_unit_file_t` is automatically applied to files created in `/etc/systemd/...`, so be sure to create your `caddy.service` file there.
 
 To tag the caddy binary, you can use the following commands:
-```shell
-semanage fcontext -a -t bin_t /usr/bin/caddy
+<pre><code class="cmd bash">semanage fcontext -a -t bin_t /usr/bin/caddy
 restorecon -Rv /usr/bin/caddy
-```
-
+</code></pre>
 
 ## Windows service
 
