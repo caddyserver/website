@@ -390,9 +390,10 @@ pre > code.cmd {
 }
 
 pre > code.cmd button {
-	position: relative;
-	margin-left: auto;
-	margin-block: 0;
+	position: absolute;
+	display: flow-root;
+	top: 0;
+	right: 1.5%;
 	aspect-ratio: 1;
 	height: min-content;
 	width: 32px;
@@ -406,12 +407,12 @@ pre > code.cmd button {
 
 .copy-tooltip {
 	position: absolute;
-	right: 59px;
-	top: 13px;
+	right: 60px;
+	top: 10px;
 	color: #ffffff;
 	background: #1a2c47;
 	border: 1px solid transparent;
-	pointer-events: none;
+	/* pointer-events: none; */
 	opacity: 0;
 	font-size: 14px;
 	border-radius: 5px;
@@ -423,17 +424,17 @@ pre > code.cmd button {
 	display: block;
 	position: absolute;
 	right: -9px;
-	top: 13px;
-	border-left: 10px solid #1a2c47;
-	border-bottom: 8px solid transparent;
-	border-top: 8px solid transparent;
+	top: auto;
+	border-left: 18px solid #1a2c47;
+	border-bottom: 13px solid transparent;
+	border-top: 13px solid transparent;
 }
 
 code.cmd.bash,
 code.cmd .bash,
 code.cmd.bash-continuation,
 code.cmd .bash-continuation {
-	display: flex;
+	/* display: flex; */
 	font-weight: bold;
 }
 

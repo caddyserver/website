@@ -23,10 +23,8 @@ $(function () {
 	$(
 		"article > h1[id], article > h2[id], article > h3[id], article > h4[id], article > h5[id], article > h6[id]"
 	).each(function () {
-		var $anchor = $(
-			'<a href="#' +
-				this.id +
-				'" class="anchor-link" title="Direct link">🔗</a>'
+		let $anchor = $(
+			`<a href="#"${this.id} class="anchor-link" title="Direct link">🔗</a>`
 		);
 		$(this).append($anchor);
 	});
@@ -77,27 +75,17 @@ $(function () {
 		);
 	});
 
+	$("code.cmd").on("scroll", function () {
+		$(this).children("button").fadeOut(400);
+	});
+
 	// select all bash code elements and dynamically add clipboard button/svg
-	$("pre > code.bash").map(function (_, block) {
+	$("code.cmd").map(function (_, block) {
 		// only add button if browser supports Clipboard API
-		if (navigator.clipboard) {
-			let tooltipText = "Copied";
-
-			let icon = $(
-				`<svg fill="currentColor" class="copy_icon"  width="32" height="32" viewBox="0 0 32 32"><path d="M25.629 27.591v-18.051h-14.127v18.051h14.127zM25.629 7.005q1.026 0 1.811 0.755t0.785 1.781v18.051q0 1.026-0.785 1.811t-1.811 0.785h-14.127q-1.026 0-1.811-0.785t-0.785-1.811v-18.051q0-1.026 0.785-1.781t1.811-0.755h14.127zM21.766 1.813v2.596h-15.455v18.051h-2.536v-18.051q0-1.026 0.755-1.811t1.781-0.785h15.455z"></path></svg>`
-			);
-			let $button = $(`<button>`).append(icon);
-
-			let $tooltip = $(`<div class="copy-tooltip">${tooltipText}</div>`);
-
-			let $codeBlockElem = $(block);
-			$codeBlockElem.append($button);
-			$codeBlockElem.append($tooltip);
-
-			$button.on("click", async function () {
-				await copyToClipboard(block, $button);
-			});
+		if (!navigator.clipboard) {
+			return;
 		}
+		return addCopyToClipboardButton(block);
 	});
 });
 
@@ -142,6 +130,35 @@ function splitTypeName(fqtn) {
 	return { pkg: pkg, typeName: typeName };
 }
 
+function debounce(func, timeout = 300) {
+	let timer;
+	return (...args) => {
+		clearTimeout(timer);
+		timer = setTimeout(() => {
+			func.apply(this, args).bind(this);
+		}, timeout);
+	};
+}
+
+function addCopyToClipboardButton(block) {
+	let tooltipText = "Copied";
+
+	let $icon = $(
+		`<svg fill="currentColor" class="copy_icon"  width="32" height="32" viewBox="0 0 32 32"><path d="M25.629 27.591v-18.051h-14.127v18.051h14.127zM25.629 7.005q1.026 0 1.811 0.755t0.785 1.781v18.051q0 1.026-0.785 1.811t-1.811 0.785h-14.127q-1.026 0-1.811-0.785t-0.785-1.811v-18.051q0-1.026 0.785-1.781t1.811-0.755h14.127zM21.766 1.813v2.596h-15.455v18.051h-2.536v-18.051q0-1.026 0.755-1.811t1.781-0.785h15.455z"></path></svg>`
+	);
+	let $button = $(`<button>`).append($icon);
+
+	let $tooltip = $(`<div class="copy-tooltip">${tooltipText}</div>`);
+
+	let $codeBlockElem = $(block);
+	$codeBlockElem.append($button);
+	$codeBlockElem.append($tooltip);
+
+	$button.on("click", async function () {
+		await copyToClipboard(block, $button);
+	});
+}
+
 async function copyToClipboard(elem, button) {
 	// cache the selector to avoid unnessessary overhead
 	let $codeElem = $(elem);
@@ -152,5 +169,6 @@ async function copyToClipboard(elem, button) {
 	await navigator.clipboard.writeText(text);
 
 	// visual feedback that task is completed
-	$btnElem.next().fadeIn(500).fadeTo(1000, 1).delay(500).fadeOut(500);
+	$btnElem.next().fadeTo(500, 1);
+	// $btnElem.next().fadeTo(500, 1).delay(500).fadeOut(400);
 }
