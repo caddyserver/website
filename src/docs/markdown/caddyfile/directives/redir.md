@@ -33,7 +33,7 @@ Redirect all requests to `https://example.com`:
 redir https://example.com
 ```
 
-Same, but preserve the existing URI:
+Same, but preserve the existing URI by appending the [`{uri}` placeholder](/docs/caddyfile/concepts#placeholders):
 
 ```caddy-d
 redir https://example.com{uri}
