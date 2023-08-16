@@ -75,8 +75,30 @@ $(function () {
 		);
 	});
 
-	$("code.cmd").on("scroll", function () {
-		$(this).children("button").fadeOut(400);
+	const $copyToClipboardContainer = $("code.cmd");
+
+	$copyToClipboardContainer.on("scroll", function (e) {
+		let $button = $(e.currentTarget).children("button");
+		if ($button.queue().includes("inprogress")) {
+			return;
+		} else {
+			$button.fadeOut({ duration: 300 });
+		}
+
+		console.log($button.queue());
+	});
+
+	// check if scroll end event has fired, if so, grab the child button and fade it in with a delay
+	$copyToClipboardContainer.on("scrollend", function (e) {
+		let $button = $(e.currentTarget).children("button");
+
+		if (!$button.queue().length >= 0) {
+			setTimeout(() => {
+				return $button.fadeIn({ duration: 50 });
+			}, 800);
+		} else {
+			return;
+		}
 	});
 
 	// select all bash code elements and dynamically add clipboard button/svg
@@ -135,7 +157,7 @@ function debounce(func, timeout = 300) {
 	return (...args) => {
 		clearTimeout(timer);
 		timer = setTimeout(() => {
-			func.apply(this, args).bind(this);
+			func.apply(this, args);
 		}, timeout);
 	};
 }
@@ -169,6 +191,6 @@ async function copyToClipboard(elem, button) {
 	await navigator.clipboard.writeText(text);
 
 	// visual feedback that task is completed
-	$btnElem.next().fadeTo(500, 1);
-	// $btnElem.next().fadeTo(500, 1).delay(500).fadeOut(400);
+	// $btnElem.next().fadeTo(500, 1);
+	$btnElem.next().fadeTo(500, 1).delay(500).fadeOut(400);
 }

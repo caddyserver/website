@@ -396,13 +396,14 @@ pre > code.cmd button {
 	right: 1.5%;
 	aspect-ratio: 1;
 	height: min-content;
+	opactiy: 1;
 	width: 32px;
 	display: flex;
+	padding: 8px;
 	align-items: center;
 	background-color: #1a2c47;
 	color: #ffffff;
 	border-radius: 50%;
-	padding: 8px;
 }
 
 .copy-tooltip {
