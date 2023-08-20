@@ -152,15 +152,16 @@ By default, connections are made to the upstream over plaintext HTTP. When using
   Additionally, you may need to override the `Host` header such that it matches the TLS SNI value, which is used by servers for routing and certificate selection. See the [HTTPS](#https) section below for more details.
 
 - Using `h2c://` as the scheme will use the [`http` transport](#the-http-transport) with [HTTP versions](#versions) set to allow cleartext HTTP/2 connections.
+
 - Using `http://` as the scheme is identical to having omitted the scheme, since HTTP is already the default. This syntax is included for symmetry with the other scheme shortcuts.
 
 Schemes cannot be mixed, since they modify the common transport configuration (a TLS-enabled transport cannot carry both HTTPS and plaintext HTTP). Any explicit transport configuration will not be overwritten, and omitting schemes or using other ports will not assume a particular transport.
 
 When using the [network address](/docs/conventions#network-addresses) form, the network type is specified as a prefix to the upstream address. This cannot be combined with a URL scheme. As a special case, `unix+h2c/` is supported as a shortcut for the `unix/` network plus the same effects as the `h2c://` scheme. Port ranges are supported as a shortcut, which expands to multiple upstreams with the same host.
 
-Upstream addresses _cannot_ contain paths or query strings, as that would imply simultaneous rewriting the request while proxying, which behavior is not defined or supported. You may use the [`rewrite`](/docs/caddyfile/directives/rewrite) directive should you need this.
+Upstream addresses **cannot** contain paths or query strings, as that would imply simultaneous rewriting the request while proxying, which behavior is not defined or supported. You may use the [`rewrite`](/docs/caddyfile/directives/rewrite) directive should you need this.
 
-If the address is not a URL (i.e. does not have a scheme), then placeholders can be used, but this makes the upstream _dynamically static_, meaning that potentially many different backends act as a single, static upstream in terms of health checks and load balancing. We recommend using a [dynamic upstreams](#dynamic-upstreams) module instead, if possible.
+If the address is not a URL (i.e. does not have a scheme), then [placeholders](/docs/caddyfile/concepts#placeholders) can be used, but this makes the upstream _dynamically static_, meaning that potentially many different backends act as a single, static upstream in terms of health checks and load balancing. We recommend using a [dynamic upstreams](#dynamic-upstreams) module instead, if possible. When using placeholders, a port **must** be included (either by the placeholder replacement, or as a static suffix to the address).
 
 
 #### Dynamic upstreams
@@ -243,7 +244,14 @@ Load balancing is used whenever more than one upstream is defined. This is enabl
 
   For policies that involve hashing, the [highest-random-weight (HRW)](https://en.wikipedia.org/wiki/Rendezvous_hashing) algorithm is used to ensure that a client or request with the same hash key is mapped to the same upstream, even if the list of upstreams change.
 
-  Some policies support fallback as an option, if noted, in which case they take a [block](/docs/caddyfile/concepts#blocks) with `fallback <policy>` which takes another load balancing policy. For those policies, the default fallback is `random`. Configuring a fallback allows using a secondary policy if the primary does not select one, allowing for powerful combinations. Fallbacks can be nested multiple times if desired. For example, `header` can be used as primary to allow for developers to choose a specific upstream, with a fallback of `first` for all other connections to implement primary/secondary failover.
+  Some policies support fallback as an option, if noted, in which case they take a [block](/docs/caddyfile/concepts#blocks) with `fallback <policy>` which takes another load balancing policy. For those policies, the default fallback is `random`. Configuring a fallback allows using a secondary policy if the primary does not select one, allowing for powerful combinations. Fallbacks can be nested multiple times if desired.
+  
+  For example, `header` can be used as primary to allow for developers to choose a specific upstream, with a fallback of `first` for all other connections to implement primary/secondary failover.
+  ```caddy-d
+  lb_policy header X-Upstream {
+  	fallback first
+  }
+  ```
 
 	- `random` randomly chooses an upstream
 

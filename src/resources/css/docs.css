@@ -325,17 +325,22 @@ h2 {
 }
 
 h3 {
-	font-size: 34px;
+	font-size: 40px;
 	margin: 50px 0 20px;
 }
 
 h4 {
-	font-size: 24px;
+	font-size: 32px;
 	margin: 25px 0 15px;
 }
 
 h5 {
-	font-size: 22px;
+	font-size: 26px;
+	margin: 2em 0 1em;
+}
+
+h6 {
+	font-size: 20px;
 	margin: 2em 0 1em;
 }
 

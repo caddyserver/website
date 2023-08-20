@@ -18,7 +18,6 @@ If the HTTP and HTTPS ports (80 and 443, respectively) are privileged ports on y
 
 </aside>
 
-
 Then hit enter and type what you want it to do, so it looks like this:
 
 ```caddy
@@ -34,7 +33,9 @@ Save this and run Caddy from the same folder that contains your Caddyfile:
 You will probably be asked for your password, because Caddy serves all sites -- even local ones -- over HTTPS by default. (The password prompt should only happen the first time!)
 
 <aside class="tip">
-	For local HTTPS, Caddy automatically generates certificates and unique private keys for you. The root certificate is added to your system's trust store, which is why the password prompt is necessary. It allows you to develop locally over HTTPS without certificate errors.
+
+For local HTTPS, Caddy automatically generates certificates and unique private keys for you. The root certificate is added to your system's trust store, which is why the password prompt is necessary. It allows you to develop locally over HTTPS without certificate errors.
+
 </aside>
 
 (If you get permission errors, you may need to run with elevated privileges or choose a port higher than 1023.)
@@ -78,6 +79,6 @@ When you are done with Caddy, make sure to stop it:
 
 ## Further reading
 
-- [Common patterns](/docs/caddyfile/patterns)
 - [Caddyfile concepts](/docs/caddyfile/concepts)
 - [Directives](/docs/caddyfile/directives)
+- [Common patterns](/docs/caddyfile/patterns)

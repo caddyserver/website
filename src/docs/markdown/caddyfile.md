@@ -9,11 +9,12 @@ The **Caddyfile** is a convenient Caddy configuration format for humans. It is m
 It looks like this:
 
 ```caddy
-example.com
-
-root * /var/www/wordpress
-php_fastcgi unix//run/php/php-version-fpm.sock
-file_server
+example.com {
+	root * /var/www/wordpress
+	encode gzip
+	php_fastcgi unix//run/php/php-version-fpm.sock
+	file_server
+}
 ```
 
 (That's a real, production-ready Caddyfile that serves WordPress with fully-managed HTTPS.)

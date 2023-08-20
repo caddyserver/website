@@ -10,14 +10,15 @@ This document will help you learn about the HTTP Caddyfile in detail.
 	- [Blocks](#blocks)
 	- [Directives](#directives)
 	- [Tokens and quotes](#tokens-and-quotes)
-2. [Addresses](#addresses)
-3. [Matchers](#matchers)
-4. [Placeholders](#placeholders)
-5. [Snippets](#snippets)
-6. [Named Routes](#named-routes)
-7. [Comments](#comments)
-8. [Environment variables](#environment-variables)
-9. [Global options](#global-options)
+2. [Global options](#global-options)
+3. [Addresses](#addresses)
+4. [Matchers](#matchers)
+5. [Placeholders](#placeholders)
+6. [Snippets](#snippets)
+7. [Named Routes](#named-routes)
+8. [Comments](#comments)
+9. [Environment variables](#environment-variables)
+
 
 
 ## Structure
@@ -174,11 +175,28 @@ example.com {
 }
 ```
 
-The opening heredoc marker must start with `<<`, followed by any text (uppercase letters recommended). The closing heredoc marker must be the same text (in the above example, `HTML`).
+The opening heredoc marker must start with `<<`, followed by any text (uppercase letters recommended). The closing heredoc marker must be the same text (in the above example, `HTML`). The opening marker can be escaped with `\<<` to prevent heredoc parsing, if needed.
 
 The closing marker can be indented, which causes every line of text to have that much indentation stripped (inspired by [PHP](https://www.php.net/manual/en/language.types.string.php#language.types.string.syntax.heredoc)) which is nice for readability inside [blocks](#blocks) while giving great control of the whitespace in the token text. The trailing newline is also stripped, but can be retained by adding an extra blank line before the closing marker.
 
 Additional tokens may follow the closing marker as arguments to the directive (such as in the example above, the status code `200`).
+
+
+## Global options
+
+A Caddyfile may optionally start with a special block that has no keys, called a [global options block](/docs/caddyfile/options):
+
+```caddy
+{
+	...
+}
+```
+
+If present, it must be the very first block in the config.
+
+It is used to set options that apply globally, or not to any one site in particular. Inside, only global options can be set; you cannot use regular site directives in them.
+
+[Learn more](/docs/caddyfile/options) about the global options block.
 
 
 
@@ -210,7 +228,9 @@ From the address, Caddy can potentially infer the scheme, host and port of your 
 
 If you specify a hostname, only requests with a matching `Host` header will be honored. In other words, if the site address is `localhost`, then Caddy will not match requests to `127.0.0.1`.
 
-Wildcards (`*`) may be used, but only to represent precisely one label of the hostname. For example, `*.example.com` matches `foo.example.com` but not `foo.bar.example.com`, and `*` matches `localhost` but not `example.com`. To catch all hosts, omit the host portion of the address.
+Wildcards (`*`) may be used, but only to represent precisely one label of the hostname. For example, `*.example.com` matches `foo.example.com` but not `foo.bar.example.com`, and `*` matches `localhost` but not `example.com`. See the [wildcard certificates pattern](/docs/caddyfile/patterns#wildcard-certificates) for a practical example.
+
+To catch all hosts, omit the host portion of the address, for example, simply `https://`. This is useful when using [On-Demand TLS](/docs/automatic-https#on-demand-tls), when you don't know the domains ahead of time.
 
 If multiple sites share the same definition, you can list all of them together; notice how the commas indicate the continuation of addresses:
 
@@ -226,7 +246,7 @@ example.com,
 www.example.com
 ```
 
-An address must be unique; you cannot specify the same address more than once.
+An address must be unique; you cannot specify the same address more than once. [Placeholders](#placeholders) **cannot** be used in addresses, but you may use Caddyfile-style [environment variables](#environment-variables) in them.
 
 By default, sites bind on all network interfaces. If you wish to override this, use the [`bind` directive](/docs/caddyfile/directives/bind) or the [`default_bind` global option](/docs/caddyfile/options#default-bind) to do so.
 
@@ -236,7 +256,7 @@ By default, sites bind on all network interfaces. If you wish to override this, 
 
 HTTP handler directives apply to all requests by default (unless otherwise documented).
 
-[Request matchers](/docs/caddyfile/matchers) can be used to classify requests by a given criteria. This concept originates in the [underlying JSON](/docs/json/apps/http/servers/routes/match/) structure, and it's important to know how to use them in the Caddyfile. With matchers, you can specify exactly which requests a certain directive applies to.
+[Request matchers](/docs/caddyfile/matchers) can be used to classify requests by a given criteria. With matchers, you can specify exactly which requests a certain directive applies to.
 
 For directives that support matchers, the first argument after the directive is the **matcher token**. Here are some examples:
 
@@ -389,20 +409,3 @@ A default value can be specified for when the environment variable is not found,
 
 If you want to defer the substitution of an environment variable until runtime, you can use the [standard `{env.*}` placeholders](/docs/conventions#placeholders). Note that not all config parameters support these placeholders though, since module developers need to add a line of code to perform the replacement. If it doesn't seem to work, please file an issue to request support for it.
 
-
-
-## Global options
-
-A Caddyfile may optionally start with a special block that has no keys, called a [global options block](/docs/caddyfile/options):
-
-```caddy
-{
-	...
-}
-```
-
-If present, it must be the very first block in the config.
-
-It is used to set options that apply globally, or not to any one site in particular. Inside, only global options can be set; you cannot use regular site directives in them.
-
-[Learn more](/docs/caddyfile/options) about the global options block.

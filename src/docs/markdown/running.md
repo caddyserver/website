@@ -11,6 +11,7 @@ While Caddy can be run directly with its [command line interface](/docs/command-
   - [Unit Files](#unit-files)
   - [Manual Installation](#manual-installation)
   - [Using the Service](#using-the-service)
+  - [Local HTTPS](#local-https-with-systemd)
   - [Overrides](#overrides)
   - [SELinux Considerations](#selinux-considerations)
 - [Windows service](#windows-service)
@@ -19,6 +20,7 @@ While Caddy can be run directly with its [command line interface](/docs/command-
 - [Docker Compose](#docker-compose)
   - [Setup](#setup)
   - [Usage](#usage)
+  - [Local HTTPS](#local-https-with-docker)
 
 
 ## Linux Service
@@ -120,6 +122,14 @@ The Caddy process will run as the `caddy` user, which has its `$HOME` set to `/v
 - The default [config storage location](/docs/conventions#configuration-directory) (for the auto-saved JSON config, primarily useful for the `caddy-api` service) will be in `/var/lib/caddy/.config/caddy`.
 
 
+### Local HTTPS with systemd
+
+When using Caddy for local development with HTTPS, you might use a [hostname](/docs/caddyfile/concepts#addresses) like `localhost` or `app.localhost`. This enables [Local HTTPS](/docs/automatic-https#local-https) using Caddy's local CA to issue certificates. 
+
+Since Caddy runs as the `caddy` user when running as a service, it won't have permission to install its root CA certificate to the system trust store. To do this, run [`sudo caddy trust`](/docs/command-line#caddy-trust) to perform installation.
+
+If you want other devices to connect to your server when using the [`internal` issuer](/docs/caddyfile/directives/tls#internal), you will need to install the root CA certificate on those devices as well. You can find the root CA certificate at `/var/lib/caddy/.local/share/caddy/pki/authorities/local/root.crt`. Many web browsers now use their own trust store (ignoring the system's trust store), so you may also need to install the certificate manually there as well.
+
 
 ### Overrides
 
@@ -158,14 +168,15 @@ Then, save the file and exit the text editor, and restart the service for it to 
 ### SELinux Considerations
 
 On SELinux enabled systems you have two options:
-1. Install Caddy using the [COPR repo](https://copr.fedorainfracloud.org/coprs/g/caddy/caddy/). Your systemd file and caddy binary will be created and labelled correctly. If you wish to use a custom build of Caddy, you'll need to label the executable as described below.
-2. [Download Caddy from this site](https://caddyserver.com/download) or compile it with [`xcaddy`](https://github.com/caddyserver/xcaddy). In both cases you will need to label the files yourself.
+1. Install Caddy using the [COPR repo](/docs/install#fedora-redhat-centos). Your systemd file and caddy binary will already be created and labelled correctly (so you may ignore this section). If you wish to use a custom build of Caddy, you'll need to label the executable as described below.
+
+2. [Download Caddy from this site](/download) or compile it with [`xcaddy`](https://github.com/caddyserver/xcaddy). In either case, you will need to label the files yourself.
 
 Systemd unit files and their executables will not be run unless labelled with `systemd_unit_file_t` and `bin_t` respectively.
 
-The `systemd_unit_file_t` is automatically applied to files created in `/etc/systemd/...`, so be sure to create your `caddy.service` file there.
+The `systemd_unit_file_t` label is automatically applied to files created in `/etc/systemd/...`, so be sure to create your `caddy.service` file there, as per the [manual installation](#manual-installation) instructions.
 
-To tag the caddy binary, you can use the following commands:
+To tag the `caddy` binary, you can use the following command:
 <pre><code class="cmd bash">semanage fcontext -a -t bin_t /usr/bin/caddy && restorecon -Rv /usr/bin/caddy
 </code></pre>
 
@@ -308,6 +319,8 @@ To reload Caddy after making changes to your Caddyfile:
 To see Caddy's 1000 most recent logs, and `f`ollow to see new ones streaming in:
 <pre><code class="cmd bash">docker compose logs caddy -n=1000 -f</code></pre>
 
+### Local HTTPS with Docker
+
 When using Docker for local development with HTTPS, you might use a [hostname](/docs/caddyfile/concepts#addresses) like `localhost` or `app.localhost`. This enables [Local HTTPS](/docs/automatic-https#local-https) using Caddy's local CA to issue certificates. This means that HTTP clients outside the container will not trust the TLS certificate served by Caddy. To solve this, you may install Caddy's root CA cert on your host machine's trust store:
 
 <div x-data="{ os: $persist(defaultOS(['linux', 'mac', 'windows'], 'linux')) }" class="tabs">
@@ -345,3 +358,9 @@ When using Docker for local development with HTTPS, you might use a [hostname](/
 
 </div>
 </div>
+
+Many web browsers now use their own trust store (ignoring the system's trust store), so you may also need to install the certificate manually there as well, using the `root.crt` file copied from the container in the command above.
+
+- For Firefox, go to Preferences > Privacy & Security > Certificates > View Certificates > Authorities > Import, and select the `root.crt` file.
+
+- For Chrome, go to Settings > Privacy and security > Security > Manage certificates > Authorities > Import, and select the `root.crt` file.

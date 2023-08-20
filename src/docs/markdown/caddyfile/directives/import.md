@@ -30,7 +30,7 @@ import <pattern> [<args...>]
   - `{args[n:]}` where the arguments beginning with `n` are inserted
   - `{args[n:m]}` where the arguments in the range between `n` and `m` are inserted
 
-  For the forms that insert many tokens, the placeholder _must_ be a [token](/docs/caddyfile/concepts#tokens-and-quotes) on its own, it cannot be part of another token. In other words, it must have spaces around it, and cannot be in quotes.
+  For the forms that insert many tokens, the placeholder **must** be a [token](/docs/caddyfile/concepts#tokens-and-quotes) on its own, it cannot be part of another token. In other words, it must have spaces around it, and cannot be in quotes.
 
   Note that prior to v2.7.0, the syntax was `{args.N}` but this form was deprecated in favor of the more flexible syntax above.
 

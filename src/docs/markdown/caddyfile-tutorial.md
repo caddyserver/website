@@ -278,6 +278,6 @@ One last thing that you will find most helpful: if you want to remark or note an
 
 ## Further reading
 
-- [Common patterns](/docs/caddyfile/patterns)
 - [Caddyfile concepts](/docs/caddyfile/concepts)
 - [Directives](/docs/caddyfile/directives)
+- [Common patterns](/docs/caddyfile/patterns)
