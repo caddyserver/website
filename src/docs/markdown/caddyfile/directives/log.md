@@ -277,7 +277,7 @@ Most commonly, the fields to filter would be `request>remote_ip` for the directl
 
 ##### query
 
-Marks a field to have one or more actions performed, to manipulate the query part of a URL field. Most commonly, the field to filter would be `uri`. The available actions are:
+Marks a field to have one or more actions performed, to manipulate the query part of a URL field. Most commonly, the field to filter would be `request>uri`. The available actions are:
 
 ```caddy-d
 <field> query {
