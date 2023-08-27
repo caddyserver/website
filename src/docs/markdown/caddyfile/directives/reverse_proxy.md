@@ -268,7 +268,7 @@ Load balancing is used whenever more than one upstream is defined. This is enabl
 	- `header [field]` maps a request header to a sticky upstream, by hashing the header value; if the specified header field is not present, the fallback policy will be used to select an upstream (`random` by default)
 
 	- `cookie [<name> [<secret>]]` on the first request from a client (when there's no cookie), the fallback policy will be used to select an upstream (`random` by default), and a `Set-Cookie` header is added to the response (default cookie name is `lb` if not specified). The cookie value is the upstream dial address of the chosen upstream, hashed with HMAC-SHA256 (using `<secret>` as the shared secret, empty string if not specified).
-	
+
 	  On subsequent requests where the cookie is present, the cookie value will be mapped to the same upstream if it's available; if not available or not found, a new upstream is selected with the fallback policy, and the cookie is added to the response.
 
 	  If you wish to use a particular upstream for debugging purposes, you may hash the upstream address with the secret, and set the cookie in your HTTP client (browser or otherwise). For example, with PHP, you could run the following to compute the cookie value, where `10.1.0.10:8080` is the address of one of your upstreams, and `secret` is your configured secret.
@@ -276,7 +276,7 @@ Load balancing is used whenever more than one upstream is defined. This is enabl
 	  echo hash_hmac('sha256', '10.1.0.10:8080', 'secret');
 	  // cdd96966817dd14a99f47ee17451464f29998da170814a16b483e4c1ff4c48cf
 	  ```
-	
+
 	  You can set the cookie in your browser via the Javascript console, for example to set the cookie named `lb`:
 	  ```js
 	  document.cookie = "lb=cdd96966817dd14a99f47ee17451464f29998da170814a16b483e4c1ff4c48cf";
@@ -629,9 +629,9 @@ Additionally, inside `handle_response`, two special handler directives may be us
 
 Three placeholders will be made available within the `handle_response` routes:
 
-- `{rp.status_code}` The status code from the backend's response.
-- `{rp.status_text}` The status text from the backend's response.
-- `{rp.header.*}` The headers from the backend's response.
+- `{http.reverse_proxy.status_code}` The status code from the backend's response.
+- `{http.reverse_proxy.status_text}` The status text from the backend's response.
+- `{http.reverse_proxy.header.*}` The headers from the backend's response.
 
 
 #### Response matcher
@@ -728,7 +728,7 @@ reverse_proxy localhost:8080 {
 	@accel header X-Accel-Redirect *
 	handle_response @accel {
 		root    * /path/to/private/files
-		rewrite * {rp.header.X-Accel-Redirect}
+		rewrite * {http.reverse_proxy.header.X-Accel-Redirect}
 		method  * GET
 		file_server
 	}

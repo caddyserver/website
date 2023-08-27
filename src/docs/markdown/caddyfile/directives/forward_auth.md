@@ -71,11 +71,9 @@ reverse_proxy <upstreams...> {
 	# On a successful response, copy response headers
 	@good status 2xx
 	handle_response @good {
-		request_header {
-			# for example, for each copy_headers field...
-			Remote-User {rp.header.Remote-User}
-			Remote-Email {rp.header.Remote-Email}
-		}
+		# for example, for each copy_headers field...
+		request_header Remote-User {http.reverse_proxy.header.Remote-User}
+		request_header Remote-Email {http.reverse_proxy.header.Remote-Email}
 	}
 }
 ```
