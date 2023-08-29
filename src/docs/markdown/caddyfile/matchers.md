@@ -31,8 +31,6 @@ $(function() {
 
 **Request matchers** can be used to filter (or classify) requests by various criteria.
 
-### Menu
-
 - [Syntax](#syntax)
 	- [Examples](#examples)
 	- [Wildcard matchers](#wildcard-matchers)
@@ -368,9 +366,9 @@ By request header fields.
 - `<field>` is the name of the HTTP header field to check.
 	- If prefixed with `!`, the field must not exist to match (omit value arg).
 - `<value>` is the value the field must have to match.
-	- If prefixed with `*`, it performs a fast suffix match.
-	- If suffixed with `*`, it performs a fast prefix match.
-	- If enclosed by `*`, it performs a fast substring match.
+	- If prefixed with `*`, it performs a fast suffix match (appears at the end).
+	- If suffixed with `*`, it performs a fast prefix match (appears at the start).
+	- If enclosed by `*`, it performs a fast substring match (appears anywhere).
 	- Otherwise, it is a fast exact match.
 
 Different header fields within the same set are AND-ed. Multiple values per field are OR'ed.
@@ -398,6 +396,10 @@ Match requests that do not have the `Foo` header field at all:
 @not_foo header !Foo
 ```
 
+Match WebSocket requests by checking for the `Connection` header containing `Upgrade` and the `Upgrade` header equalling `websocket`, using an [expression](#expression) matcher:
+```caddy-d
+@websockets `header({'Connection':'*Upgrade*','Upgrade':'websocket'})`
+```
 
 
 ---

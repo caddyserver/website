@@ -178,7 +178,7 @@ Additionally, you should avoid performing expensive operations in `Provision`, s
 
 #### Logs
 
-If your module needs logging, do not use `log.Print*()` from the Go standard library. In other words, **do not use Go's global logger**. Caddy uses high-performance, highly flexible, structured logging with [zap](https://github.com/uber-go/zap).
+See [how logging works](/docs/logging) in Caddy. If your module needs logging, do not use `log.Print*()` from the Go standard library. In other words, **do not use Go's global logger**. Caddy uses high-performance, highly flexible, structured logging with [zap](https://github.com/uber-go/zap).
 
 To emit logs, get a logger in your module's Provision method:
 

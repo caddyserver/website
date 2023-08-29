@@ -8,8 +8,6 @@ This page demonstrates a few complete and minimal Caddyfile configurations for c
 
 These are not drop-in solutions; you will have to customize your domain name, ports/sockets, directory paths, etc. They are intended to illustrate some of the most common configuration patterns.
 
-#### Menu
-
 - [Static file server](#static-file-server)
 - [Reverse proxy](#reverse-proxy)
 - [PHP](#php)

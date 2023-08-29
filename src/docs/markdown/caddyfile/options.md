@@ -41,7 +41,7 @@ The very top of your Caddyfile can be a **global options block**. This is a bloc
 
 There can only be one at most, and it must be the first block of the Caddyfile.
 
-Possible options are:
+Possible options are (click on each option to jump to its documentation):
 
 ```caddy
 {
@@ -282,6 +282,12 @@ See the [Automatic HTTPS](/docs/automatic-https) page for more details.
 ##### `email`
 Your email address. Mainly used when creating an ACME account with your CA, and is highly recommended in case there are problems with your certificates.
 
+<aside class="tip">
+
+Keep in mind that Let's Encrypt may send you emails about your certificate nearing expiry, but this may be misleading because Caddy may have chosen to use a different issuer (e.g. ZeroSSL) when renewing. Check your logs and/or the certificate itself (in your browser for example) to see which issuer was used, and that its expiry is still valid; if so, you may safely ignore the email from Let's Encrypt.
+
+</aside>
+
 
 ##### `default_sni`
 Sets a default TLS ServerName for when clients do not use SNI in their ClientHello.
@@ -317,9 +323,15 @@ Configures the ACME DNS challenge provider to use for all ACME transactions. The
 
 
 ##### `on_demand_tls`
-Configures [On-Demand TLS](/docs/automatic-https#on-demand-tls) where it is enabled, but does not enable it (to enable it, use the [on_demand `tls` subdirective](/docs/caddyfile/directives/tls#syntax)). Highly recommended if using in production environments, to prevent abuse.
+Configures [On-Demand TLS](/docs/automatic-https#on-demand-tls) where it is enabled, but does not enable it (to enable it, use the [`on_demand` subdirective of the `tls` directive](/docs/caddyfile/directives/tls#syntax)). Required for use in production environments, to prevent abuse.
 
 - **ask** will cause Caddy to make an HTTP request to the given URL with a query string of `?domain=` containing the value of the domain name. If the endpoint returns a `2xx` status code, Caddy will be authorized to obtain a certificate for that name. Any other status code will result in cancelling issuance of the certificate.
+
+<aside class="tip">
+
+The ask endpoint should return _as fast as possible_, in a few milliseconds, ideally. Typically, your endpoint should do a constant-time lookup in an database with an index by domain name; avoid loops. Avoid making DNS queries or other network requests.
+
+</aside>
 
 - **interval** and **burst** allows `<n>` certificate operations within `<duration>` interval.
 
@@ -586,7 +598,7 @@ The name to put in the CommonName field of the root certificate. Default: `{pki.
 The name to put in the CommonName field of the intermediate certificates. Default: `{pki.ca.name} - ECC Intermediate`
 
 ##### `intermediate_lifetime`
-The [duration](/docs/conventions#durations) for which intermediate certificates are valid. This value must be less than the lifetime of the root cert (`3600d`). Default: `7d`. It is recommended not to change this unless absolutely necessary.
+The [duration](/docs/conventions#durations) for which intermediate certificates are valid. This value must be less than the lifetime of the root cert (`3600d` or 10 years). Default: `7d`. It is recommended not to change this unless absolutely necessary.
 
 ##### `root`
 A key pair (certificate and private key) to use as the root for the CA. If not specified, one will be generated and managed automatically.

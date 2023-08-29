@@ -9,9 +9,6 @@ Caddy 2 is a whole new code base, written from scratch, to improve on Caddy 1. C
 
 This guide won't delve into the new features available -- which are really cool, by the way, you should [learn them](/docs/getting-started) -- the goal here is to just get you up and running on Caddy 2 quickly.
 
-
-### Menu
-
 - [High-order bits](#high-order-bits)
 - [Steps](#steps)
 - [HTTPS and ports](#https-and-ports)

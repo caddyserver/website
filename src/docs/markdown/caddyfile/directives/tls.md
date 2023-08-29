@@ -55,11 +55,19 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 
 - **&lt;email&gt;** is the email address to use for the ACME account managing the site's certificates.
 
+<aside class="tip">
+
+Keep in mind that Let's Encrypt may send you emails about your certificate nearing expiry, but this may be misleading because Caddy may have chosen to use a different issuer (e.g. ZeroSSL) when renewing. Check your logs and/or the certificate itself (in your browser for example) to see which issuer was used, and that its expiry is still valid; if so, you may safely ignore the email from Let's Encrypt.
+
+</aside>
+
 - **&lt;cert_file&gt;** and **&lt;key_file&gt;** are the paths to the certificate and private key PEM files. Specifying just one is invalid.
 
-- **protocols** <span id="protocols"/> specifies the minimum and maximum protocol versions. Default min: `tls1.2`. Default max: `tls1.3`
+- **protocols** <span id="protocols"/> specifies the minimum and maximum protocol versions. DO NOT change these unless you know what you're doing. Configuring this is rarely necessary, because Caddy will always use modern defaults.
+  
+  Default min: `tls1.2`, Default max: `tls1.3`
 
-- **ciphers** <span id="ciphers"/> specifies the list of cipher suite names in descending preference order. It is recommended to not change these unless you know what you're doing. Note that cipher suites are not customizable for TLS 1.3; and not all TLS 1.2 ciphers are enabled by default. The supported names are (in no particular order here):
+- **ciphers** <span id="ciphers"/> specifies the list of cipher suite names in descending preference order. DO NOT change these unless you know what you're doing. Note that cipher suites are not customizable for TLS 1.3; and not all TLS 1.2 ciphers are enabled by default. The supported names are (in no particular order here):
 	- `TLS_RSA_WITH_3DES_EDE_CBC_SHA`
 	- `TLS_RSA_WITH_AES_128_CBC_SHA`
 	- `TLS_RSA_WITH_AES_256_CBC_SHA`
@@ -147,7 +155,7 @@ These issuers come standard with the `tls` directive:
 
 #### acme
 
-Obtains certificates using the ACME protocol.
+Obtains certificates using the ACME protocol. Note that `acme` is a default issuer (using Let's Encrypt), so configuring it explicitly is usually unnecessary.
 
 ```caddy
 ... acme [<directory_url>] {
@@ -174,9 +182,13 @@ Obtains certificates using the ACME protocol.
 }
 ```
 
-- **dir** <span id="dir"/> is the URL to the ACME CA's directory. Default: `https://acme-v02.api.letsencrypt.org/directory`
+- **dir** <span id="dir"/> is the URL to the ACME CA's directory.
+  
+  Default: `https://acme-v02.api.letsencrypt.org/directory`
 
-- **test_dir** <span id="test_dir"/> is an optional fallback directory to use when retrying challenges; if all challenges fail, this endpoint will be used during retries; useful if a CA has a staging endpoint where you want to avoid rate limits on their production endpoint. Default: `https://acme-staging-v02.api.letsencrypt.org/directory`
+- **test_dir** <span id="test_dir"/> is an optional fallback directory to use when retrying challenges; if all challenges fail, this endpoint will be used during retries; useful if a CA has a staging endpoint where you want to avoid rate limits on their production endpoint.
+
+  Default: `https://acme-staging-v02.api.letsencrypt.org/directory`
 
 - **email** <span id="email"/> is the ACME account contact email address.
 
@@ -216,7 +228,7 @@ Obtains certificates using the ACME protocol.
 
 #### zerossl
 
-Obtains certificates using the ACME protocol, specifically with ZeroSSL.
+Obtains certificates using the ACME protocol, specifically with ZeroSSL. Note that `zerossl` is a default issuer, so configuring it explicitly is usually unnecessary.
 
 ```caddy
 ... zerossl [<api_key>] {
@@ -224,13 +236,11 @@ Obtains certificates using the ACME protocol, specifically with ZeroSSL.
 }
 ```
 
-The syntax for `zerossl` is exactly the same as for `acme`, except that its name is `zerossl` and it can optionally take your ZeroSSL API key.
+The syntax for `zerossl` is exactly the same as for [`acme`](#acme), except that its name is `zerossl` and it can optionally take your ZeroSSL API key.
 
-The functionality of the `zerossl` issuer is the same as the `acme` issuer, except that it will use ZeroSSL's directory by default and it can automatically negotiate EAB credentials (whereas with the `acme` issuer, you have to manually provide EAB credentials and set the directory endpoint).
+Its functionality is also the same, except that it will use ZeroSSL's directory by default and it can automatically negotiate EAB credentials (whereas with the `acme` issuer, you have to manually provide EAB credentials and set the directory endpoint).
 
-When explicitly configuring `zerossl`, an email address is required so that your certificates can appear in your ZeroSSL dashboard.
-
-Note that ZeroSSL is a default issuer, so configuring it explicitly is usually unnecessary.
+When explicitly configuring `zerossl`, configuring an `email` is required so that your certificates can appear in your ZeroSSL dashboard.
 
 #### internal
 
@@ -244,9 +254,13 @@ Obtains certificates from an internal certificate authority.
 }
 ```
 
-- **ca** <span id="ca"/> is the name of the internal CA to use. Default: `local`. See the [PKI app global options](/docs/caddyfile/options#pki-options) to configure alternate CAs.
+- **ca** <span id="ca"/> is the name of the internal CA to use. Default: `local`. See the [PKI app global options](/docs/caddyfile/options#pki-options) to configure the `local` CA, or to create alternate CAs.
 
-- **lifetime** <span id="lifetime"/> is a [duration value](/docs/conventions#durations) that sets the validity period for interally issued leaf certificates. Default: 12h. It is NOT recommended to change this, unless absolutely necessary.
+  By default, the root CA certificate has a `3600d` lifetime (10 years) and the intermediate has a `7d` lifetime (7 days).
+
+  Caddy will attempt to install the root CA certificate to the system trust store, but this may fail when Caddy is running as an unprivileged user, or when running in a Docker container. In that case, the root CA certificate will need to be manually installed, either by using the [`caddy trust`](/docs/command-line#caddy-trust) command, or by [copying out of the container](/docs/running#usage).
+
+- **lifetime** <span id="lifetime"/> is a [duration value](/docs/conventions#durations) that sets the validity period for interally issued leaf certificates. Default: `12h`. It is NOT recommended to change this, unless absolutely necessary. It must be shorter than the intermediate's lifetime.
 
 - **sign_with_root** <span id="sign_with_root"/> forces the root to be the issuer instead of the intermediate. This is NOT recommended and should only be used when devices/clients do not properly validate certificate chains (very uncommon).
 

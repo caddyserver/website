@@ -24,8 +24,9 @@ Forcefully close a connection received for unknown domains when using a wildcard
         respond "This is foo!" 200
     }
 
-    # Unhandled domains fall through to here, but we don't want to accept their requests
     handle {
+		# Unhandled domains fall through to here,
+		# but we don't want to accept their requests
         abort
     }
 }
