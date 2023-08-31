@@ -96,9 +96,6 @@ header {
 
 	# clickjacking protection
 	X-Frame-Options DENY
-
-	# keep referrer data off of HTTP connections
-	Referrer-Policy no-referrer-when-downgrade
 }
 ```
 
