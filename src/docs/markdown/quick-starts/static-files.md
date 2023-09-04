@@ -70,7 +70,7 @@ You can also use another folder as the site root:
 ```caddy
 localhost
 
-root * /home/me/mysite
+root * /var/www/mysite
 file_server
 ```
 
