@@ -24,6 +24,12 @@ $(function() {
 			let url = '#' + text.replace(/#/g, '').trim().toLowerCase().replace(/ /g, "-");
 			$(item).html(before + '<a href="' + url + '" style="color: inherit;" title="' + text + '">' + text + '</a>');
 		});
+	// Surgically fix a duplicate link; 'name' appears twice as a link
+	// for two different sections, so we change the second to #name-1
+	$('pre.chroma .line:contains("ca [<id>]")')
+		.next()
+		.find('a:contains("name")')
+		.attr('href', '#name-1');
 });
 </script>
 
