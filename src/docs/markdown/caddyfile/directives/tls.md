@@ -3,7 +3,7 @@ title: tls (Caddyfile directive)
 ---
 
 <script>
-$(function() {
+window.$(function() {
 	// We'll add links to all the subdirectives if a matching anchor tag is found on the page.
 	addLinksToSubdirectives();
 });

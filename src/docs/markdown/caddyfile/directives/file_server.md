@@ -3,9 +3,9 @@ title: file_server (Caddyfile directive)
 ---
 
 <script>
-$(function() {
+window.$(function() {
 	// Fix inline browse arg
-	$('pre.chroma .s:contains("browse")').first()
+	window.$('pre.chroma .s:contains("browse")').first()
 		.wrapAll('<span class="k">').parent()
 		.html('<a href="#browse" style="color: inherit;" title="browse">browse</a>')
 

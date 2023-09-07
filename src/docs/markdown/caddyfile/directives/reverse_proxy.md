@@ -3,19 +3,19 @@ title: reverse_proxy (Caddyfile directive)
 ---
 
 <script>
-$(function() {
+window.$(function() {
 	// Fix response matchers to render with the right color,
 	// and link to response matchers section
-	$('pre.chroma .k:contains("@")')
+	window.$('pre.chroma .k:contains("@")')
 		.map(function(k, item) {
 			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
 			let url = '#' + item.innerText.replace(/_/g, "-");
-			$(item).addClass('nd').removeClass('k')
-			$(item).html('<a href="#response-matcher" style="color: inherit;" title="Response matcher">' + text + '</a>');
+			window.$(item).addClass('nd').removeClass('k')
+			window.$(item).html(`<a href="#response-matcher" style="color: inherit;" title="Response matcher">${text}</a>`);
 		});
 
 	// Fix matcher placeholder
-	$('pre.chroma .k:contains("handle_response")').first().nextAll().slice(0, 3)
+	window.$('pre.chroma .k:contains("handle_response")').first().nextAll().slice(0, 3)
 		.wrapAll('<span class="nd">').parent()
 		.html('<a href="#response-matcher" style="color: inherit;" title="Response matcher">[&lt;matcher&gt;]</a>')
 

@@ -3,30 +3,30 @@ title: Global options (Caddyfile)
 ---
 
 <script>
-$(function() {
+window.$(function() {
 	// We'll add links on the options in the code block at the top
 	// to their associated anchor tags.
 	let headers = $('article h5').map((i, el) => el.id.replace(/-/g, "_")).toArray();
-	$('pre.chroma .k')
+	window.$('pre.chroma .k')
 		.filter((k, item) => headers.includes(item.innerText))
 		.map(function(k, item) {
 			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
 			let url = '#' + item.innerText.replace(/_/g, "-");
-			$(item).html('<a href="' + url + '" style="color: inherit;" title="' + text + '">' + text + '</a>');
+			window.$(item).html(`<a href="${url}" style="color: inherit;" title="${text}">${text}</a>`);
 		});
 	// Add links on comments to their respective sections
-	$('pre.chroma .c1')
+	window.$('pre.chroma .c1')
 		.filter((k, item) => item.innerText.includes('#'))
 		.map(function(k, item) {
 			let text = item.innerText;
-			let before = text.slice(0, text.indexOf('#'));
-			text = text.slice(text.indexOf('#'));
+			let before = text.slice(0, text.indexOf('#')); // the leading whitespace
+			text = text.slice(text.indexOf('#')); // only the comment part
 			let url = '#' + text.replace(/#/g, '').trim().toLowerCase().replace(/ /g, "-");
-			$(item).html(before + '<a href="' + url + '" style="color: inherit;" title="' + text + '">' + text + '</a>');
+			window.$(item).html(`${before}<a href="${url}" style="color: inherit;" title="${text}">${text}</a>`);
 		});
 	// Surgically fix a duplicate link; 'name' appears twice as a link
 	// for two different sections, so we change the second to #name-1
-	$('pre.chroma .line:contains("ca [<id>]")')
+	window.$('pre.chroma .line:contains("ca [<id>]")')
 		.next()
 		.find('a:contains("name")')
 		.attr('href', '#name-1');
