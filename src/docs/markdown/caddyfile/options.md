@@ -822,7 +822,7 @@ Also included is the [`proxy_protocol`](/docs/json/apps/http/servers/listener_wr
 
 Allows configuring IP ranges (CIDRs) of proxy servers from which requests should be trusted. By default, no proxies are trusted.
 
-Enabling this causes trusted requests to have the _real_ client IP parsed from HTTP headers (by default, `X-Forwarded-For`; see [`client_ip_headers`](#client-ip-headers) to configure other headers). If trusted, the client IP is added to [access logs](/docs/caddyfile/directives/log), is available as a `{client_ip}` [placeholder](/docs/caddyfile/concepts#placeholders), and allows the use of the [`client_ip` matcher](/docs/caddyfile/matchers#client-ip). If the request is not from a trusted proxy, then the client IP is set to the remote IP address of the direct incoming connection.
+Enabling this causes trusted requests to have the _real_ client IP parsed from HTTP headers (by default, `X-Forwarded-For`; see [`client_ip_headers`](#client-ip-headers) to configure other headers). If trusted, the client IP is added to [access logs](/docs/caddyfile/directives/log), is available as a `{client_ip}` [placeholder](/docs/caddyfile/concepts#placeholders), and allows the use of the [`client_ip` matcher](/docs/caddyfile/matchers#client-ip). If the request is not from a trusted proxy, then the client IP is set to the remote IP address of the direct incoming connection. By default, [`client_ip_headers`](#client-ip-headers) are parsed left-to-right. See [`trusted_proxies_strict`](#trusted-proxies-strict) to alter this behaviour.
 
 Some matchers or handlers may use the trust status of the request to make decisions. For example, if trusted, the [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy#defaults) handler will proxy and augment the sensitive `X-Forwarded-*` request headers.
 
@@ -850,6 +850,27 @@ Here's a complete example, trusting an example IPv4 range and an IPv6 range:
 	}
 }
 ```
+
+##### `trusted_proxies_strict`
+
+When [`trusted_proxies`](#trusted-proxies) is enabled, the [`client_ip_headers`](#client-ip-headers) are parsed from left-to-right by default. The first untrusted IP address found becomes the real client address. Since v2.8, you can opt-in to right-to-left parsing of these headers with `trusted_proxies_strict`. By default, this option is disabled for backwards compatibility.
+
+Upstream proxies such as HAProxy, CloudFlare, AWS ALB, CloudFront, etc. will append each new connecting remote address to the right of `X-Forwarded-For`. It is recommended to enable `trusted_proxies_strict` when working with these, as the left-most IP address may be spoofed by the client.
+
+```caddy
+{
+	servers {
+		trusted_proxies static private_ranges
+		trusted_proxies_strict
+	}
+}
+```
+
+<aside class="tip">
+
+Specifically in the case of AWS ALB, you will certainly want to enable this option. [Per their documentation](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/x-forwarded-headers.html#w227aac13c27b9c15) you can only identify the real client IP by setting XFF mode to `append`. This IP will be appended to the right of `X-Forwarded-For` and can only be safely extracted via `trusted_proxies_strict`.
+
+</aside>
 
 
 ##### `client_ip_headers`
