@@ -528,6 +528,21 @@ Here's a complete example, trusting an example IPv4 range and an IPv6 range:
 }
 ```
 
+##### `trusted_proxies_strict`
+
+When [`trusted_proxies`](#trusted-proxies) is enabled, the [`client_ip_headers`](#client-ip-headers) are parsed from left-to-right by default. Upstream proxies or load balancers – such as CloudFlare, AWS ALB, CloudFront, etc. – will append each new connecting remote address to the right of the `client_ip_header` (X-Forwarded-For by default). If you can trust the upstream proxy to remove all forwarded values, then you can trust that the left-most IP address is indeed the client's IP address. Otherwise, if you can only trust the first unknown right-most IP address, then you should enable `trusted_proxies_strict`.
+
+```caddy
+{
+	servers {
+		trusted_proxies static private_ranges
+		trusted_proxies_strict
+	}
+}
+```
+
+Specifically in the case of AWS ALB, you'll almost certainly want to enable this option. [Per their documentation](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/x-forwarded-headers.html#w227aac13c27b9c15) you can only identify the real client IP by setting the XFF mode to `append`. With [`trusted_proxies_strict`](#trusted-proxies-strict) enabled, your `client_ip` will be the right-most IP address from `X-Forwarded-For` that isn't the IP address of AWS ALB itself. Without [`trusted_proxies_strict`](#trusted-proxies-strict), the `client_ip` will instead be the left-most IP address which is spoofable by the client.
+
 
 ##### `client_ip_headers`
 
