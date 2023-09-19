@@ -3,14 +3,58 @@
 	<head>
 		<title>Caddy - The Ultimate Server with Automatic HTTPS</title>
 		{{include "/includes/head.html"}}
+		
+		<link rel="stylesheet" href="/resources/css/vendor/asciinema-player-3.6.1.css">
+		<script src="/resources/js/vendor/asciinema-player-3.6.1.min.js"></script>
+		
 		<link rel="stylesheet" href="/resources/css/home.css">
+
 		<!-- <meta property="og:title" content="Caddy 2 - The Ultimate Server with Automatic HTTPS">
-		<meta name="twitter:title" value="Caddy 2 - The Ultimate Server with Automatic HTTPS"> -->
+			<meta name="twitter:title" value="Caddy 2 - The Ultimate Server with Automatic HTTPS"> -->
 	</head>
 	<body>
 		<div class="hero">
 			{{include "/includes/header.html" "dark-header"}}
+			
+			<div class="wrapper">
+				<div class="vertical-padding">
+					<div class="asides">
+						<div>
+							<h1>
+								<div class="color-dodge">
+									<div class="the">The</div>
+									Ultimate Server
+								</div>
+								<div class="sub-h1">
+									makes your sites more <b>secure</b>, more <b>reliable</b>, and more <b>scalable</b> more <b>easily</b>.
+								</div>
+							</h1>
+							
+						</div>
+						<div>
+							<div class="display right">
+								<div class="caption">
+									<div id="demo"></div>
+									Play screencast to see Caddy serve HTTPS in &lt; 1 minute.
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="action-buttons">
+						<a href="/download" class="button primary">Download</a>
+						<a href="/docs/" class="button cool">Docs<sh></sh></a>
+					</div>
+				</div>
+			</div>
 		</div>
 
+
+		<script>
+			AsciinemaPlayer.create('/resources/321140.cast', $('#demo'), {
+				preload: true,
+				autoPlay: true,
+				controls: true
+			});
+		</script>
 	</body>
 </html>

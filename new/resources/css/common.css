@@ -38,8 +38,8 @@
 	--link-hover-color: rgb(42, 228, 98);
 	--heading-color: #dee8ee;
 	--code-bg: #1f3237;
-	--dropdown-bg: #34414b;
-	--dropdown-linkbox: #202b2f;
+	--dropdown-bg: #152125; /* #34414b; */
+	--dropdown-linkbox: #1d2c32;
 	--dropdown-link-title-color: #f0f3f5;
 	--dropdown-link-color: #9ebeca;
 	--dropdown-link-hover-color: white;
@@ -250,11 +250,13 @@ header nav ul {
 	/* necessary for hoversplash: */
 	position: relative;
 	overflow: hidden;
+	display: inline-block;
 }
 
 .button.primary {
 	background: linear-gradient(135deg, white 25%, rgba(167, 183, 193) 80%);
 	color: #222;
+	font-weight: bold;
 }
 
 .button.primary:hover {
@@ -370,7 +372,7 @@ header nav ul {
 	font-family: Poppins, ui-rounded;
 	font-weight: 600;
 	color: var(--dropdown-link-title-color);
-	font-size: 20px;
+	font-size: 18px;
 	margin-bottom: 5px;
 }
 
