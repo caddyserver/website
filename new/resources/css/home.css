@@ -3,10 +3,12 @@
 	background-image:
 		radial-gradient(at 50% 96%, hsla(0,100%,20%,0.35) 0px, transparent 50%),
 		radial-gradient(at 5% 30%, hsla(136,95%,15%,1) 0px, transparent 50%),
-		radial-gradient(at 91% 0%, hsla(214,83%,25%,1) 0px, transparent 50%),
+		radial-gradient(at 91% 35%, hsla(214,83%,25%,1) 0px, transparent 75%),
 		radial-gradient(at 82% 73%, hsla(265,72%,20%,1) 0px, transparent 50%);
-	
-	min-height: 800px;
+}
+
+.hero .vertical-padding {
+	padding: 100px 0;
 }
 
 .button.secondary {
@@ -17,4 +19,260 @@
 .button.secondary:hover {
 	color: white;
 	border-color: white;
+}
+
+
+.button.cool {
+	position: relative;
+	color: rgb(226 254 214);
+
+	/* necessary for gradient dropshadow: */
+	transform-style: preserve-3d;
+	overflow: unset;
+}
+
+.button.cool::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	border-radius: 8px;
+	border: 2px solid transparent;
+	background: linear-gradient(to right, #65E823,#D67FDB) border-box;
+	-webkit-mask:
+		linear-gradient(#fff 0 0) padding-box,
+		linear-gradient(#fff 0 0);
+	mask:
+		linear-gradient(#fff 0 0) padding-box,
+		linear-gradient(#fff 0 0);
+	-webkit-mask-composite: xor;
+	mask-composite: exclude;
+}
+
+
+@property --a {
+	syntax: '<angle>';
+	inherits: false;
+	initial-value: 0deg;
+}
+
+@keyframes a {
+	from {
+		--a: 0deg;
+	}
+	to {
+		--a: 360deg;
+	}
+}
+
+.button.cool sh {
+	position: absolute;
+	inset: -100px;
+	border: 100px solid #0000;
+	border-radius: 110px; /* a little more than the inset+border+border-radius */
+	mask:
+		linear-gradient(#000 0 0) content-box,
+		linear-gradient(#000 0 0);
+	-webkit-mask:
+		linear-gradient(#000 0 0) content-box,
+		linear-gradient(#000 0 0);
+	-webkit-mask-composite: xor;
+	mask-composite: exclude;
+	transform: translateZ(-1px); /* hack the z-index so as to be behind the transparent element */
+	pointer-events: none;
+}
+.button.cool sh::before {
+	content: "";
+	position: absolute;
+	inset: 0px;
+	background: conic-gradient(from var(--a), rgb(207, 19, 175) 0.42%, #ee6907 59.24%, #70d52c);
+	filter: blur(35px);
+	transform: translate(0px,0px);
+
+	--a: 0deg; /*  needed for firefox to have a valid output ? */
+	animation: a 1s linear infinite;
+	opacity: 0;
+	transition: opacity .5s;
+}
+.button.cool:hover sh::before {
+	opacity: 1;
+}
+
+
+
+
+h1 {
+	font-family: Poppins;
+	font-size: 120px;
+	text-transform: uppercase;
+	color: #65D1C6;
+	line-height: .9;
+}
+
+h1 .color-dodge {
+	mix-blend-mode: color-dodge;
+}
+
+h1 .the {
+	font-size: 75px;
+	line-height: 1;
+}
+
+h1 .sub-h1 {
+	margin-top: 1em;
+	text-transform: none;
+	color: #b1fffe;
+	font-size: 32px;
+	font-weight: normal;
+	line-height: 1.3;
+}
+
+
+
+
+
+
+
+
+
+
+.asides {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	margin: 0 auto;
+	align-items: center;
+}
+
+.asides.top {
+	align-items: stretch;
+}
+
+.asides > * { 
+	flex: 1;
+	margin-right: 50px;
+	min-width: 0; /* kind of a hack that allows proper sizing of pre children; see https://weblog.west-wind.com/posts/2016/feb/15/flexbox-containers-pre-tags-and-managing-overflow */
+	min-width: 300px;
+}
+
+.asides > :last-child {
+	margin-right: 0;
+}
+
+.asides h2 {
+	text-align: left;
+}
+
+.asides p {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.caption {
+	margin-top: 10px;
+	font-size: 14px;
+	text-align: center;
+}
+
+#demo {
+	display: block;
+	margin-bottom: 2em;
+}
+
+div.ap-wrapper div.ap-player {
+	box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.25);
+	transform: scale(1.1);
+	border-radius: 10px;
+}
+
+div.ap-wrapper:fullscreen div.ap-player {
+	transform: none;
+}
+
+.ap-player pre.ap-terminal {
+	border-color: transparent;
+	background-color: transparent;
+}
+
+.display {
+	perspective: 1500px;
+}
+
+.display code {
+	border-radius: 10px;
+	width: 100%;
+}
+
+.display code {
+	max-width: 800px;
+	font-size: 110%;
+	display: block;
+	position: relative;
+	padding: 20px 40px;
+	white-space: pre;
+	font-weight: bold;
+	overflow-x: auto;
+	box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.display.right > * {
+	transform: rotateY(-25deg);
+}
+.display.left > * {
+	transform: rotateY(25deg);
+}
+
+.display code.light {
+	background: #fff linear-gradient(135deg, rgba(255,255,255,0) 0%,rgba(241,241,241,0.5) 46%,rgba(225,225,225,0.5) 46.25%,rgba(246,246,246,0) 100%);
+}
+
+.display code.dark,
+.ap-player {
+	/* background: #333 linear-gradient(135deg, rgba(0, 0, 0, 0) 0%,rgba(125, 125, 125, 0.3) 46%,rgba(45, 45, 45, 0.8) 46.8%,rgba(0, 0, 0, 0) 100%); */
+	background: rgb(0 0 0 / .6) linear-gradient(135deg, transparent 0%, rgb(200 200 200 / 0.25) 46%, rgb(200 200 200 / .15) 46.5%, transparent 100%);
+	color: #fff;
+}
+
+.blinking {
+	animation: blinking 1s infinite;
+	background-color: #fff;
+	width: .5em;
+	height: 1.2em;
+	position: relative;
+	top: 5px;
+	display: inline-block;
+}
+
+@keyframes blinking {
+	0%   { background-color: #fff; }
+	45%  { background-color: #fff; }
+	60%  { background-color: transparent; }
+	99%  { background-color: transparent; }
+	100% { background-color: #fff; }
+}
+
+
+.action-buttons {
+	display: flex;
+	gap: 1.5em;
+	margin-top: 55px;
+}
+
+
+@media (max-width: 720px) {
+	.display {
+		margin-top: 50px;
+		margin-bottom: 50px;
+	}
+	.display.right > * {
+		transform: none;
+	}
+	.display.left > * {
+		transform: none;
+	}
+	.asides > * { 
+		margin-right: 0;
+	}
 }
