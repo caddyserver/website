@@ -1,3 +1,7 @@
+body {
+	background-color: #123245;
+}
+
 .hero {
 	background-color: hsla(201,63%,15%,1);
 	background-image:
@@ -5,6 +9,8 @@
 		radial-gradient(at 5% 30%, hsla(136,95%,15%,1) 0px, transparent 50%),
 		radial-gradient(at 91% 35%, hsla(214,83%,25%,1) 0px, transparent 75%),
 		radial-gradient(at 82% 73%, hsla(265,72%,20%,1) 0px, transparent 50%);
+	
+	padding-bottom: 20vw;
 }
 
 .hero .vertical-padding {
@@ -231,7 +237,7 @@ div.ap-wrapper:fullscreen div.ap-player {
 .display code.dark,
 .ap-player {
 	/* background: #333 linear-gradient(135deg, rgba(0, 0, 0, 0) 0%,rgba(125, 125, 125, 0.3) 46%,rgba(45, 45, 45, 0.8) 46.8%,rgba(0, 0, 0, 0) 100%); */
-	background: rgb(0 0 0 / .6) linear-gradient(135deg, transparent 0%, rgb(200 200 200 / 0.25) 46%, rgb(200 200 200 / .15) 46.5%, transparent 100%);
+	background: rgb(0 0 0 / .7) linear-gradient(135deg, transparent 0%, rgb(200 200 200 / 0.25) 46%, rgb(200 200 200 / .15) 46.5%, transparent 100%);
 	color: #fff;
 }
 
@@ -259,6 +265,117 @@ div.ap-wrapper:fullscreen div.ap-player {
 	gap: 1.5em;
 	margin-top: 55px;
 }
+
+
+
+.sponsors-leaders {
+	position: relative;
+	text-align: center;
+	margin: 75px auto;
+	padding: 35px;
+}
+
+.sponsors-leaders h3 {
+	color: #EB5EDD;
+	font-weight: normal;
+	font-family: Poppins, ui-rounded;
+	font-size: 18px;
+	margin-bottom: 1em;
+}
+
+.sponsors-leaders::before {
+	content: "";
+	position: absolute;
+	padding: 40px;
+	background-color: rgb(207 27 189 / .2);
+	filter: blur(10px);
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	pointer-events: none;
+}
+
+.sponsor-logos {
+	display: flex;
+	gap: 50px;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 1em;
+}
+
+.sponsor-logos img {
+	width: 100%;
+	max-height: 2em;
+}
+
+
+
+
+
+.wavy-top {
+	background-color: #C4D5E0;
+	margin-top: -10vw;
+	position: relative;
+	z-index: 0;
+	padding-top: 11vw;
+	font-family: Poppins, ui-rounded;
+}
+
+.wavy-top::before {
+	content: "";
+	position: absolute;
+	top: -16vw;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-image: url('/resources/images/home-curvey-bg.svg');
+	background-repeat: no-repeat;
+	background-size: 100% auto;
+	z-index: -1;
+}
+
+.bgtext {
+	color: #86A6A3;
+	opacity: .5;
+	width: 90%;
+	min-width: 65vw;
+	max-width: 1200px;
+	font-size: 15vw;
+	text-align: center;
+	line-height: .85;
+	font-weight: 800;
+	text-transform: uppercase;
+	mix-blend-mode: color-burn;
+	pointer-events: none;
+	
+	position: absolute;
+	top: 40px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.bgtext .site-on {
+	font-size: 85%;
+}
+
+.wavy-top h2 {
+	color: #003E4B;
+	font-size: 52px;
+	text-align: center;
+	max-width: 950px;
+	font-weight: normal;
+	margin: 0 auto;
+	line-height: 2em;
+}
+
+.wavy-top h2 b {
+	font-weight: 800;
+}
+
+
+
 
 
 @media (max-width: 720px) {
