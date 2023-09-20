@@ -11,18 +11,24 @@ ready(function() {
 	}
 	currentPageLink?.classList?.add('current');
 
-	// generate in-page nav before adding anchor links to headings
+	// generate in-page nav before adding anchor links to headings;
+	// only show sidebar if there are any navigable headers
+	// TODO: support h3 too
 	const spacingMS = 50;
 	let delay = spacingMS;
-	$$('main article h2').forEach(elem => {
-		const a = document.createElement('a');
-		a.innerText = elem.innerText;
-		a.href = `#${elem.id}`;
-		setTimeout(function() {
-			$('#pagenav').append(a);
-		}, delay);
-		delay += spacingMS;
-	});
+	const h2elems = $$('main article h2');
+	if (h2elems.length) {
+		$('#pagenav .heading').style.display = 'block';
+		h2elems.forEach(elem => {
+			const a = document.createElement('a');
+			a.innerText = elem.innerText;
+			a.href = `#${elem.id}`;
+			setTimeout(function() {
+				$('#pagenav').append(a);
+			}, delay);
+			delay += spacingMS;
+		});
+	}
 
 	// add anchor links, inspired by https://github.com/bryanbraun/anchorjs
 	$$('article > h2[id], article > h3[id], article > h4[id], article > h5[id], article > h6[id]').forEach(function(elem) {
@@ -84,6 +90,7 @@ ready(function() {
 	});
 });
 
+// toggle left-nav when menu link is clicked
 on('click', '#docs-menu', e => {
 	const nav = $('#docs-menu-container');
 	if (!nav.offsetHeight) {
