@@ -1,9 +1,9 @@
 :root, .light {
-	--header-bg: white;
-	--button-secondary-color: rgb(64, 131, 153);
-	--button-secondary-border-color: rgb(198, 217, 223);
-	--button-secondary-color-hover: rgb(7, 86, 134);
-	--button-secondary-border-color-hover: rgb(155, 191, 213);
+	--header-bg: transparent;
+	--button-color: rgb(64, 131, 153);
+	--button-border-color: rgb(198, 217, 223);
+	--button-color-hover: rgb(7, 86, 134);
+	--button-border-color-hover: rgb(155, 191, 213);
 	--nav-current-bg: linear-gradient(to right, #ecf1f3, transparent);
 	--nav-link-hover-shadow-color: rgba(0, 0, 0, 0.15);
 	--nav-link-hover-before-bg: #d2e5e7;
@@ -16,10 +16,10 @@
 
 .dark {
 	--header-bg: rgba(44, 130, 164, 0.11);
-	--button-secondary-color: rgb(36, 166, 208);
-	--button-secondary-border-color: rgb(38, 116, 140);
-	--button-secondary-color-hover: rgb(0, 194, 255);
-	--button-secondary-border-color-hover: rgb(0, 194, 255);
+	--button-color: rgb(36, 166, 208);
+	--button-border-color: rgb(38, 116, 140);
+	--button-color-hover: rgb(0, 194, 255);
+	--button-border-color-hover: rgb(0, 194, 255);
 	--nav-current-bg: linear-gradient(to right, #1a3c4d, transparent);
 	--nav-link-hover-shadow-color: rgba(255, 255, 255, 0.15);
 	--nav-link-hover-before-bg: #32494f;
@@ -50,20 +50,26 @@ header {
 .topbar {
 	border-bottom: 0;
 }
+
+button,
+.button {
+	color: var(--button-color);
+	border: 1px solid var(--button-border-color);
+}
+button:hover,
+.button:hover {
+	color: var(--button-color-hover);
+	border: 1px solid var(--button-border-color-hover);
+}
+button.primary,
 .button.primary {
 	background: linear-gradient(135deg, #7ece98 25%, rgb(49, 155, 208) 80%);
 	color: white;
+	border: none;
 }
+button.primary:hover,
 .button.primary:hover {
 	color: white;
-}
-.button.secondary {
-	color: var(--button-secondary-color);
-	border: 1px solid var(--button-secondary-border-color);
-}
-.button.secondary:hover {
-	color: var(--button-secondary-color-hover);
-	border: 1px solid var(--button-secondary-border-color-hover);
 }
 
 
@@ -86,8 +92,12 @@ main {
 	font-size: 16px;
 }
 
-.docs nav {
+.docs nav,
+#pagenav {
 	flex: 1;
+}
+
+.docs nav {
 	min-width: 250px;
 }
 
@@ -98,6 +108,9 @@ main {
 	display: none;
 }
 
+#pagenav .heading {
+	display: none;
+}
 
 
 
@@ -240,6 +253,7 @@ article {
 
 	max-width: 1100px;
 	min-width: 0;
+	width: 100%;
 }
 
 /*
@@ -248,7 +262,7 @@ server-side from markdown to have a constrained
 width, a few elements should be allowed to
 extend to the borders of the page
 */
-article > :not(.fullwidth),
+article > :not(.fullwidth, .fullspan),
 article > .fullwidth > *,
 .pad {
 	padding-left: 8%;
@@ -579,9 +593,54 @@ td code {
 }
 
 
+.box {
+	border-radius: 10px;
+	padding: 1em;
+	margin: 1em;
+	font-size: 18px;
+	border: 2px solid var(--box-bg);
+}
 
+.box-filled {
+	border: none;
+	background: var(--box-bg);
+}
 
+.box-capped {
+	padding: 0;
+}
 
+.box-capped > * {
+	padding: 1em;
+}
+
+.box-cap {
+	border-bottom: 1px solid var(--box-bg);
+}
+
+.box-filled .box-cap {
+	border-bottom: 1px solid var(--button-border-color); /* #d0dfe6; */
+}
+
+.box > :first-child {
+	margin-top: 0;
+}
+.box > :last-child {
+	margin-bottom: 0;
+}
+
+.box:not(.box-capped) > :first-child {
+	padding-top: 0;
+}
+.box:not(.box-capped) > :last-child {
+	padding-bottom: 0;
+}
+
+.box h3 {
+	font-size: 125%;
+	margin: 0 0 .5em;
+	text-align: left;
+}
 
 
 #autonav {

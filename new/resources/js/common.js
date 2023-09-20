@@ -105,7 +105,7 @@ function nextTheme() {
 }
 
 // hoversplash effect!
-on('mouseover', '.button', (e) => {
+on('mouseover', '.button:not(.cool), button:not(.cool)', (e) => {
 	const elem = document.createElement('span');
 	elem.classList.add('hover-splash');
 

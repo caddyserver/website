@@ -11,20 +11,20 @@
 	padding: 100px 0;
 }
 
-.button.secondary {
+.button {
 	color: rgb(54 206 255);
 	border: 1px solid rgb(54 206 255);
 }
 
-.button.secondary:hover {
+.button:hover {
 	color: white;
 	border-color: white;
 }
 
-
 .button.cool {
 	position: relative;
 	color: rgb(226 254 214);
+	border: none;
 
 	/* necessary for gradient dropshadow: */
 	transform-style: preserve-3d;

@@ -2,6 +2,7 @@
 .light {
 	--body-bg: white;
 	--text-color: #222;
+	--text-color-muted: #7087a0;
 	--header-bg: rgba(118, 179, 194, 0.11);
 	--header-border-color: #ebf0f2;
 	--topbar-link-color-hover: black;
@@ -21,7 +22,8 @@
 	--dropdown-link-hover-color: #142633;
 	--dropdown-featured-bg: linear-gradient(to bottom, rgb(239 244 247), transparent);
 	--dropdown-featured-hover-bg: rgb(223, 233, 238); /* rgb(232, 255, 254); */
-	--dropdown-shadow-color: rgb(0 0 0 / .4);
+	--dropdown-shadow-color: rgb(0 0 0 / .25);
+	--box-bg: var(--header-border-color);
 }
 
 .dark {
@@ -47,6 +49,7 @@
 	--dropdown-featured-bg: linear-gradient(to bottom, rgb(46, 58, 66), transparent);
 	--dropdown-featured-hover-bg: rgb(64, 82, 92);
 	--dropdown-shadow-color: black;
+	--box-bg: var(--header-bg);
 }
 
 .dark #logo-light,
@@ -100,6 +103,16 @@ body {
 	tab-size: 4;
 	background-color: var(--body-bg);
 	color: var(--text-color);
+	background-image:
+		radial-gradient(at calc(50% - min(25vw, 800px)) -10%, hsl(137.64deg, 100%, 92.42%) 0px, transparent min(15%, 500px)),
+		radial-gradient(at calc(50% + min(25vw, 800px)) -10%, hsl(201.2deg, 68%, 90.2%) 0px, transparent min(15%, 500px));
+}
+
+/* TODO: clean this up */
+.dark body {
+	background-image:
+		radial-gradient(at calc(50% - min(35vw, 700px)) -10%, hsl(129.5deg, 100%, 12.4%) 0px, transparent min(25%, 600px)),
+		radial-gradient(at calc(50% + min(35vw, 700px)) -10%, hsl(201deg, 100%, 19.33%) 0px, transparent min(25%, 600px))
 }
 
 main a {
@@ -212,7 +225,6 @@ header nav ul {
 .navbar .button {
 	text-decoration: none;
 	transition: all 200ms;
-	color: inherit;
 	font-weight: 500;
 }
 
@@ -242,27 +254,35 @@ header nav ul {
 	gap: 1em;
 }
 
+button,
 .button {
 	padding: .6em 1.5em;
 	border-radius: 6px;
 	text-decoration: none;
+	background: none;
+	cursor: pointer;
 
 	/* necessary for hoversplash: */
 	position: relative;
 	overflow: hidden;
-	display: inline-block;
+	display: flex;
+	align-items: center;
 }
 
+button.primary,
 .button.primary {
 	background: linear-gradient(135deg, white 25%, rgba(167, 183, 193) 80%);
 	color: #222;
 	font-weight: bold;
+	border: none;
 }
 
+button.primary:hover,
 .button.primary:hover {
 	color: #1a71cb;
 }
 
+button:active,
 .button:active {
 	transition: all 75ms;
 	transform: scale(.95);
@@ -294,12 +314,14 @@ header nav ul {
 	animation: 1s cubic-bezier(.16, 1, .3, 1) hoverSplash;
 }
 
-.button.primary .hover-splash {
-	background-color: rgba(255, 255, 255, 0.6);
+button .hover-splash,
+.button .hover-splash {
+	background-color: rgba(24, 156, 233, 0.6);
 }
 
-.button.secondary .hover-splash {
-	background-color: rgba(24, 156, 233, 0.6);
+button.primary .hover-splash,
+.button.primary .hover-splash {
+	background-color: rgba(255, 255, 255, 0.6);
 }
 
 
@@ -311,7 +333,7 @@ header nav ul {
 	border-radius: 15px;
 	line-height: 1.5;
 	overflow: hidden;
-	box-shadow: 0 30px 75px var(--dropdown-shadow-color);
+	box-shadow: 0 50px 75px var(--dropdown-shadow-color);
 	visibility: hidden;
 	top: calc(100% - 5px);
 	left: 0;

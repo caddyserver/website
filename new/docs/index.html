@@ -4,11 +4,13 @@
 		<title>Caddy Documentation</title>
 		{{include "/includes/head.html"}}
 		<link rel="stylesheet" href="/resources/css/docs.css">
+		<link rel="stylesheet" href="/resources/css/docs-home.css">
 		<!-- <meta property="og:title" content="Caddy 2 - The Ultimate Server with Automatic HTTPS">
 		<meta name="twitter:title" value="Caddy 2 - The Ultimate Server with Automatic HTTPS"> -->
 
 		<script src="/resources/js/vendor/marked.min.js"></script>
 		<script src="/resources/js/docs.js"></script>
+		<script src="/resources/js/docs-home.js"></script>
 	</head>
 	<body>
 		{{include "/includes/header.html" ""}}
@@ -92,255 +94,91 @@
 					</ul>
 				</nav>
 
-<article><h1 id="api">Administration API</h1>
-<p>Caddy is configured through an administration endpoint which can be accessed via HTTP using a <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> API. You can <a href="/docs/json/admin/">configure this endpoint</a> in your Caddy config.</p>
-<p><strong>Default address: <code>localhost:2019</code></strong></p>
-<p>The default address can be changed by setting the <code>CADDY_ADMIN</code> environment variable. Some installation methods may set this to something different. The address in the Caddy config always takes precedence over the default.</p>
-<aside class="tip">
-	If you are running untrusted code on your server (yikes 😬), make sure you protect your admin endpoint by isolating processes, patching vulnerable programs, and configuring the endpoint to bind to a permissioned unix socket instead.
-</aside>
-<p>The latest configuration will be saved to disk after any changes (unless <a href="/docs/json/admin/config/">disabled</a>). You can resume the last working config after a restart with <a href="/docs/command-line#caddy-run"><code>caddy run --resume</code></a>, which guarantees config durability in the event of a power cycle or similar.</p>
-<p>To get started with the API, try our <a href="/docs/api-tutorial">API tutorial</a> or, if you only have a minute, our <a href="/docs/quick-starts/api">API quick-start guide</a>.</p>
-<hr>
-<ul>
-<li>
-<p><strong><a href="#post-load">POST /load</a></strong>
-Sets or replaces the active configuration</p>
-</li>
-<li>
-<p><strong><a href="#post-stop">POST /stop</a></strong>
-Stops the active configuration and exits the process</p>
-</li>
-<li>
-<p><strong><a href="#get-configpath">GET /config/[path]</a></strong>
-Exports the config at the named path</p>
-</li>
-<li>
-<p><strong><a href="#post-configpath">POST /config/[path]</a></strong>
-Sets or replaces object; appends to array</p>
-</li>
-<li>
-<p><strong><a href="#put-configpath">PUT /config/[path]</a></strong>
-Creates new object; inserts into array</p>
-</li>
-<li>
-<p><strong><a href="#patch-configpath">PATCH /config/[path]</a></strong>
-Replaces an existing object or array element</p>
-</li>
-<li>
-<p><strong><a href="#delete-configpath">DELETE /config/[path]</a></strong>
-Deletes the value at the named path</p>
-</li>
-<li>
-<p><strong><a href="#using-id-in-json">Using <code>@id</code> in JSON</a></strong>
-Easily traverse into the config structure</p>
-</li>
-<li>
-<p><strong><a href="#concurrent-config-changes">Concurrent config changes</a></strong>
-Avoid collisions when making unsynchronized changes to config</p>
-</li>
-<li>
-<p><strong><a href="#post-adapt">POST /adapt</a></strong>
-Adapts a configuration to JSON without running it</p>
-</li>
-<li>
-<p><strong><a href="#get-pkicaltidgt">GET /pki/ca/&lt;id&gt;</a></strong>
-Returns information about a particular <a href="/docs/json/apps/pki/">PKI app</a> CA</p>
-</li>
-<li>
-<p><strong><a href="#get-pkicaltidgtcertificates">GET /pki/ca/&lt;id&gt;/certificates</a></strong>
-Returns the certificate chain of a particular <a href="/docs/json/apps/pki/">PKI app</a> CA</p>
-</li>
-<li>
-<p><strong><a href="#get-reverse-proxyupstreams">GET /reverse_proxy/upstreams</a></strong>
-Returns the current status of the configured proxy upstreams</p>
-</li>
-</ul>
-<h2 id="post-load">POST /load</h2>
-<p>Sets Caddy's configuration, overriding any previous configuration. It blocks until the reload completes or fails. Configuration changes are lightweight, efficient, and incur zero downtime. If the new config fails for any reason, the old config is rolled back into place without downtime.</p>
-<p>This endpoint supports different config formats using config adapters. The request's Content-Type header indicates the config format used in the request body. Usually, this should be <code>application/json</code> which represents Caddy's native config format. For another config format, specify the appropriate Content-Type so that the value after the forward slash / is the name of the config adapter to use. For example, when submitting a Caddyfile, use a value like <code>text/caddyfile</code>; or for JSON 5, use a value such as <code>application/json5</code>; etc.</p>
-<p>If the new config is the same as the current one, no reload will occur. To force a reload, set <code>Cache-Control: must-revalidate</code> in the request headers.</p>
-<h3 id="examples">Examples</h3>
-<p>Set a new active configuration:</p>
-<pre><code class="cmd bash">curl "http://localhost:2019/load" \
-	-H "Content-Type: application/json" \
-	-d @caddy.json</code></pre>
-<p>Note: curl's <code>-d</code> flag removes newlines, so if your config format is sensitive to line breaks (e.g. the Caddyfile), use <code>--data-binary</code> instead:</p>
-<pre><code class="cmd bash">curl "http://localhost:2019/load" \
-	-H "Content-Type: text/caddyfile" \
-	--data-binary @Caddyfile</code></pre>
-<h2 id="post-stop">POST /stop</h2>
-<p>Gracefully shuts down the server and exits the process. To only stop the running configuration without exiting the process, use <a href="#delete-configpath">DELETE /config/</a>.</p>
-<h3 id="example">Example</h3>
-<p>Stop the process:</p>
-<pre><code class="cmd bash">curl -X POST "http://localhost:2019/stop"</code></pre>
-<h2 id="get-configpath">GET /config/[path]</h2>
-<p>Exports Caddy's current configuration at the named path. Returns a JSON body.</p>
-<h3 id="examples-1">Examples</h3>
-<p>Export entire config and pretty-print it:</p>
-<pre><code class="cmd"><span class="bash">curl "http://localhost:2019/config/" | jq</span>
-{
-	"apps": {
-		"http": {
-			"servers": {
-				"myserver": {
-					"listen": [
-						":443"
-					],
-					"routes": [
-						{
-							"match": [
-								{
-									"host": [
-										"example.com"
-									]
-								}
-							],
-							"handle": [
-								{
-									"handler": "file_server"
-								}
-							]
-						}
-					]
-				}
-			}
-		}
-	}
-}</code></pre>
-<p>Export just the listener addresses:</p>
-<pre><code class="cmd"><span class="bash">curl "http://localhost:2019/config/apps/http/servers/myserver/listen"</span>
-[":443"]</code></pre>
-<h2 id="post-configpath">POST /config/[path]</h2>
-<p>Changes Caddy's configuration at the named path to the JSON body of the request. If the destination value is an array, POST appends; if an object, it creates or replaces.</p>
-<p>As a special case, many items can be added to an array if:</p>
-<ol>
-<li>the path ends in <code>/...</code></li>
-<li>the element of the path before <code>/...</code> refers to an array</li>
-<li>the payload is an array</li>
-</ol>
-<p>In this case, the elements in the payload's array will be expanded, and each one will be appended to the destination array. In Go terms, this would have the same effect as:</p>
-<pre class="chroma"><code><span class="line"><span class="cl"><span class="nx">baseSlice</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">baseSlice</span><span class="p">,</span> <span class="nx">newElems</span><span class="o">...</span><span class="p">)</span>
-</span></span></code></pre><h3 id="examples-2">Examples</h3>
-<p>Add a listener address:</p>
-<pre><code class="cmd bash">curl \
-	-H "Content-Type: application/json" \
-	-d '":8080"' \
-	"http://localhost:2019/config/apps/http/servers/myserver/listen"</code></pre>
-<p>Add multiple listener addresses:</p>
-<pre><code class="cmd bash">curl \
-	-H "Content-Type: application/json" \
-	-d '[":8080", ":5133"]' \
-	"http://localhost:2019/config/apps/http/servers/myserver/listen/..."</code></pre>
-<h2 id="put-configpath">PUT /config/[path]</h2>
-<p>Changes Caddy's configuration at the named path to the JSON body of the request. If the destination value is a position (index) in an array, PUT inserts; if an object, it strictly creates a new value.</p>
-<h3 id="example-1">Example</h3>
-<p>Add a listener address in the first slot:</p>
-<pre><code class="cmd bash">curl -X PUT \
-	-H "Content-Type: application/json" \
-	-d '":8080"' \
-	"http://localhost:2019/config/apps/http/servers/myserver/listen/0"</code></pre>
-<h2 id="patch-configpath">PATCH /config/[path]</h2>
-<p>Changes Caddy's configuration at the named path to the JSON body of the request. PATCH strictly replaces an existing value or array element.</p>
-<h3 id="example-2">Example</h3>
-<p>Replace the listener addresses:</p>
-<pre><code class="cmd bash">curl -X PATCH \
-	-H "Content-Type: application/json" \
-	-d '[":8081", ":8082"]' \
-	"http://localhost:2019/config/apps/http/servers/myserver/listen"</code></pre>
-<h2 id="delete-configpath">DELETE /config/[path]</h2>
-<p>Removes Caddy's configuration at the named path. DELETE deletes the target value.</p>
-<h3 id="examples-3">Examples</h3>
-<p>To unload the entire current configuration but leave the process running:</p>
-<pre><code class="cmd bash">curl -X DELETE "http://localhost:2019/config/"</code></pre>
-<p>To stop only one of your HTTP servers:</p>
-<pre><code class="cmd bash">curl -X DELETE "http://localhost:2019/config/apps/http/servers/myserver"</code></pre>
-<h2 id="using-id-in-json">Using <code>@id</code> in JSON</h2>
-<p>You can embed IDs in your JSON document for easier direct access to those parts of the JSON.</p>
-<p>Simply add a field called <code>&quot;@id&quot;</code> to an object and give it a unique name. For example, if you had a reverse proxy handler that you wanted to access frequently:</p>
-<pre class="chroma"><code><span class="line"><span class="cl"><span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nt">&#34;@id&#34;</span><span class="p">:</span> <span class="s2">&#34;my_proxy&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">	<span class="nt">&#34;handler&#34;</span><span class="p">:</span> <span class="s2">&#34;reverse_proxy&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre><p>To use it, simply make a request to the <code>/id/</code> API endpoint in the same way you would to the corresponding <code>/config/</code> endpoint, but without the whole path. The ID takes the request directly into that scope of the config for you.</p>
-<p>For example, to access the upstreams of the reverse proxy without an ID, the path would be something like</p>
-<pre><code>/config/apps/http/servers/myserver/routes/1/handle/0/upstreams
-</code></pre>
-<p>but with an ID, the path becomes</p>
-<pre><code>/id/my_proxy/upstreams
-</code></pre>
-<p>which is much easier to remember and write by hand.</p>
-<h2 id="concurrent-config-changes">Concurrent config changes</h2>
-<aside class="tip">
-<p>This section is for all <code>/config/</code> endpoints. It is experimental and subject to change.</p>
-</aside>
-<p>Caddy's config API provides <a href="https://en.wikipedia.org/wiki/ACID">ACID guarantees</a> for individual requests, but changes that involve more than a single request are subject to collisions or data loss if not properly synchronized.</p>
-<p>For example, two clients may <code>GET /config/foo</code> at the same time, make an edit within that scope (config path), then call <code>POST|PUT|PATCH|DELETE /config/foo/...</code> at the same time to apply their changes, resulting in a collision: either one will overwrite the other, or the second might leave the config in an unintended state since it was applied to a different version of the config than it was prepared against. This is because the changes are not aware of each other.</p>
-<p>Caddy's API does not support transactions spanning multiple requests, and HTTP is a stateless protocol. However, you can use the <code>Etag</code> trailer and <code>If-Match</code> header to detect and prevent collisions for any and all changes as a kind of optimistic concurrency control. This is useful if there is any chance that you are using Caddy's <code>/config/...</code> endpoints concurrently without synchronization. All responses to <code>GET /config/...</code> requests have an HTTP trailer called <code>Etag</code> that contains the path and a hash of the contents in that scope (e.g. <code>Etag: &quot;/config/apps/http/servers 65760b8e&quot;</code>). Simply set the <code>If-Match</code> header on a mutative request to that of an Etag trailer from a previous <code>GET</code> request.</p>
-<p>The basic algorithm for this is as follows:</p>
-<ol>
-<li>Perform a <code>GET</code> request to any scope <code>S</code> within the config. Hold onto the <code>Etag</code> trailer of the response.</li>
-<li>Make your desired change on the returned config.</li>
-<li>Perform a <code>POST|PUT|PATCH|DELETE</code> request within scope <code>S</code>, setting the <code>If-Match</code> header to the recent <code>Etag</code> value.</li>
-<li>If the response is HTTP 412 (Precondition Failed), repeat from step 1, or give up after too many attempts.</li>
-</ol>
-<p>This algorithm safely allows multiple, overlapping changes to Caddy's configuration without explicit synchronization. It is designed so that simultaneous changes to different parts of the config don't require a retry: only changes that overlap the same scope of the config can possibly cause a collision and thus require a retry.</p>
-<h2 id="post-adapt">POST /adapt</h2>
-<p>Adapts a configuration to Caddy JSON without loading or running it. If successful, the resulting JSON document is returned in the response body.</p>
-<p>The Content-Type header is used to specify the configuration format in the same way that <a href="#post-load">/load</a> works. For example, to adapt a Caddyfile, set <code>Content-Type: text/caddyfile</code>.</p>
-<p>This endpoint will adapt any configuration format as long as the associated <a href="/docs/config-adapters">config adapter</a> is plugged in to your Caddy build.</p>
-<h3 id="examples-4">Examples</h3>
-<p>Adapt a Caddyfile to JSON:</p>
-<pre><code class="cmd bash">curl "http://localhost:2019/adapt" \
-	-H "Content-Type: text/caddyfile" \
-	--data-binary @Caddyfile</code></pre>
-<h2 id="get-pkicaltidgt">GET /pki/ca/&lt;id&gt;</h2>
-<p>Returns information about a particular <a href="/docs/json/apps/pki/">PKI app</a> CA by its ID. If the requested CA ID is the default (<code>local</code>), then the CA will be provisioned if it has not already been. Other CA IDs will return an error if they have not been previously provisioned.</p>
-<pre><code class="cmd"><span class="bash">curl "http://localhost:2019/pki/ca/local" | jq</span>
-{
-	"id": "local",
-	"name": "Caddy Local Authority",
-	"root_common_name": "Caddy Local Authority - 2022 ECC Root",
-	"intermediate_common_name": "Caddy Local Authority - ECC Intermediate",
-	"root_certificate": "-----BEGIN CERTIFICATE-----\nMIIB ... gRw==\n-----END CERTIFICATE-----\n",
-	"intermediate_certificate": "-----BEGIN CERTIFICATE-----\nMIIB ... FzQ==\n-----END CERTIFICATE-----\n"
-}</code></pre>
-<h2 id="get-pkicaltidgtcertificates">GET /pki/ca/&lt;id&gt;/certificates</h2>
-<p>Returns the certificate chain of a particular <a href="/docs/json/apps/pki/">PKI app</a> CA by its ID. If the requested CA ID is the default (<code>local</code>), then the CA will be provisioned if it has not already been. Other CA IDs will return an error if they have not been previously provisioned.</p>
-<p>This endpoint is used internally by the <a href="/docs/command-line#caddy-trust"><code>caddy trust</code></a> command to allow installing the CA's root certificate to your system's trust store.</p>
-<pre><code class="cmd"><span class="bash">curl "http://localhost:2019/pki/ca/local/certificates"</span>
------BEGIN CERTIFICATE-----
-MIIByDCCAW2gAwIBAgIQViS12trTXBS/nyxy7Zg9JDAKBggqhkjOPQQDAjAwMS4w
-...
-By75JkP6C14OfU733oElfDUMa5ctbMY53rWFzQ==
------END CERTIFICATE-----
------BEGIN CERTIFICATE-----
-MIIBpDCCAUmgAwIBAgIQTS5a+3LUKNxC6qN3ZDR8bDAKBggqhkjOPQQDAjAwMS4w
-...
-9M9t0FwCIQCAlUr4ZlFzHE/3K6dARYKusR1ck4A3MtucSSyar6lgRw==
------END CERTIFICATE-----</code></pre>
-<h2 id="get-reverse-proxyupstreams">GET /reverse_proxy/upstreams</h2>
-<p>Returns the current status of the configured reverse proxy upstreams (backends) as a JSON document.</p>
-<pre><code class="cmd"><span class="bash">curl "http://localhost:2019/reverse_proxy/upstreams" | jq</span>
-[
-	{"address": "10.0.1.1:80", "num_requests": 4, "fails": 2},
-	{"address": "10.0.1.2:80", "num_requests": 5, "fails": 4},
-	{"address": "10.0.1.3:80", "num_requests": 3, "fails": 3}
-]</code></pre>
-<p>Each entry in the JSON array is a configured <a href="/docs/json/apps/http/servers/routes/handle/reverse_proxy/upstreams/">upstream</a> stored in the global upstream pool.</p>
-<ul>
-<li><strong>address</strong> is the dial address of the upstream. For SRV upstreams, this is the <code>lookup_srv</code> DNS name.</li>
-<li><strong>num_requests</strong> is the amount of active requests currently being handled by the upstream.</li>
-<li><strong>fails</strong> the current number of failed requests remembered, as configured by passive health checks.</li>
-</ul>
-<p>If your goal is to determine a backend's availability, you will need to cross-check relevant properties of the upstream against the handler configuration you are utilizing. For example, if you've enabled <a href="/docs/json/apps/http/servers/routes/handle/reverse_proxy/health_checks/passive/">passive health checks</a> for your proxies, then you need to also take into consideration the <code>fails</code> and <code>num_requests</code> values to determine if an upstream is considered available: check that the <code>fails</code> amount is less than your configured maximum amount of failures for your proxy (i.e. <a href="/docs/json/apps/http/servers/routes/handle/reverse_proxy/health_checks/passive/max_fails/"><code>max_fails</code></a>), and that <code>num_requests</code> is less than or equal to your configured amount of maximum requests per upstream (i.e. <a href="/docs/json/apps/http/servers/routes/handle/reverse_proxy/health_checks/passive/unhealthy_request_count/"><code>unhealthy_request_count</code></a> for the whole proxy, or <a href="/docs/json/apps/http/servers/routes/handle/reverse_proxy/upstreams/max_requests/"><code>max_requests</code></a> for individual upstreams).</p>
-</article>
+				<article>
+					<h1>Documentation</h1>
+
+					<div class="fullspan">
+						<div class="box box-filled box-capped quick-assist">
+							<div class="box-cap quick-assist-history">
+								<a title="Click quick for slick trick (not AI)">Quick Assist</a>
+							</div>
+							<div>
+								<h3 class="quick-assist-question"></h3>
+								<div class="quick-assist-content"></div>
+								<div class="quick-assist-options"></div>
+							</div>
+						</div>
+
+						<div class="box">
+							<h3>Getting Started</h3>
+							<p>
+								New here? Welcome! As usual, before running any server software, please make sure you:
+							</p>
+							<ul>
+								<li>know how to use your terminal / command line</li>
+								<li>are familiar with installing and using non-graphical software</li>
+								<li>can edit text files to configure programs</li>
+								<li>understand how your operating system's network stack and permissions model work</li>
+							</ul>
+							<p>
+								
+							</p>
+						</div>
+						<div class="box">
+							<h3>Caddyfile Directives</h3>
+							<p>
+								Quick access to all standard Caddyfile directives:
+							</p>
+							<ul>
+								<li><code><a href="/docs/caddyfile/directives/abort">abort</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/acme_server">acme_server</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/basicauth">basicauth</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/bind">bind</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/encode">encode</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/error">error</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/file_server">file_server</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/forward_auth">forward_auth</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/handle">handle</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/handle_errors">handle_errors</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/handle_path">handle_path</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/header">header</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/import">import</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/log">log</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/map">map</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/method">method</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/metrics">metrics</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/php_fastcgi">php_fastcgi</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/push">push</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/redir">redir</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/request_body">request_body</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/request_header">request_header</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/respond">respond</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/reverse_proxy">reverse_proxy</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/rewrite">rewrite</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/root">root</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/route">route</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/skip_log">skip_log</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/templates">templates</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/tls">tls</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/tracing">tracing</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/try_files">try_files</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/uri">uri</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/vars">vars</a></code></li>
+							</ul>
+						</div>
+						<div class="box">
+							<h3>Examples</h3>
+							<p>
+								
+							</p>
+						</div>
+					</div>
+				</article>
 
 				<nav id="pagenav">
 					<div class="heading">On this page</div>
 				</nav>
 			</div>
 		</main>
-
 	</body>
 </html>
