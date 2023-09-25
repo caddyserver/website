@@ -33,6 +33,7 @@
 							<div class="action-buttons">
 								<a href="/download" class="button primary">Download</a>
 								<a href="/docs/" class="button cool">Docs<sh></sh></a>
+								<iframe src="https://ghbtns.com/github-btn.html?user=caddyserver&amp;repo=caddy&amp;type=star&amp;count=true&amp;size=large" frameborder="0" scrolling="0" width="160px" height="30px" class="github-stars" style="margin: 0 auto; align-self: center;"></iframe>
 							</div>
 						</div>
 						<div>
@@ -72,7 +73,7 @@
 				<b>By default, </b>Caddy <b>automatically obtains</b> and <b>renews</b> TLS certificates for <b>all your sites.</b>
 			</h2>
 
-			<div class="wrapper cols">
+			<div class="wrapper feature cols">
 				<div class="col">
 					<h3 class="green">Dynamically provision certificates</h3>
 					<p>
@@ -95,81 +96,279 @@
 		</div>
 
 		<section>
-			<div class="section-header">
-				<h2>
-					The <b>most advanced</b> HTTPS server <b>in the world</b>
-				</h2>
-			</div>
-
-			<div class="wrapper cols">
-				<div class="col">
-					<h3 class="green">Dynamically provision certificates</h3>
-					<p>
-						With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
-					</p>
-				</div>
-				<div class="col">
-					<h3 class="purple">Dynamically provision certificates</h3>
-					<p>
-						With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
-					</p>
-				</div>
-				<div class="col">
-					<h3 class="blue">Dynamically provision certificates</h3>
-					<p>
-						With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
-					</p>
+			<div class="section-upset">
+				<div class="wrapper">
+					<h2>
+						The <b>most advanced</b> HTTPS server <b>in the world</b>
+					</h2>
 				</div>
 			</div>
+			<div class="wrapper">
+				<div class="feature cols">
+					<div class="col">
+						<h3 class="green">Dynamically provision certificates</h3>
+						<p>
+							With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+						</p>
+					</div>
+					<div class="col">
+						<h3 class="purple">Dynamically provision certificates</h3>
+						<p>
+							With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+						</p>
+					</div>
+					<div class="col">
+						<h3 class="blue">Dynamically provision certificates</h3>
+						<p>
+							With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+						</p>
+					</div>
+				</div>
 
-			<div class="wrapper demobox">
-				<h2>Experience it</h2>
-				<p>
-					<b>Discover Caddy's automagic HTTPS features in this demo!</b>
-				</p>
-				<p>
-					Point any subdomain named <b><code>caddydemo</code></b> to:
-				</p>
-				<p class="demo-ips">
-					<code>
-						<span class="record-type">A</span>
-						<span class="demo-ip">123.123.123.123</span>
-					</code>
-					<code>
-						<span class="record-type">AAAA</span>
-						<span class="demo-ip">::f00</span>
-					</code>
-				</p>
-				<p>
-					Then <b>visit it</b> in your browser.
-				</p>
-				<p>
-					You'll notice how Caddy <b>provisions a certificate</b> for your domain <b>automatically.</b>
-				</p>
-				<div class="demo-help">
+				<div class="demobox">
+					<h2>Experience it</h2>
 					<p>
-						<b>Not working?</b> Make sure to use a subdomain of a registered domain, not a "sub-subdomain."
-						Verify you have created the public DNS records shown above with the correct values.
-						You may have to wait to allow time for propagation. Consult your DNS provider's documentation or support for more information.
+						<b>Discover Caddy's automagic HTTPS features.</b>
 					</p>
 					<p>
-						<b>Example subdomains that could work:</b> <code>caddydemo.example.net</code>, <code>caddydemo.example.co.uk</code>
+						Point any subdomain named <b><code>caddydemo</code></b> to:
+					</p>
+					<p class="demo-ips">
+						<code>
+							<span class="record-type">A</span>
+							<span class="demo-ip">1.2.3.4</span>
+						</code>
+						<code>
+							<span class="record-type">AAAA</span>
+							<span class="demo-ip">::f00</span>
+						</code>
 					</p>
 					<p>
-						(Caddy is capable of serving TLS for any domains and IPs. This demo is arbitrarily restricted.)
+						Then <b>visit it</b> in your browser.
 					</p>
+					<p>
+						You'll notice how Caddy <b>provisions a certificate</b> for your domain <b>automatically.</b>
+					</p>
+					<div class="demo-help">
+						<p>
+							Caddy is capable of serving TLS for any domains and IPs. This demo is intentionally restricted.
+						</p>
+						<p>
+							<b>Not working?</b> Make sure to use a subdomain of a registered domain, not a "sub-subdomain."
+							Verify you have created the public DNS records shown above with the correct values.
+							You may have to allow time for propagation. Consult your DNS provider's documentation or support for more information.
+						</p>
+						<p>
+							<b>Example subdomains that could work:</b> <code>caddydemo.example.net</code>, <code>caddydemo.example.co.uk</code>
+						</p>
+					</div>
 				</div>
 			</div>
 		</section>
 
-		<section class="dark-section">
+		<section class="diagonal down dark feature">
 			<div class="wrapper">
 				<h2>
-					Flexible configuration for any production environment
+					A truly forward-thinking reverse proxy
 				</h2>
+				<p>
+					Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. 
+					Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. 
+				</p>
+				<div class="cols">
+					<div class="col">
+						<h3 class="green">Dynamically provision certificates</h3>
+						<p>
+							With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+						</p>
+					</div>
+					<div class="col">
+						<h3 class="purple">Dynamically provision certificates</h3>
+						<p>
+							With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+						</p>
+					</div>
+					<div class="col">
+						<h3 class="blue">Dynamically provision certificates</h3>
+						<p>
+							With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+						</p>
+					</div>
+				</div>
+
+
+				<h2>
+					Production-grade static file server
+				</h2>
+				<p>
+					Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. 
+					Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. 
+				</p>
+				<div class="cols">
+					<div class="col">
+						<h3 class="green">Dynamically provision certificates</h3>
+						<p>
+							With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+						</p>
+					</div>
+					<div class="col">
+						<h3 class="purple">Dynamically provision certificates</h3>
+						<p>
+							With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+						</p>
+					</div>
+					<div class="col">
+						<h3 class="blue">Dynamically provision certificates</h3>
+						<p>
+							With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+						</p>
+					</div>
+				</div>
 			</div>
 		</section>
 
+		<section class="feature">
+			<div class="wrapper">
+				<h2>
+					Flexible configuration for all production environments
+				</h2>
+				<p>
+					Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. 
+					Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. 
+				</p>
+				<div class="cols">
+					<div class="col">
+						<h3 class="green">Dynamically provision certificates</h3>
+						<p>
+							With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+						</p>
+					</div>
+					<div class="col">
+						<h3 class="purple">Dynamically provision certificates</h3>
+						<p>
+							With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+						</p>
+					</div>
+					<div class="col">
+						<h3 class="blue">Dynamically provision certificates</h3>
+						<p>
+							With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+
+		<section class="diagonal up light feature">
+			<div class="wrapper">
+				<h2>
+					Unparalleled extensibility
+				</h2>
+				<p>
+					Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. 
+					Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. 
+				</p>
+				<div class="cols">
+					<div class="col">
+						<h3 class="green">Dynamically provision certificates</h3>
+						<p>
+							With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+						</p>
+					</div>
+					<div class="col">
+						<h3 class="purple">Dynamically provision certificates</h3>
+						<p>
+							With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+						</p>
+					</div>
+					<div class="col">
+						<h3 class="blue">Dynamically provision certificates</h3>
+						<p>
+							With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+		<section class="feature">
+			<div class="wrapper">
+				<h2>
+					The gold standard web server
+				</h2>
+				<p>
+					Caddy keeps your sites up when other servers let you down.
+				</p>
+				<div class="cols">
+					<div class="col">
+						<h3 class="green">Dynamically provision certificates</h3>
+						<p>
+							With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+						</p>
+					</div>
+					<div class="col">
+						<h3 class="purple">Dynamically provision certificates</h3>
+						<p>
+							With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+						</p>
+					</div>
+					<div class="col">
+						<h3 class="blue">Dynamically provision certificates</h3>
+						<p>
+							With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+		<footer>
+			<div class="wrapper">
+				<div>
+					<img src="/resources/images/logo-dark.svg" class="logo" alt="Caddy web server">
+					<p>
+						An awesome <a href="https://github.com/caddyserver/caddy">open source</a> project
+						that relies on <a href="/sponsor">sponsors</a>.
+					</p>
+					<p>
+						<a href="https://usefathom.com/ref/AUKNWU">Privacy-respecting analytics</a> by Fathom
+					</p>
+					<br>
+					<p>
+						&copy; {{now | date "2006"}} Stack Holdings. All rights reserved.
+					</p>
+				</div>
+				<div class="link-col" style="margin-left: auto;">
+					<div class="col-header">Project</div>
+					<a href="#">Features</a>
+					<a href="#">Download</a>
+					<a href="#">Documentation</a>
+					<a href="#">Get involved</a>
+				</div>
+				<div class="link-col">
+					<div class="col-header">Business services</div>
+					<a href="#">Support</a>
+					<a href="#">Development</a>
+					<a href="#">Training</a>
+				</div>
+				<div class="link-col">
+					<div class="col-header">Community</div>
+					<a href="https://caddy.community">Forum</a>
+					<a href="https://github.com/caddyserver">GitHub</a>
+					<a href="https://twitter.com/caddyserver">Twitter / X</a>
+					<a href="/research">Research</a>
+				</div>
+				<div class="link-col" style="margin-right: auto;">
+					<div class="col-header">Contact</div>
+					<a href="https://caddy.community">Sales</a>
+					<a href="https://github.com/caddyserver">Email</a>
+				</div>
+			</div>
+		</footer>
 
 		<script>
 			AsciinemaPlayer.create('/resources/321140.cast', $('#demo'), {
