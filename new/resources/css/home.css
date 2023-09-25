@@ -133,6 +133,7 @@ h1 .sub-h1 {
 	font-size: 32px;
 	font-weight: normal;
 	line-height: 1.3;
+	font-family: Figtree;
 }
 
 
@@ -273,14 +274,7 @@ div.ap-wrapper:fullscreen div.ap-player {
 	text-align: center;
 	margin: 75px auto;
 	padding: 35px;
-}
-
-.sponsors-leaders h3 {
-	color: #EB5EDD;
-	font-weight: normal;
-	font-family: Poppins, ui-rounded;
-	font-size: 18px;
-	margin-bottom: 1em;
+	z-index: 0;
 }
 
 .sponsors-leaders::before {
@@ -293,7 +287,16 @@ div.ap-wrapper:fullscreen div.ap-player {
 	left: 0;
 	right: 0;
 	bottom: 0;
+	z-index: -1;
 	pointer-events: none;
+}
+
+.sponsors-leaders h3 {
+	color: #EB5EDD;
+	font-weight: normal;
+	font-family: Poppins, ui-rounded;
+	font-size: 18px;
+	margin-bottom: 1em;
 }
 
 .sponsor-logos {
@@ -319,7 +322,8 @@ div.ap-wrapper:fullscreen div.ap-player {
 	margin-top: -10vw;
 	position: relative;
 	z-index: 0;
-	padding-top: 11vw;
+	padding-top: 14vw;
+	padding-bottom: 300px;
 	font-family: Poppins, ui-rounded;
 }
 
@@ -340,7 +344,7 @@ div.ap-wrapper:fullscreen div.ap-player {
 	color: #86A6A3;
 	opacity: .5;
 	width: 90%;
-	min-width: 65vw;
+	/* min-width: 65vw; */
 	max-width: 1200px;
 	font-size: 15vw;
 	text-align: center;
@@ -351,7 +355,7 @@ div.ap-wrapper:fullscreen div.ap-player {
 	pointer-events: none;
 	
 	position: absolute;
-	top: 40px;
+	top: 5vw;
 	left: 50%;
 	transform: translateX(-50%);
 }
@@ -362,19 +366,179 @@ div.ap-wrapper:fullscreen div.ap-player {
 
 .wavy-top h2 {
 	color: #003E4B;
-	font-size: 52px;
+	/* font-size: 52px; */
+	font-size: 3vw;
 	text-align: center;
+	width: 60vw;
 	max-width: 950px;
 	font-weight: normal;
-	margin: 0 auto;
-	line-height: 2em;
+	margin: 0 auto 200px;
+	line-height: 2.5em;
 }
 
-.wavy-top h2 b {
+.wavy-top h2 b,
+.section-header b {
 	font-weight: 800;
 }
 
 
+section {
+	padding: 5em;
+	background: white;
+}
+
+.section-header {
+	background: white;
+	margin-top: -250px;
+	padding: 50px 100px 0;
+	border-radius: 20px;
+	z-index: 0;
+	position: relative;
+	box-shadow: 0 -15px 20px -10px rgb(0 0 0 / .1);
+}
+
+.section-header h2 {
+	background: linear-gradient(195deg, rgb(6, 79, 107) 25%, rgba(139, 189, 224, 1) 49%, rgb(72, 129, 164)50%, rgb(8, 44, 58) 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	
+	font-family: Poppins;
+	font-size: 80px;
+	font-weight: 600;
+	text-align: center;
+	margin-bottom: 100px;
+}
+
+
+.cols {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content:space-around;
+	gap: 50px;
+}
+
+.col {
+	/* max-width: 33.333%; */
+	min-width: 250px;
+	padding-left: 1em;
+	flex: 1;
+}
+
+.col h3 {
+	font-weight: 600;
+	font-size: 18px;
+	border-left: 2px solid;
+	padding-top: .25em;
+	padding-bottom: .25em;
+	margin-bottom: 10px;
+
+	/* shove the border over but leave space between border and content */
+	margin-left: -1em;
+	padding-left: calc(1em - 2px);
+}
+
+.col p {
+	font-family: Inter;
+	font-size: 90%;
+	line-height: 1.6;
+	color: #424242;
+}
+
+.col .green {
+	color: #389564;
+	border-color: #389564;
+}
+
+.col .purple {
+	color: rgb(105, 30, 105);
+	border-color: rgb(105, 30, 105);
+}
+
+.col .blue {
+	color: rgb(34, 94, 143);
+	border-color: rgb(34, 94, 143);
+}
+
+
+
+
+
+.demobox {
+	position: relative;
+	color: #003e4b;
+	background: radial-gradient(circle at 200px 100px, rgba(184,255,239,1) 0%, rgba(234,249,255,1) 280px);
+	font-family: Poppins, ui-rounded;
+	font-size: 20px;
+	padding: 50px;
+	border-radius: 15px;
+	margin-top: 200px;
+}
+
+.demobox h2 {
+	position: absolute;
+	top: -99px;
+	font-size: 90px;
+	font-weight: 700;
+	white-space: nowrap;
+
+	background: linear-gradient(0deg, rgba(27,180,186,1) 10%, rgba(0,61,75,1) 50%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.demobox p {
+	margin-bottom: 2em;
+}
+
+.demo-ips {
+	display: flex;
+	gap: 2em;
+}
+
+.demo-ips code {
+	background: #ecffff;
+	display: flex;
+	border-radius: 5px;
+	box-shadow: 0 4px 16px rgb(0 0 0 / .1);
+}
+
+.record-type,
+.demo-ip {
+	display: block;
+	padding: 10px 20px;
+}
+
+.record-type {
+	color: #6ea9b7;
+	border-right: 1px solid #cef4f1;
+}
+
+.demo-help {
+	border-top: 1px solid #b5d3d9;
+	font-size: 75%;
+	color: #628991;
+	font-family: Inter;
+	max-width: 800px;
+}
+
+.demo-help p {
+	margin: 10px 0;
+}
+
+
+.dark-section {
+	background-color: #002020;
+	color: #fff;
+}
+
+.dark-section h2 {
+	font-family: Poppins, ui-rounded;
+	font-size: 50px;
+	font-weight: 600;
+	max-width: 800px;
+}
 
 
 

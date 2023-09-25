@@ -1,7 +1,7 @@
 :root,
 .light {
 	--body-bg: white;
-	--text-color: #222;
+	--text-color: #2c2c2c;
 	--text-color-muted: #7087a0;
 	--header-bg: rgba(118, 179, 194, 0.11);
 	--header-border-color: #ebf0f2;
@@ -98,8 +98,8 @@
 body {
 	font-family: Inter, Figtree, Gantari, 'Albert Sans', Inter, system-ui;
 	font-size: 18px;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
+	/* -webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale; */
 	tab-size: 4;
 	background-color: var(--body-bg);
 	color: var(--text-color);
