@@ -12,7 +12,7 @@
 		<!-- <meta property="og:title" content="Caddy 2 - The Ultimate Server with Automatic HTTPS">
 			<meta name="twitter:title" value="Caddy 2 - The Ultimate Server with Automatic HTTPS"> -->
 	</head>
-	<body>
+	<body class="light">
 		<div class="hero">
 			{{include "/includes/header.html" "dark-header"}}
 			
@@ -47,17 +47,72 @@
 					</div>
 
 					<div class="sponsors-leaders">
+						<!-- <h3>Trusted, used, and sponsored by <b>leaders</b></h3> -->
 						<h3>Sponsored by <b>leaders</b></h3>
-						<div class ="sponsor-logos">
+						
+						<!--
+							Images are not in any particular order except the top row is featured (higher-tier) sponsors.
+							Images are individually adjusted to appear roughly equally sized and weighted along their row.
+						-->
+
+						<div class="sponsor-logos">
 							<a href="https://zerossl.com" target="_blank">
-								<img src="/resources/images/sponsors/zerossl-dark.svg" alt="ZeroSSL">
+								<img src="/resources/images/sponsors/zerossl.svg" alt="ZeroSSL" height="45">
 							</a>
 							<a href="https://stripe.com" target="_blank">
-								<img src="/resources/images/sponsors/stripe-dark.svg" alt="Stripe">
+								<img src="/resources/images/sponsors/stripe.svg" alt="Stripe" class="featured" height="45">
 							</a>
 						</div>
-						<a href="/sponsor" class="button purple">Sponsorship info</a>
+						<div class="sponsors-divider"></div>
+						<div class="sponsor-logos">
+						<a href="https://opensource.mercedes-benz.com/" target="_blank">
+							<img src="/resources/images/sponsors/mercedes-benz.svg" alt="Mercedes-Benz" height="38">
+						</a>
+						<a href="https://sourcegraph.com/" target="_blank">
+							<img src="/resources/images/sponsors/sourcegraph.svg" alt="Sourcegraph" height="30">
+						</a>
+						<a href="https://tailscale.com" target="_blank">
+							<img src="/resources/images/sponsors/tailscale.svg" alt="Tailscale" height="22">
+						</a>
+						<a href="https://fusionauth.com" target="_blank">
+							<img src="/resources/images/sponsors/fusionauth.svg" alt="FusionAuth" height="35">
+						</a>
+						<a href="https://www.aryeo.com" target="_blank">
+							<img src="/resources/images/sponsors/aryeo.svg" alt="Aryeo" height="26">
+						</a>
+						<a href="https://checklyhq.com" target="_blank">
+							<img src="/resources/images/sponsors/checkly.svg" alt="Checkly" height="24" style="position: relative; top: 3px;">
+						</a>
+						<a href="https://appcove.com/" target="_blank">
+							<img src="/resources/images/sponsors/appcove.png" alt="AppCove" height="24">
+						</a>
+						<a href="https://www.transistor.fm" target="_blank">
+							<img src="/resources/images/sponsors/transistorfm.svg" alt="Transistor" height="32">
+						</a>
+						<a href="https://photostructure.com/" target="_blank">
+							<img src="/resources/images/sponsors/photostructure.svg" alt="PhotoStructure" height="30">
+						</a>
+						<a href="https://gitea.com/" target="_blank">
+							<img src="/resources/images/sponsors/gitea.svg" alt="Gitea" height="25">
+						</a>
+						<a href="https://aniftyco.com/" target="_blank">
+							<img src="/resources/images/sponsors/niftyco.svg" alt="Niftyco" height="25">
+						</a>
+						<a href="https://iqm.com/" target="_blank">
+							<img src="/resources/images/sponsors/iqm.svg" alt="IQM" height="24">
+						</a>
+						<a href="/sponsor" class="button purple">
+							<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-new-section" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+								<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+								<path d="M9 12l6 0"></path>
+								<path d="M12 9l0 6"></path>
+								<path d="M4 6v-1a1 1 0 0 1 1 -1h1m5 0h2m5 0h1a1 1 0 0 1 1 1v1m0 5v2m0 5v1a1 1 0 0 1 -1 1h-1m-5 0h-2m-5 0h-1a1 1 0 0 1 -1 -1v-1m0 -5v-2m0 -5"></path>
+							 </svg>
+							Join the ranks
+						</a>
 					</div>
+					<!-- <a href="/sponsor" class="button purple">Sponsorship info</a> -->
+				</div>
 				</div>
 			</div>
 		</div>
@@ -91,6 +146,14 @@
 					<p>
 						With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
 					</p>
+				</div>
+
+				<div class="sponsorship-primer">
+					<h3>software <b>assurance</b></h3>
+					<p>
+						Some text here that explains sponsorships
+					</p>
+					<a href="/sponsor" class="button purple">See sponsorships</a>
 				</div>
 			</div>
 		</div>

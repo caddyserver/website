@@ -320,20 +320,26 @@ div.ap-wrapper:fullscreen div.ap-player {
 	color: #EB5EDD;
 	font-weight: normal;
 	font-size: 18px;
-	margin-bottom: 1em;
+	margin-bottom: 2em;
 }
 
 .sponsor-logos {
 	display: flex;
-	gap: 50px;
+	column-gap: 50px;
+	row-gap: 25px;
 	flex-wrap: wrap;
 	align-items: center;
 	justify-content: center;
-	margin-bottom: 1em;
+	max-width: 900px;
+	margin: 1.5em auto;
 }
 
-.sponsor-logos img {
-	height: 2em;
+
+.sponsors-divider {
+	border-top: 1px solid #634772;
+	max-width: 200px;
+	width: 100%;
+	margin: 0 auto;
 }
 
 
@@ -452,7 +458,7 @@ section {
 }
 
 section.dark .cols {
-	color: #c1ced9;
+	color: #aec6c3;
 }
 
 .col {
@@ -593,6 +599,31 @@ section.light {
 
 
 
+.sponsorship-primer {
+	border-radius: 10px;
+	background: linear-gradient(50deg, #670d7f, #531cc7);
+	padding: 40px 50px;
+	color: #edb7e8;
+}
+
+.sponsorship-primer h3 {
+	color: white;
+	font-size: 150%;
+	font-weight: normal;
+}
+
+.sponsorship-primer p {
+	margin: 1em 0;
+	font-weight: normal;
+}
+
+.sponsorship-primer p:last-child {
+	margin-bottom: 0;
+}
+
+
+
+
 footer {
 	padding: 75px 0;
 	font-size: 14px;
@@ -645,7 +676,7 @@ footer .link-col a {
 }
 
 footer .link-col a:hover {
-	color: #c8ecf5;
+	color: #35655e;
 }
 
 
