@@ -1,3 +1,272 @@
+body {
+	background-color: #123245;
+}
+
+h1,
+h2,
+h3,
+h4 {
+	font-family: Poppins, ui-rounded;
+}
+
+h1 {
+	font-size: 120px;
+	font-weight: 800;
+	text-transform: uppercase;
+	color: #65D1C6;
+	line-height: .9;
+}
+
+h1 .color-dodge {
+	mix-blend-mode: color-dodge;
+}
+
+h1 .subheader {
+	margin-top: 1em;
+	text-transform: none;
+	color: #b1fffe;
+	font-size: 32px;
+	font-weight: normal;
+	line-height: 1.3;
+	font-family: Figtree;
+}
+
+
+
+
+
+p,
+h2 {
+	max-width: 800px;
+}
+
+h2 {
+	font-size: 50px;
+	font-weight: 600;
+}
+
+.feature h2:not(:first-child) {
+	margin-top: 100px;
+}
+
+
+
+.hero {
+	background-color: hsla(201,63%,15%,1);
+	background-image:
+		radial-gradient(at 50% 96%, hsla(0,100%,20%,0.35) 0px, transparent 50%),
+		radial-gradient(at 5% 30%, hsla(136,95%,15%,1) 0px, transparent 50%),
+		radial-gradient(at 91% 35%, hsla(214,83%,25%,1) 0px, transparent 75%),
+		radial-gradient(at 82% 73%, hsla(265,72%,20%,1) 0px, transparent 50%);
+}
+
+.hero .hero-content {
+	padding: 100px 0;
+}
+
+
+
+
+.button {
+	color: rgb(54 206 255);
+	border: 1px solid rgb(54 206 255);
+}
+
+.button:hover {
+	color: white;
+	border-color: white;
+}
+
+.button.cool {
+	position: relative;
+	color: rgb(226 254 214);
+	border: none;
+
+	/* necessary for gradient dropshadow: */
+	transform-style: preserve-3d;
+	overflow: unset;
+}
+
+.button.cool::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	border-radius: 8px;
+	border: 2px solid transparent;
+	background: linear-gradient(to right, #65E823,#D67FDB) border-box;
+	-webkit-mask:
+		linear-gradient(#fff 0 0) padding-box,
+		linear-gradient(#fff 0 0);
+	mask:
+		linear-gradient(#fff 0 0) padding-box,
+		linear-gradient(#fff 0 0);
+	-webkit-mask-composite: xor;
+	mask-composite: exclude;
+}
+
+
+@property --a {
+	syntax: '<angle>';
+	inherits: false;
+	initial-value: 0deg;
+}
+
+@keyframes a {
+	from {
+		--a: 0deg;
+	}
+	to {
+		--a: 360deg;
+	}
+}
+
+.button.cool sh {
+	position: absolute;
+	inset: -100px;
+	border: 100px solid #0000;
+	border-radius: 110px; /* a little more than the inset+border+border-radius */
+	mask:
+		linear-gradient(#000 0 0) content-box,
+		linear-gradient(#000 0 0);
+	-webkit-mask:
+		linear-gradient(#000 0 0) content-box,
+		linear-gradient(#000 0 0);
+	-webkit-mask-composite: xor;
+	mask-composite: exclude;
+	transform: translateZ(-1px); /* hack the z-index so as to be behind the transparent element */
+	pointer-events: none;
+}
+.button.cool sh::before {
+	content: "";
+	position: absolute;
+	inset: 0px;
+	background: conic-gradient(from var(--a), rgb(207, 19, 175) 0.42%, #ee6907 59.24%, #70d52c);
+	filter: blur(25px);
+	transform: translate(0px,0px);
+
+	--a: 0deg; /*  needed for firefox to have a valid output ? */
+	animation: a 1s linear infinite;
+	opacity: 0;
+	transition: opacity .5s;
+}
+.button.cool:hover sh::before {
+	opacity: 1;
+}
+
+
+
+
+.feature p {
+	font-weight: 600;
+	margin-top: 2em;
+	margin-bottom: 4em;
+	line-height: 1.65;
+}
+
+
+section {
+	padding: 200px;
+	background: white;
+}
+
+section.dark,
+footer {
+	background-color: #002020;
+	color: #fff;
+}
+
+section.light {
+	background-color: #f5f8f9;
+}
+
+.diagonal {
+	padding: 200px 0;
+	margin: 25px 0;
+}
+
+.diagonal.up { transform: skewY(-5deg); }
+.diagonal.up > * { transform: skewY(5deg); }
+
+.diagonal.down { transform: skewY(5deg); }
+.diagonal.down > * { transform: skewY(-5deg); }
+
+
+
+
+
+
+.cols {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content:space-around;
+	gap: 50px;
+	color: #424242;
+}
+
+section.dark .cols {
+	color: #aec6c3;
+}
+
+.col {
+	/* max-width: 33.333%; */
+	min-width: 250px;
+	padding-left: 1em;
+	flex: 1;
+}
+
+.col h3 {
+	font-weight: 600;
+	font-size: 20px;
+	border-left: 2px solid;
+	padding-top: .15em;
+	padding-bottom: .15em;
+	margin-bottom: 10px;
+
+	/* shove the border over but leave space between border and content */
+	margin-left: -1em;
+	padding-left: calc(1em - 2px);
+}
+
+.col p {
+	font-family: Inter;
+	font-size: 90%;
+	font-weight: normal;
+}
+
+.col .green {
+	color: #23a460; border-color: #23a460;
+}
+.col .purple {
+	color: rgb(151, 39, 151); border-color: rgb(151, 39, 151);
+}
+.col .blue {
+	color: rgb(14, 110, 189); border-color: rgb(14, 110, 189);
+}
+section.dark .col .green {
+	color: #41e68f; border-color: #41e68f;
+}
+section.dark .col .purple {
+	color: rgb(204, 82, 204); border-color: rgb(204, 82, 204);
+}
+section.dark .col .blue {
+	color: rgb(81, 165, 234); border-color: rgb(81, 165, 234);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 .sponsor-experience {
 	border-radius: 10px;
 	padding: 30px 50px 40px;
@@ -62,4 +331,30 @@
 
 .sponsor-experience.stripe {
 	background: linear-gradient(to right, #635bff 30%, #d4b8ff);
+}
+
+
+
+
+
+.sponsorship-primer {
+	border-radius: 10px;
+	background: linear-gradient(50deg, #670d7f, #531cc7);
+	padding: 40px 50px;
+	color: #edb7e8;
+}
+
+.sponsorship-primer h3 {
+	color: white;
+	font-size: 150%;
+	font-weight: normal;
+}
+
+.sponsorship-primer p {
+	margin: 1em 0;
+	font-weight: normal;
+}
+
+.sponsorship-primer p:last-child {
+	margin-bottom: 0;
 }
