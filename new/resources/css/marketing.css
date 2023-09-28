@@ -1,0 +1,65 @@
+.sponsor-experience {
+	border-radius: 10px;
+	padding: 30px 50px 40px;
+	color: #fff;
+	display: flex;
+	flex-wrap: wrap;
+	max-width: 700px; /* TODO: TEMPORARY! */
+	column-gap: 50px;
+}
+
+.sponsor-experience::before {
+	content: "Sponsor Experience";
+	text-transform: uppercase;
+	letter-spacing: 4px;
+	color: rgb(255 255 255 / .7);
+	font-size: 12px;
+	font-weight: 800;
+	text-align: center;
+	display: block;
+	width: 100%;
+}
+
+.sponsor-experience .experience-content {
+	flex: 1;
+	margin-top: 40px;
+}
+
+.sponsor-experience .experience-quote {
+	margin-bottom: 1em;
+}
+
+.sponsor-experience .experience-logo {
+	width: 150px;
+}
+
+.sponsor-experience .experience-credit {
+	display: flex;
+	gap: 1em;
+	align-items: center;
+}
+
+.sponsor-experience cite {
+	font-style: normal;
+	font-size: 14px;
+	color: rgb(255 255 255 / .7);
+}
+
+.sponsor-experience cite b {
+	display: block;
+	font-size: 125%;
+	color: #fff;
+}
+
+.sponsor-experience .experience-picture {
+	width: 3em;
+	height: 3em;
+	border-radius: 50%;
+	object-fit: cover;
+	background-color: gray;
+}
+
+
+.sponsor-experience.stripe {
+	background: linear-gradient(to right, #635bff 30%, #d4b8ff);
+}
