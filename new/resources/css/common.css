@@ -108,7 +108,6 @@ body {
 		radial-gradient(at calc(50% + min(25vw, 800px)) -10%, hsl(201.2deg, 68%, 90.2%) 0px, transparent min(15%, 500px));
 }
 
-/* TODO: clean this up */
 .dark body {
 	background-image:
 		radial-gradient(at calc(50% - min(35vw, 700px)) -10%, hsl(129.5deg, 100%, 12.4%) 0px, transparent min(25%, 600px)),
@@ -508,6 +507,73 @@ button.primary .hover-splash,
 #current-theme {
 	text-transform: capitalize;
 }
+
+
+
+
+footer {
+	padding: 75px 0;
+	font-size: 14px;
+	color: #7c9393;
+	line-height: 1.5;
+}
+
+footer p {
+	margin: 1em 0;
+}
+
+footer a {
+	color: inherit;
+	font-weight: bold;
+	transition: .25s;
+}
+
+footer a:hover {
+	color: #76b8b8;
+}
+
+footer .wrapper {
+	display: flex;
+	gap: 75px;
+}
+
+footer .logo {
+	display: block;
+	margin-bottom: 15px;
+	height: 40px;
+}
+
+footer .link-col {
+	font-size: initial;
+	line-height: 2;
+}
+
+footer .col-header {
+	font-size: 110%;
+	color: white;
+	font-weight: 700;
+	margin-bottom: .5em;
+}
+
+footer .link-col a {
+	display: block;
+	color: #b7c8c8;
+	font-weight: 500;
+	text-decoration: none;
+}
+
+footer .link-col a:hover {
+	color: #35655e;
+}
+
+
+
+
+
+
+
+
+
 
 
 
