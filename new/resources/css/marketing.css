@@ -1,5 +1,6 @@
 body {
 	background-color: #123245;
+	background-image: none;
 }
 
 h1,
@@ -16,10 +17,11 @@ h1 {
 	color: #65D1C6;
 	line-height: .9;
 	margin-bottom: 1em;
-}
 
-h1 .color-dodge {
-	mix-blend-mode: color-dodge;
+	background: linear-gradient(to right, #47E27C 25%, #4ED3FB 75%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
 }
 
 h1 .subheading {
