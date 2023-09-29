@@ -1,11 +1,3 @@
-h1 {
-	color: #4ED3FB;
-	background: linear-gradient(to right, #47E27C 25%, #4ED3FB 75%);
-	-webkit-background-clip: text;
-	background-clip: text;
-	-webkit-text-fill-color: transparent;
-}
-
 p.footnote {
 	margin-top: 2em;
 	font-size: 12px;

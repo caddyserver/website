@@ -20,6 +20,10 @@ h1 {
 	margin-bottom: 0;
 }
 
+h1 .color-dodge {
+	mix-blend-mode: color-dodge;
+}
+
 h1 .the {
 	font-size: 75px;
 	line-height: 1;
