@@ -12,23 +12,30 @@ h4 {
 h1 {
 	font-size: 120px;
 	font-weight: 800;
-	text-transform: uppercase;
+	text-align: center;
 	color: #65D1C6;
 	line-height: .9;
+	margin-bottom: 1em;
 }
 
 h1 .color-dodge {
 	mix-blend-mode: color-dodge;
 }
 
-h1 .subheader {
-	margin-top: 1em;
+h1 .subheading {
+	margin: 2em auto 0;
+	margin-top: 2em;
 	text-transform: none;
 	color: #b1fffe;
-	font-size: 32px;
+	font-size: 42px;
 	font-weight: normal;
 	line-height: 1.3;
 	font-family: Figtree;
+	max-width: 850px;
+}
+
+h1 .subheading b {
+	font-weight: 800;
 }
 
 
@@ -60,10 +67,9 @@ h2 {
 		radial-gradient(at 82% 73%, hsla(265,72%,20%,1) 0px, transparent 50%);
 }
 
-.hero .hero-content {
-	padding: 100px 0;
+.hero-content {
+	padding-top: 100px;
 }
-
 
 
 
@@ -158,27 +164,40 @@ h2 {
 
 
 
-
-.feature p {
-	font-weight: 600;
-	margin-top: 2em;
-	margin-bottom: 4em;
-	line-height: 1.65;
-}
-
-
 section {
-	padding: 200px;
+	padding: 200px 0;
 	background: white;
+	color: var(--text-color);
 }
+
+.hero section.transparent {
+	background: none;
+	padding: 50px 0;
+	color: #cbe2e4;
+}
+
+.hero section.transparent h2 {
+	color: #fff;
+}
+
+.hero-content a,
+.hero section.transparent a {
+	color: #75b8c8;
+}
+
+.hero-content a:hover,
+.hero section.transparent a:hover {
+	color: #82e7ff;
+}
+
 
 section.dark,
 footer {
 	background-color: #002020;
-	color: #fff;
+	color: white;
 }
 
-section.light {
+section.gray {
 	background-color: #f5f8f9;
 }
 
@@ -193,8 +212,28 @@ section.light {
 .diagonal.down { transform: skewY(5deg); }
 .diagonal.down > * { transform: skewY(-5deg); }
 
+.feature p {
+	font-weight: 500;
+	margin-top: 2em;
+	line-height: 1.65;
+}
 
+.sides {
+	display: flex;
+	gap: 50px;
+	align-items: center;
+	margin: 100px 0;
+}
 
+.sides > * {
+	flex: 1;
+}
+
+.side-flex {
+	display: flex;
+	gap: 2em;
+	flex: 1.5;
+}
 
 
 
@@ -202,8 +241,10 @@ section.light {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content:space-around;
-	gap: 50px;
+	--gap: 50px;
+	gap: var(--gap);
 	color: #424242;
+	margin-top: 4em;
 }
 
 section.dark .cols {
@@ -211,10 +252,13 @@ section.dark .cols {
 }
 
 .col {
-	/* max-width: 33.333%; */
-	min-width: 250px;
+	min-width: 350px;
 	padding-left: 1em;
 	flex: 1;
+}
+
+.cols-big .col {
+	min-width: 450px;
 }
 
 .col h3 {
@@ -230,10 +274,29 @@ section.dark .cols {
 	padding-left: calc(1em - 2px);
 }
 
+.col p + h3 {
+	margin-top: var(--gap);
+}
+
+.col h3.plain {
+	border-left: none;
+	margin-left: 0;
+	padding-left: 0;
+}
+
+.hero .col h3 {
+	color: white;
+}
+
 .col p {
 	font-family: Inter;
 	font-size: 90%;
 	font-weight: normal;
+	line-height: 1.5;
+}
+
+.hero .col p {
+	color: rgb(255 255 255 / .8);
 }
 
 .col .green {

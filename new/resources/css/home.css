@@ -8,7 +8,17 @@
 	padding-bottom: 20vw;
 }
 
+.hero-content {
+	padding-bottom: 100px;
+}
 
+
+
+h1 {
+	text-align: left;
+	text-transform: uppercase;
+	margin-bottom: 0;
+}
 
 h1 .the {
 	font-size: 75px;
@@ -16,7 +26,9 @@ h1 .the {
 }
 
 
-
+h1 .subheading  {
+	margin-top: .75em;
+}
 
 
 

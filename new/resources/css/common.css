@@ -296,7 +296,7 @@ button.purple,
 .button.purple {
 	border: none;
 	background: linear-gradient(165deg, rgba(170,81,212,1) 20%, rgba(37,159,235,1) 100%);
-	color: white;
+	color: white !important; /* sigh... to prevent being stepped on by very specific link color rule on the sponsors page */
 	font-weight: bold;
 	font-size: 90%;
 	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25)
