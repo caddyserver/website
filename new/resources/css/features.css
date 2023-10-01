@@ -2,3 +2,19 @@
 	margin-bottom: 0;
 	padding-bottom: 50px;
 }
+
+.datagrid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2em;
+	margin-top: 50px;
+}
+
+.datagrid h4 {
+	color: #668591;
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	margin-bottom: .5em;
+	min-width: 200px;
+}

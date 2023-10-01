@@ -55,7 +55,7 @@ h2 {
 }
 
 .feature h2:not(:first-child) {
-	margin-top: 100px;
+	margin-top: 150px;
 }
 
 
@@ -238,12 +238,14 @@ section.gray {
 }
 
 
+.cols, h3 {
+	--gap: 50px;
+}
 
 .cols {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content:space-around;
-	--gap: 50px;
 	gap: var(--gap);
 	color: #424242;
 	margin-top: 4em;
@@ -263,7 +265,7 @@ section.dark .cols {
 	min-width: 450px;
 }
 
-.col h3 {
+h3 {
 	font-weight: 600;
 	font-size: 20px;
 	border-left: 2px solid;
@@ -276,17 +278,17 @@ section.dark .cols {
 	padding-left: calc(1em - 2px);
 }
 
-.col p + h3 {
+p + h3 {
 	margin-top: var(--gap);
 }
 
-.col h3.plain {
+h3.plain {
 	border-left: none;
 	margin-left: 0;
 	padding-left: 0;
 }
 
-.hero .col h3 {
+.hero h3 {
 	color: white;
 }
 
@@ -301,22 +303,22 @@ section.dark .cols {
 	color: rgb(255 255 255 / .8);
 }
 
-.col .green {
+h3.green {
 	color: #23a460; border-color: #23a460;
 }
-.col .purple {
+h3.purple {
 	color: rgb(151, 39, 151); border-color: rgb(151, 39, 151);
 }
-.col .blue {
+h3.blue {
 	color: rgb(14, 110, 189); border-color: rgb(14, 110, 189);
 }
-section.dark .col .green {
+section.dark h3.green {
 	color: #41e68f; border-color: #41e68f;
 }
-section.dark .col .purple {
+section.dark h3.purple {
 	color: rgb(204, 82, 204); border-color: rgb(204, 82, 204);
 }
-section.dark .col .blue {
+section.dark h3.blue {
 	color: rgb(81, 165, 234); border-color: rgb(81, 165, 234);
 }
 
@@ -413,6 +415,9 @@ section.dark .col .blue {
 	color: white;
 	font-size: 150%;
 	font-weight: normal;
+	border: none;
+	padding-left: 0;
+	margin-left: 0;
 }
 
 .sponsorship-primer p {
