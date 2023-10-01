@@ -1,3 +1,7 @@
+h1 {
+	-webkit-text-fill-color: inherit;
+}
+
 .bgtext,
 .demobox {
 	font-family: Poppins, ui-rounded;
@@ -196,6 +200,9 @@ div.ap-wrapper:fullscreen div.ap-player {
 	font-weight: normal;
 	font-size: 18px;
 	margin-bottom: 2em;
+	border-left: 0;
+	margin-left: 0;
+	padding-left: 0;
 }
 
 .sponsor-logos {
@@ -288,7 +295,7 @@ div.ap-wrapper:fullscreen div.ap-player {
 	background: white;
 	max-width: 1600px;
 	margin: -350px auto 0;
-	padding: 50px 100px 0;
+	padding: 50px 50px 0;
 	border-radius: 20px;
 	z-index: 0;
 	position: relative;
