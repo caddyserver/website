@@ -18,3 +18,45 @@
 	margin-bottom: .5em;
 	min-width: 200px;
 }
+
+.feature-list {
+	font-size: 90%;
+	margin-top: 50px;
+}
+
+.feature-row {
+	display: grid;
+	grid: auto / 1fr 3fr 2fr;
+	gap: 2em;
+	padding: 2em 0;
+	border-bottom: 2px dashed #a4c8ff25; /* #e6eaf0 */
+}
+
+.feature-row .benefits {
+	color: var(--text-color-muted);
+	font-weight: 500;
+}
+
+.feature-row .detail {
+	font-weight: 500;
+}
+
+.feature-row ul.detail {
+	margin-left: 1em;
+}
+
+.feature-row ul li {
+	margin-bottom: .5em;
+}
+
+.feature-row:last-child {
+	border-bottom: none;
+}
+
+
+/* TODO: Figure this out */
+@media (max-width: 800px) {
+	.feature-row {
+		grid: repeat(3, auto) / 1fr;
+	}
+}

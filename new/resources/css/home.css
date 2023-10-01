@@ -1,7 +1,3 @@
-h1 {
-	-webkit-text-fill-color: inherit;
-}
-
 .bgtext,
 .demobox {
 	font-family: Poppins, ui-rounded;
@@ -22,6 +18,11 @@ h1 {
 	text-align: left;
 	text-transform: uppercase;
 	margin-bottom: 0;
+
+	background-image: unset;
+	-webkit-background-clip: unset;
+	background-clip: unset;
+	-webkit-text-fill-color: unset;
 }
 
 h1 .color-dodge {
@@ -32,7 +33,6 @@ h1 .the {
 	font-size: 75px;
 	line-height: 1;
 }
-
 
 h1 .subheading  {
 	margin-top: .75em;
