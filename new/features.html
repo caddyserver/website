@@ -22,7 +22,7 @@
 			</div>
 		</div>
 
-		<section class="diagonal up light feature">
+		<section class="diagonal up feature">
 			<div class="wrapper">
 				<h2>
 					Overview
@@ -36,15 +36,54 @@
 				
 				<h3 class="green">High-level technical specifications</h3>
 
-				<div class="cols">
-					<div class="col">
+				<div class="feature-list">
+					<div class="feature-row">
 						<h4>Language</h4>
+						<div class="benefits">
+							The language choice is crucial for a web server. Most servers (NGINX, Apache, HAProxy, etc.) and their dependencies are written in C, which are vulnerable to catastrophic memory safety bugs like Heartbleed. Go programs like Caddy are impervious to a whole class of security vulnerabilities.
+						</div>
+						<div class="detail">
+							Go
+						</div>
 					</div>
-					<div class="col">
-						The language choice is crucial for a web server. Most servers (NGINX, Apache, HAProxy, etc.) are written in C, which are vulnerable to catastrophic memory safety bugs.
+					<div class="feature-row">
+						<h4>Build artifacts</h4>
+						<div class="benefits">
+							Caddy compiles directly to native CPU instructions. There is no interpreter required; and many instructions are architecture-optimized.
+						</div>
+						<div class="detail">
+							Platform-native static binary
+						</div>
 					</div>
-					<div class="col">
-						Go
+					<div class="feature-row">
+						<h4>Runtime dependencies</h4>
+						<div class="benefits">
+							Caddy is statically compiled. Dynamically-linked applications can easily break in production and may be less secure as shared executable resources are loaded from various places around the system. Generally, Caddy binaries do not necessarily require external libraries &mdash; not even libc.
+						</div>
+						<div class="detail">
+							None
+						</div>
+					</div>
+					<div class="feature-row">
+						<h4>Compile time</h4>
+						<div class="benefits">
+							On consumer hardware, standard Caddy builds compile in just a few seconds. This is crucial for rapid iteration, plugin development, and low-cost deployments.
+						</div>
+						<div class="detail">
+							5 seconds
+						</div>
+					</div>
+					<div class="feature-row">
+						<h4>Deployment environments</h4>
+						<div class="benefits">
+							Caddy can go practically anywhere and be deployed a variety of ways.
+						</div>
+						<ul class="detail">
+							<li>System service</li>
+							<li>Command line interface</li>
+							<li>Containers</li>
+							<li>Kubernetes</li>
+						</ul>
 					</div>
 				</div>
 
