@@ -78,15 +78,6 @@ h2 {
 
 
 
-.button {
-	color: rgb(54 206 255);
-	border: 1px solid rgb(54 206 255);
-}
-
-.button:hover {
-	color: white;
-	border-color: white;
-}
 
 .button.cool {
 	position: relative;
@@ -196,12 +187,6 @@ section {
 }
 
 
-section.dark,
-footer {
-	background-color: #002020;
-	color: white;
-}
-
 section.gray {
 	background-color: #f5f8f9;
 }
@@ -310,7 +295,7 @@ h3.green {
 	color: #23a460; border-color: #23a460;
 }
 h3.purple {
-	color: rgb(151, 39, 151); border-color: rgb(151, 39, 151);
+	color: rgb(179, 59, 179); border-color: rgb(179, 59, 179);
 }
 h3.blue {
 	color: rgb(14, 110, 189); border-color: rgb(14, 110, 189);

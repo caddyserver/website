@@ -103,15 +103,12 @@ body {
 	tab-size: 4;
 	background-color: var(--body-bg);
 	color: var(--text-color);
-	background-image:
-		radial-gradient(at calc(50% - min(25vw, 800px)) -10%, hsl(137.64deg, 100%, 92.42%) 0px, transparent min(15%, 500px)),
-		radial-gradient(at calc(50% + min(25vw, 800px)) -10%, hsl(201.2deg, 68%, 90.2%) 0px, transparent min(15%, 500px));
 }
 
-.dark body {
-	background-image:
-		radial-gradient(at calc(50% - min(35vw, 700px)) -10%, hsl(129.5deg, 100%, 12.4%) 0px, transparent min(25%, 600px)),
-		radial-gradient(at calc(50% + min(35vw, 700px)) -10%, hsl(201deg, 100%, 19.33%) 0px, transparent min(25%, 600px))
+section.dark,
+footer {
+	background-color: #002020;
+	color: white;
 }
 
 main a {
@@ -270,6 +267,16 @@ button,
 	overflow: hidden;
 	display: inline-flex;
 	align-items: center;
+}
+
+.button {
+	color: rgb(54 206 255);
+	border: 1px solid rgb(54 206 255);
+}
+
+.button:hover {
+	color: white;
+	border-color: white;
 }
 
 button.primary,

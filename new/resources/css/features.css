@@ -3,7 +3,7 @@
 	padding-bottom: 50px;
 }
 
-.datagrid {
+/* .datagrid {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 2em;
@@ -17,11 +17,30 @@
 	letter-spacing: 1px;
 	margin-bottom: .5em;
 	min-width: 200px;
+} */
+
+.legend {
+	margin-bottom: -100px;
+	margin-left: auto;
+	margin-right: auto;
+	font-size: 24px;
+	color: var(--text-color-muted);
+	text-align: center;
+	max-width: 750px;
+	line-height: 1.5;
+}
+
+.legend .nonstandard {
+	font-weight: bold;
 }
 
 .feature-list {
 	font-size: 90%;
-	margin: 50px 0 100px;
+	margin: 50px 0 125px;
+}
+
+.feature-list:last-child {
+	margin-bottom: 0;
 }
 
 .feature-row {
@@ -30,6 +49,10 @@
 	gap: 2em;
 	padding: 2em 0;
 	border-bottom: 2px dashed #a4c8ff25; /* #e6eaf0 */
+}
+
+.feature-row:last-child {
+	padding-bottom: 0;
 }
 
 .feature-row .benefits {
@@ -51,6 +74,14 @@
 
 .feature-row:last-child {
 	border-bottom: none;
+}
+
+.nonstandard {
+	color: #e76100; /* #005c94 */
+}
+
+.dark .nonstandard {
+	color: #fb8a26;
 }
 
 

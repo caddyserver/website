@@ -43,7 +43,9 @@ body {
 	background-image:
 		radial-gradient(at calc(50% - min(25vw, 800px)) -10%, hsl(137.64deg, 100%, 92.42%) 0px, transparent min(15%, 500px)),
 		radial-gradient(at calc(50% + min(25vw, 800px)) -10%, hsl(201.2deg, 68%, 90.2%) 0px, transparent min(15%, 500px));
+	background-repeat: no-repeat;
 }
+
 
 .dark body {
 	background-image:
