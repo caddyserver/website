@@ -22,217 +22,428 @@
 			</div>
 		</div>
 
-		<section class="diagonal up feature">
-			<div class="wrapper">
-				<h2>
-					Overview
-				</h2>
-				<p>
-					Caddy is essentially a configuration management system that can run various apps like an HTTP server, TLS certificate manager, PKI facilities, and more. It can be extended with plugins known as config modules.
-				</p>
-				<p>
-					Caddy sports a flexible and powerful HTTP reverse proxy, on-line configuration API, and a robust, production-ready static file server, and serves all sites over HTTPS by default with automagic TLS certificates.
-				</p>
+		<main>
 
-				<h3 class="green">Overall program technical specifications</h3>
+			<section class="diagonal up feature">
+				<div class="wrapper">
+					<div class="legend">
+						Features in <span class="nonstandard">this color</span> are provided by available plugins.
+					</div>
 
-				<div class="feature-list">
-					<div class="feature-row">
-						<h4>Language</h4>
-						<div class="benefits">
-							The language choice is crucial for a web server. Most servers (NGINX, Apache, HAProxy, etc.) and their dependencies are written in C, which are vulnerable to catastrophic memory safety bugs like Heartbleed. Go programs like Caddy are impervious to a whole class of security vulnerabilities.
+					<h2>
+						Overview
+					</h2>
+					<p>
+						Caddy is essentially a configuration management system that can run various apps like an HTTP server, TLS certificate manager, PKI facilities, and more. It can be extended with plugins known as config modules.
+					</p>
+					<p>
+						Caddy sports a flexible and powerful HTTP reverse proxy, on-line configuration API, and a robust, production-ready static file server, and serves all sites over HTTPS by default with automagic TLS certificates.
+					</p>
+
+					<h3 class="green">Overall program technical specifications</h3>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>Language</h4>
+							<div class="benefits">
+								The language choice is crucial for a web server. Most servers (NGINX, Apache, HAProxy, etc.) and their dependencies are written in C, which are vulnerable to catastrophic memory safety bugs like Heartbleed. Go programs like Caddy are impervious to a whole class of security vulnerabilities.
+							</div>
+							<div class="detail">
+								Go
+							</div>
 						</div>
-						<div class="detail">
-							Go
+						<div class="feature-row">
+							<h4>Build artifacts</h4>
+							<div class="benefits">
+								Caddy compiles directly to native CPU instructions. There is no interpreter required; and many instructions are architecture-optimized.
+							</div>
+							<div class="detail">
+								Platform-native static binary
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Runtime dependencies</h4>
+							<div class="benefits">
+								Caddy is statically compiled. Dynamically-linked applications can easily break in production and may be less secure as shared executable resources are loaded from various places around the system. Generally, Caddy binaries do not necessarily require external libraries &mdash; not even libc.
+							</div>
+							<div class="detail">
+								None
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Compile time</h4>
+							<div class="benefits">
+								On consumer hardware, standard Caddy builds compile in just a few seconds. This is crucial for rapid iteration, plugin development, and low-cost deployments.
+							</div>
+							<div class="detail">
+								5 seconds
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Deployment environments</h4>
+							<div class="benefits">
+								Caddy can go practically anywhere and be deployed a variety of ways. In general, upgrading is as simple as replacing the binary.
+							</div>
+							<ul class="detail">
+								<li>Command line interface</li>
+								<li>System service</li>
+								<li>Containers</li>
+								<li>Kubernetes</li>
+								<li>Embedded</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Supply chain and releases</h4>
+							<div class="benefits">
+								Go modules verify the integrity of our dependencies and we cryptographically sign our release artifacts so you know what you can trust.
+							</div>
+							<div class="detail">
+								Cryptographically verified
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Operating systems</h4>
+							<div class="benefits">
+								Caddy runs on every major platform for which Go compiles.
+							</div>
+							<ul class="detail">
+								<li>Linux</li>
+								<li>Windows</li>
+								<li>macOS</li>
+								<li>FreeBSD</li>
+								<li>OpenBSD</li>
+								<li>NetBSD</li>
+								<li>Android</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Microarchitectures</h4>
+							<div class="benefits">
+								Run Caddy with native code on numerous CPU platforms.
+							</div>
+							<ul class="detail">
+								<li>x86 (i386, i686)</li>
+								<li>x86-64 (AMD64)</li>
+								<li>ARM</li>
+								<li>ARM 64 (AArch64)</li>
+								<li>MIPS</li>
+								<li>MIPS64[LE]</li>
+								<li>PPC64[LE]</li>
+								<li>RISCV64</li>
+								<li>S390X</li>
+								<li>Apple Silicon (Apple ARM; M1, M2, etc.)</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Regular expression engine</h4>
+							<div class="benefits">
+								Caddy's regular expression language is <a href="https://swtch.com/~rsc/regexp/regexp1.html">based on the Thompson NFA and has numerous performance improvements over PCRE</a> used by other web servers. It guarantees the runtime cost increases linearly instead of exponentially. This is ideal when evaluating untrusted input.
+								<p>
+									<a href="https://github.com/google/re2/wiki/Syntax">RE2 Syntax</a>
+								</p>
+							</div>
+							<div class="detail">
+								RE2
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Concurrency model</h4>
+							<div class="benefits">
+								Go's runtime optimizes scheduled CPU time in smarter ways than the operating system can using lightweight user-space threads called goroutines. Caddy easily handles hundreds of thousands of requests per second.
+							</div>
+							<div class="detail">
+								Goroutines (epoll + kqueue)
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Plugin model</h4>
+							<div class="benefits">
+								Caddy can be extended by compile-time plugins, which compile as native code, in a way that cannot be broken during deployments or by system upgrades. With no IPC or RPC calls, Caddy extensions perform equally well with native code.
+							</div>
+							<div class="detail">
+								Compile-time static
+							</div>
 						</div>
 					</div>
-					<div class="feature-row">
-						<h4>Build artifacts</h4>
-						<div class="benefits">
-							Caddy compiles directly to native CPU instructions. There is no interpreter required; and many instructions are architecture-optimized.
+
+					<h3 class="purple">High-level capabilities</h3>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>Configuration changes</h4>
+							<div class="benefits">
+								With zero-downtime graceful reloads, Caddy's configuration can be changed while it is running. It's programmable/scriptable for powerful automation.
+							</div>
+							<ul class="detail">
+								<li>RESTful HTTP API</li>
+								<li>Config files</li>
+								<li>Secure remote access</li>
+								<!-- <li>Optimistic concurrency</li> -->
+							</ul>
 						</div>
-						<div class="detail">
-							Platform-native static binary
+						<div class="feature-row">
+							<h4>App modules</h4>
+							<div class="benefits">
+								Top-level configuration structures are called app modules, or Caddy apps. They provide the bulk of Caddy's functionality. Anyone can write app modules, and Caddy comes with several standard apps built-in.
+							</div>
+							<ul class="detail">
+								<li>HTTP</li>
+								<li>TLS</li>
+								<li>PKI</li>
+								<li>Events</li>
+								<li class="nonstandard">Raw TCP & UDP</li>
+								<li class="nonstandard">SSH</li>
+								<li class="nonstandard">PHP</li>
+								<li class="nonstandard">Dynamic DNS</li>
+								<li class="nonstandard">Security</li>
+								<li class="nonstandard">Process supervision</li>
+								<li class="nonstandard">Profiling</li>
+							</ul>
 						</div>
-					</div>
-					<div class="feature-row">
-						<h4>Runtime dependencies</h4>
-						<div class="benefits">
-							Caddy is statically compiled. Dynamically-linked applications can easily break in production and may be less secure as shared executable resources are loaded from various places around the system. Generally, Caddy binaries do not necessarily require external libraries &mdash; not even libc.
+						<div class="feature-row">
+							<h4>Logs</h4>
+							<div class="benefits">
+								Caddy's logging can be configured as to format, verbosity, output, and more.
+							</div>
+							<ul class="detail">
+								<li>Leveled</li>
+								<li>Structured</li>
+								<li>High efficiency, zero-allocation</li>
+							</ul>
 						</div>
-						<div class="detail">
-							None
-						</div>
-					</div>
-					<div class="feature-row">
-						<h4>Compile time</h4>
-						<div class="benefits">
-							On consumer hardware, standard Caddy builds compile in just a few seconds. This is crucial for rapid iteration, plugin development, and low-cost deployments.
-						</div>
-						<div class="detail">
-							5 seconds
-						</div>
-					</div>
-					<div class="feature-row">
-						<h4>Deployment environments</h4>
-						<div class="benefits">
-							Caddy can go practically anywhere and be deployed a variety of ways. In general, upgrading is as simple as replacing the binary.
-						</div>
-						<ul class="detail">
-							<li>Command line interface</li>
-							<li>System service</li>
-							<li>Containers</li>
-							<li>Kubernetes</li>
-							<li>Embedded</li>
-						</ul>
-					</div>
-					<div class="feature-row">
-						<h4>Supply chain and releases</h4>
-						<div class="benefits">
-							Go modules verify the integrity of our dependencies and we cryptographically sign our release artifacts so you know what you can trust.
-						</div>
-						<div class="detail">
-							Cryptographically verified
-						</div>
-					</div>
-					<div class="feature-row">
-						<h4>Operating systems</h4>
-						<div class="benefits">
-							Caddy runs on every major platform for which Go compiles.
-						</div>
-						<ul class="detail">
-							<li>Linux</li>
-							<li>Windows</li>
-							<li>macOS</li>
-							<li>FreeBSD</li>
-							<li>OpenBSD</li>
-							<li>NetBSD</li>
-							<li>Android</li>
-						</ul>
-					</div>
-					<div class="feature-row">
-						<h4>Microarchitectures</h4>
-						<div class="benefits">
-							Run Caddy with native code on numerous CPU platforms.
-						</div>
-						<ul class="detail">
-							<li>x86 (i386, i686)</li>
-							<li>x86-64 (AMD64)</li>
-							<li>ARM</li>
-							<li>ARM 64 (AArch64)</li>
-							<li>MIPS</li>
-							<li>MIPS64[LE]</li>
-							<li>PPC64[LE]</li>
-							<li>RISCV64</li>
-							<li>S390X</li>
-							<li>Apple Silicon (Apple ARM; M1, M2, etc.)</li>
-						</ul>
-					</div>
-					<div class="feature-row">
-						<h4>Regular expression engine</h4>
-						<div class="benefits">
-							Caddy's regular expression language is <a href="https://swtch.com/~rsc/regexp/regexp1.html">based on the Thompson NFA and has numerous performance improvements over PCRE</a> used by other web servers. It guarantees the runtime cost increases linearly instead of exponentially. This is ideal when evaluating untrusted input.
-							<p>
-								<a href="https://github.com/google/re2/wiki/Syntax">RE2 Syntax</a>
-							</p>
-						</div>
-						<div class="detail">
-							RE2
-						</div>
-					</div>
-					<div class="feature-row">
-						<h4>Concurrency model</h4>
-						<div class="benefits">
-							Go's runtime optimizes scheduled CPU time in smarter ways than the operating system can using lightweight user-space threads called goroutines. Caddy easily handles hundreds of thousands of requests per second.
-						</div>
-						<div class="detail">
-							Goroutines (epoll + kqueue)
-						</div>
-					</div>
-					<div class="feature-row">
-						<h4>Plugin model</h4>
-						<div class="benefits">
-							Caddy can be extended by compile-time plugins, which compile as native code, in a way that cannot be broken during deployments or by system upgrades. With no IPC or RPC calls, Caddy extensions perform equally well with native code.
-						</div>
-						<div class="detail">
-							Compile-time static
+						<div class="feature-row">
+							<h4>Storage</h4>
+							<div class="benefits">
+								Assets and state, including certificates and OCSP staples, are stored in configurable storage backends. In fact, multiple instances of Caddy configured with the same storage are considered part of a cluster and can coordinate automatically.
+							</div>
+							<ul class="detail">
+								<li>File system</li>
+								<li>Embedded (in-memory)</li>
+								<li class="nonstandard">Postgres</li>
+								<li class="nonstandard">Redis</li>
+								<li class="nonstandard">Vault</li>
+								<li class="nonstandard">Consul</li>
+							</ul>
 						</div>
 					</div>
 				</div>
+			</section>
 
-				<h3 class="purple">High-level capabilities</h3>
 
-				<div class="feature-list">
-					<div class="feature-row">
-						<h4>Configuration changes</h4>
-						<div class="benefits">
-							With zero-downtime graceful reloads, Caddy's configuration can be changed while it is running. It's programmable/scriptable for powerful automation.
+
+
+
+
+			<section class="diagonal down dark feature">
+				<div class="wrapper">
+					<h2>
+						Command line interface
+					</h2>
+					<p>
+						Caddy's CLI is not only useful&mdash;it's <i>helpful</i>. While most server CLIs merely run the process and reload config, Caddy's CLI goes the extra lightyear to help make administering your modern web server a breeze.
+					</p>
+					<p>
+						Plugins can register their own subcommands to extend Caddy's CLI. 
+					</p>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>Command help</h4>
+							<div class="benefits">
+								If you misspell a command or flag, miss an argument, or don't know the subcommand, help text is automatically printed. You can also access overall command help or subcommand help with <code>caddy help</code> or <code>-h</code>.
+							</div>
+							<div class="detail">
+								Built-in, automatic (<code>man</code> pages can also be generated)
+							</div>
 						</div>
-						<ul class="detail">
-							<li>RESTful HTTP API</li>
-							<li>Config files</li>
-							<li>Secure remote access</li>
-							<!-- <li>Optimistic concurrency</li> -->
-						</ul>
+						<div class="feature-row">
+							<h4>Admin API wrappers</h4>
+							<div class="benefits">
+								Several subcommands use administration API endpoints for use with the CLI to help you perform common tasks like loading config from files or stopping the server.
+							</div>
+							<ul class="detail">
+								<li>Adapt config to JSON</li>
+								<li>Start the server, optionally with config</li>
+								<li>Gracefully reload configuration</li>
+								<li>Stop the server</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Binary utilities</h4>
+							<div class="benefits">
+								Since custom builds of Caddy are so common, several commands exist to help you manage and get detailed information about your build.
+							</div>
+							<ul class="detail">
+								<li>Detailed build metadata</li>
+								<li>List installed config modules</li>
+								<li>List dependencies</li>
+								<li>Add and remove plugin packages</li>
+								<li>Print the version</li>
+								<li>Upgrade the Caddy binary</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Configuration utilities</h4>
+							<div class="benefits">
+								If you choose to use configuration files, Caddy's CLI helps you manage them.
+							</div>
+							<ul class="detail">
+								<li>Format Caddyfile</li>
+								<li>Validate configuration</li>
+								<li>List dependencies</li>
+								<li>Add and remove plugin packages</li>
+								<li>Print the version</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Module utilities</h4>
+							<div class="benefits">
+								Modules may register their own subcommands to provide common functionality that can be utilized without a config document.
+							</div>
+							<ul class="detail">
+								<li>Static file server</li>
+								<li>HTTP reverse proxy</li>
+								<li>Static HTTP responses (templateable)</li>
+								<li>Storage import/export (backup/restore)</li>
+								<li>Hash password for use with HTTP basic auth</li>
+								<li>Export file browse template</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Integration utilities</h4>
+							<div class="benefits">
+								Several subcommands can help you integrate Caddy into your shell environment.
+							</div>
+							<ul class="detail">
+								<li>Generate shell completion script</li>
+								<li>Print the environment</li>
+								<li>Generate <code>man</code> pages</li>
+								<li>Install Caddy-managed root CA into trust stores</li>
+								<li>Remove Caddy-managed root CA from trust stores</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>System signals</h4>
+							<div class="benefits">
+								Caddy has support for common operating system signals/interrupts, with subtle differences in behavior for each one.
+								<p>
+									<a href="/docs/command-line#signals">Signal documentation</a>
+								</p>
+							</div>
+							<ul class="detail">
+								<li>INT (graceful stop)</li>
+								<li>QUIT</li>
+								<li>TERM</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Exit codes</h4>
+							<div class="benefits">
+								Whether Caddy exits successfully or with an error, the <a href="/docs/command-line#exit-codes">exit code</a> can give a hint to your process supervisor or script how to handle that.
+							</div>
+						</div>
 					</div>
-					<div class="feature-row">
-						<h4>App modules</h4>
-						<div class="benefits">
-							Top-level configuration structures are called app modules, or Caddy apps. They provide the bulk of Caddy's functionality. Anyone can write app modules, and Caddy comes with several standard apps built-in.
-						</div>
-						<ul class="detail">
-							<li>HTTP</li>
-							<li>TLS</li>
-							<li>PKI</li>
-							<li>Events</li>
-						</ul>
-					</div>
-					<div class="feature-row">
-						<h4>Logs</h4>
-						<div class="benefits">
-							Caddy's logging can be configured as to format, verbosity, output, and more.
-						</div>
-						<ul class="detail">
-							<li>Leveled</li>
-							<li>Structured</li>
-							<li>High efficiency, zero-allocation</li>
-						</ul>
-					</div>
-					<div class="feature-row">
-						<h4>Storage</h4>
-						<div class="benefits">
-							Assets and state are stored in configurable storage modules. Third-party plugins add databases like Postgres and Redis, or orchestrators like Consul and Vault.
-						</div>
-						<div class="detail">
-							<li>File system</li>
-							<li>Embedded (in-memory)</li>
-						</div>
-					</div>
+					
 				</div>
-			</div>
-		</section>
+			</section>
 
 
 
+			<section class="feature">
+				<div class="wrapper">
+					<h2>
+						Configuration
+					</h2>
+					<p>
+						We've designed Caddy so that its configuration not only provides access to features, but <i>it IS a feature</i> in and of itself.
+					</p>
+					<p>
+						No more quibbling over which config file format is the best: use whatever you want! Caddy's <a href="/docs/config-adapters">config adapters</a> allow you to use whatever config format you prefer.
+					</p>
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>Native config format</h4>
+							<div class="benefits">
+								Caddy's native configuration format is ubiquitous: it has tooling in nearly every operating system, platform, programming language, and API ecosystem. Almost all other formats can be translated down into JSON, which balances human readability and programmability. You'll find it a powerful ally of your web server.
+							</div>
+							<div class="detail">
+								JSON
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Config adapters</h4>
+							<div class="benefits">
+								You can always write your config in another format and with config adapters, Caddy will implicitly translate it into JSON for you so you can work with what you like.
+							</div>
+							<ul class="detail">
+								<li>Caddyfile</li>
+								<li class="nonstandard">JSON 5</li>
+								<li class="nonstandard">JSON-C</li>
+								<li class="nonstandard">NGINX Conf</li>
+								<li class="nonstandard">YAML</li>
+								<li class="nonstandard">CUE</li>
+								<li class="nonstandard">TOML</li>
+								<li class="nonstandard">HCL</li>
+								<li class="nonstandard">Dhall</li>
+								<li class="nonstandard">MySQL</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Human-friendly config</h4>
+							<div class="benefits">
+								The Caddyfile is most users' favorite way to write their web server config by hand because its syntax is forgiving while also being designed with a structure that makes it easy to read and write. It is translated to JSON automatically.
+							</div>
+							<div class="detail">
+								Caddyfile
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Export</h4>
+							<div class="benefits">
+								Caddy's administration API allows you to have runtime access to the current configuration in JSON format with a simple GET request.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Config API</h4>
+							<div class="benefits">
+								Caddy receives its configuration through an API endpoint, which can accept JSON or any other format it has a config adapter for.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Config files</h4>
+							<div class="benefits">
+								If you prefer normal commands to manage configuration, Caddy's CLI wraps the API endpoints for you.
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</section>
 
+			<section class="light gray diagonal up feature">
+				<div class="wrapper">
+					<h2>
+						HTTP File Server
+					</h2>
+					<p>
+						Caddy's file server is best-in-class.
+					</p>
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>TODO...</h4>
+							<div class="benefits">
+								TODO...
+							</div>
+							<div class="detail">
+								TODO...
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</section>
 
-
-		<section class="diagonal down dark feature">
-			<div class="wrapper">
-				<h2>
-					Command line interface
-				</h2>
-				<p>
-					Caddy's CLI is not only useful&mdash;it's <i>helpful</i>. While most server CLIs stop at running the process and reloading config, Caddy's CLI goes the extra lightyear to help make administering your web server a breeze.
-				</p>
-				<p>
-					Plugins can register their own subcommands to extend Caddy's CLI. 
-				</p>
-
-
-			</div>
-		</section>
-
+		</main>
 
 
 		{{include "/includes/footer.html"}}
