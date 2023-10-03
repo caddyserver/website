@@ -420,13 +420,209 @@
 				</div>
 			</section>
 
-			<section class="light gray diagonal up feature">
+
+			<section class="diagonal up dark feature">
 				<div class="wrapper">
 					<h2>
-						HTTP File Server
+						Reverse proxy
 					</h2>
 					<p>
-						Caddy's file server is best-in-class.
+						Caddy has the most flexible general-purpose reverse proxy in the world, featuring advanced request and response handling, dynamic routing, health checking, load balancing, circuit breaking, and more.
+					</p>
+					<p>
+						What makes Caddy's proxy unique is its design. Only the client-facing side of the proxy needs to be HTTP; the transport underlying the roundtrip with the backend can be fulfilled with any protocol!
+					</p>
+					<p>
+						Moreover, our proxy can be programmed with highly dynamic upstreams. That is, the available upstreams can change during in-flight requests! If no backends are available, Caddy can hold onto the request until one is.
+					</p>
+
+					<h3 class="blue">High-level proxy features</h3>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>Transports</h4>
+							<div class="benefits">
+								Transports are how Caddy gets the response from the backend. Caddy's proxy can be a front for protocols other than HTTP by using alternate transport modules. This allows Caddy to generate HTTP responses from backends that don't even speak HTTP!
+							</div>
+							<ul class="detail">
+								<li>HTTP</li>
+								<li>FastCGI</li>
+								<li class="nonstandard">NTLM</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Load balancing</h4>
+							<div class="benefits">
+								Selecting upstreams is a crucial function of any modern reverse proxy. Caddy has a variety of built-in load balancing policies to choose from to suit any production services. Some policies are extremely fast and lightweight; others provide upstream affinity based on properties of the client or request; others strive for even distribution by counting connections or using randomness and weights.
+							</div>
+							<ul class="detail">
+								<li>Random</li>
+								<li>Random Choose-N</li>
+								<li>Least connections</li>
+								<li>Round robin</li>
+								<li>Weighted round robin</li>
+								<li>First available</li>
+								<li>Remote IP hash</li>
+								<li>Client IP hash</li>
+								<li>URI hash</li>
+								<li>Query hash</li>
+								<li>Header hash</li>
+								<li>Cookie hash</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Circuit breaking</h4>
+							<div class="benefits">
+								A circuit breaker module can temporarily mark a backend as down before it actually goes down, to keep it up.
+							</div>
+							<div class="detail nonstandard">
+								Latency-based
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Health checking</h4>
+							<div class="benefits">
+								Health checks detect when upstreams are unavailable. Passive health checks infer status from actual requests. Active health checks work in the background, out-of-band of client requests.
+							</div>
+							<ul class="detail">
+								<li>Active</li>
+								<li>Passive</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Observability</h4>
+							<div class="benefits">
+								The admin API exposes an endpoint to retrieve the traffic count and health status of the proxy upstreams.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Upstream sources</h4>
+							<div class="benefits">
+								Caddy can get the list of upstreams in various ways. The most common is to write them into the configuration (static). Other ways are dynamic, by which a list of upstreams are returned for each request (these utilize configurable caching to enhance performance). 
+							</div>
+							<ul class="detail">
+								<li>Static</li>
+								<li>Dynamic: A records</li>
+								<li>Dynamic: SRV records</li>
+								<li>Dynamic: Multiple sources combined</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Streaming</h4>
+							<div class="benefits">
+								Responses can be streamed directly to the client, or for better wire performance, buffered slightly and flushed periodically.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Trusted proxies</h4>
+							<div class="benefits">
+								HTTP headers can't be trusted from all clients, so you can specify a list of IP ranges of proxies 
+							</div>
+							<ul class="detail">
+								<li>Static</li>
+								<li>Dynamic: A records</li>
+								<li>Dynamic: SRV records</li>
+								<li>Dynamic: Multiple sources combined</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Header manipulation</h4>
+							<div class="benefits">
+								Headers can be modified in the request going up to the backend and the response coming back down from the backend.
+							</div>
+							<ul class="detail">
+								<li>Add</li>
+								<li>Set (overwrite)</li>
+								<li>Delete</li>
+								<li>Substring replace</li>
+							</ul>
+						</div>
+					</div>
+
+					<h3 class="green">Active health checks</h3>
+					<p>
+						Active health checks assume a backend is down by default until that is confirmed otherwise by a health check.
+					</p>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>HTTP request parameters</h4>
+							<div class="benefits">
+								Active health checks are performed against an HTTP endpoint on the upstream. You can customize the parameters for these HTTP requests to work for you.
+							</div>
+							<ul class="detail">
+								<li>Path &amp; query string</li>
+								<li>Port</li>
+								<li>Headers</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Timing</h4>
+							<div class="benefits">
+								You can customize the interval at which active health checks are performed.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Success criteria</h4>
+							<div class="benefits">
+								Each active health check can be customized with a set of criteria to determine healthy or unhealthy status.
+							</div>
+							<ul class="detail">
+								<li>Response timeout</li>
+								<li>HTTP status code</li>
+								<li>Regular expression match on body</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Failure safety</h4>
+							<div class="benefits">
+								Backends that are experiencing bugs and difficulties may sometimes respond with unexpectedly large response bodies. Caddy lets you limit this to preserve proxy resources.
+							</div>
+							<div class="detail">
+								Limit response size
+							</div>
+						</div>
+					</div>
+
+					<h3 class="purple">Passive health checks</h3>
+					<p>
+						Passive health checks assume a backend is up by default until failure criteria are met in the course of proxying requests.
+					</p>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>Failure criteria</h4>
+							<div class="benefits">
+								All passive health checks count connection failures. In addition, you can set more criteria needed to deem a backend as healthy during a request.
+							</div>
+							<ul class="detail">
+								<li>Concurrent request limit exceeded</li>
+								<li>HTTP Status</li>
+								<li>Latency</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Failure memory</h4>
+							<div class="benefits">
+								You can customize how long to remember failures and how many failures need to be in memory to consider a backend to be down.
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</section>
+
+
+			<section class="feature">
+				<div class="wrapper">
+					<h2>
+						Static file server
+					</h2>
+					<p>
+						Caddy's file server is the preferred way of serving static files for your website. 
+					</p>
+					<p>
+						The way it works is simple: specify a root directory from which to serve the files, then request paths are automatically inferred as file paths relative to that root and the file is sent to the client.
 					</p>
 					<div class="feature-list">
 						<div class="feature-row">
