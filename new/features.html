@@ -348,7 +348,6 @@
 			</section>
 
 
-
 			<section class="feature">
 				<div class="wrapper">
 					<h2>
@@ -419,6 +418,78 @@
 					
 				</div>
 			</section>
+
+
+			<section class="diagonal down gray feature">
+				<div class="wrapper">
+					<h2>
+						HTTP server
+					</h2>
+					<p>
+						Caddy's HTTP server is one-of-a-kind: powerful, extensible, efficient, and modern.
+					</p>
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>HTTP versions</h4>
+							<div class="benefits">
+								Caddy's HTTP server supports all major versions of HTTP and enables them by default. You can customize exacttly which versions you want to serve.
+							</div>
+							<ul class="detail">
+								<li>HTTP/1.1</li>
+								<li>HTTP/2</li>
+								<li>HTTP/2 over cleartext (H2C)</li>
+								<li>HTTP/3</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Listen interfaces</h4>
+							<div class="benefits">
+								Each HTTP server can listen on one or more sockets and network interfaces. For ports, you can specify specific host interface or all interfaces with just a port. All varieties of unix sockets are also supported.
+							</div>
+							<ul class="detail">
+								<li>TCP</li>
+								<li>UDP</li>
+								<li>Unix sockets</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Listener wrappers</h4>
+							<div class="benefits">
+								Listeners can be wrapped by modules that operate at the connection-accept level.
+							</div>
+							<ul class="detail">
+								<li>Redirect HTTP on HTTPS port</li>
+								<li>PROXY protocol</li>
+								<li class="nonstandard">Tailscale</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Timeouts</h4>
+							<div class="benefits">
+								Setting timeouts is an important defensive measure for production environments, but must be tuned carefully to accommodate legitimate slow clients with large downloads or uploads.
+							</div>
+							<ul class="detail">
+								<li>Read timeout</li>
+								<li>Read HTTP header timeout</li>
+								<li>Write timeout</li>
+								<li>Idle timeout</li>
+								<li>TCP keepalive interval</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Full duplex communication</h4>
+							<div class="benefits">
+								Concurrent reading and writing of HTTP/1 is not supported by all clients, but can be enabled for certain clients and applications that require it.
+							</div>
+							<ul class="detail">
+								<li>Configurable for HTTP/1</li>
+								<li>Default for HTTP/2</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</section>
+
 
 
 			<section class="diagonal up dark feature">
@@ -516,14 +587,8 @@
 						<div class="feature-row">
 							<h4>Trusted proxies</h4>
 							<div class="benefits">
-								HTTP headers can't be trusted from all clients, so you can specify a list of IP ranges of proxies 
+								In order to use proxy-related headers like X-Forwarded-For, you can specify a list of IP ranges of proxies you trust. By default Caddy doesn't trust the clients.
 							</div>
-							<ul class="detail">
-								<li>Static</li>
-								<li>Dynamic: A records</li>
-								<li>Dynamic: SRV records</li>
-								<li>Dynamic: Multiple sources combined</li>
-							</ul>
 						</div>
 						<div class="feature-row">
 							<h4>Header manipulation</h4>
@@ -536,6 +601,28 @@
 								<li>Delete</li>
 								<li>Substring replace</li>
 							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Buffering</h4>
+							<div class="benefits">
+								The proxy can read the entire body before flushing it. This uses more memory but can be required by some backend applications or clients in some cases.
+							</div>
+							<ul class="detail">
+								<li>Requests</li>
+								<li>Responses</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Request rewriting</h4>
+							<div class="benefits">
+								Rewriting is a different concern from proxying and is normally handled separately, but sometimes you need to rewrite requests using information from the proxy like the chosen upstream. Caddy's proxy lets you do this.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Response interception</h4>
+							<div class="benefits">
+								By default, Caddy's proxy simply writes responses to the client. However, you can intercept the upstream's response and handle it in other ways. This includes matching only certain responses and invoking a custom handler chain you specify.
+							</div>
 						</div>
 					</div>
 
@@ -606,6 +693,103 @@
 							<div class="benefits">
 								You can customize how long to remember failures and how many failures need to be in memory to consider a backend to be down.
 							</div>
+						</div>
+					</div>
+
+
+					<h3 class="blue">HTTP transport</h3>
+					<p>
+						This is the default transport module. It crafts a proxied HTTP request to obtain an HTTP response from the backend.
+					</p>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>DNS resolvers</h4>
+							<div class="benefits">
+								The system resolvers are used by default, but you can specify custom DNS resolvers per proxy handler.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>TLS</h4>
+							<div class="benefits">
+								Caddy can be configured to support TLS (formerly known as SSL) to the upstream.
+							</div>
+							<ul class="detail">
+								<li>Custom root CA pool</li>
+								<li>Client authentication to backend</li>
+								<li>Custom handshake timeout</li>
+								<li>Server Name Indicator (SNI)</li>
+								<li>Renegotiation level</li>
+								<li>Exempt certain ports from TLS</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Connection pooling</h4>
+							<div class="benefits">
+								Connections to backends are pooled for maximum efficiency and minimal latency.
+							</div>
+							<ul class="detail">
+								<li>HTTP Keep-Alive</li>
+								<li>Custom probe interval</li>
+								<li>Maximum idle connections (total and per-host)</li>
+								<li>Idle connection timeout</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Compression</h4>
+							<div class="benefits">
+								Caddy can compress requests for the roundtrip with the backend.
+							</div>
+							<div class="detail">
+								Gzip
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Connection limit</h4>
+							<div class="benefits">
+								You can limit the number of connections per host.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>PROXY Protocol</h4>
+							<div class="benefits">
+								The PROXY Protocol v1 and v2 are both supported when connecting to upstreams.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Timeouts</h4>
+							<div class="benefits">
+								Various timeouts can be configured; some have sensible default values.
+							</div>
+							<ul class="detail">
+								<li>Connection (dial)</li>
+								<li>RFC 6555 fallback</li>
+								<li>Reading response headers</li>
+								<li>Expect continue</li>
+								<li>Read</li>
+								<li>Write</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Custom buffer sizes</h4>
+							<div class="benefits">
+								Tune the size of read/write buffers if you find that your application performs better with certain settings.
+							</div>
+							<ul class="detail">
+								<li>Read buffers</li>
+								<li>Write buffers</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>HTTP versions</h4>
+							<div class="benefits">
+								Caddy's proxy supports multiple HTTP versions with the backend. By default, HTTP/1.1 and HTTP/2 are supported.
+							</div>
+							<ul class="detail">
+								<li>HTTP/1.1</li>
+								<li>HTTP/2</li>
+								<li>H2C (HTTP/2 over cleartext)</li>
+							</ul>
 						</div>
 					</div>
 					
