@@ -29,6 +29,7 @@
 .dark {
 	--body-bg: #0d171a;
 	--text-color: #cbe2e4; /* #a4c0c2 */
+	--text-color-muted: #92b2d5;
 	--header-bg: rgba(44, 130, 164, 0.11);
 	--header-border-color: transparent;
 	--topbar-link-color-hover: white;

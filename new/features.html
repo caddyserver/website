@@ -24,7 +24,7 @@
 
 		<main>
 
-			<section class="diagonal up feature">
+			<section class="feature">
 				<div class="wrapper">
 					<div class="legend">
 						Features in <span class="nonstandard">this color</span> are provided by available plugins.
@@ -420,6 +420,39 @@
 			</section>
 
 
+
+
+			<section class="diagonal up dark feature">
+				<div class="wrapper">
+					<h2>
+						Automatic HTTPS
+					</h2>
+					<p>
+						Our flagship feature, Caddy enables HTTPS by default and automatically procure and maintain certificates for all your sites.
+					</p>
+					<p>
+						TODO: Some strong marketing text
+					</p>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>TODO...</h4>
+							<div class="benefits">
+								TODO...
+							</div>
+							<div class="detail">
+								TODO...
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</section>
+
+
+
+
+
 			<section class="diagonal down gray feature">
 				<div class="wrapper">
 					<h2>
@@ -440,6 +473,15 @@
 								<li>HTTP/2 over cleartext (H2C)</li>
 								<li>HTTP/3</li>
 							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>HTTPS</h4>
+							<div class="benefits">
+								Caddy's flagship feature is enabling HTTPS automatically and by default. You can control how it works or disable aspects: HTTP redirects, certificate management, certain hostnames, etc.
+							</div>
+							<div class="detail">
+								Automatic
+							</div>
 						</div>
 						<div class="feature-row">
 							<h4>Listen interfaces</h4>
@@ -485,6 +527,42 @@
 								<li>Configurable for HTTP/1</li>
 								<li>Default for HTTP/2</li>
 							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Error handling</h4>
+							<div class="benefits">
+								Caddy gives you full control over handling errors to give you clients the best/desired experience.
+							</div>
+							<div class="detail">
+								Custom error routes
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>TLS termination</h4>
+							<div class="benefits">
+								Terminate TLS (formerly "SSL") with sensible defaults that you can customize to give you fine-grained control over TLS handshakes. You can assign policies to clients based on various factors such as ServerName (SNI) or remote IP.
+							</div>
+							<ul class="detail">
+								<li>TLS 1.2</li>
+								<li>TLS 1.3</li>
+								<li>Client authentication (TLS mutual auth)</li>
+								<li>Client auth modes: request, require, verify if given, require and verify</li>
+								<li>Cipher suites</li>
+								<li>Curves</li>
+								<li>ALPN</li>
+								<li>Limit protocol versions</li>
+								<li>Default SNI</li>
+								<li>Fallback SNI</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Cross-site security</h4>
+							<div class="benefits">
+								Caddy often serves multiple sites on the same socket, so Caddy automatically enables protections to keep your sites safe if any of them have TLS client auth enabled.
+							</div>
+							<div class="detail">
+								Verification that TLS ServerName and HTTP Host header match
+							</div>
 						</div>
 					</div>
 				</div>
