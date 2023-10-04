@@ -247,7 +247,7 @@ section.dark .cols {
 	color: #aec6c3;
 }
 
-.col {
+.cols .col {
 	min-width: 350px;
 	padding-left: 1em;
 	flex: 1;
@@ -284,7 +284,7 @@ h3.plain {
 	color: white;
 }
 
-.col p {
+.cols .col p {
 	font-family: Inter;
 	font-size: 90%;
 	font-weight: normal;

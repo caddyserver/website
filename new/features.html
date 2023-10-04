@@ -24,10 +24,10 @@
 
 		<main>
 
-			<section class="feature">
+			<section class="diagonal up feature">
 				<div class="wrapper">
 					<div class="legend">
-						Features in <span class="nonstandard">this color</span> are provided by available plugins.
+						Features in <span class="nonstandard">this color</span> are provided by optional plugins.
 					</div>
 
 					<h2>
@@ -46,16 +46,25 @@
 						<div class="feature-row">
 							<h4>Language</h4>
 							<div class="benefits">
-								The language choice is crucial for a web server. Most servers (NGINX, Apache, HAProxy, etc.) and their dependencies are written in C, which are vulnerable to catastrophic memory safety bugs like Heartbleed. Go programs like Caddy are impervious to a whole class of security vulnerabilities.
+								The language choice is crucial for a web server. Language impacts development speed and ease, performance, testing, deployment complexity, ecosystem reliability, dependencies, tooling, error handling and reliability, and much, much more. Go offers strong advantages in all these areas, allowing for rapid development, robust production performance, and high scalability.
 							</div>
 							<div class="detail">
 								Go
 							</div>
 						</div>
 						<div class="feature-row">
+							<h4>Memory safety guarantees</h4>
+							<div class="benefits">
+								Most servers (NGINX, Apache, HAProxy, etc.) and their dependencies are written in C, which are vulnerable to catastrophic memory safety bugs (such as buffer overflows) like Heartbleed. Go programs like Caddy are impervious to a whole class of security vulnerabilities.
+							</div>
+							<div class="detail">
+								Strong
+							</div>
+						</div>
+						<div class="feature-row">
 							<h4>Build artifacts</h4>
 							<div class="benefits">
-								Caddy compiles directly to native CPU instructions. There is no interpreter required; and many instructions are architecture-optimized.
+								Caddy compiles directly to native CPU instructions. There is no interpreter required; and many instructions are architecture-optimized. Static binaries are also <a href="https://www.phoronix.com/news/Glibc-LD-Nasty-Root-Bug">more secure</a> because there is no dynamic linking.
 							</div>
 							<div class="detail">
 								Platform-native static binary
@@ -149,7 +158,7 @@
 						<div class="feature-row">
 							<h4>Concurrency model</h4>
 							<div class="benefits">
-								Go's runtime optimizes scheduled CPU time in smarter ways than the operating system can using lightweight user-space threads called goroutines. Caddy easily handles hundreds of thousands of requests per second.
+								Go's runtime optimizes scheduled CPU time in smarter ways than the operating system can using lightweight user-space threads called goroutines. Caddy utilizes all CPU cores and easily handles hundreds of thousands of requests per second.
 							</div>
 							<div class="detail">
 								Goroutines (epoll + kqueue)
@@ -203,12 +212,17 @@
 						<div class="feature-row">
 							<h4>Logs</h4>
 							<div class="benefits">
-								Caddy's logging can be configured as to format, verbosity, output, and more.
+								All Caddy modules use Caddy's centralized logging facilities. Caddy's logging can be configured as to format, verbosity, output, and more.
 							</div>
 							<ul class="detail">
 								<li>Leveled</li>
 								<li>Structured</li>
 								<li>High efficiency, zero-allocation</li>
+								<li>Extensible</li>
+								<li>Delete, filter, redact, and censor fields</li>
+								<li>IP masking</li>
+								<li>Hash values</li>
+								<li>Regex replacement</li>
 							</ul>
 						</div>
 						<div class="feature-row">
@@ -411,7 +425,7 @@
 						<div class="feature-row">
 							<h4>Config files</h4>
 							<div class="benefits">
-								If you prefer normal commands to manage configuration, Caddy's CLI wraps the API endpoints for you.
+								If you prefer normal shell commands for managing configuration, Caddy's CLI wraps the API endpoints for you.
 							</div>
 						</div>
 					</div>
@@ -428,21 +442,33 @@
 						Automatic HTTPS
 					</h2>
 					<p>
-						Our flagship feature, Caddy enables HTTPS by default and automatically procure and maintain certificates for all your sites.
+						Our flagship feature. Caddy enables HTTPS by default, and automatically procures and renews certificates for all your sites.
 					</p>
 					<p>
-						TODO: Some strong marketing text
+						Fully-native, integrated auto-HTTPS is far superior to any solution that requires external tooling or cron jobs. Caddy's certificate maintenance is the best in the industry because it is more robust, reliable, and scalable than any other solution.
+					</p>
+					<p>
+						You can try deploying 100,000 sites with Certbot and a cron job&mdash;but if that doesn't fall over by itself, the web server will. Only Caddy is designed to massively scale TLS certificates both horizontally and vertically.
+					</p>
+					<p>
+						Never manually generate a CSR again. Never click a link in an email to download a certificate. Never (mis)configure your web server to use them. Never miss reminders to renew your certificates, one-by-one, every few months before they expire. You won't even have to think about certificates or TLS.
+					</p>
+					<p>
+						It's truly automagic.
 					</p>
 
 					<div class="feature-list">
 						<div class="feature-row">
-							<h4>TODO...</h4>
+							<h4>Compliance</h4>
 							<div class="benefits">
-								TODO...
+								Caddy's <i>defaults</i> are secure without any additional configuration, and passes compliance tests across various industries.
 							</div>
-							<div class="detail">
-								TODO...
-							</div>
+							<ul class="detail">
+								<li>PCI DSS compliant</li>
+								<li>NIST compliant</li>
+								<li>HIPAA compliant</li>
+								<li>Industry best practices</li>
+							</ul>
 						</div>
 
 					</div>
@@ -564,6 +590,28 @@
 								Verification that TLS ServerName and HTTP Host header match
 							</div>
 						</div>
+						<div class="feature-row">
+							<h4>Access logs</h4>
+							<div class="benefits">
+								Enable zero-allocation, structured access logs for the ultimate understanding of client requests and responses. Customize using Caddy's built-in logging configuration or the use of third-party modules.
+							</div>
+							<ul class="detail">
+								<li>More useful than Common Log Format (CLF)</li>
+								<li>Request headers (except sensitive fields)</li>
+								<li>Response headers</li>
+								<li>Remote IP</li>
+								<li>Latency</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Observability</h4>
+							<div class="benefits">
+								Your web server can be monitored using standards-compatible metrics.
+							</div>
+							<div class="detail">
+								Prometheus metrics, open telemetry
+							</div>
+						</div>
 					</div>
 				</div>
 			</section>
@@ -655,6 +703,12 @@
 								<li>Dynamic: SRV records</li>
 								<li>Dynamic: Multiple sources combined</li>
 							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Retries</h4>
+							<div class="benefits">
+								Requests can be retried until a backend is available to successfully handle the request. During this time, the list of upstreams may even be updated while the request is still pending!
+							</div>
 						</div>
 						<div class="feature-row">
 							<h4>Streaming</h4>
@@ -870,6 +924,55 @@
 							</ul>
 						</div>
 					</div>
+
+					<h3 class="green">FastCGI transport</h3>
+					<p>
+						FastCGI is typically used to serve PHP applications via php-fpm. FastCGI responders may require additional information about the script being run such as script name, path relative to root, etc., and Caddy's FastCGI transport takes care of all of that and makes it configurable.
+					</p>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>Highly efficient</h4>
+							<div class="benefits">
+								Caddy's FastCGI client implementation has been optimized to rival the performance of memory-unsafe clients written in C, sometimes even surpassing their performance.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Path splitting</h4>
+							<div class="benefits">
+								The path can be split, usually at the extension, to compute the proper PATH_INFO variable.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Resolve root symlink</h4>
+							<div class="benefits">
+								Optionally require paths declared to symlinks to be updated if the symlink changes without php-fpm being restarted.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Environment variables</h4>
+							<div class="benefits">
+								Read from the parent environment, and also set custom environment variables for your CGI script.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Timeouts</h4>
+							<div class="benefits">
+								Set timeouts to conserve resources.
+							</div>
+							<ul class="detail">
+								<li>Dial (connect)</li>
+								<li>Read</li>
+								<li>Write</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Capture stderr</h4>
+							<div class="benefits">
+								Caddy can capture the output to stderr from the upstream and log them for visibility.
+							</div>
+						</div>
+					</div>
 					
 				</div>
 			</section>
@@ -900,6 +1003,15 @@
 					
 				</div>
 			</section>
+
+
+			<!--
+
+				TODO:
+					- Admin API (including debug endpoints)
+					- HTTP handlers
+					- PKI facilities
+					- 
 
 		</main>
 
