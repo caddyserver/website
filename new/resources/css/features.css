@@ -45,7 +45,7 @@
 
 .feature-row {
 	display: grid;
-	grid: auto / 1fr 3fr 2fr;
+	grid: auto / 1fr 2fr 1fr;
 	gap: 2em;
 	padding: 2em 0;
 	border-bottom: 2px dashed #a4c8ff25; /* #e6eaf0 */
@@ -88,6 +88,10 @@
 /* TODO: Figure this out */
 @media (max-width: 800px) {
 	.feature-row {
-		grid: repeat(3, auto) / 1fr;
+		grid: repeat(3,auto) / 1fr 1fr;
+	}
+
+	.feature-row .benefits {
+		grid-area: 2 / 1;
 	}
 }

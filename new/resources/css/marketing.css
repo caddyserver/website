@@ -186,8 +186,12 @@ section {
 	color: #82e7ff;
 }
 
+.dark section.gray {
+	background-color: #1b1c1c;
+}
 
-section.gray {
+section.gray,
+section.light.gray {
 	background-color: #f5f8f9;
 }
 
@@ -295,7 +299,7 @@ h3.green {
 	color: #23a460; border-color: #23a460;
 }
 h3.purple {
-	color: rgb(238, 89, 238); border-color: rgb(238, 89, 238);
+	color: rgb(179, 80, 179); border-color: rgb(179, 80, 179);
 }
 h3.blue {
 	color: rgb(14, 110, 189); border-color: rgb(14, 110, 189);
@@ -304,10 +308,10 @@ section.dark h3.green {
 	color: #41e68f; border-color: #41e68f;
 }
 section.dark h3.purple {
-	color: rgb(204, 82, 204); border-color: rgb(204, 82, 204);
+	color: rgb(238, 89, 238); border-color: rgb(238, 89, 238);
 }
 section.dark h3.blue {
-	color: rgb(81, 165, 234); border-color: rgb(81, 165, 234);
+	color: rgb(113, 191, 255); border-color: rgb(113, 191, 255);
 }
 
 
