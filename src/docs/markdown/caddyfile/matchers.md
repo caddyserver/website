@@ -58,11 +58,11 @@ window.$(function() {
 
 In the Caddyfile, a **matcher token** immediately following the directive can limit that directive's scope. The matcher token can be one of these forms:
 
-1. **`*`** to match all requests (wildcard; default).
-2. **`/path`** start with a forward slash to match a request path.
-3. **`@name`** to specify a _named matcher_.
+1. [**`*`**](#wildcard-matchers) to match all requests (wildcard; default).
+2. [**`/path`**](#path-matchers) start with a forward slash to match a request path.
+3. [**`@name`**](#named-matchers) to specify a _named matcher_.
 
-Matcher tokens are [usually optional](/docs/caddyfile/directives#matchers). If a matcher token is omitted, it is the same as a wildcard matcher (`*`).
+If a directive supports matchers, it will appear as `[<matcher>]` in its syntax documentation. Matcher tokens are [usually optional](/docs/caddyfile/directives#syntax), denoted by `[ ]`. If the matcher token is omitted, it is the same as a wildcard matcher (`*`).
 
 
 #### Examples
@@ -172,6 +172,8 @@ Like directives, named matcher definitions must go inside the site blocks that u
 A named matcher definition constitutes a _matcher set_. Matchers in a set are AND'ed together; i.e. all must match. For example, if you have both a `header` and `path` matcher in the set, both must match.
 
 Multiple matchers of the same type may be unioned (e.g. multiple `path` matchers in the same set) using boolean algebra (AND/OR), as described in their respective sections below.
+
+For more complex boolean matching logic, it's recommended to the [`expression` matcher](#expression) to write a CEL expression, which supports _and_ `&&`, _or_ `||`, and _parentheses_ `( )`.
 
 
 
