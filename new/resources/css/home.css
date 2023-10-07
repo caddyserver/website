@@ -321,6 +321,64 @@ div.ap-wrapper:fullscreen div.ap-player {
 
 
 
+
+
+.testimonials {
+	display: grid;
+	grid-auto-columns: minmax(0, 1fr);
+	grid-auto-flow: column;
+	gap: 25px;
+	position: relative;
+}
+.testimonials::before {
+	content: "";
+	background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 45%, rgba(255,255,255,0) 55%, rgba(255,255,255,1) 100%);
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	pointer-events: none;
+}
+.testimonial-picture {
+	width: 60px;
+	border-radius: 50%;
+}
+.testimonial {
+	display: flex;
+	align-items: flex-start;
+	gap: 1em;
+	border: 1px solid rgb(174, 181, 185);
+	border-radius: 5px;
+	padding: 1em;
+}
+.testimonial-quote {
+	margin-bottom: 1em;
+}
+.testimonial-name,
+.testimonial-role {
+	font-size: 90%;
+}
+.testimonial-name {
+	font-weight: bold;
+	margin-bottom: .5em;
+}
+.testimonial-name::before {
+	content: '—';
+}
+.testimonial-role {
+	color: var(--text-color-muted);
+	font-style: italic;
+}
+
+
+
+
+
+
+
+
+
 .demobox {
 	position: relative;
 	color: #003e4b;

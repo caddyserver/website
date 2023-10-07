@@ -57,7 +57,10 @@
 
 .feature-row .benefits {
 	color: var(--text-color-muted);
-	font-weight: 500;
+}
+
+.feature-row .benefits p:first-child {
+	margin-top: 0;
 }
 
 .feature-row .detail {
