@@ -527,7 +527,7 @@
 						<div class="feature-row">
 							<h4>Must-Staple</h4>
 							<div class="benefits">
-								Caddy can obtain certificates that force OCSP stapling if the CA supports it. This grants a higher degree of security in the case of revocation.
+								Caddy can obtain certificates that force OCSP stapling if the CA supports it. This may grant a higher degree of security in the case of revocation.
 							</div>
 						</div>
 						<div class="feature-row">
@@ -545,22 +545,30 @@
 								You can customize the type of key used for your certificates.
 							</div>
 							<ul class="detail">
-								<li>ed25519</li>
-								<li>p256</li>
-								<li>p384</li>
-								<li>rsa2048</li>
-								<li>rsa4096</li>
+								<li>Ed25519</li>
+								<li>ECDSA P256</li>
+								<li>ECDSA P384</li>
+								<li>RSA 2048</li>
+								<li>RSA 4096</li>
 							</ul>
 						</div>
 						<div class="feature-row">
 							<h4>Certificate lifetimes</h4>
 							<div class="benefits">
 								<p>Most ACME clients assume 90-day certificates, or don't expect certificates shorter than 7 days. Caddy can successfully manage certificates with lifetimes on the order of hours and minutes.</p>
-								
 								<p>Instead of hard-coding a certain age before renewing, Caddy computes the age relative to the lifespan of each certificate, called a Renewal Window Ratio. By default, Caddy renews certificates after 2/3 of their usable lifetime. This ratio works for most validity periods, but can be adjusted.</p>
 							</div>
 							<div class="detail">
 								Any lifetime
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Intelligent error handling</h4>
+							<div class="benefits">
+								If Caddy can't get a certificate, errors are logged and Caddy will backoff exponentially and retry as long as needed until it succeeds (typically up to 30 days but could be longer). Caddy makes every reasonable effort to keep your certificate renewed.
+							</div>
+							<div class="detail">
+								Exponential backoff
 							</div>
 						</div>
 						<div class="feature-row">
@@ -572,6 +580,102 @@
 					</div>
 
 					<h3 class="purple">ACME</h3>
+
+					<p>
+						Caddy's ACME client is best-in-class, with higher reliability and more production experience than any other integrated ACME client available today. Caddy has been using ACME since before the public availability of Let's Encrypt, and Caddy works with any ACME-compatible CA.
+					</p>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>Compatibility</h4>
+							<div class="benefits">
+								Some ACME clients are only tested with Let's Encrypt. Caddy is guaranteed compatible with all ACME-capable CAs.
+							</div>
+							<div class="detail">
+								All RFC 8555-compliant certificate authorities, such as:
+								<ul>
+									<li>Let's Encrypt</li>
+									<li>ZeroSSL</li>
+									<li>Google Trust Services</li>
+									<li>BuyPass</li>
+									<li>DigiCert</li>
+									<li>GlobalSign</li>
+									<li>SSL.com</li>
+									<li>Smallstep</li>
+								</ul>
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Test endpoints</h4>
+							<div class="benefits">
+								By default, Caddy will fall back to a CA's test or staging endpoint (if there is one) after a failed attempt at getting a certificate to avoid hitting CA-enforced production rate limits. This could also be an ACME server you set up solely for the purpose of validating DNS configurations.
+							</div>
+							<div class="detail">
+								Let's Encrypt (others configurable)
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>External account binding</h4>
+							<div class="benefits">
+								Optionally configure External Account Binding (EAB) to enable Caddy to work with CAs that require you to have a separate account with them.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Challenge types</h4>
+							<div class="benefits">
+								Caddy supports all major ACME challenge types for Web PKI and can also be extended to support others.
+							</div>
+							<ul class="detail">
+								<li>HTTP-01</li>
+								<li>TLS-ALPN-01</li>
+								<li>DNS-01</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Alternate challenge ports</h4>
+							<div class="benefits">
+								While certain ACME challenges must use the standardized ports 80 and 443, Caddy supports listening for these on alternate ports if you are forwarding them through a router.
+							</div>
+							<ul class="detail">
+								<li>HTTP (default 80)</li>
+								<li>TLS-ALPN (default 443)</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>DNS challenge integrations</h4>
+							<div class="benefits">
+								Solve the DNS challenge with integrations for dozens of DNS providers. <b>This list is incomplete;</b> <a href="https://github.com/caddy-dns">see the full list of DNS providers</a>.
+							</div>
+							<ul class="detail">
+								<li class="nonstandard">ACME-DNS</li>
+								<li class="nonstandard">AliDNS</li>
+								<li class="nonstandard">Cloudflare</li>
+								<li class="nonstandard">DigitalOcean</li>
+								<li class="nonstandard">DNSPod</li>
+								<li class="nonstandard">DuckDNS</li>
+								<li class="nonstandard">DynDNS</li>
+								<li class="nonstandard">EasyDNS</li>
+								<li class="nonstandard">Gandi</li>
+								<li class="nonstandard">GoDaddy</li>
+								<li class="nonstandard">Google Cloud DNS</li>
+								<li class="nonstandard">Hetzner</li>
+								<li class="nonstandard">Linode</li>
+								<li class="nonstandard">Name.com</li>
+								<li class="nonstandard">Namecheap</li>
+								<li class="nonstandard">Namesilo</li>
+								<li class="nonstandard">Netlify</li>
+								<li class="nonstandard">OVH</li>
+								<li class="nonstandard">Porkbun</li>
+								<li class="nonstandard">PowerDNS</li>
+								<li class="nonstandard">RFC 2136</li>
+								<li class="nonstandard">Route 53</li>
+								<li class="nonstandard">Scaleway</li>
+								<li class="nonstandard">Vercel</li>
+								<li class="nonstandard">Vultr</li>
+								<li><a href="https://github.com/caddy-dns">See all...</a></li>
+							</ul>
+						</div>
+					</div>
 					
 
 				</div>
