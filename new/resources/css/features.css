@@ -67,8 +67,13 @@
 	font-weight: 500;
 }
 
-.feature-row ul.detail {
+.feature-row ul.detail,
+.feature-row .detail ul {
 	margin-left: 1em;
+}
+
+.feature-row .detail ul {
+	margin-top: 1em;
 }
 
 .feature-row ul li {

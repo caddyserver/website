@@ -324,10 +324,11 @@ div.ap-wrapper:fullscreen div.ap-player {
 
 
 .testimonials {
+	--testimonial-spacing: 25px;
 	display: grid;
 	grid-auto-columns: minmax(0, 1fr);
 	grid-auto-flow: column;
-	gap: 25px;
+	gap: var(--testimonial-spacing);
 	position: relative;
 }
 .testimonials::before {
@@ -351,9 +352,12 @@ div.ap-wrapper:fullscreen div.ap-player {
 	border: 1px solid rgb(174, 181, 185);
 	border-radius: 5px;
 	padding: 1em;
+	margin: var(--testimonial-spacing) 0;
 }
 .testimonial-quote {
 	margin-bottom: 1em;
+	font-size: 16px;
+	line-height: 1.4;
 }
 .testimonial-name,
 .testimonial-role {

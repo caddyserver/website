@@ -159,7 +159,7 @@
 					<div class="sponsorship-primer">
 						<h3>software <b>assurance</b></h3>
 						<p>
-							Some text here that explains sponsorships
+							Sponsorships aren't just donations. They provide your business with benefits
 						</p>
 						<a href="/sponsor" class="button purple">See sponsorships</a>
 					</div>
@@ -345,54 +345,9 @@
 					</div>
 
 					<div class="testimonials">
-						<div class="testimonial-col">
-							<div class="testimonial">
-								<img class="testimonial-picture" src="https://pbs.twimg.com/profile_images/1624497316366528512/fBMXDuiZ_400x400.jpg">
-								<div class="testimonial-content">
-									<div class="testimonial-quote">
-										Caddy is awesome.
-									</div>
-									<div class="testimonial-name">
-										Firstname lastname
-									</div>
-									<div class="testimonial-role">
-										9000x developer, Bigcorp
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="testimonial-col">
-							<div class="testimonial">
-								<img class="testimonial-picture" src="https://pbs.twimg.com/profile_images/1624497316366528512/fBMXDuiZ_400x400.jpg">
-								<div class="testimonial-content">
-									<div class="testimonial-quote">
-										Caddy is awesome.
-									</div>
-									<div class="testimonial-name">
-										Firstname lastname
-									</div>
-									<div class="testimonial-role">
-										9000x developer, Bigcorp
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="testimonial-col">
-							<div class="testimonial">
-								<img class="testimonial-picture" src="https://pbs.twimg.com/profile_images/1624497316366528512/fBMXDuiZ_400x400.jpg">
-								<div class="testimonial-content">
-									<div class="testimonial-quote">
-										Caddy is awesome.
-									</div>
-									<div class="testimonial-name">
-										Firstname lastname
-									</div>
-									<div class="testimonial-role">
-										9000x developer, Bigcorp
-									</div>
-								</div>
-							</div>
-						</div>
+						<div class="testimonial-col"></div>
+						<div class="testimonial-col"></div>
+						<div class="testimonial-col"></div>
 					</div>
 				</div>
 			</section>
@@ -467,6 +422,24 @@
 
 
 		{{include "/includes/footer.html"}}
+
+
+		<template id="tpl-testimonial">
+			<div class="testimonial">
+				<img class="testimonial-picture">
+				<div class="testimonial-content">
+					<div class="testimonial-quote">
+
+					</div>
+					<div class="testimonial-name">
+
+					</div>
+					<div class="testimonial-role">
+
+					</div>
+				</div>
+			</div>
+		</template>
 
 		<script>
 			AsciinemaPlayer.create('/resources/321140.cast', $('#video-demo'), {

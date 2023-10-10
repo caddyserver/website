@@ -3,8 +3,34 @@
 		"name": "First last",
 		"role": "9999x developer",
 		"company": "Bigcorp",
-		"picture": "https://...",
+		"picture": "https://pbs.twimg.com/profile_images/1624497316366528512/fBMXDuiZ_400x400.jpg",
 		"quote": "Caddy is cool.",
 		"link": "https://..."
+	},
+	{
+		"name": "Brad Warren",
+		"role": "Lead Engineer of Certbot",
+		"company": "Electronic Frontier Foundation (EFF)",
+		"picture": "https://sea1.discourse-cdn.com/letsencrypt/user_avatar/community.letsencrypt.org/bmw/144/7797_2.png",
+		"quote": "I think we should consider making Caddy the default ACME client recommendation. … It allows for better integration between the TLS server and the ACME management of those certificates. … [ACME clients with] Apache and NGINX are inherently more error prone and brittle than having the TLS server manage its certificates itself. … Caddy is written in a memory-safe language. Adoption of memory-safe programming languages is something that both ISRG and the broader computer security community have been encouraging more and more lately.",
+		"link": "https://community.letsencrypt.org/t/should-our-default-client-recommendation-be-caddy-if-not-why-not/199949?u=mholt"
+	},
+	{
+		"name": "Josh Aas",
+		"role": "Executive Director",
+		"company": "Let's Encrypt",
+		"picture": "https://sea1.discourse-cdn.com/letsencrypt/user_avatar/community.letsencrypt.org/josh/144/10641_2.png",
+		"quote": "Caddy is impressive. This is what we want, setting up a secure website.",
+		"link": "https://www.youtube.com/watch?v=OE5UhQGg_Fo"
+	},
+	{
+		"name": "Stripe",
+		"role": "Global Leader of Fintech",
+		"quote": "With its extensible architecture and on-line config API, Caddy powers many of Stripe's internal systems."
+	},
+	{
+		"name": "Robert Melton",
+		"role": "Software Developer",
+		"quote": "Our client was in deep trouble: they were about to fail PCI compliance. We tossed Caddy in front hours before the deadline and went from 40 to 0 security errors in just minutes. … We have put over 1,000 domains on Caddy so far."
 	}
 ]
