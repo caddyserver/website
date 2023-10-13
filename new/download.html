@@ -4,21 +4,73 @@
 		<title>Download Caddy</title>
 		{{include "/includes/head.html"}}
 		<link rel="stylesheet" href="/resources/css/download.css">
+		<link rel="stylesheet" href="/resources/css/docs.css">
+		<script src="/resources/js/download.js"></script>
 	</head>
 	<body>
-		<div class="hero">
-			{{include "/includes/header.html" "light-header"}}
-			
-
+		{{include "/includes/header.html" "light-header"}}
 		<main>
-
-			<div class="wrapper">
-				Hello, world!
+			<article>
+				<h1>Download</h1>
+			</article>
+			
+			<div class="wrapper filters">
+				<input id="search-package" placeholder="Search package: e.g. cloudflare" class="shadow" />
+				<select id="sort-package" class="shadow">
+					<option value="download">Sort by most popular</option>
+					<option value="alphabetically">Sort alphabetically</option>
+					<option value="type">Group by module namespace</option>
+				</select>
 			</div>
-		
+
+			<div class="wrapper list">
+				<div id="side-panel-packages">
+				</div>
+				<div id="packages">
+				</div>
+			</div>
 		</main>
 
 
 		{{include "/includes/footer.html"}}
+		<script type="text/javascript">
+			let groupBy = 'download';
+			const getCardTemplate = item => `{{ include "/includes/card.html" }}`;
+
+			function renderList(list) {
+				if (groupBy === 'type') {
+					const groupedData = packageManager.group(groupBy)
+					document.getElementById('side-panel-packages').innerHTML = `
+<div>
+	${Object.keys(groupedData).map(k => `<a href="#${k}"> ${ k }</a>`).join('')}
+</div>`;
+					document.getElementById('packages').innerHTML = Object.entries(groupedData).filter(([_, items]) => !!items.length).map(([category, items]) => `
+<section id="${category}">
+	<h2 class="blue">${category}</h2>
+	<div class="card-list">${items.map(getCardTemplate).join('')}</div>
+</section>`).join('')
+					return;
+				}
+
+				document.getElementById('side-panel-packages').innerHTML = '';
+				document.getElementById('packages').innerHTML = `
+<div class="card-list">
+	${list.map(getCardTemplate).join('')}
+</div>`;
+			};
+
+			packageManager.getPackages().then(() => {
+				renderList(packageManager.group(groupBy))
+			})
+
+			document.getElementById('search-package').addEventListener('input', ({ target: { value } }) => {
+				packageManager.setFilterValue(value.toLowerCase());
+				renderList(packageManager.group(groupBy))
+			})
+			document.getElementById('sort-package').addEventListener('change', ({ target: { value } }) => {
+				groupBy = value;
+				renderList(packageManager.group(value))
+			})
+		</script>
 	</body>
 </html>
