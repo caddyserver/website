@@ -167,7 +167,7 @@ acme_server
 
 For ease of use, the Caddyfile adapter sorts directives according to the following rules:
 
-- Differently named directives are sorted by their position in the [default order](#order). The default order can be overridden with the [`order` global option](/docs/caddyfile/options). Directives from plugins _do not_ have an order, so the [`order`](/docs/caddyfile/options) global option or the [`route`](/docs/caddyfile/directives/route) directive should be used to set one.
+- Differently named directives are sorted by their position in the [default order](#directive-order). The default order can be overridden with the [`order` global option](/docs/caddyfile/options). Directives from plugins _do not_ have an order, so the [`order`](/docs/caddyfile/options) global option or the [`route`](/docs/caddyfile/directives/route) directive should be used to set one.
 
 - Same-named directives are sorted according to their [matchers](/docs/caddyfile/matchers#syntax).
 
