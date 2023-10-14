@@ -102,7 +102,7 @@ Those modifications include a custom start/stop behavior and additional sandboxi
 
 <pre><code class="cmd"><span class="bash">pacman -Syu caddy</span></code></pre>
 
-[**View Caddy in the Arch Linux repositories**](https://archlinux.org/packages/community/x86_64/caddy/) and [**the Arch Linux Wiki**](https://wiki.archlinux.org/title/Caddy)
+[**View Caddy in the Arch Linux repositories**](https://archlinux.org/packages/extra/x86_64/caddy/) and [**the Arch Linux Wiki**](https://wiki.archlinux.org/title/Caddy)
 
 ## Docker
 
