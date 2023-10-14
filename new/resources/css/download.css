@@ -23,14 +23,13 @@ html {
 }
 
 #side-panel-packages {
-    padding-top: 32px;
     padding-bottom: 32px;
 }
 
 #side-panel-packages>div {
-    padding: 1rem 1rem 1rem 0;
+    padding: 32px 1rem 1rem 0;
     overflow-y: scroll;
-    width: 300px;
+    width: 250px;
     max-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -46,7 +45,7 @@ html {
     gap: 48px;
 }
 
-#packages>section>h2 {
+h2 {
     padding-bottom: 16px;
     color: rgb(14, 110, 189);
     border-color: rgb(14, 110, 189);
@@ -148,6 +147,15 @@ article {
 
     .filters {
         grid-template-columns: 1fr;
+    }
+
+    .wrapper.list {
+        flex-direction: column;
+    }
+
+    #side-panel-packages>div {
+        overflow: unset;
+        width: 100%;
     }
 }
 

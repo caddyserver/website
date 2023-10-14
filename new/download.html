@@ -39,12 +39,13 @@
 
 			function renderList(list) {
 				if (groupBy === 'type') {
-					const groupedData = packageManager.group(groupBy)
+					const groupedData = Object.entries(packageManager.group(groupBy)).filter(([_, items]) => !!items.length)
 					document.getElementById('side-panel-packages').innerHTML = `
 <div>
-	${Object.keys(groupedData).map(k => `<a href="#${k}"> ${ k }</a>`).join('')}
+	<h2 class="blue">Namespaces</h2>
+	${groupedData.map(([k]) => `<a href="#${k}"> ${ k }</a>`).join('')}
 </div>`;
-					document.getElementById('packages').innerHTML = Object.entries(groupedData).filter(([_, items]) => !!items.length).map(([category, items]) => `
+					document.getElementById('packages').innerHTML = groupedData.map(([category, items]) => `
 <section id="${category}">
 	<h2 class="blue">${category}</h2>
 	<div class="card-list">${items.map(getCardTemplate).join('')}</div>
