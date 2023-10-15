@@ -27,12 +27,12 @@ class Package {
      * @type {ReadonlyArray<Pkg>}
      */
     packages = [];
-    
+
     /** 
      * @type {string}
      */
     filter = '';
-    
+
     /**
      * @returns Promise<>
      */
@@ -50,7 +50,7 @@ class Package {
         if (!this.filter) {
             return pkgs;
         }
-        
+
         return pkgs.filter(pkg => pkg.name.includes(this.filter) || pkg.repo.includes(this.filter) || pkg.description.includes(this.filter));
     }
 
@@ -63,9 +63,9 @@ class Package {
         const pkgs = this.getSearchPackages(this.packages);
         switch (groupBy) {
             case 'alphabetically':
-                return pkgs.sort((a,b) => a.name.localeCompare(b.name));
+                return pkgs.sort((a, b) => a.name.localeCompare(b.name));
             case 'download':
-                return pkgs.sort((a,b) => b.downloads - a.downloads);
+                return pkgs.sort((a, b) => b.downloads - a.downloads);
             case 'type':
                 return pkgs.reduce((acc, current) => {
                     if (!current?.modules?.length) {
@@ -118,3 +118,24 @@ class Package {
 }
 
 const packageManager = new Package();
+
+let packages = [];
+function togglePackage({ target: { dataset: { module } } }) {
+    const element = document.getElementById('packages').querySelector(`button[data-module="${module}"]`);
+    if (packages.includes(module)) {
+        packages = packages.filter(p => p !== module);
+        if (!packages.length) {
+            modulesCount.innerHTML = '';
+        } else {
+            modulesCount.innerHTML = `with ${packages.length} extra module${packages.length > 1 ? 's' : ''}`;
+        }
+
+        element.innerHTML = "Add this module";
+    } else {
+        packages.push(module);
+        element.innerHTML = "Remove this module";
+        modulesCount.innerHTML = `with ${packages.length} extra module${packages.length > 1 ? 's' : ''}`;
+    }
+
+    document.getElementById('command-builder').innerText = `xcaddy build${packages.map(p => ` --with ${p}`).join('')}`
+}

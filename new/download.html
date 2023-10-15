@@ -1,111 +1,131 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Download Caddy</title>
-		{{include "/includes/head.html"}}
-		<link rel="stylesheet" href="/resources/css/download.css">
-		<link rel="stylesheet" href="/resources/css/docs.css">
-		<script src="/resources/js/download.js"></script>
-	</head>
-	<body>
-		{{include "/includes/header.html" "light-header"}}
-		<main>
-			<article>
-				<h1>Download</h1>
-			</article>
-			
-			<div class="wrapper filters">
-				<input id="search-package" placeholder="Search package: e.g. cloudflare" class="shadow" />
-				<select id="sort-package" class="shadow">
-					<option value="download">Sort by most popular</option>
-					<option value="alphabetically">Sort alphabetically</option>
-					<option value="type">Group by module namespace</option>
-				</select>
+
+<head>
+	<title>Download Caddy</title>
+	{{include "/includes/head.html"}}
+	<link rel="stylesheet" href="/resources/css/download.css">
+	<link rel="stylesheet" href="/resources/css/docs.css">
+	<script src="/resources/js/download.js"></script>
+</head>
+
+<body>
+	{{include "/includes/header.html" "light-header"}}
+	<main>
+		<article>
+			<h1>Download</h1>
+		</article>
+
+		<div class="wrapper filters">
+			<input id="search-package" placeholder="Search package: e.g. cloudflare" class="shadow" />
+			<select id="sort-package" class="shadow">
+				<option value="download">Sort by most popular</option>
+				<option value="alphabetically">Sort alphabetically</option>
+				<option value="type">Group by module namespace</option>
+			</select>
+		</div>
+
+		<div class="wrapper list">
+			<div id="side-panel-packages">
 			</div>
-
-			<div class="wrapper list">
-				<div id="side-panel-packages">
+			<div id="packages">
+			</div>
+		</div>
+		<div id="download" class="wrapper">
+			<div class="shadow-lg">
+				<div id="downloader">
+					<span>Download the caddy binary <span id="modules-count"></span> for</span>
+					<select size="1" selected="linux-amd64" id="platform" class="shadow">
+						<option value="dragonfly-amd64">Dragonfly amd64</option>
+						<option value="freebsd-amd64">FreeBSD amd64</option>
+						<option value="freebsd-arm-6">FreeBSD arm 6</option>
+						<option value="freebsd-arm-7">FreeBSD arm 7</option>
+						<option value="freebsd-arm64">FreeBSD arm64</option>
+						<option value="linux-amd64">Linux amd64</option>
+						<option value="linux-arm-5">Linux arm 5</option>
+						<option value="linux-arm-6">Linux arm 6</option>
+						<option value="linux-arm-7">Linux arm 7</option>
+						<option value="linux-arm64">Linux arm64</option>
+						<option value="linux-mips">Linux mips</option>
+						<option value="linux-mips64">Linux mips64</option>
+						<option value="linux-mips64le">Linux mips64le</option>
+						<option value="linux-mipsle">Linux mipsle</option>
+						<option value="linux-ppc64">Linux ppc64</option>
+						<option value="linux-ppc64le">Linux ppc64le</option>
+						<option value="linux-s390x">Linux s390x</option>
+						<option value="darwin-amd64">macOS amd64 (Intel)</option>
+						<option value="darwin-arm64">macOS arm64 (Apple)</option>
+						<option value="openbsd-amd64">OpenBSD amd64</option>
+						<option value="openbsd-arm-6">OpenBSD arm 6</option>
+						<option value="openbsd-arm-7">OpenBSD arm 7</option>
+						<option value="openbsd-arm64">OpenBSD arm64</option>
+						<option value="windows-amd64">Windows amd64</option>
+						<option value="windows-arm-6">Windows arm 6</option>
+						<option value="windows-arm-7">Windows arm 7</option>
+						<option value="windows-arm64">Windows arm64</option>
+					</select>
+					<button>Download</button>
 				</div>
-				<div id="packages">
+
+				<div id="command">
+					<pre>
+						<span id="command-builder">xcaddy build</span>
+					</pre>
+					<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="24"
+						height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+						stroke-linecap="round" stroke-linejoin="round">
+						<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+						<path d="M8 8m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z"></path>
+						<path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+					</svg>
 				</div>
 			</div>
-			<div id="download" class="wrapper">
-				<div class="shadow-lg">
-					<div>
-						<span>Download generated caddy binary with 3 extra modules or run the command below</span>
-					</div>
-
-					<div id="command">
-						<pre>
-							<span id="command-builder">xcaddy build</span>
-						</pre>
-						<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="24" height="24"
-							viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-							stroke-linejoin="round">
-							<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-							<path d="M8 8m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z"></path>
-							<path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
-						</svg>
-					</div>
-				</div>
-			</div>
-		</main>
+		</div>
+	</main>
 
 
-		{{include "/includes/footer.html"}}
-		<script type="text/javascript">
-			let groupBy = 'download';
-			let packages = [];
-			const getCardTemplate = item => `{{ include "/includes/card.html" }}`;
+	{{include "/includes/footer.html"}}
+	<script type="text/javascript">
+		let groupBy = 'download';
+		const getCardTemplate = item => `{{ include "/includes/card.html" }}`;
+		const modulesCount = document.getElementById('modules-count');
 
-			function renderList(list) {
-				if (groupBy === 'type') {
-					const groupedData = Object.entries(packageManager.group(groupBy)).filter(([_, items]) => !!items.length)
-					document.getElementById('side-panel-packages').innerHTML = `
+		function renderList(list) {
+			if (groupBy === 'type') {
+				const groupedData = Object.entries(packageManager.group(groupBy)).filter(([_, items]) => !!items.length)
+				document.getElementById('side-panel-packages').innerHTML = `
 <div>
 	<h2 class="blue">Namespaces</h2>
-	${groupedData.map(([k]) => `<a href="#${k}"> ${ k }</a>`).join('')}
+	${groupedData.map(([k]) => `<a href="#${k}"> ${k}</a>`).join('')}
 </div>`;
-					document.getElementById('packages').innerHTML = groupedData.map(([category, items]) => `
+				document.getElementById('packages').innerHTML = groupedData.map(([category, items]) => `
 <section id="${category}">
 	<h2 class="blue">${category}</h2>
-	<div class="card-list">${items.map(getCardTemplate).join('')}</div>
+	<div class="card-list">${items.map(item => getCardTemplate({ ...item, state: packages.includes(item.path) })).join('')}</div>
 </section>`).join('')
-					return;
-				}
-
-				document.getElementById('side-panel-packages').innerHTML = '';
-				document.getElementById('packages').innerHTML = `
-<div class="card-list">
-	${list.map(getCardTemplate).join('')}
-</div>`;
-			};
-
-			function togglePackage({ target: { dataset: { module } } }) {
-				const element = document.getElementById('packages').querySelector(`button[data-module="${module}"]`);
-				if (packages.includes(module)) {
-					packages = packages.filter(p => p !== module)
-					element.innerHTML = "Add this module";
-				} else {
-					packages.push(module);
-					element.innerHTML = "Remove this module";
-				}
-
-				document.getElementById('command-builder').innerText = `xcaddy build${packages.map(p => ` --with ${p}`).join('')}`
+				return;
 			}
 
-			packageManager.getPackages().then(() => {
-				renderList(packageManager.group(groupBy))
-			})
+			document.getElementById('side-panel-packages').innerHTML = '';
+			document.getElementById('packages').innerHTML = `
+<div class="card-list">
+	${list.map(item => getCardTemplate({ ...item, state: packages.includes(item.path) })).join('')}
+</div>`;
+		};
 
-			document.getElementById('search-package').addEventListener('input', ({ target: { value } }) => {
-				packageManager.setFilterValue(value.toLowerCase());
-				renderList(packageManager.group(groupBy))
-			})
-			document.getElementById('sort-package').addEventListener('change', ({ target: { value } }) => {
-				groupBy = value;
-				renderList(packageManager.group(value))
-			})
-		</script>
-	</body>
+		packageManager.getPackages().then(() => {
+			renderList(packageManager.group(groupBy))
+		})
+
+		document.getElementById('search-package').addEventListener('input', ({ target: { value } }) => {
+			packageManager.setFilterValue(value.toLowerCase());
+			renderList(packageManager.group(groupBy))
+		})
+		document.getElementById('sort-package').addEventListener('change', ({ target: { value } }) => {
+			groupBy = value;
+			renderList(packageManager.group(value))
+		})
+	</script>
+</body>
+
 </html>

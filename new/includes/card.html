@@ -39,7 +39,7 @@
         </p>
         <div class="card-actions">
             <button type="button" class="button card-button" data-module="${item.path}" onclick="togglePackage(event)">
-                Add this module
+                ${item.state ? 'Remove' : 'Add'} this module
             </button>
         </div>
     </div>
