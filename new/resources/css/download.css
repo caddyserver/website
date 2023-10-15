@@ -1,5 +1,10 @@
+* {
+    --border-download: 1px solid rgba(226, 232, 240, 0.8);
+    --radius: 0.5rem;
+}
+
 .card {
-    border: 1px solid rgba(226, 232, 240, 0.8);
+    border: var(--border-download);
     border-radius: 16px;
     padding: 16px;
     width: 100%;
@@ -16,6 +21,10 @@ html {
 
 .shadow {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06);
+}
+
+.shadow-lg {
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
 .wrapper.list {
@@ -43,6 +52,40 @@ html {
     padding-bottom: 32px;
     display: grid;
     gap: 48px;
+}
+
+#download {
+    position: sticky;
+    bottom: 0;
+    padding-bottom: 16px;
+}
+
+#download>div {
+    border: var(--border-download);
+    background-color: var(--body-bg);
+    border-radius: var(--radius);
+    padding: 1rem;
+}
+
+#command {
+    border-radius: var(--radius);
+    border: 1px solid var(--button-border-color);
+    padding: 0.75rem;
+    display: inline-flex;
+    width: 100%;
+}
+
+#command>pre {
+    width: 100%;
+    overflow-x: scroll;
+    display: inline-flex;
+    white-space: nowrap;
+}
+
+#command-builder::before {
+    content: '$';
+    color: var(--text-color-muted);
+    margin-right: 0.25rem;
 }
 
 h2 {
@@ -90,10 +133,6 @@ h2 {
 
 .card-header>:first-child>span:first-child {
     font-weight: bold;
-}
-
-.card-icon {
-    border-radius: 8px;
 }
 
 .card-description {
@@ -167,7 +206,7 @@ select {
     font-weight: 600;
     background-color: white;
     width: 100%;
-    border-radius: 0.5rem;
+    border-radius: var(--radius);
     border: none;
 }
 

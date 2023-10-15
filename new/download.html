@@ -29,12 +29,33 @@
 				<div id="packages">
 				</div>
 			</div>
+			<div id="download" class="wrapper">
+				<div class="shadow-lg">
+					<div>
+						<span>Download generated caddy binary with 3 extra modules or run the command below</span>
+					</div>
+
+					<div id="command">
+						<pre>
+							<span id="command-builder">xcaddy build</span>
+						</pre>
+						<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="24" height="24"
+							viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+							stroke-linejoin="round">
+							<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+							<path d="M8 8m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z"></path>
+							<path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+						</svg>
+					</div>
+				</div>
+			</div>
 		</main>
 
 
 		{{include "/includes/footer.html"}}
 		<script type="text/javascript">
 			let groupBy = 'download';
+			let packages = [];
 			const getCardTemplate = item => `{{ include "/includes/card.html" }}`;
 
 			function renderList(list) {
@@ -59,6 +80,19 @@
 	${list.map(getCardTemplate).join('')}
 </div>`;
 			};
+
+			function togglePackage({ target: { dataset: { module } } }) {
+				const element = document.getElementById('packages').querySelector(`button[data-module="${module}"]`);
+				if (packages.includes(module)) {
+					packages = packages.filter(p => p !== module)
+					element.innerHTML = "Add this module";
+				} else {
+					packages.push(module);
+					element.innerHTML = "Remove this module";
+				}
+
+				document.getElementById('command-builder').innerText = `xcaddy build${packages.map(p => ` --with ${p}`).join('')}`
+			}
 
 			packageManager.getPackages().then(() => {
 				renderList(packageManager.group(groupBy))
