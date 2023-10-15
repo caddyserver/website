@@ -139,3 +139,7 @@ function togglePackage({ target: { dataset: { module } } }) {
 
     document.getElementById('command-builder').innerText = `xcaddy build${packages.map(p => ` --with ${p}`).join('')}`
 }
+
+function copyCommand() {
+    navigator.clipboard.writeText(`xcaddy build${packages.map(s => ` --with ${s}`).join('')}`)
+}

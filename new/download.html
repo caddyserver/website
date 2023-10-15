@@ -16,21 +16,6 @@
 			<h1>Download</h1>
 		</article>
 
-		<div class="wrapper filters">
-			<input id="search-package" placeholder="Search package: e.g. cloudflare" class="shadow" />
-			<select id="sort-package" class="shadow">
-				<option value="download">Sort by most popular</option>
-				<option value="alphabetically">Sort alphabetically</option>
-				<option value="type">Group by module namespace</option>
-			</select>
-		</div>
-
-		<div class="wrapper list">
-			<div id="side-panel-packages">
-			</div>
-			<div id="packages">
-			</div>
-		</div>
 		<div id="download" class="wrapper">
 			<div class="shadow-lg">
 				<div id="downloader">
@@ -64,10 +49,10 @@
 						<option value="windows-arm-7">Windows arm 7</option>
 						<option value="windows-arm64">Windows arm64</option>
 					</select>
-					<button>Download</button>
+					<button class="primary">Download</button>
 				</div>
 
-				<div id="command">
+				<div id="command" onclick="copyCommand()">
 					<pre>
 						<span id="command-builder">xcaddy build</span>
 					</pre>
@@ -79,6 +64,22 @@
 						<path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
 					</svg>
 				</div>
+			</div>
+		</div>
+
+		<div class="wrapper filters">
+			<input id="search-package" placeholder="Search package: e.g. cloudflare" class="shadow" />
+			<select id="sort-package" class="shadow">
+				<option value="download">Sort by most popular</option>
+				<option value="alphabetically">Sort alphabetically</option>
+				<option value="type">Group by module namespace</option>
+			</select>
+		</div>
+
+		<div class="wrapper list">
+			<div id="side-panel-packages">
+			</div>
+			<div id="packages">
 			</div>
 		</div>
 	</main>
