@@ -43,7 +43,11 @@ html {
     display: flex;
     flex-direction: column;
     position: sticky;
-    top: 0;
+    top: 100px;
+}
+
+#download-link>button {
+    font-size: 1rem;
 }
 
 #platform {
@@ -273,4 +277,12 @@ select {
     background-position: calc(100% - 20px) calc(1px + 50%), calc(100% - 16.1px) calc(1px + 50%);
     background-size: 4px 4px, 4px 4px;
     background-repeat: no-repeat;
+}
+
+.package-version {
+    height: 50%;
+    font-size: 80%;
+    width: 4rem;
+    padding-top: unset;
+    padding-bottom: unset;
 }

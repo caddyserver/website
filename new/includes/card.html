@@ -29,7 +29,9 @@
                     <path d="M12 3l0 6"></path>
                     <path d="M12 15l0 6"></path>
                 </svg>
-                latest
+                <input class="package-version" placeholder="latest"
+                    value="${item.state && item.state !== 'latest' ? item.state : ''}"
+                    oninput="updateVersion(event, '${item.path}')" />
             </span>
         </div>
     </div>

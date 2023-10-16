@@ -1,3 +1,7 @@
+const BASE_API_PATH = 'https://localhost/api';
+const pkgURL = `${BASE_API_PATH}/packages`;
+const downloadURL = `${BASE_API_PATH}/download`;
+
 class Package {
     /**
      * @typedef {Object} Module
@@ -20,9 +24,6 @@ class Package {
      * @property {string} name
      */
 
-    /** @type {string} */
-    pkgURL = "https://localhost/api/packages";
-
     /** 
      * @type {ReadonlyArray<Pkg>}
      */
@@ -37,7 +38,7 @@ class Package {
      * @returns Promise<>
      */
     getPackages() {
-        return fetch(this.pkgURL, { headers: { 'X-Requested-With': 'XMLHttpRequest', Origin: 'https://caddyserver.com' } })
+        return fetch(pkgURL, { headers: { 'X-Requested-With': 'XMLHttpRequest', Origin: 'https://caddyserver.com' } })
             .then(res => res.json())
             .then(({ result }) => this.packages = result.sort((a, b) => a.downloads - b.downloads).map(item => ({ ...item, description: item.modules?.map(m => m.docs ?? m.name).join('\n') ?? '', name: item.repo.split('/')[4].toLowerCase() })));
     }
@@ -119,27 +120,83 @@ class Package {
 
 const packageManager = new Package();
 
-let packages = [];
+const params = new URLSearchParams(window.location.search?.slice(1));
+let versions = params.getAll('p').reduce((acc, current) => {
+    [p, v] = current.split('@');
+
+    acc[p] = v ?? '';
+
+    return acc;
+}, {});
+
 function togglePackage({ target: { dataset: { module } } }) {
     const element = document.getElementById('packages').querySelector(`button[data-module="${module}"]`);
-    if (packages.includes(module)) {
-        packages = packages.filter(p => p !== module);
-        if (!packages.length) {
+    if (module in versions) {
+        delete versions[module];
+        const countVersions = Object.keys(versions).length;
+        if (!countVersions) {
             modulesCount.innerHTML = '';
         } else {
-            modulesCount.innerHTML = `with ${packages.length} extra module${packages.length > 1 ? 's' : ''}`;
+            modulesCount.innerHTML = `with ${countVersions} extra module${countVersions > 1 ? 's' : ''}`;
         }
 
         element.innerHTML = "Add this module";
     } else {
-        packages.push(module);
+        versions[module] = '';
+        const countVersions = Object.keys(versions).length;
         element.innerHTML = "Remove this module";
-        modulesCount.innerHTML = `with ${packages.length} extra module${packages.length > 1 ? 's' : ''}`;
+        modulesCount.innerHTML = `with ${countVersions} extra module${countVersions > 1 ? 's' : ''}`;
     }
 
-    document.getElementById('command-builder').innerText = `xcaddy build${packages.map(p => ` --with ${p}`).join('')}`
+    setDownloadLink();
+}
+
+function setDownloadLink() {
+    document.getElementById('command-builder').innerText = getCommand();
+    document
+        .getElementById('download-link')
+        .setAttribute('href', `${downloadURL}?${new URLSearchParams(Object.entries(versions).map(p => ['p', `${p}${!!versions[p] ? `@${versions[p]}` : ''}`])).toString()}`);
+}
+
+function getCommand() {
+    return `xcaddy build${Object.entries(versions ?? {}).map(([p, v]) => ` --with ${p}${!!v ? `@${v}` : ''}`).join('')}`
 }
 
 function copyCommand() {
-    navigator.clipboard.writeText(`xcaddy build${packages.map(s => ` --with ${s}`).join('')}`)
+    navigator.clipboard.writeText(getCommand())
+}
+
+function renderList(list) {
+    if (groupBy === 'type') {
+        const groupedData = Object.entries(packageManager.group(groupBy)).filter(([_, items]) => !!items.length)
+        document.getElementById('side-panel-packages').innerHTML = `
+<div>
+<h2 class="blue">Namespaces</h2>
+${groupedData.map(([k]) => `<a href="#${k}"> ${k}</a>`).join('')}
+</div>`;
+        document.getElementById('packages').innerHTML = groupedData.map(([category, items]) => `
+<section id="${category}">
+<h2 class="blue">${category}</h2>
+<div class="card-list">${items.map(item => getCardTemplate({ ...item, state: versions[item.path] })).join('')}</div>
+</section>`).join('')
+        return;
+    }
+
+    document.getElementById('side-panel-packages').innerHTML = '';
+    document.getElementById('packages').innerHTML = `
+<div class="card-list">
+${list.map(item => getCardTemplate({ ...item, state: versions[item.path] })).join('')}
+</div>`;
+};
+
+packageManager.getPackages().then(() => {
+    renderList(packageManager.group(groupBy));
+    const countVersions = Object.keys(versions).length;
+    modulesCount.innerHTML = countVersions ? `with ${countVersions} extra module${countVersions > 1 ? 's' : ''}` : '';
+    setDownloadLink();
+})
+
+function updateVersion({ target: { value } }, pkg) {
+    versions[pkg] = value;
+    setDownloadLink();
 }
