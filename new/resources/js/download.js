@@ -155,7 +155,7 @@ function setDownloadLink() {
     document.getElementById('command-builder').innerText = getCommand();
     document
         .getElementById('download-link')
-        .setAttribute('href', `${downloadURL}?${new URLSearchParams(Object.entries(versions).map(p => ['p', `${p}${!!versions[p] ? `@${versions[p]}` : ''}`])).toString()}`);
+        .setAttribute('href', `${downloadURL}?${new URLSearchParams(Object.entries(versions).map(([p, v]) => ['p', `${p}${!!v ? `@${v}` : ''}`])).toString()}`);
 }
 
 function getCommand() {
