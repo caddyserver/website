@@ -1,4 +1,4 @@
-const BASE_API_PATH = 'https://localhost/api';
+const BASE_API_PATH = '/api';
 const pkgURL = `${BASE_API_PATH}/packages`;
 const downloadURL = `${BASE_API_PATH}/download`;
 
