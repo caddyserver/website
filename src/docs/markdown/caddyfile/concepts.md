@@ -219,7 +219,7 @@ These are examples of valid addresses:
 
 <aside class="tip">
 
-[Automatic HTTPS](/docs/automatic-https) is enabled if your site's address contains a hostname or IP address. This behavior is purely implicit, however, so it never overrides any explicit configuration. For example, if the site's address is `http://example.com`, auto-HTTPS will not activate because the scheme is explicitly `http://`.
+[Automatic HTTPS](/docs/automatic-https) is enabled if your site's address contains a hostname or IP address. This behavior is purely implicit, however, so it never overrides any explicit configuration. For example, if the site's address is `http://example.com`, auto-HTTPS will not activate because the scheme is explicitly `http`.
 
 </aside>
 
