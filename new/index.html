@@ -106,6 +106,9 @@
 							<a href="https://iqm.com/" target="_blank">
 								<img src="/resources/images/sponsors/iqm.svg" alt="IQM" title="IQM" height="24">
 							</a>
+							<a href="https://approximated.app/" target="_blank">
+								<img src="/resources/images/sponsors/approximated.svg" alt="Approximated" title="Approximated" height="20">
+							</a>
 							<a href="/sponsor" class="button purple">
 								<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-new-section" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
 									<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -138,47 +141,24 @@
 
 				<div class="wrapper feature cols">
 					<div class="col">
+						<h3 class="purple">HTTPS/TLS for custom domains</h3>
+						<p>
+							The secret sauce of almost every white-label SaaS is Caddy's original On-Demand TLS feature. Grow your SaaS business by orders of magnitude with ease!
+						</p>
+					</div>
+					<div class="col">
 						<h3 class="green">Dynamically provision certificates</h3>
 						<p>
 							With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
 						</p>
 					</div>
 					<div class="col">
-						<h3 class="purple">Dynamically provision certificates</h3>
+						<h3 class="blue">Massively scale your TLS</h3>
 						<p>
-							With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
-						</p>
-					</div>
-					<div class="col">
-						<h3 class="blue">Dynamically provision certificates</h3>
-						<p>
-							With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+							Other web servers and scripted certificate tools fall over with hundreds of thousands of sites or thousands of instances. Caddy is designed to manage certificates reliably at this scale.
 						</p>
 					</div>
 
-					<div class="sponsorship-primer">
-						<h3>software <b>assurance</b></h3>
-						<p>
-							Sponsorships aren't just donations. They provide your business with benefits
-						</p>
-						<a href="/sponsor" class="button purple">See sponsorships</a>
-					</div>
-
-					<div class="sponsor-experience stripe">
-						<img src="/resources/images/sponsors/stripe.svg" class="experience-logo">
-						<div class="experience-content">
-							<div class="experience-quote">
-								"Something good to say, hopefully. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet."
-							</div>
-							<div class="experience-credit">
-								<img src="" class="experience-picture">
-								<cite>
-									<b>Firstname Last</b>
-									Position or credentials
-								</cite>
-							</div>
-						</div>
-					</div>
 				</div>
 			</div>
 
@@ -191,23 +171,38 @@
 					</div>
 				</div>
 				<div class="wrapper">
+					
 					<div class="feature cols">
 						<div class="col">
-							<h3 class="green">Dynamically provision certificates</h3>
+							<h3 class="green">All you need for TLS and PKI 🔐</h3>
 							<p>
-								With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+								Caddy securely serves all sites with TLS by default. It can also manage your internal PKI for you across a fleet of servers and clients.
 							</p>
 						</div>
 						<div class="col">
-							<h3 class="purple">Dynamically provision certificates</h3>
+							<h3 class="purple">On-line config API ⚡️</h3>
 							<p>
-								With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+								Caddy's native configuration is a JSON document that you can export and manipulate with a RESTful config API.
 							</p>
 						</div>
 						<div class="col">
-							<h3 class="blue">Dynamically provision certificates</h3>
+							<h3 class="blue">PCI, HIPAA, and NIST compliant ✅</h3>
 							<p>
-								With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+								Caddy's TLS defaults are secure and pass PCI, HIPAA, and NIST compliance requirements. Yes, defaults: no hassle required.
+							</p>
+						</div>
+
+						<div class="col">
+							<h3 class="purple">HTTPS for localhost 🏠</h3>
+							<p>
+								We mean it when we say Caddy serves every site on HTTPS. Even localhost and internal IPs are served with TLS using the intermediate of a fully-automated, self-managed CA that is automatically installed into most local trust stores.
+							</p>
+						</div>
+
+						<div class="col">
+							<h3 class="green">Cluster coordination 🌐</h3>
+							<p>
+								Simply configure multiple Caddy instances with the same storage, and they will automatically coordinate certificate management and share resources such as keys and OCSP staples!
 							</p>
 						</div>
 					</div>
@@ -250,6 +245,14 @@
 							</p>
 						</div>
 					</div>
+
+					<div class="sponsorship-primer">
+						<h3>sponsored by <b>users like you</b></h3>
+						<p>
+							Caddy is free software and relies on sponsorships to survive. They aren't just donations: they ensure ongoing development and provide your business with tangible benefits!
+						</p>
+						<a href="/sponsor" class="button purple">See sponsorships</a>
+					</div>
 				</div>
 			</section>
 
@@ -259,27 +262,48 @@
 						A truly forward-thinking reverse proxy
 					</h2>
 					<p>
-						Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. 
-						Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. 
+						Caddy's proxy was designed to be as forward-compatible as possible and has major batteries included: load balancing, active and passive health checks, dynamic upstreams, retries, pluggable transports, and of course, best-in-class TLS security.
 					</p>
 					<div class="cols">
 						<div class="col">
-							<h3 class="green">Dynamically provision certificates</h3>
+							<h3 class="green">Proxy HTTP, FastCGI, WebSockets, and more</h3>
 							<p>
-								With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+								Capable of proxying HTTP and HTTPS, but also WebSockets, gRPC, FastCGI (usually PHP), and more! The underlying transport module is extensible for any custom way to generate an HTTP response.
+							</p>
+							<h3 class="purple">Dynamic environment? No problem</h3>
+							<p>
+								Provide Caddy with a static list of backends or enable a module to retrieve backends dynamically during each request: ideal for rapidly changing environments. Caddy flows with your infrastructure!
+							</p>
+							<h3 class="blue">High availability</h3>
+							<p>
+								Caddy comes with a whole suite of high availability (HA) features: advanced health checking, graceful (hitless) config changes, circuit breaking, load limiting, on-line retries, and more. The best part? It's all free. No enterprise-level paywalls.
 							</p>
 						</div>
 						<div class="col">
-							<h3 class="purple">Dynamically provision certificates</h3>
-							<p>
-								With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
-							</p>
+							<div class="sponsorship-primer">
+								<h3>software <b>assurance</b></h3>
+								<p>
+									Without sponsorships, Caddy could stop being developed at any time.
+									With sponsorships, you gain peace of mind knowing that the project will continue to be developed, along with tangible benefits like private support and training.
+								</p>
+								<a href="/sponsor" class="button purple">See sponsorships</a>
+							</div>
 						</div>
-						<div class="col">
-							<h3 class="blue">Dynamically provision certificates</h3>
-							<p>
-								With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
-							</p>
+
+						<div class="sponsor-experience stripe">
+							<img src="/resources/images/sponsors/stripe.svg" class="experience-logo">
+							<div class="experience-content">
+								<div class="experience-quote">
+									"With its extensible architecture and on-line config API, Caddy powers many of Stripe's internal systems."
+								</div>
+								<div class="experience-credit">
+									<img src="https://preview.tabler.io/static/avatars/002m.jpg" class="experience-picture">
+									<cite>
+										<b>Sean Lin</b>
+										Example product manager
+									</cite>
+								</div>
+							</div>
 						</div>
 					</div>
 
@@ -288,26 +312,31 @@
 						Production-grade static file server
 					</h2>
 					<p>
-						Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. 
-						Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. 
+						Serving static files is a tried-and-true method of delivering sites to numerous clients efficiently. Caddy has a robust file server that can be combined with other middleware features for the ultimate effortless website.
 					</p>
 					<div class="cols">
 						<div class="col">
-							<h3 class="green">Dynamically provision certificates</h3>
+							<h3 class="blue">Compression</h3>
 							<p>
-								With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+								Caddy can compress files on-the-fly or serve precompressed files for extra performance. Caddy is also the first web server to support Zstandard encoding.
 							</p>
 						</div>
 						<div class="col">
-							<h3 class="purple">Dynamically provision certificates</h3>
+							<h3 class="green">Virtual file systems</h3>
 							<p>
-								With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+								Serve your static site from anything: the local file system, remote cloud storage, a database, or even embedded in the server binary!
 							</p>
 						</div>
 						<div class="col">
-							<h3 class="blue">Dynamically provision certificates</h3>
+							<h3 class="purple">Range requests, Etags, and more</h3>
 							<p>
-								With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+								Unlike many simpler file servers intended for temporary local development, Caddy fully supports Range requests, Etags, and a full production feature set.
+							</p>
+						</div>
+						<div class="col">
+							<h3 class="green">Directory file browser</h3>
+							<p>
+								If a directory without an index file is requested, Caddy can show an elegant file browser with breadcrumb nav, file size visualizations, filetype icons, and a grid view.
 							</p>
 						</div>
 					</div>
@@ -317,29 +346,28 @@
 			<section class="light feature">
 				<div class="wrapper">
 					<h2>
-						Flexible configuration for all production environments
+						Flexible configuration for all workflows
 					</h2>
 					<p>
-						Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. 
-						Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. 
+						Configure your server your way. Caddy's native configuration format is JSON, but with Caddy's config adapters, you can use any config format you prefer. All configuration is posted through a RESTful admin API, and Caddy's CLI helps you work with config files easily.
 					</p>
 					<div class="cols">
 						<div class="col">
-							<h3 class="green">Dynamically provision certificates</h3>
+							<h3 class="green">Config adapters</h3>
 							<p>
-								With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+								Use whatever config format you like, such as NGINX config, YAML, TOML, CUE, HCL, Dhall, or even a MySQL database!
 							</p>
 						</div>
 						<div class="col">
-							<h3 class="purple">Dynamically provision certificates</h3>
+							<h3 class="purple">Human-friendly Caddyfile</h3>
 							<p>
-								With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+								The Caddyfile is most people's preferred format for hand-written configurations because it is simple to read and write.
 							</p>
 						</div>
 						<div class="col">
-							<h3 class="blue">Dynamically provision certificates</h3>
+							<h3 class="blue">Admin API</h3>
 							<p>
-								With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+								Caddy's config is managed through an administration API that is programmable and makes dynamic changes a breeze.
 							</p>
 						</div>
 					</div>
@@ -360,8 +388,10 @@
 						Unparalleled extensibility
 					</h2>
 					<p>
-						Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. 
-						Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. 
+						Caddy is the only server in the world with such a novel modular architecture. At its core, Caddy is a configuration manager that runs apps like an HTTP server, internal certificate authority, TLS certificate manager, process supervisor, and more.
+					</p>
+					<p>
+						And because of its unique design, all these features are freely available without bloating the software: only compile in what you need.
 					</p>
 					<div class="cols">
 						<div class="col">

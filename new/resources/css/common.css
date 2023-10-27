@@ -516,6 +516,28 @@ button.primary .hover-splash,
 	text-transform: capitalize;
 }
 
+.construction-images {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 20px;
+}
+
+.construction img {
+	margin-left: 20px;
+	margin-right: 20px;
+	max-width: 100%;
+}
+
+.construction p {
+	width: 100%;
+	margin-left: auto;
+	margin-right: auto;
+	color: #e71414; 
+}
+
+
 
 
 
@@ -543,6 +565,30 @@ footer a:hover {
 footer .wrapper {
 	display: flex;
 	gap: 75px;
+}
+
+footer .nostalgia {
+	display: block;
+	text-align: center;
+	margin-top: 50px;
+}
+
+footer .nostalgia-badges {
+	gap: 25px;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	display: flex;
+}
+
+footer .nostalgia p {
+	margin: 0 auto 15px;
+	color: #d2f7e7;
+}
+
+footer .w3c {
+	width: 80px;
+	line-height: 0;
 }
 
 footer .logo {
@@ -573,9 +619,6 @@ footer .link-col a {
 footer .link-col a:hover {
 	color: #35655e;
 }
-
-
-
 
 
 
