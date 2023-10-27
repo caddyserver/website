@@ -93,6 +93,35 @@
 }
 
 
+.split {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	margin-bottom: 75px;
+	align-items: center;
+}
+
+.split > * {
+	flex: 1;
+	margin-right: 50px;
+	min-width: 0;
+	min-width: 300px;
+}
+
+.split img {
+	max-width: 100%;
+}
+
+.split img,
+.benefits img {
+	margin: 2em 0 0;
+	max-width: 100%;
+	box-shadow: 0 6px 10px rgb(0 0 0 / .15);
+	border-radius: 8px;
+}
+
+
+
 /* TODO: Figure this out */
 @media (max-width: 800px) {
 	.feature-row {

@@ -322,7 +322,10 @@ section.dark h3.blue {
 
 
 
-
+.sponsor-experience,
+.sponsorship-primer {
+	max-width: 700px; /* TODO: TEMPORARY! */
+}
 
 
 
@@ -332,7 +335,6 @@ section.dark h3.blue {
 	color: #fff;
 	display: flex;
 	flex-wrap: wrap;
-	max-width: 700px; /* TODO: TEMPORARY! */
 	column-gap: 50px;
 }
 
@@ -400,7 +402,8 @@ section.dark h3.blue {
 	border-radius: 10px;
 	background: linear-gradient(50deg, #670d7f, #531cc7);
 	padding: 40px 50px;
-	color: #edb7e8;
+	margin: 50px auto;
+	color: #ffcffb;
 }
 
 .sponsorship-primer h3 {
@@ -410,10 +413,12 @@ section.dark h3.blue {
 	border: none;
 	padding-left: 0;
 	margin-left: 0;
+	margin-bottom: 0;
+	padding-bottom: 0;
 }
 
 .sponsorship-primer p {
-	margin: 1em 0;
+	margin: 1em 0 1.5em;
 	font-weight: normal;
 }
 
