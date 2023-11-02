@@ -37,5 +37,22 @@
 		"username": "lost_RD",
 		"quote": "Every time I have a problem, google directs me to a \"mature\" Traefik-based solution that barely works, if at all. Then I come here and there's a Caddy solution that blows it out of the water. New plan for today then. ... It's a simple addition to an already-simple config. Traefik is complexity on complexity and a nightmare to debug.",
 		"link": "https://discord.com/channels/569842713239879680/569842713239879682/1161874875053527081"
+	},
+	{
+		"name": "Karim Naufal",
+		"role": "Tech founder",
+		"quote": "After working for 12 hours straight, unable to make Traefik work and almost going nuts, I switched to Caddy and was able to make it work in 3 lines of code, HTTPS included. Thank you Caddy team for this magically simple and awesome project."
+	},
+	{
+		"name": "Kenn White",
+		"role": "Security engineer",
+		"org": "Subcontractor, UK government",
+		"quote": "This is a brilliant piece of software. ... Even on first install, the defaults are sane. Truly, great work. … Seriously: Caddy makes it possible for hundreds of thousands of very needy folk to get treatment. It’s the backbone of vital systems used by local Doctors Without Borders and local government ministries."
+	},
+	{
+		"name": "John Resig",
+		"role": "Creator of jQuery",
+		"quote": "Caddy is pretty incredible. A 3-line config yields a fully A-rated SSL site. Trivial!",
+		"link": "https://twitter.com/jeresig/status/821768122017398785"
 	}
 ]

@@ -322,24 +322,31 @@ div.ap-wrapper:fullscreen div.ap-player {
 
 
 
-
+.testimonials-container {
+	height: 100vh;
+	position: relative;
+}
 .testimonials {
 	--testimonial-spacing: 25px;
 	display: grid;
 	grid-auto-columns: minmax(0, 1fr);
 	grid-auto-flow: column;
 	gap: var(--testimonial-spacing);
-	position: relative;
+	padding-top: 150px;
+	padding-bottom: 150px;
+	height: 100%;
+	overflow-y: auto;
 }
-.testimonials::before {
+.testimonials-container::before {
 	content: "";
-	background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 45%, rgba(255,255,255,0) 55%, rgba(255,255,255,1) 100%);
+	background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 400px, rgba(255,255,255,0) 600px, rgba(255,255,255,1) 100%);
 	position: absolute;
 	top: 0;
 	bottom: 0;
 	left: 0;
 	right: 0;
 	pointer-events: none;
+	z-index: 1;
 }
 .testimonial-picture {
 	width: 60px;
@@ -349,7 +356,7 @@ div.ap-wrapper:fullscreen div.ap-player {
 	display: flex;
 	align-items: flex-start;
 	gap: 1em;
-	border: 1px solid rgb(174, 181, 185);
+	border: 1px solid rgb(222, 233, 240);
 	border-radius: 5px;
 	padding: 1em;
 	margin: var(--testimonial-spacing) 0;
