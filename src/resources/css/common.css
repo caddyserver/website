@@ -203,11 +203,19 @@ article a:hover {
 }
 
 pre,
-code {
+code,
+kbd {
 	font-family: 'PT Mono', 'Source Code Pro', monospace;
 	padding: 3px 6px;
 	font-size: 95%;
 	line-height: 1.5em;
+}
+
+kbd {
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	font-size: 80%;
+	font-weight: bold;
 }
 
 

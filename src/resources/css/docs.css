@@ -364,7 +364,8 @@ h6 {
 	background-color: rgba(0, 0, 0, .075);
 }
 
-code {
+code,
+kbd {
 	background-color: #e9f1fb;
 	border-radius: 5px;
 }
@@ -739,6 +740,11 @@ td code {
 	word-wrap: break-word;
 }
 
+blockquote {
+	background-color: #f0f5f1;
+	padding-top: 2em;
+	padding-bottom: 2em;
+}
 
 
 
@@ -1027,7 +1033,8 @@ td code {
 		color: #5aa3dc;
 	}
 
-	code {
+	code,
+	kbd {
 		background-color: #122844;
 	}
 
@@ -1073,6 +1080,10 @@ td code {
 	th,
 	td {
 		border-bottom-color: #233444;
+	}
+
+	blockquote {
+		background-color: #101010;
 	}
 
 	.tabs .tab-buttons {
