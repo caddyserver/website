@@ -31,19 +31,7 @@ http://localhost:2019/debug/pprof/
 	By default, the admin API is only accessible locally. If running remotely, in VMs, or in containers, see the next section for how to access this endpoint.
 </aside>
 
-You will see a simple list of profiles available along with their descriptions:
-
-> - **allocs:** A sampling of all past memory allocations
-> - **block:** Stack traces that led to blocking on synchronization primitives
-> - **cmdline:** The command line invocation of the current program
-> - **goroutine:** Stack traces of all current goroutines. Use debug=2 as a query parameter to export in the same format as an unrecovered panic.
-> - **heap:** A sampling of memory allocations of live objects. You can specify the gc GET parameter to run GC before taking the heap sample.
-> - **mutex:** Stack traces of holders of contended mutexes
-> - **profile:** CPU profile. You can specify the duration in the seconds GET parameter. After you get the profile file, use the go tool pprof command to investigate the profile.
-> - **threadcreate:** Stack traces that led to the creation of new OS threads
-> - **trace:** A trace of execution of the current program. You can specify the duration in the seconds GET parameter. After you get the trace file, use the go tool trace command to investigate the trace.
-
-Above these descriptions, you'll notice a simple table of counts and links, such as:
+You'll notice a simple table of counts and links, such as:
 
 Count | Profile
 ----- | --------------------
@@ -56,11 +44,23 @@ Count | Profile
 0     | profile
 29    | threadcreate
 0     | trace
-full goroutine stack dump
+|     | full goroutine stack dump
 
 The counts are a handy way to quickly identify leaks. If you suspect a leak, refresh the page repeatedly and you'll see one or more of those counts constantly increasing. If the heap count grows, it's a possible memory leak; if the goroutine count grows, it's a possible goroutine leak.
 
 Click through the profiles and see what they look like. Some may be empty and that's normal a lot of the time. The most commonly-used ones are <b>goroutine</b> (function stacks), <b>heap</b> (memory), and <b>profile</b> (CPU). Other profiles are useful for troubleshooting mutex contention or deadlocks.
+
+At the bottom, there's a simple description of each profile:
+
+- **allocs:** A sampling of all past memory allocations
+- **block:** Stack traces that led to blocking on synchronization primitives
+- **cmdline:** The command line invocation of the current program
+- **goroutine:** Stack traces of all current goroutines. Use debug=2 as a query parameter to export in the same format as an unrecovered panic.
+- **heap:** A sampling of memory allocations of live objects. You can specify the gc GET parameter to run GC before taking the heap sample.
+- **mutex:** Stack traces of holders of contended mutexes
+- **profile:** CPU profile. You can specify the duration in the seconds GET parameter. After you get the profile file, use the go tool pprof command to investigate the profile.
+- **threadcreate:** Stack traces that led to the creation of new OS threads
+- **trace:** A trace of execution of the current program. You can specify the duration in the seconds GET parameter. After you get the trace file, use the go tool trace command to investigate the trace.
 
 <aside class="tip">
 
@@ -227,7 +227,7 @@ The first line contains the goroutine's number (61961905), state ("IO wait"), an
 	- `semacquire`: Waiting to acquire a semaphore (low-level synchronization primitive).
 	- `syscall`: Executing a system call. Consumes an OS thread.
 
-- **Duration:** How long the goroutine has existed. Useful for finding bugs like goroutine leaks. For example, if we expect all network connections to be closed after a few minutes, what does it mean when we find a lot of goroutines alive for hours?
+- **Duration:** How long the goroutine has existed. Useful for finding bugs like goroutine leaks. For example, if we expect all network connections to be closed after a few minutes, what does it mean when we find a lot of netconn goroutines alive for hours?
 
 ### Interpreting goroutine dumps
 
@@ -242,3 +242,7 @@ So, we can deduce that this goroutine is serving an HTTP/2 request! It's waiting
 Every program is different, but when debugging Caddy, these patterns tend to hold true.
 
 ## Memory profiles
+
+Memory (or heap) profiles track heap allocations, which are the major consumers of memory on a system. Allocations are also a usual suspect for performance problems because allocating memory requires syscalls, which can be slow.
+
+Heap profiles look similar to goroutine profile in nearly every way except the start of the top line.
