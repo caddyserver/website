@@ -98,7 +98,9 @@ By default, Caddy's admin API is only accessible over the loopback socket. Howev
 One easy option is to simply reverse proxy to it from your site:
 
 ```caddy-d
-reverse_proxy /debug/pprof/* localhost:2019
+reverse_proxy /debug/pprof/* localhost:2019 {
+	header_up Host {upstream_hostport}
+}
 ```
 
 This will, of course, make profiles available to who can connect to your site. If that's not desired, you can add some authentication using an HTTP auth module of your choice.
