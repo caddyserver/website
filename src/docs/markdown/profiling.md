@@ -7,9 +7,9 @@ Profiling Caddy
 
 A **program profile** is a snapshot of a program's use of resources at runtime. Profiles can be extremely helpful to identify problem areas, troubleshoot bugs and crashes, and optimize code.
 
-Caddy uses Go's facilities for capturing profiles, which are compatible with the [pprof](https://github.com/google/pprof) tool, which is built into the `go` command.
+Caddy uses Go's tooling for capturing profiles, which is called [pprof](https://github.com/google/pprof), and it is built into the `go` command.
 
-Profiles report on consumers of CPU and memory, show stack traces of goroutines, and help trace down deadlocks or high-contention synchronization primitives.
+Profiles report on consumers of CPU and memory, show stack traces of goroutines, and help track down deadlocks or high-contention synchronization primitives.
 
 When reporting certain bugs in Caddy, we may ask for a profile. This article can help. It describes both how to obtain profiles with Caddy,and how to use and interpret the resulting pprof profiles in general.
 
@@ -275,7 +275,17 @@ Interestingly, we can infer from that call stack that the http2 package used a p
 
 CPU profiles help you understand where the Go program is spending most of its scheduled time on the processor.
 
-However, there is no plaintext form for these, so we'll use `go tool pprof` commands to help us read them. Download the profile (aptly named `profile`) and in the same folder, run this command, which opens an interactive prompt:
+However, there is no plaintext form for these, so we'll use `go tool pprof` commands to help us read them in the next section.
+
+To download a CPU profile, make a request to `/debug/pprof/profile?seconds=N`, where N is the number of seconds over which you want to collect the profile.
+
+It should download a binary file, aptly named `profile`.
+
+## `go tool pprof`
+
+Go comes with a profile analysis tool called pprof. We'll use it to read the CPU profile as an example, but you can use it with any kind of profile.
+
+Run this command (replacing "profile" with the actual filepath if different), which opens an interactive prompt:
 
 <pre><code class="cmd bash">go tool pprof profile
 Type: cpu
@@ -286,17 +296,36 @@ Entering interactive mode (type "help" for commands, "o" for options)
 
 <aside class="tip">
 
-Replace `profile` with the name of the filename. When dealing with multiple profiles it's conventional to use file extensions like `.cpu` or `.prof` to indicate a profile.
+You can use this command to examine any type of profile, not just CPU profiles which this article uses as an example. The principles are the same for other profiles and the concepts carry over.
 
 </aside>
 
-This is something you can explore. As you can see, entering `help` gives you a list of commands and `o` will give you options.
+This is something you can explore. Entering `help` gives you a list of commands and `o` will show you current options.
 
-There's a lot of commands, but the most common ones are typically:
+There's a lot of commands, but some common ones are:
 
 - `top`: Show what used the most CPU. You can append a number like `top 20` to see more.
 - `web`: Open the call graph in your web browser. This is a great way to visually see CPU usage.
 - `svg`: Generate an SVG image of the call graph. It's the same as `web` except it doesn't open your web browser and the SVG is saved locally.
-- 
+- `tree`: More of a tabular view of the call stack.
 
-**You can actually explore any kind of pprof profile with this tool.** It's not just for CPU profiles. Similar features are available for heap and goroutine profiles too!
+If we run `top`, we see output like:
+
+```
+Showing nodes accounting for 120ms, 85.71% of 140ms total
+Showing top 10 nodes out of 124
+      flat  flat%   sum%        cum   cum%
+      30ms 21.43% 21.43%       30ms 21.43%  runtime.madvise
+      10ms  7.14% 28.57%       70ms 50.00%  github.com/caddyserver/caddy/v2/modules/caddyhttp/rewrite.Rewrite.ServeHTTP
+      10ms  7.14% 35.71%       20ms 14.29%  github.com/dlclark/regexp2.(*Regexp).run
+      10ms  7.14% 42.86%       10ms  7.14%  runtime.(*bmap).setoverflow (inline)
+      10ms  7.14% 50.00%       10ms  7.14%  runtime.memclrNoHeapPointers
+      10ms  7.14% 57.14%       10ms  7.14%  runtime.pthread_cond_wait
+      10ms  7.14% 64.29%       10ms  7.14%  runtime.pthread_kill
+      10ms  7.14% 71.43%       10ms  7.14%  runtime.scanobject
+      10ms  7.14% 78.57%       10ms  7.14%  runtime.step
+      10ms  7.14% 85.71%       10ms  7.14%  runtime.walltime
+```
+
+Interesting! Ignoring the `madvise` system call by the runtime, we can instantly see that the most time was spent in the `rewrite` handler.
+
