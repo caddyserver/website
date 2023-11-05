@@ -64,7 +64,7 @@ At the bottom, there's a simple description of each profile:
 
 <aside class="tip">
 
-The difference between "goroutine" and "full goroutine stack dump" is the `?debug=2` parameter: the full stack dump is like what you'd see output after a panic; it's more verbose and, notably, does not collapse identical goroutines.
+The difference between "goroutine" and "full goroutine stack dump" is the `?debug=2` parameter: the full stack dump is like output you'd see after a panic; it's more verbose and, notably, does not collapse identical goroutines.
 
 </aside>
 
@@ -73,11 +73,11 @@ The difference between "goroutine" and "full goroutine stack dump" is the `?debu
 
 Clicking the links on the pprof index page above will give you profiles in text format. This is useful for debugging, and it's what we on the Caddy team prefer because we can scan it to look for obvious clues without needing extra tooling.
 
-But binary is actually the default format. The HTML links append the `?debug=` query string parameter to format them as text.
+But binary is actually the default format. The HTML links append the `?debug=` query string parameter to format them as text, except for the (CPU) "profile" link, which does not have a textual representation.
 
 These are the query string parameters you can set (from [the Go docs](https://pkg.go.dev/net/http/pprof#hdr-Parameters)):
 
-- **`debug=N` (all profiles):** response format: N = 0: binary (default), N > 0: plaintext
+- **`debug=N` (all profiles except cpu):** response format: N = 0: binary (default), N > 0: plaintext
 - **`gc=N` (heap profile):** N > 0: run a garbage collection cycle before profiling
 - **`seconds=N` (allocs, block, goroutine, heap, mutex, threadcreate profiles):** return a delta profile
 - **`seconds=N` (cpu, trace profiles):** profile for the given duration
@@ -243,6 +243,60 @@ Every program is different, but when debugging Caddy, these patterns tend to hol
 
 ## Memory profiles
 
-Memory (or heap) profiles track heap allocations, which are the major consumers of memory on a system. Allocations are also a usual suspect for performance problems because allocating memory requires syscalls, which can be slow.
+Memory (or heap) profiles track heap allocations, which are the major consumers of memory on a system. Allocations are also a usual suspect for performance problems because allocating memory requires system calls, which can be slow.
 
-Heap profiles look similar to goroutine profile in nearly every way except the start of the top line.
+Heap profiles look similar to goroutine profiles in nearly every way except the start of the top line. Here's an example:
+
+```
+0: 0 [1: 4096] @ 0xb1fc05 0xb1fc4d 0x48d8d1 0xb1fce6 0xb184c7 0xb1bc8e 0xb41653 0xb4105c 0xb4151d 0xb23b14 0x4719c1
+#	0xb1fc04	bufio.NewWriterSize+0x24					bufio/bufio.go:599
+#	0xb1fc4c	golang.org/x/net/http2.glob..func8+0x6c				golang.org/x/net@v0.17.0/http2/http2.go:263
+#	0x48d8d0	sync.(*Pool).Get+0xb0						sync/pool.go:151
+#	0xb1fce5	golang.org/x/net/http2.(*bufferedWriter).Write+0x45		golang.org/x/net@v0.17.0/http2/http2.go:276
+#	0xb184c6	golang.org/x/net/http2.(*Framer).endWrite+0xc6			golang.org/x/net@v0.17.0/http2/frame.go:371
+#	0xb1bc8d	golang.org/x/net/http2.(*Framer).WriteHeaders+0x48d		golang.org/x/net@v0.17.0/http2/frame.go:1131
+#	0xb41652	golang.org/x/net/http2.(*writeResHeaders).writeHeaderBlock+0xd2	golang.org/x/net@v0.17.0/http2/write.go:239
+#	0xb4105b	golang.org/x/net/http2.splitHeaderBlock+0xbb			golang.org/x/net@v0.17.0/http2/write.go:169
+#	0xb4151c	golang.org/x/net/http2.(*writeResHeaders).writeFrame+0x1dc	golang.org/x/net@v0.17.0/http2/write.go:234
+#	0xb23b13	golang.org/x/net/http2.(*serverConn).writeFrameAsync+0x73	golang.org/x/net@v0.17.0/http2/server.go:851
+```
+
+The first line format is as follows:
+
+```
+<live objects> <live memory> [<allocations>: <allocation memory>] @ <addresses...>
+```
+
+In the example above, we have a single allocation made by `bufio.NewWriterSize()` but currently no live objects from this call stack.
+
+Interestingly, we can infer from that call stack that the http2 package used a pooled 4 KB to write HTTP/2 frame(s) to the client. You'll often see pooled objects in Go memory profiles if hot paths have been optimized to reuse allocations. This reduces new allocations, and the heap profile can help you know if the pool is being used properly!
+
+## CPU profiles
+
+CPU profiles help you understand where the Go program is spending most of its scheduled time on the processor.
+
+However, there is no plaintext form for these, so we'll use `go tool pprof` commands to help us read them. Download the profile (aptly named `profile`) and in the same folder, run this command, which opens an interactive prompt:
+
+<pre><code class="cmd bash">go tool pprof profile
+Type: cpu
+Time: Nov 4, 2023 at 6:32pm (MDT)
+Duration: 5.12s, Total samples = 92.30s (1801.83%)
+Entering interactive mode (type "help" for commands, "o" for options)
+(pprof) </code></pre>
+
+<aside class="tip">
+
+Replace `profile` with the name of the filename. When dealing with multiple profiles it's conventional to use file extensions like `.cpu` or `.prof` to indicate a profile.
+
+</aside>
+
+This is something you can explore. As you can see, entering `help` gives you a list of commands and `o` will give you options.
+
+There's a lot of commands, but the most common ones are typically:
+
+- `top`: Show what used the most CPU. You can append a number like `top 20` to see more.
+- `web`: Open the call graph in your web browser. This is a great way to visually see CPU usage.
+- `svg`: Generate an SVG image of the call graph. It's the same as `web` except it doesn't open your web browser and the SVG is saved locally.
+- 
+
+**You can actually explore any kind of pprof profile with this tool.** It's not just for CPU profiles. Similar features are available for heap and goroutine profiles too!
