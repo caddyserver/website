@@ -306,9 +306,10 @@ We'll use Go's built-in profile analyzer to read the CPU profile as an example, 
 Run this command (replacing "profile" with the actual filepath if different), which opens an interactive prompt:
 
 <pre><code class="cmd bash">go tool pprof profile
+File: caddy_master
 Type: cpu
-Time: Nov 4, 2023 at 6:32pm (MDT)
-Duration: 5.12s, Total samples = 92.30s (1801.83%)
+Time: Aug 29, 2022 at 8:47pm (MDT)
+Duration: 30.02s, Total samples = 70.11s (233.55%)
 Entering interactive mode (type "help" for commands, "o" for options)
 (pprof) </code></pre>
 
@@ -318,49 +319,132 @@ You can use this command to examine any type of profile, not just CPU profiles. 
 
 </aside>
 
-This is something you can explore. Entering `help` gives you a list of commands and `o` will show you current options.
+This is something you can explore. Entering `help` gives you a list of commands and `o` will show you current options. And if you type `help <command>` you can get information about a specific command.
 
 There's a lot of commands, but some common ones are:
 
-- `top`: Show what used the most CPU. You can append a number like `top 20` to see more.
+- `top`: Show what used the most CPU. You can append a number like `top 20` to see more, or a regex to "focus" on or ignore certain items.
 - `web`: Open the call graph in your web browser. This is a great way to visually see CPU usage.
 - `svg`: Generate an SVG image of the call graph. It's the same as `web` except it doesn't open your web browser and the SVG is saved locally.
 - `tree`: A tabular view of the call stack.
 
-The `top` command is usually the first go-to. We see output like:
+Let's start with `top`. We see output like:
 
 ```
-Showing nodes accounting for 120ms, 85.71% of 140ms total
-Showing top 10 nodes out of 124
+(pprof) top
+Showing nodes accounting for 38.36s, 54.71% of 70.11s total
+Dropped 785 nodes (cum <= 0.35s)
+Showing top 10 nodes out of 196
       flat  flat%   sum%        cum   cum%
-      30ms 21.43% 21.43%       30ms 21.43%  runtime.madvise
-      10ms  7.14% 28.57%       70ms 50.00%  github.com/caddyserver/caddy/v2/modules/caddyhttp/rewrite.Rewrite.ServeHTTP
-      10ms  7.14% 35.71%       20ms 14.29%  github.com/dlclark/regexp2.(*Regexp).run
-      10ms  7.14% 42.86%       10ms  7.14%  runtime.(*bmap).setoverflow (inline)
-      10ms  7.14% 50.00%       10ms  7.14%  runtime.memclrNoHeapPointers
-      10ms  7.14% 57.14%       10ms  7.14%  runtime.pthread_cond_wait
-      10ms  7.14% 64.29%       10ms  7.14%  runtime.pthread_kill
-      10ms  7.14% 71.43%       10ms  7.14%  runtime.scanobject
-      10ms  7.14% 78.57%       10ms  7.14%  runtime.step
-      10ms  7.14% 85.71%       10ms  7.14%  runtime.walltime
+    10.97s 15.65% 15.65%     10.97s 15.65%  runtime/internal/syscall.Syscall6
+     6.59s  9.40% 25.05%     36.65s 52.27%  runtime.gcDrain
+     5.03s  7.17% 32.22%      5.34s  7.62%  runtime.(*lfstack).pop (inline)
+     3.69s  5.26% 37.48%     11.02s 15.72%  runtime.scanobject
+     2.42s  3.45% 40.94%      2.42s  3.45%  runtime.(*lfstack).push
+     2.26s  3.22% 44.16%      2.30s  3.28%  runtime.pageIndexOf (inline)
+     2.11s  3.01% 47.17%      2.56s  3.65%  runtime.findObject
+     2.03s  2.90% 50.06%      2.03s  2.90%  runtime.markBits.isMarked (inline)
+     1.69s  2.41% 52.47%      1.69s  2.41%  runtime.memclrNoHeapPointers
+     1.57s  2.24% 54.71%      1.57s  2.24%  runtime.epollwait
 ```
 
-Interesting! Ignoring the `madvise` system call by the runtime, we can instantly see that the most time was spent in the `rewrite` handler.
+The top 10 consumers of the CPU were all in the Go runtime -- in particular, lots of garbage collection (remember that syscalls are used to free and allocate memory). This is a hint that we could reduce allocations to improve performance, and a heap profile would be worthwhile.
 
-It's important to note that CPU profiles get their measurements from intermittent sampling, and samples will never be captured more frequently than the sampling rate, which is 10ms by default. That's why you don't see any cumulative time durations in the table above that are less than 10ms (they are likely less, but rounded up).
+OK, but what if we want to see CPU utilization from our own code? We can ignore patterns containing "runtime" like so:
 
-For more specific timings, you can do an execution trace. (TODO: Add section about tracing.)
+```
+(pprof) top -runtime  
+Active filters:
+   ignore=runtime
+Showing nodes accounting for 0.92s, 1.31% of 70.11s total
+Dropped 160 nodes (cum <= 0.35s)
+Showing top 10 nodes out of 243
+      flat  flat%   sum%        cum   cum%
+     0.17s  0.24%  0.24%      0.28s   0.4%  sync.(*Pool).getSlow
+     0.11s  0.16%   0.4%      0.11s  0.16%  github.com/prometheus/client_golang/prometheus.(*histogram).observe (inline)
+     0.10s  0.14%  0.54%      0.23s  0.33%  github.com/prometheus/client_golang/prometheus.(*MetricVec).hashLabels
+     0.10s  0.14%  0.68%      0.12s  0.17%  net/textproto.CanonicalMIMEHeaderKey
+     0.10s  0.14%  0.83%      0.10s  0.14%  sync.(*poolChain).popTail
+     0.08s  0.11%  0.94%      0.26s  0.37%  github.com/prometheus/client_golang/prometheus.(*histogram).Observe
+     0.07s   0.1%  1.04%      0.07s   0.1%  internal/poll.(*fdMutex).rwlock
+     0.07s   0.1%  1.14%      0.10s  0.14%  path/filepath.Clean
+     0.06s 0.086%  1.23%      0.06s 0.086%  context.value
+     0.06s 0.086%  1.31%      0.06s 0.086%  go.uber.org/zap/buffer.(*Buffer).AppendByte
+```
 
-If we instead run the `svg` or `web` commands, we'll get a visualization of the profile; something like this:
+Well, it's clear that Prometheus metrics are another top consumer, but you'll notice that cumulatively, they amount to orders of magnitude less than GC above. The stark difference suggests that we should focus on reducing GC.
+
+<aside class="tip">
+
+It's important to note that CPU profiles get their measurements from intermittent sampling, and samples will never be captured more frequently than the sampling rate, which is 10ms by default. That's why you won't see any cumulative time durations that are less than 10ms (they are likely less, but rounded up). For more specific timings, you can do an execution trace, which does not use sampling. (TODO: Add section about tracing.)
+
+</aside>
+
+Let's use `q` to quit this profile and use the same command on the heap profile:
+
+```
+(pprof) top
+Showing nodes accounting for 22259.07kB, 81.30% of 27380.04kB total
+Showing top 10 nodes out of 102
+      flat  flat%   sum%        cum   cum%
+   12300kB 44.92% 44.92%    12300kB 44.92%  runtime.allocm
+ 2570.01kB  9.39% 54.31%  2570.01kB  9.39%  bufio.NewReaderSize
+ 2048.81kB  7.48% 61.79%  2048.81kB  7.48%  runtime.malg
+ 1542.01kB  5.63% 67.42%  1542.01kB  5.63%  bufio.NewWriterSize
+ ...
+ ```
+
+Bingo. Nearly half of memory is allocated strictly for read and write buffers from our use of the bufio package. Thus, we can infer that optimizing our code to reduce buffering would be very beneficial. (The [associated patch in Caddy](https://github.com/caddyserver/caddy/pull/4978) does just that).
+
+### Visualizations
+
+If we instead run the `svg` or `web` commands, we'll get a visualization of the profile:
+
+![CPU profile visualization](/resources/images/profile.png)
+
+This is a CPU profile but similar graphs are available for other profile types.
+
+To learn how to read these graphs, read [the pprof documentation](https://github.com/google/pprof/blob/main/doc/README.md#interpreting-the-callgraph).
 
 
+### Diffing profiles
 
+After you make a code change, you can compare the before and after using a difference analysis ("diff"). Here's a diff of the heap:
 
+<pre><code class="cmd bash">go tool pprof -diff_base=before.prof after.prof
+File: caddy
+Type: inuse_space
+Time: Aug 29, 2022 at 1:21am (MDT)
+Entering interactive mode (type "help" for commands, "o" for options)
+(pprof) top
+Showing nodes accounting for -26.97MB, 49.32% of 54.68MB total
+Dropped 10 nodes (cum <= 0.27MB)
+Showing top 10 nodes out of 137
+      flat  flat%   sum%        cum   cum%
+  -27.04MB 49.45% 49.45%   -27.04MB 49.45%  bufio.NewWriterSize
+      -2MB  3.66% 53.11%       -2MB  3.66%  runtime.allocm
+    1.06MB  1.93% 51.18%     1.06MB  1.93%  github.com/yuin/goldmark/util.init
+    1.03MB  1.89% 49.29%     1.03MB  1.89%  github.com/caddyserver/caddy/v2/modules/caddyhttp/reverseproxy.glob..func2
+       1MB  1.84% 47.46%        1MB  1.84%  bufio.NewReaderSize
+      -1MB  1.83% 49.29%       -1MB  1.83%  runtime.malg
+       1MB  1.83% 47.46%        1MB  1.83%  github.com/caddyserver/caddy/v2/modules/caddyhttp/reverseproxy.cloneRequest
+      -1MB  1.83% 49.29%       -1MB  1.83%  net/http.(*Server).newConn
+   -0.55MB  1.00% 50.29%    -0.55MB  1.00%  html.populateMaps
+    0.53MB  0.97% 49.32%     0.53MB  0.97%  github.com/alecthomas/chroma.TypeRemappingLexer</code></pre>
+
+As you can see, we reduced memory allocations by about half!
+
+Diffs can be visualized, too:
+
+![CPU profile visualization](/resources/images/profile-diff.png)
+
+This makes it really obvious how the changes affected the performance of certain parts of the program.
 
 ## Further reading
 
-To put the "pro" in "profile", consider these resources:
+There's a lot to master with program profiling, and we've only scratched the surface.
+
+To really put the "pro" in "profiling", consider these resources:
 
 - [pprof Documentation](https://github.com/google/pprof/blob/main/doc/README.md)
 - [A real-world use of profiles with Caddy](https://github.com/caddyserver/caddy/pull/4978)
-- 
