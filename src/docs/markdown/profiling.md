@@ -16,7 +16,7 @@ When reporting certain bugs in Caddy, we may ask for a profile. This article can
 
 Two things to know before getting started:
 
-1. **Caddy profiles are NOT security-sensitive.** They contain benign technical readouts, not the contents of memory. They cannot enable hackers to have access to your system. They are safe to share.
+1. **Caddy profiles are NOT security-sensitive.** They contain benign technical readouts, not the contents of memory. They do not grant access to systems. They are safe to share.
 2. **Profiles are lightweight and can be collected in production.** In fact, this is a recommended best practice for many users; see later in this article.
 
 ## Obtaining profiles
@@ -293,15 +293,15 @@ Interestingly, we can infer from that call stack that the http2 package used a p
 
 CPU profiles help you understand where the Go program is spending most of its scheduled time on the processor.
 
-However, there is no plaintext form for these, so we'll use `go tool pprof` commands to help us read them in the next section.
+However, there is no plaintext form for these, so in the next section, we'll use `go tool pprof` commands to help us read them.
 
-To download a CPU profile, make a request to `/debug/pprof/profile?seconds=N`, where N is the number of seconds over which you want to collect the profile.
+To download a CPU profile, make a request to `/debug/pprof/profile?seconds=N`, where N is the number of seconds over which you want to collect the profile. During CPU profile collection, program performance may be mildly impacted. (Other profiles have virtually no performance impact.)
 
-It should download a binary file, aptly named `profile`.
+When completed, it should download a binary file, aptly named `profile`. Then we need to examine it.
 
 ## `go tool pprof`
 
-Go comes with a profile analysis tool called pprof. We'll use it to read the CPU profile as an example, but you can use it with any kind of profile.
+We'll use Go's built-in profile analyzer to read the CPU profile as an example, but you can use it with any kind of profile.
 
 Run this command (replacing "profile" with the actual filepath if different), which opens an interactive prompt:
 
@@ -314,7 +314,7 @@ Entering interactive mode (type "help" for commands, "o" for options)
 
 <aside class="tip">
 
-You can use this command to examine any type of profile, not just CPU profiles which this article uses as an example. The principles are the same for other profiles and the concepts carry over.
+You can use this command to examine any type of profile, not just CPU profiles. The principles are the same for other profiles and the concepts carry over.
 
 </aside>
 
@@ -325,9 +325,9 @@ There's a lot of commands, but some common ones are:
 - `top`: Show what used the most CPU. You can append a number like `top 20` to see more.
 - `web`: Open the call graph in your web browser. This is a great way to visually see CPU usage.
 - `svg`: Generate an SVG image of the call graph. It's the same as `web` except it doesn't open your web browser and the SVG is saved locally.
-- `tree`: More of a tabular view of the call stack.
+- `tree`: A tabular view of the call stack.
 
-If we run `top`, we see output like:
+The `top` command is usually the first go-to. We see output like:
 
 ```
 Showing nodes accounting for 120ms, 85.71% of 140ms total
@@ -347,3 +347,20 @@ Showing top 10 nodes out of 124
 
 Interesting! Ignoring the `madvise` system call by the runtime, we can instantly see that the most time was spent in the `rewrite` handler.
 
+It's important to note that CPU profiles get their measurements from intermittent sampling, and samples will never be captured more frequently than the sampling rate, which is 10ms by default. That's why you don't see any cumulative time durations in the table above that are less than 10ms (they are likely less, but rounded up).
+
+For more specific timings, you can do an execution trace. (TODO: Add section about tracing.)
+
+If we instead run the `svg` or `web` commands, we'll get a visualization of the profile; something like this:
+
+
+
+
+
+## Further reading
+
+To put the "pro" in "profile", consider these resources:
+
+- [pprof Documentation](https://github.com/google/pprof/blob/main/doc/README.md)
+- [A real-world use of profiles with Caddy](https://github.com/caddyserver/caddy/pull/4978)
+- 
