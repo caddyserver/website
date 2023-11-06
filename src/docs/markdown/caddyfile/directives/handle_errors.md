@@ -41,7 +41,7 @@ The following placeholders are available while handling errors. They are [Caddyf
 
 ## Examples
 
-Custom error pages based on the status code (i.e. a page called `404.html` for 404 errors). Note that [`file_server`](file_server) preserves the error's HTTP status code when run in `handle_errors` (assumes you set a [site root](/docs/caddyfile/directives/root) in your site beforehand):
+Custom error pages based on the status code (i.e. a page called `404.html` for `404` errors). Note that [`file_server`](file_server) preserves the error's HTTP status code when run in `handle_errors` (assumes you set a [site root](root) in your site beforehand):
 
 ```caddy-d
 handle_errors {
@@ -50,7 +50,7 @@ handle_errors {
 }
 ```
 
-A single error page that uses [`templates`](/docs/caddyfile/directives/templates) to write a custom error message:
+A single error page that uses [`templates`](templates) to write a custom error message:
 
 ```caddy-d
 handle_errors {
@@ -85,7 +85,7 @@ handle_errors {
 }
 ```
 
-Simply use [`respond`](/docs/caddyfile/directives/respond) to return the error code and name
+Simply use [`respond`](respond) to return the error code and name
 
 ```caddy-d
 handle_errors {
@@ -93,7 +93,7 @@ handle_errors {
 }
 ```
 
-To handle specific error codes differently, use an [`expression`](/docs/caddyfile/matchers#expression) matcher, using [`handle`](/docs/caddyfile/directives/handle) for mutual exclusivity:
+To handle specific error codes differently, use an [`expression`](/docs/caddyfile/matchers#expression) matcher, using [`handle`](handle) for mutual exclusivity:
 
 ```caddy-d
 handle_errors {

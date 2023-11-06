@@ -238,7 +238,9 @@ Append the results of multiple dynamic upstream modules. Useful if you want redu
 
 ### Load balancing
 
-Load balancing is used whenever more than one upstream is defined. This is enabled by default, with the `random` load balancing policy.
+Load balancing is typically used to split traffic between multiple upstreams. By enabling retries, it can also be used with one or more upstreams, to hold requests until a healthy upstream can be selected (e.g. to wait and mitigate errors while rebooting or redeploying an upstream).
+
+This is enabled by default, with the `random` policy. Retries are disabled by default.
 
 - **lb_policy** <span id="lb_policy"/> is the name of the load balancing policy, along with any options. Default: `random`.
 
