@@ -132,7 +132,7 @@ Save that to a file named `Caddyfile` (no extension) in the current directory.
 
 <aside class="complete">Make a Caddyfile</aside>
 
-Stop Caddy if it is already running (Ctrl+C), then run:
+Stop Caddy if it is already running (<kbd>Ctrl</kbd>+<kbd>C</kbd>), then run:
 
 <pre><code class="cmd bash">caddy adapt</code></pre>
 
@@ -233,7 +233,7 @@ As you can see, Caddy is well-suited for a wide variety of use cases and deploym
 
 ## Start, stop, run
 
-Since Caddy is a server, it runs indefinitely. That means your terminal won't unblock after you execute `caddy run` until the process is terminated (usually with Ctrl+C).
+Since Caddy is a server, it runs indefinitely. That means your terminal won't unblock after you execute `caddy run` until the process is terminated (usually with <kbd>Ctrl</kbd>+<kbd>C</kbd>).
 
 Although `caddy run` is the most common and is usually recommended (especially when making a system service!), you can alternatively use `caddy start` to start Caddy and have it run in the background:
 
@@ -241,7 +241,7 @@ Although `caddy run` is the most common and is usually recommended (especially w
 
 This will let you use your terminal again, which is convenient in some interactive headless environments.
 
-You will then have to stop the process yourself, since Ctrl+C won't stop it for you:
+You will then have to stop the process yourself, since <kbd>Ctrl</kbd>+<kbd>C</kbd> won't stop it for you:
 
 <pre><code class="cmd bash">caddy stop</code></pre>
 
@@ -256,7 +256,7 @@ Your server can perform zero-downtime config reloads/changes.
 
 All [API endpoints](/docs/api) that load or change config are graceful with zero downtime.
 
-When using the command line, however, it may be tempting to use Ctrl+C to stop your server and then restart it again to pick up the new configuration. Don't do this: stopping and starting the server is orthogonal to config changes, and will result in downtime.
+When using the command line, however, it may be tempting to use <kbd>Ctrl</kbd>+<kbd>C</kbd> to stop your server and then restart it again to pick up the new configuration. Don't do this: stopping and starting the server is orthogonal to config changes, and will result in downtime.
 
 <aside class="tip">
 	Stopping your server will cause the server to go down.

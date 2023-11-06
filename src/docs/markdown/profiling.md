@@ -11,7 +11,7 @@ Caddy uses Go's tooling for capturing profiles, which is called [pprof](https://
 
 Profiles report on consumers of CPU and memory, show stack traces of goroutines, and help track down deadlocks or high-contention synchronization primitives.
 
-When reporting certain bugs in Caddy, we may ask for a profile. This article can help. It describes both how to obtain profiles with Caddy,and how to use and interpret the resulting pprof profiles in general.
+When reporting certain bugs in Caddy, we may ask for a profile. This article can help. It describes both how to obtain profiles with Caddy, and how to use and interpret the resulting pprof profiles in general.
 
 
 Two things to know before getting started:
@@ -91,7 +91,7 @@ Once your profiles are downloaded, you can upload them to a GitHub issue comment
 
 _If you're already able to access the admin API locally, skip this section._
 
-By default, Caddy's admin API is only accessible over the loopback socket. However, there are at least 3 ways you can access Caddy's /debug/pprof endpoint remotely:
+By default, Caddy's admin API is only accessible over the loopback socket. However, there are at least 3 ways you can access Caddy's `/debug/pprof` endpoint remotely:
 
 ### Reverse proxy through your site
 
@@ -107,21 +107,39 @@ This will, of course, make profiles available to who can connect to your site. I
 
 (Don't forget the `/debug/pprof/*` matcher, otherwise you'll proxy the entire admin API!)
 
+
 ### SSH tunnel
 
 Another way is to use an SSH tunnel. This is an encrypted connection using the SSH protocol between your computer and your server. Run a command like this on your computer:
 
 <pre><code class="cmd bash">ssh -N username@example.com -L 8123:localhost:2019</code></pre>
 
-This tunnels `localhost:8123` to `example.com:2019`. Make sure to replace `username`, `example.com`, and ports as necessary.
+This tunnels `localhost:8123` (on your local machine) to `localhost:2019` on `example.com`. Make sure to replace `username`, `example.com`, and ports as necessary.
+
+<aside class="tip">
+
+This command will run in the foreground. Keep in mind that if you try to background the process with <kbd>Ctrl</kbd>+<kbd>Z</kbd>, it will pause the tunnel, and connections using the tunnel will fail to connect.
+
+</aside>
 
 Then in another terminal you can run `curl` like so:
 
 <pre><code class="cmd bash">curl -v http://localhost:8123/debug/pprof/ -H "Host: localhost:2019"</code></pre>
 
-You can avoid the need for `-H "Host: ..."` by using port 2019 on both sides of the tunnel (but this requires that port 2019 is not already taken on your own computer).
+You can avoid the need for `-H "Host: ..."` by using port `2019` on both sides of the tunnel (but this requires that port `2019` is not already taken on your own computer, i.e. not having Caddy running locally).
 
 While the tunnel is active, you can access any and all of the admin API. Type <kbd>Ctrl</kbd>+<kbd>C</kbd> on the `ssh` command to close the tunnel.
+
+#### Long-running tunnel
+
+Running a tunnel with the above command requires that you keep the terminal open. If you want to run the tunnel in the background, you can start the tunnel like this:
+
+<pre><code class="cmd bash">ssh -f -N -M -S /tmp/caddy-tunnel.sock username@example.com -L 8123:localhost:2019</code></pre>
+
+This will start in the background and create a control socket at `/tmp/caddy-tunnel.sock`. You can then use the control socket to close the tunnel when you're done with it:
+
+<pre><code class="cmd bash">ssh -S /tmp/caddy-tunnel.sock -O exit e</code></pre>
+
 
 ### Remote admin API
 
