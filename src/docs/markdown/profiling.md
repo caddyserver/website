@@ -448,3 +448,5 @@ To really put the "pro" in "profiling", consider these resources:
 
 - [pprof Documentation](https://github.com/google/pprof/blob/main/doc/README.md)
 - [A real-world use of profiles with Caddy](https://github.com/caddyserver/caddy/pull/4978)
+- [Performance on the Go wiki](https://github.com/golang/go/wiki/Performance)
+- [The `net/http/pprof` package](https://pkg.go.dev/net/http/pprof)
