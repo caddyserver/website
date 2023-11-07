@@ -234,6 +234,11 @@ Formats or prettifies a Caddyfile, then exits. The result is printed to stdout u
 `--diff` causes the output to be compared against the input, and lines will be prefixed with `-` and `+` where they differ. Note that unchanges lines are prefixed with two spaces for alignment, and that this is not a valid patch format; it's just meant as a visual tool.
 
 
+<aside class="advice">
+
+The `caddy fmt` command [does not support](https://github.com/caddyserver/caddy/issues/5930#issuecomment-1797709061) [heredocs](/docs/caddyfile/concepts#heredocs).
+
+</aside>
 
 
 ### `caddy hash-password`
