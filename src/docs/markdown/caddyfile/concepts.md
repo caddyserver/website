@@ -181,6 +181,10 @@ The closing marker can be indented, which causes every line of text to have that
 
 Additional tokens may follow the closing marker as arguments to the directive (such as in the example above, the status code `200`).
 
+<aside class="advice">
+The [`caddy fmt`](/docs/command-line#caddy-fmt) command [does not support](https://github.com/caddyserver/caddy/issues/5930#issuecomment-1797709061) heredocs.
+</aside>
+
 
 ## Global options
 
