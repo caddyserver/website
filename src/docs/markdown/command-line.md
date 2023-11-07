@@ -235,7 +235,9 @@ Formats or prettifies a Caddyfile, then exits. The result is printed to stdout u
 
 
 <aside class="advice">
+
 The `caddy fmt` command [does not support](https://github.com/caddyserver/caddy/issues/5930#issuecomment-1797709061) [heredocs](/docs/caddyfile/concepts#heredocs).
+
 </aside>
 
 
