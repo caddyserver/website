@@ -158,7 +158,14 @@
 							Other web servers and scripted certificate tools fall over with hundreds of thousands of sites or thousands of instances. Caddy is designed to manage certificates reliably at this scale.
 						</p>
 					</div>
+				</div>
 
+				<div class="sponsorship-primer">
+					<h3>sponsored by <b>users like you</b></h3>
+					<p>
+						Caddy is free software and relies on sponsorships to survive. Not just donations: sponsorships ensure ongoing development and provide your business with tangible benefits.
+					</p>
+					<a href="/sponsor" class="button purple">See sponsorships</a>
 				</div>
 			</div>
 
@@ -233,9 +240,6 @@
 						</p>
 						<div class="demo-help">
 							<p>
-								Caddy is capable of serving TLS for any domains and IPs. This demo is intentionally restricted.
-							</p>
-							<p>
 								<b>Not working?</b> Make sure to use a subdomain of a registered domain, not a "sub-subdomain."
 								Verify you have created the public DNS records shown above with the correct values.
 								You may have to allow time for propagation. Consult your DNS provider's documentation or support for more information.
@@ -243,15 +247,53 @@
 							<p>
 								<b>Example subdomains that could work:</b> <code>caddydemo.example.net</code>, <code>caddydemo.example.co.uk</code>
 							</p>
+							<p>
+								Caddy is capable of serving TLS for any domains and IPs. This demo is intentionally restricted.
+							</p>
 						</div>
 					</div>
+				</div>
+			</section>
 
-					<div class="sponsorship-primer">
-						<h3>sponsored by <b>users like you</b></h3>
-						<p>
-							Caddy is free software and relies on sponsorships to survive. They aren't just donations: they ensure ongoing development and provide your business with tangible benefits!
-						</p>
-						<a href="/sponsor" class="button purple">See sponsorships</a>
+			<section class="diagonal up light gray feature">
+				<div class="wrapper">
+
+					<h2>All you need for TLS and PKI</h2>
+					<p>
+						Caddy is not only the world leader in certificate automation, it is also a fully-featured certificate authority for your own internal PKI.
+					</p>
+
+					<div class="asides">
+						<div>
+							<p>
+								Caddy 2 is a <a href="/docs/extending-caddy">highly extensible</a>, self-hosted platform on which you can build, configure, and deploy long-running services ("apps").
+							</p>
+							<p>
+								Caddy ships with apps for an <a href="/docs/modules/http">HTTPS server</a> (static files, reverse proxying, load balancing, etc.), <a href="/docs/modules/tls">TLS certificate manager</a>, and <a href="/docs/modules/pki">fully-managed internal PKI</a>. Caddy apps collaborate to make complex infrastructure just work with fewer moving parts.
+							</p>
+							<p>
+								<b>For example, the config shown here keeps your TLS certificates renewed for other programs to use;</b> no external tools or HTTP daemon required!
+							</p>
+							<p>
+								Providing a unified configuration, on-line <a href="/docs/api">config API</a>, and <a href="/docs/json/">automatic documentation</a> for all apps, Caddy is nearly infinitely extensible. Thanks to its unique <a href="/docs/architecture">modular architecture</a>, we can offer unlimited features without bloating the code base.
+							</p>
+						</div>
+						<div>
+							<div class="display right">
+								<code class="light">{
+  "apps": {
+    "tls": {
+      "certificates": {
+        "automate": [
+          "example.com",
+		  "sub.example.com",
+          "example.net"
+        ]
+      }
+    }
+  }
+}</code></div>
+						</div>
 					</div>
 				</div>
 			</section>
@@ -259,26 +301,68 @@
 			<section class="diagonal down dark feature">
 				<div class="wrapper">
 					<h2>
-						A truly forward-thinking reverse proxy
+						A forward-thinking reverse proxy
 					</h2>
 					<p>
 						Caddy's proxy was designed to be as forward-compatible as possible and has major batteries included: load balancing, active and passive health checks, dynamic upstreams, retries, pluggable transports, and of course, best-in-class TLS security.
 					</p>
-					<div class="cols">
-						<div class="col">
-							<h3 class="green">Proxy HTTP, FastCGI, WebSockets, and more</h3>
-							<p>
-								Capable of proxying HTTP and HTTPS, but also WebSockets, gRPC, FastCGI (usually PHP), and more! The underlying transport module is extensible for any custom way to generate an HTTP response.
-							</p>
-							<h3 class="purple">Dynamic backends</h3>
-							<p>
-								Provide Caddy with a static list of backends or enable a module to retrieve backends dynamically during each request: ideal for rapidly changing environments. Caddy flows with your infrastructure!
-							</p>
-							<h3 class="blue">High availability</h3>
-							<p>
-								Caddy comes with a whole suite of high availability (HA) features: advanced health checking, graceful (hitless) config changes, circuit breaking, load limiting, on-line retries, and more. The best part? It's all free. No enterprise-level paywalls.
-							</p>
+
+
+					<div class="asides asides-40-60">
+						<div class="spacing">
+							<div class="rollover" data-rollover="rollover-php">
+								<h3 class="green">Proxy HTTP, FastCGI, WebSockets, and more</h3>
+								<p>
+									Capable of proxying HTTP and HTTPS, but also WebSockets, gRPC, FastCGI (usually PHP), and more! The underlying transport module is extensible for any custom way to generate an HTTP response.
+								</p>
+							</div>
+							<div class="rollover" data-rollover="rollover-dynamic-backends">
+								<h3 class="purple">Dynamic backends</h3>
+								<p>
+									Provide Caddy with a static list of backends or enable a module to retrieve backends dynamically during each request: ideal for rapidly changing environments. Caddy flows with your infrastructure!
+								</p>
+							</div>
+							<div class="rollover" data-rollover="rollover-ha">
+								<h3 class="blue">High availability</h3>
+								<p>
+									Caddy comes with a whole suite of high availability (HA) features: advanced health checking, graceful (hitless) config changes, circuit breaking, load limiting, on-line retries, and more. The best part? It's all free. No enterprise-level paywalls.
+								</p>
+							</div>
 						</div>
+						<div>
+							<div class="display right">
+								<code class="dark">example.com
+
+<span class="comment"># Serve PHP sites</span>
+handle /blog/* {
+	root * /var/www/wordpress
+	<span class="rollover-php rollover-green">php_fastcgi localhost:9000</span>
+	file_server
+}
+
+<span class="comment"># Proxy an autoscaling API with dynamic backends</span>
+<span class="rollover-dynamic-backends rollover-purple">reverse_proxy /api/* {
+	dynamic srv _api._tcp.example.com
+}</span>
+
+<span class="comment"># Proxy a compute-heavy distributed service
+# with load balancing and health checks</span>
+<span class="rollover-ha rollover-blue">reverse_proxy /service/* {
+	to              192.168.1.1 192.168.1.2 192.168.1.3
+	lb_policy       least_conn
+	lb_try_duration 10s
+	fail_duration   5s
+}</span>
+
+<span class="comment"># Proxy everything else to an HTTPS upstream</span>
+reverse_proxy https://service.example.com {
+	header_up Host {upstream_hostport}
+}<div class="blinking"></div></code>
+							</div>
+						</div>
+					</div>
+
+					<div class="cols">
 						<div class="col">
 							<div class="sponsorship-primer">
 								<h3>software <b>assurance</b></h3>
@@ -289,19 +373,20 @@
 								<a href="/sponsor" class="button purple">See sponsorships</a>
 							</div>
 						</div>
-
-						<div class="sponsor-experience stripe">
-							<img src="/resources/images/sponsors/stripe.svg" class="experience-logo">
-							<div class="experience-content">
-								<div class="experience-quote">
-									"With its extensible architecture and on-line config API, Caddy powers many of Stripe's internal systems."
-								</div>
-								<div class="experience-credit">
-									<img src="https://preview.tabler.io/static/avatars/002m.jpg" class="experience-picture">
-									<cite>
-										<b>Sean Lin</b>
-										Example product manager
-									</cite>
+						<div class="col">
+							<div class="sponsor-experience stripe">
+								<img src="/resources/images/sponsors/stripe.svg" class="experience-logo">
+								<div class="experience-content">
+									<div class="experience-quote">
+										"With its extensible architecture and on-line config API, Caddy powers many of Stripe's internal systems."
+									</div>
+									<div class="experience-credit">
+										<img src="https://preview.tabler.io/static/avatars/002m.jpg" class="experience-picture">
+										<cite>
+											<b>Sean Lin</b>
+											Example product manager
+										</cite>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -314,30 +399,73 @@
 					<p>
 						Serving static files is a tried-and-true method of delivering sites to numerous clients efficiently. Caddy has a robust file server that can be combined with other middleware features for the ultimate effortless website.
 					</p>
-					<div class="cols">
+
+
+					<div class="asides asides-40-60">
+						<div class="spacing">
+							<div class="rollover" data-rollover="rollover-compress">
+								<h3 class="blue">Compression</h3>
+								<p>
+									Caddy can compress files on-the-fly or serve precompressed files for extra performance. Caddy is also the first web server to support Zstandard encoding.
+								</p>
+							</div>
+							<div class="rollover" data-rollover="rollover-vfs">
+								<h3 class="green">Virtual file systems</h3>
+								<p>
+									Serve your static site from anything: the local file system, remote cloud storage, a database, or even embedded in the server binary!
+								</p>
+							</div>
+							<div class="rollover" data-rollover="rollover-range">
+								<h3 class="yellow">Range requests, Etags, and more</h3>
+								<p>
+									Unlike many ad-hoc file servers intended for temporary local development, Caddy fully supports Range requests, Etags, and a full production feature set.
+								</p>
+							</div>
+							<div class="rollover" data-rollover="rollover-browse">
+								<h3 class="purple">Directory file browser</h3>
+								<p>
+									If a directory without an index file is requested, Caddy can show an elegant file browser with breadcrumb nav, file size visualizations, filetype icons, and a grid view.
+								</p>
+							</div>
+						</div>
+						<div>
+							<div class="display right">
+								<code class="light">example.com
+
+root * /var/www
+
+<span class="comment"># Serve precompressed files if present</span>
+<span class="rollover-compress rollover-blue">file_server /downloads/* {
+	precompressed gzip zstd br
+}</span>
+
+<span class="comment"># Compress everything else that would benefit</span>
+<span class="rollover-compress rollover-blue">encode zstd gzip</span>
+
+<span class="comment"># Get files from a database</span>
+<span class="rollover-vfs rollover-green">file_server /database/* {
+	fs sqlite data.sql 
+}</span>
+
+<span class="comment"># Get files from within the Caddy binary</span>
+<span class="rollover-vfs rollover-green">file_server /embedded/* {
+	fs embedded
+}</span>
+
+<span class="comment rollover-range rollover-yellow"># (Range/Etag/etc. all work without extra config)</span>
+
+<span class="comment"># Serve static site with directory listings as needed</span>
+<span class="rollover-browse rollover-purple">file_server browse</span></code>
+							</div>
+						</div>
+					</div>
+
+					<div class="cols rollover" data-rollover="rollover-browse">
 						<div class="col">
-							<h3 class="blue">Compression</h3>
-							<p>
-								Caddy can compress files on-the-fly or serve precompressed files for extra performance. Caddy is also the first web server to support Zstandard encoding.
-							</p>
+							<img src="/resources/images/file-browser/browse-themes.png" class="gallery">
 						</div>
 						<div class="col">
-							<h3 class="green">Virtual file systems</h3>
-							<p>
-								Serve your static site from anything: the local file system, remote cloud storage, a database, or even embedded in the server binary!
-							</p>
-						</div>
-						<div class="col">
-							<h3 class="purple">Range requests, Etags, and more</h3>
-							<p>
-								Unlike many simpler file servers intended for temporary local development, Caddy fully supports Range requests, Etags, and a full production feature set.
-							</p>
-						</div>
-						<div class="col">
-							<h3 class="green">Directory file browser</h3>
-							<p>
-								If a directory without an index file is requested, Caddy can show an elegant file browser with breadcrumb nav, file size visualizations, filetype icons, and a grid view.
-							</p>
+							<img src="/resources/images/file-browser/browse-gallery-light.png" class="gallery">
 						</div>
 					</div>
 				</div>
@@ -346,12 +474,102 @@
 			<section class="light feature">
 				<div class="wrapper">
 					<h2>
-						Flexible configuration for all workflows
+						Flexible configuration compatible with any workflow
 					</h2>
 					<p>
 						Configure your server your way. Caddy's native configuration format is JSON, but with Caddy's config adapters, you can use any config format you prefer. All configuration is posted through a RESTful admin API, and Caddy's CLI helps you work with config files easily.
 					</p>
-					<div class="cols">
+
+	
+					<div class="asides">
+						<div>
+							<div class="display left">
+								<code class="dark">$ caddy start --config caddy.json
+
+$ curl localhost:2019/id/my_handler \
+	-X PATCH \
+	-H "Content-Type: application/json" \
+	-d '{
+			"handler": "static_response",
+			"body": "Work smarter, not harder."
+		}'
+
+$ curl localhost:2019/config/ | jq<div class="blinking"></div></code>
+							</div>
+						</div>
+						<div>
+							<h3>JSON config API</h3>
+							<p>
+								Caddy's native config format is JSON, giving you incredible power and flexibility for automated, large-scale deployments.
+							<p>
+								Make dynamic config changes through an <a href="/docs/api">intuitive, programmable REST API</a> that offers ACID guarantees. It is also <b>safely scoped</b>, meaning that the URI path restricts changes, making it impossible to accidentally alter other parts of your config.
+							</p>
+							<!-- <ul>
+								<li><b>Atomic:</b> Multiple changes in a single request are treated as a single unit; any failed change aborts all the other changes.</li>
+								<li><b>Consistent:</b> No invalid configurations can be loaded; your server will never break if a problem is detected at config load.</li>
+								<li><b>Isolated:</b> No config changes rely on another. (It helps that HTTP is a stateless protocol!)</li>
+								<li><b>Durable:</b> Caddy automatically persists the current, valid configuration to disk and can safely resume it after a power cycle if the <code>--resume</code> flag is used.</li>
+							</ul> -->
+							<!-- <a href="/docs/api-tutorial" class="cyan button">API <b>tutorial</b></a>
+							&nbsp;
+							<a href="/docs/api" class="gray button">API <b>reference</b></a> -->
+						</div>
+					</div>
+
+
+					<div class="asides">
+						<div>
+							<h3>Caddyfile</h3>
+							<p>
+								Most people prefer to use a <a href="/docs/caddyfile">Caddyfile</a> because it lets you get a production-ready site up and running in just a few hand-written lines. It's not uncommon for Caddyfiles to be just <a href="https://twitter.com/yakczar/status/713712646147743744">~15% the size of a less-capable nginx config</a>!
+							</p>
+						</div>
+						<div>
+							<div class="display right">
+								<code class="light">caddyserver.com
+	
+root * src
+
+file_server
+templates
+encode zstd gzip
+
+redir   /docs/json   /docs/json/
+rewrite /docs/json/* /docs/json/index.html
+rewrite /docs/*      /docs/index.html
+
+reverse_proxy /api/* localhost:9002</code>
+								<div class="caption">Actual config used by this site.</div>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="asides">
+					<div>
+						<div class="display left">
+							<code class="dark">$ caddy run \
+	--config nginx.conf \
+	--adapter nginx<div class="blinking"></div></code>
+						</div>
+					</div>
+					<div>
+						<h3>Config adapters</h3>
+						<p>
+							Power Caddy with anything, even NGINX config files!
+						</p>
+						<p>
+							With first-class support for <a href="/docs/config-adapters">config adaptation</a>, you can configure your web server with your favorite format: YAML, TOML, CUE, NGINX, HCL, Dhall, JSON with comments, or even a MySQL database. The Caddyfile is a built-in config adapter.
+						</p>
+						<!-- <p>
+							Fewer moving parts means fewer failures, lower costs, and less sunk time.
+						</p> -->
+						<!-- <a href="/docs/config-adapters" class="gray button">Config adapters</a> -->
+					</div>
+				</div>
+
+
+					<!-- <div class="cols">
 						<div class="col">
 							<h3 class="green">Config adapters</h3>
 							<p>
@@ -370,7 +588,7 @@
 								Caddy's config is managed through an administration API that is programmable and makes dynamic changes a breeze.
 							</p>
 						</div>
-					</div>
+					</div> -->
 
 					<div class="testimonials-container">
 						<div class="testimonials">
@@ -390,28 +608,28 @@
 						Unparalleled extensibility
 					</h2>
 					<p>
-						Caddy is the only server in the world with such a novel modular architecture. At its core, Caddy is a configuration manager that runs apps like an HTTP server, internal certificate authority, TLS certificate manager, process supervisor, and more.
+						Caddy is the only server in the world with its novel, modular architecture. At its core, Caddy is a configuration manager that runs apps like an HTTP server, internal certificate authority, TLS certificate manager, process supervisor, and more.
 					</p>
 					<p>
-						And because of its unique design, all these features are freely available without bloating the software: only compile in what you need.
+						And because of its unique design, all these features are freely available without bloating the software. Only compile in what you need.
 					</p>
 					<div class="cols">
 						<div class="col">
-							<h3 class="green">Dynamically provision certificates</h3>
+							<h3 class="green">Unlimited power</h3>
 							<p>
-								With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+								Nearly every part of the config that "does something" is pluggable. Caddy offers so much in such a lean package.
 							</p>
 						</div>
 						<div class="col">
-							<h3 class="purple">Dynamically provision certificates</h3>
+							<h3 class="purple">Native CPU performance</h3>
 							<p>
-								With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+								No RPC calls or flimsy dependency management. Plugins are compiled into the static binary, making successful deployments certain and runtimes blazing fast.
 							</p>
 						</div>
 						<div class="col">
-							<h3 class="blue">Dynamically provision certificates</h3>
+							<h3 class="blue">Easy to develop</h3>
 							<p>
-								With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+								Writing Caddy plugins is as easy as writing a Go package.
 							</p>
 						</div>
 					</div>
