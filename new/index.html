@@ -258,14 +258,24 @@
 			<section class="diagonal up light gray feature">
 				<div class="wrapper">
 
-					<h2>All you need for TLS and PKI</h2>
+					<h2>Deploy your own PKI with Caddy</h2>
 					<p>
-						Caddy is not only the world leader in certificate automation, it is also a fully-featured certificate authority for your own internal PKI.
+						Not only is Caddy the world leader in certificate automation, it also sports a fully-featured PKI suite for your own fully-automated internal PKI and private CAs.
+					</p>
+					<p>
+						Caddy will serve your localhost and internal sites over HTTPS using its own CA. And you can create your own CA to issue certs across your infrastructure. It has a built-in ACME server, powered by Smallstep, to automate your private PKI reliably at scale.
 					</p>
 
 					<div class="asides">
 						<div>
+							<h3>Keep certificates renewed</h3>
 							<p>
+								Caddy is more than just a web server. For example, this config is all it takes to obtain and renew certificates for a set of domain names.
+							</p>
+							<p>
+								Additional config can be written to wire up certificate maintenance events, which can then be used to integrate with external scripts and tooling.
+							</p>
+							<!-- <p>
 								Caddy 2 is a <a href="/docs/extending-caddy">highly extensible</a>, self-hosted platform on which you can build, configure, and deploy long-running services ("apps").
 							</p>
 							<p>
@@ -276,7 +286,7 @@
 							</p>
 							<p>
 								Providing a unified configuration, on-line <a href="/docs/api">config API</a>, and <a href="/docs/json/">automatic documentation</a> for all apps, Caddy is nearly infinitely extensible. Thanks to its unique <a href="/docs/architecture">modular architecture</a>, we can offer unlimited features without bloating the code base.
-							</p>
+							</p> -->
 						</div>
 						<div>
 							<div class="display right">
@@ -477,7 +487,7 @@ root * /var/www
 						Flexible configuration compatible with any workflow
 					</h2>
 					<p>
-						Configure your server your way. Caddy's native configuration format is JSON, but with Caddy's config adapters, you can use any config format you prefer. All configuration is posted through a RESTful admin API, and Caddy's CLI helps you work with config files easily.
+						Configure your server your way. Caddy's native configuration format is JSON, and with Caddy's config adapters, you can use any config format you prefer. All configuration is posted through a RESTful admin API, and Caddy's CLI helps you work with config files easily.
 					</p>
 
 	
@@ -521,7 +531,7 @@ $ curl localhost:2019/config/ | jq<div class="blinking"></div></code>
 						<div>
 							<h3>Caddyfile</h3>
 							<p>
-								Most people prefer to use a <a href="/docs/caddyfile">Caddyfile</a> because it lets you get a production-ready site up and running in just a few hand-written lines. It's not uncommon for Caddyfiles to be just <a href="https://twitter.com/yakczar/status/713712646147743744">~15% the size of a less-capable nginx config</a>!
+								Although JSON offers ultimate control, most people prefer to use a <a href="/docs/caddyfile">Caddyfile</a> because it lets you get a production-ready site up and running in just a few hand-written lines. It's not uncommon for Caddyfiles to be just <a href="https://twitter.com/yakczar/status/713712646147743744">~15% the size of a less-capable nginx config</a>.
 							</p>
 						</div>
 						<div>
@@ -559,7 +569,7 @@ reverse_proxy /api/* localhost:9002</code>
 							Power Caddy with anything, even NGINX config files!
 						</p>
 						<p>
-							With first-class support for <a href="/docs/config-adapters">config adaptation</a>, you can configure your web server with your favorite format: YAML, TOML, CUE, NGINX, HCL, Dhall, JSON with comments, or even a MySQL database. The Caddyfile is a built-in config adapter.
+							With first-class support for <a href="/docs/config-adapters">config adaptation</a>, you can configure your web server with your favorite format: YAML, TOML, CUE, NGINX, HCL, Dhall, JSON with comments, or even a MySQL database... or anything else. The Caddyfile is a built-in config adapter.
 						</p>
 						<!-- <p>
 							Fewer moving parts means fewer failures, lower costs, and less sunk time.
@@ -611,7 +621,7 @@ reverse_proxy /api/* localhost:9002</code>
 						Caddy is the only server in the world with its novel, modular architecture. At its core, Caddy is a configuration manager that runs apps like an HTTP server, internal certificate authority, TLS certificate manager, process supervisor, and more.
 					</p>
 					<p>
-						And because of its unique design, all these features are freely available without bloating the software. Only compile in what you need.
+						And because of its unique design, we can offer unlimited features without bloating the code base. Only compile in what you need.
 					</p>
 					<div class="cols">
 						<div class="col">
