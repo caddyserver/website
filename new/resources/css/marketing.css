@@ -3,6 +3,12 @@ body {
 	background-image: none;
 }
 
+img.gallery {
+	max-width: 100%;
+	box-shadow: 0 6px 10px rgb(0 0 0 / .15);
+	border-radius: 8px;
+}
+
 h1,
 h2,
 h3,
@@ -49,7 +55,7 @@ h1 .subheading b {
 
 p,
 h2 {
-	max-width: 800px;
+	max-width: 850px;
 }
 
 h2 {
@@ -230,8 +236,14 @@ section.light.gray {
 }
 
 
-.cols, h3 {
+.cols, .spacing {
 	--gap: 50px;
+}
+
+.spacing {
+	display: flex;
+	gap: var(--gap);
+	flex-direction: column;
 }
 
 .cols {
@@ -263,7 +275,6 @@ h3 {
 	border-left: 2px solid;
 	padding-top: .15em;
 	padding-bottom: .15em;
-	margin-bottom: 10px;
 
 	/* shove the border over but leave space between border and content */
 	margin-left: -1em;
@@ -271,7 +282,7 @@ h3 {
 }
 
 p + h3 {
-	margin-top: var(--gap);
+	margin-top: 4em;
 }
 
 h3.plain {
@@ -287,7 +298,6 @@ h3.plain {
 .cols .col p {
 	font-family: Inter;
 	font-size: 90%;
-	font-weight: normal;
 	line-height: 1.5;
 }
 
@@ -313,8 +323,9 @@ section.dark h3.purple {
 section.dark h3.blue {
 	color: rgb(113, 191, 255); border-color: rgb(113, 191, 255);
 }
-
-
+section.dark h3.yellow {
+	color: #ffcb50; border-color: #ffcb50;
+}
 
 
 
@@ -404,6 +415,10 @@ section.dark h3.blue {
 	padding: 40px 50px;
 	margin: 50px auto;
 	color: #ffcffb;
+}
+
+.cols .sponsorship-primer:first-child {
+	margin-top: 0;
 }
 
 .sponsorship-primer h3 {
