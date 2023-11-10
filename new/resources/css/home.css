@@ -143,6 +143,9 @@ div.ap-wrapper:fullscreen div.ap-player {
 	overflow-x: auto;
 	box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.1);
 }
+.display.left code {
+	box-shadow: -10px 10px 25px rgba(0, 0, 0, 0.1);
+}
 
 .display.right > * {
 	transform: rotateY(-25deg);

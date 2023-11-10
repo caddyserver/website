@@ -260,15 +260,104 @@
 
 					<h2>Deploy your own PKI with Caddy</h2>
 					<p>
-						Not only is Caddy the world leader in certificate automation, it also sports a fully-featured PKI suite for your own fully-automated internal PKI and private CAs.
+						Not only is Caddy the industry leader in certificate automation, it also sports a fully-featured PKI suite for your own fully-automated internal PKI and private CAs.
 					</p>
-					<p>
+					<!-- <p>
 						Caddy will serve your localhost and internal sites over HTTPS using its own CA. And you can create your own CA to issue certs across your infrastructure. It has a built-in ACME server, powered by Smallstep, to automate your private PKI reliably at scale.
+					</p> -->
+					<p>
+						Powered by open source <a href="https://smallstep.com/certificates/">Smallstep libraries</a>, Caddy becomes a self-managing certificate authority.
 					</p>
+					<a href="https://smallstep.com" title="Powered by Smallstep"><img src="/resources/images/smallstep.png" alt="Smallstep" class="smallstep"></a>
 
 					<div class="asides">
 						<div>
-							<h3>Keep certificates renewed</h3>
+							<div class="display left">
+								<code class="light">localhost {
+	respond "Hello from HTTPS!"
+}
+
+192.168.1.10 {
+	respond "Also HTTPS!"
+}
+
+http://localhost {
+	respond "Plain HTTP"
+}</code>
+							</div>
+						</div>
+						<div>
+							<h3 class="purple">Internal and localhost certificates</h3>
+							<p>
+								If you configure sites with local or internal addresses, Caddy will serve them over HTTPS using a locally-trusted certificate authority with short-lived, auto-renewing certificates. It even offers to install your unique root into your local trust stores for you.
+							</p>
+						</div>
+					</div>
+
+					<div class="asides">
+						<div>
+							<h3 class="blue">Make and use your own CAs</h3>
+							<p>
+								Caddy lets you define as many CAs as you need. Root and intermediate keys are generated automatically, and intermediates are renewed before they expire.
+							</p>
+							<p>
+								Deploy an instance to act as an ACME server. Then other Caddy instances can use it for their certificates.
+							</p>
+						</div>
+						<div>
+							<div class="display right">
+								<code class="light">{
+	pki {
+		ca corporate {
+			name "Our Corporation Authority"
+		}
+	}
+}
+
+internal.example.com {
+	<span class="comment"># ACME endpoint: /acme/corporate/directory</span>
+	acme_server {
+		ca corporate
+	}
+}</code></div>
+						<!-- <div class="display right">
+								<code class="light">{
+	pki {
+		ca our_own {
+			name "Our Own Authority"
+		}
+	}
+}
+
+internal.example.com {
+	tls {
+		issuer internal {
+			ca our_own
+		}
+	}
+}</code></div> -->
+						</div>
+					</div>
+
+					<div class="asides">
+						<div>
+							<div class="display left">
+								<code class="light">{
+  "apps": {
+    "tls": {
+      "certificates": {
+        "automate": [
+          "example.com",
+		  "sub.example.com",
+          "example.net"
+        ]
+      }
+    }
+  }
+}</code></div>
+						</div>
+						<div>
+							<h3 class="green">Keep certificates renewed</h3>
 							<p>
 								Caddy is more than just a web server. For example, this config is all it takes to obtain and renew certificates for a set of domain names.
 							</p>
@@ -288,23 +377,9 @@
 								Providing a unified configuration, on-line <a href="/docs/api">config API</a>, and <a href="/docs/json/">automatic documentation</a> for all apps, Caddy is nearly infinitely extensible. Thanks to its unique <a href="/docs/architecture">modular architecture</a>, we can offer unlimited features without bloating the code base.
 							</p> -->
 						</div>
-						<div>
-							<div class="display right">
-								<code class="light">{
-  "apps": {
-    "tls": {
-      "certificates": {
-        "automate": [
-          "example.com",
-		  "sub.example.com",
-          "example.net"
-        ]
-      }
-    }
-  }
-}</code></div>
-						</div>
 					</div>
+
+					
 				</div>
 			</section>
 
@@ -358,7 +433,7 @@ handle /blog/* {
 <span class="comment"># Proxy a compute-heavy distributed service
 # with load balancing and health checks</span>
 <span class="rollover-ha rollover-blue">reverse_proxy /service/* {
-	to              192.168.1.1 192.168.1.2 192.168.1.3
+	to              10.0.1.1:80 10.0.1.2:80 10.0.1.3:80
 	lb_policy       least_conn
 	lb_try_duration 10s
 	fail_duration   5s

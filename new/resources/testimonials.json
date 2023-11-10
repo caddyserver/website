@@ -54,5 +54,13 @@
 		"role": "Creator of jQuery",
 		"quote": "Caddy is pretty incredible. A 3-line config yields a fully A-rated SSL site. Trivial!",
 		"link": "https://twitter.com/jeresig/status/821768122017398785"
+	},
+	{
+		"name": "Zack Siri",
+		"username": "zacksiri",
+		"role": "Founder",
+		"org": "Installar",
+		"quote": "It's a good thing we bet on Caddy. It's been a pleasure working with Caddy.",
+		"link": "https://twitter.com/zacksiri/status/1722636053939654992"
 	}
 ]
