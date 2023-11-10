@@ -70,14 +70,17 @@
 							<a href="https://opensource.mercedes-benz.com/" target="_blank">
 								<img src="/resources/images/sponsors/mercedes-benz.svg" alt="Mercedes-Benz" title="Mercedes-Benz" height="38">
 							</a>
-							<a href="https://sourcegraph.com/" target="_blank">
-								<img src="/resources/images/sponsors/sourcegraph.svg" alt="Sourcegraph" title="Sourcegraph" height="30">
-							</a>
 							<a href="https://tailscale.com" target="_blank">
 								<img src="/resources/images/sponsors/tailscale.svg" alt="Tailscale" title="Tailscale" height="22">
 							</a>
 							<a href="https://les-tilleuls.coop/" target="_blank">
 								<img src="/resources/images/sponsors/les-tilleuls.svg" alt="Les-Tilleuls" title="Les-Tilleuls" height="25">
+							</a>
+							<a href="https://framer.com" target="_blank">
+								<img src="/resources/images/sponsors/framer.svg" alt="Framer" title="Framer" height="32">
+							</a>
+							<a href="https://sourcegraph.com/" target="_blank">
+								<img src="/resources/images/sponsors/sourcegraph.svg" alt="Sourcegraph" title="Sourcegraph" height="30">
 							</a>
 							<a href="https://fusionauth.com" target="_blank">
 								<img src="/resources/images/sponsors/fusionauth.svg" alt="FusionAuth" title="FusionAuth" height="35">
@@ -172,9 +175,7 @@
 			<section class="light">
 				<div class="section-upset">
 					<div class="wrapper">
-						<h2>
-							The <b>most advanced</b> HTTPS server <b>in the world</b>
-						</h2>
+						<h2>The <b>most advanced</b> HTTPS server <b>in the world</b></h2>
 					</div>
 				</div>
 				<div class="wrapper">
@@ -198,18 +199,22 @@
 								Caddy's TLS defaults are secure and pass PCI, HIPAA, and NIST compliance requirements. Yes, defaults: no hassle required.
 							</p>
 						</div>
-
 						<div class="col">
 							<h3 class="purple">HTTPS for localhost 🏠</h3>
 							<p>
 								We mean it when we say Caddy serves every site on HTTPS. Even localhost and internal IPs are served with TLS using the intermediate of a fully-automated, self-managed CA that is automatically installed into most local trust stores.
 							</p>
 						</div>
-
 						<div class="col">
-							<h3 class="green">Cluster coordination 🌐</h3>
+							<h3 class="blue">Cluster coordination 🌐</h3>
 							<p>
-								Simply configure multiple Caddy instances with the same storage, and they will automatically coordinate certificate management and share resources such as keys and OCSP staples!
+								Simply configure multiple Caddy instances with the same storage, and they will automatically coordinate certificate management as a fleet and share resources such as keys and OCSP staples!
+							</p>
+						</div>
+						<div class="col">
+							<h3 class="green">Fewer moving parts ⚙️</h3>
+							<p>
+								Simplify your infrastructure! Caddy saves money, increases developer productivity, and reduces problems in production. 
 							</p>
 						</div>
 					</div>
@@ -268,7 +273,7 @@
 					<p>
 						Powered by open source <a href="https://smallstep.com/certificates/">Smallstep libraries</a>, Caddy becomes a self-managing certificate authority.
 					</p>
-					<a href="https://smallstep.com" title="Powered by Smallstep"><img src="/resources/images/smallstep.png" alt="Smallstep" class="smallstep"></a>
+					
 
 					<div class="asides">
 						<div>
@@ -291,6 +296,7 @@ http://localhost {
 							<p>
 								If you configure sites with local or internal addresses, Caddy will serve them over HTTPS using a locally-trusted certificate authority with short-lived, auto-renewing certificates. It even offers to install your unique root into your local trust stores for you.
 							</p>
+							<a href="https://smallstep.com" title="Powered by Smallstep"><img src="/resources/images/sponsors/smallstep.svg" alt="Smallstep" class="smallstep"></a>
 						</div>
 					</div>
 
@@ -385,9 +391,7 @@ internal.example.com {
 
 			<section class="diagonal down dark feature">
 				<div class="wrapper">
-					<h2>
-						A forward-thinking reverse proxy
-					</h2>
+					<h2>A forward-thinking reverse proxy</h2>
 					<p>
 						Caddy's proxy was designed to be as forward-compatible as possible and has major batteries included: load balancing, active and passive health checks, dynamic upstreams, retries, pluggable transports, and of course, best-in-class TLS security.
 					</p>
@@ -478,9 +482,7 @@ reverse_proxy https://service.example.com {
 					</div>
 
 
-					<h2>
-						Production-grade static file server
-					</h2>
+					<h2>Production-grade static file server</h2>
 					<p>
 						Serving static files is a tried-and-true method of delivering sites to numerous clients efficiently. Caddy has a robust file server that can be combined with other middleware features for the ultimate effortless website.
 					</p>
@@ -558,9 +560,7 @@ root * /var/www
 
 			<section class="light feature">
 				<div class="wrapper">
-					<h2>
-						Flexible configuration compatible with any workflow
-					</h2>
+					<h2>Flexible configuration compatible with any workflow</h2>
 					<p>
 						Configure your server your way. Caddy's native configuration format is JSON, and with Caddy's config adapters, you can use any config format you prefer. All configuration is posted through a RESTful admin API, and Caddy's CLI helps you work with config files easily.
 					</p>
@@ -689,9 +689,7 @@ reverse_proxy /api/* localhost:9002</code>
 
 			<section class="diagonal up light gray feature">
 				<div class="wrapper">
-					<h2>
-						Unparalleled extensibility
-					</h2>
+					<h2>Unparalleled extensibility</h2>
 					<p>
 						Caddy is the only server in the world with its novel, modular architecture. At its core, Caddy is a configuration manager that runs apps like an HTTP server, internal certificate authority, TLS certificate manager, process supervisor, and more.
 					</p>
@@ -714,7 +712,7 @@ reverse_proxy /api/* localhost:9002</code>
 						<div class="col">
 							<h3 class="blue">Easy to develop</h3>
 							<p>
-								Writing Caddy plugins is as easy as writing a Go package.
+								Writing Caddy plugins is as easy as writing a Go package. It's a comfortable and familiar process for any Go programmer.
 							</p>
 						</div>
 					</div>
@@ -724,29 +722,68 @@ reverse_proxy /api/* localhost:9002</code>
 
 			<section class="light feature">
 				<div class="wrapper">
-					<h2>
-						The gold standard web server
-					</h2>
+					<h2>The <span class="gold">gold standard</span> web server</h2>
 					<p>
-						Caddy keeps your sites up when other servers let you down.
+						Caddy has the most robust TLS stack on the market. With stronger memory safety guarantees than OpenSSL (Apache &amp; NGINX) and more advanced certificate automation logic than any other server or utility, Caddy keeps your sites online through problems when other servers... won't.
+					</p>
+					<p>
+						Caddy was the first server to fully automate public certificate management&mdash;so we've been doing this longer than anyone. With more than 50 million certificates under management, Caddy has set the gold standard for other servers to live up to.
 					</p>
 					<div class="cols">
 						<div class="col">
-							<h3 class="green">Dynamically provision certificates</h3>
+							<h3 class="green">OCSP stapling saves the day</h3>
 							<p>
-								With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+								Caddy automatically staples OCSP responses and caches them to weather outages. In 2018, many popular sites went down for users of mainstream browsers because crucial OCSP infrastructure had an extended outage. Only Caddy staples and caches OCSP responses by default, so all Caddy sites were unaffected.
 							</p>
 						</div>
 						<div class="col">
-							<h3 class="purple">Dynamically provision certificates</h3>
+							<h3 class="purple">On guard against revocation</h3>
 							<p>
-								With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+								In 2020, a mass certificate revocation event left many sysadmins scrambling to renew their certificates ahead of schedule. Caddy automatically renews certificates that get revoked, and all Caddy sites were unaffected. (This was before ARI existed.)
 							</p>
 						</div>
 						<div class="col">
-							<h3 class="blue">Dynamically provision certificates</h3>
+							<h3 class="blue">Stands tall during audits</h3>
 							<p>
-								With On-Demand TLS, only Caddy obtains, renews, and maintains certificates on-the-fly during TLS handshakes. Perfect for customer-owned domains.
+								Companies have deployed Caddy in front of their site just hours before important audits&mdash;potentially saving their compliance status&mdash;because of Caddy's safe defaults and "batteries included" approach.
+							</p>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="gray feature">
+				<div class="wrapper">
+					<h2>Recommended by experts</h2>
+					<p>
+						Academic and industry experts recommend Caddy, which has been cited in peer-reviewed journals for its security defaults, best practices, and its uniquely advanced feature set.
+					</p>
+					<div class="cols">
+						<div class="col">
+							<a href="https://doi.org/10.1145/3319535.3363192"><img src="/resources/images/cites/aas.png" class="cite"></a>
+							<p>
+								"Servers running Caddy exhibit nearly ubiquitous HTTPS deployment and use modern TLS configurations. ... We hope to see other popular server software follow Caddy's lead."
+							</p>
+							<p class="cite">
+								&mdash;<b>Josh Aas, Richard Barnes, Benton Case, Zakir Durumeric, Peter Eckersley, Alan Flores-López, J. Alex Halderman, Jacob Hoffman-Andrews, James Kasten, Eric Rescorla, Seth Schoen, and Brad Warren.</b> 2019. <i>Let's Encrypt: An Automated Certificate Authority to Encrypt the Entire Web.</i> In Proceedings of the 2019 ACM SIGSAC Conference on Computer and Communications Security (CCS '19). Association for Computing Machinery, New York, NY, USA, 2473–2487. <a href="https://doi.org/10.1145/3319535.3363192">https://doi.org/10.1145/3319535.3363192</a>
+							</p>
+						</div>
+						<div class="col">
+							<a href="https://www.usenix.org/conference/usenixsecurity17/technical-sessions/presentation/krombholz"><img src="/resources/images/cites/krombholz.png" class="cite"></a>
+							<p>
+								"TLS must be enabled by default ... and the Caddy web server is a good and usable example."
+							</p>
+							<p class="cite">
+								&mdash;<b>Katharina Krombholz, Wilfried Mayer, Martin Schmiedecker, and Edgar Weippl.</b> 2017. <i>"I Have No Idea What I'm Doing" - On the Usability of Deploying HTTPS.</i> In 26th USENIX Security Symposium (USENIX Security 17), USENIX Association, Vancouver, BC, 1339-1356. Retrieved from <a href="https://www.usenix.org/conference/usenixsecurity17/technical-sessions/presentation/krombholz">https://www.usenix.org/conference/usenixsecurity17/technical-sessions/presentation/krombholz</a>
+							</p>
+						</div>
+						<div class="col">
+							<a href="https://doi.org/10.1145/2987443.2987480"><img src="/resources/images/cites/springall.png" class="cite"></a>
+							<p>
+								"No popular server software does [session ticket key rotation], with the exception of Caddy."
+							</p>
+							<p class="cite">
+								&mdash;<b>Drew Springall, Zakir Durumeric, and J. Alex Halderman.</b> 2016. <i>Measuring the Security Harm of TLS Crypto Shortcuts.</i> In Proceedings of the 2016 Internet Measurement Conference (IMC '16), Association for Computing Machinery, Santa Monica, California, USA, 33-47. DOI:<a href="https://doi.org/10.1145/2987443.2987480">https://doi.org/10.1145/2987443.2987480</a>
 							</p>
 						</div>
 					</div>

@@ -421,9 +421,26 @@ div.ap-wrapper:fullscreen div.ap-player {
 
 
 
+.smallstep {
+	max-width: 150px;
+	margin-top: 1em;
+}
 
+.gold {
+	color: gold;
+	background: linear-gradient(63deg, rgba(212,167,36,1) 8%, rgba(251,228,63,1) 50%, rgba(241,218,57,1) 75%); 
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
 
+.col .cite {
+	font-size: 75%;
+}
 
+img.cite {
+	max-width: 100%;
+}
 
 
 .demobox {
