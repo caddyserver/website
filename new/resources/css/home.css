@@ -511,6 +511,20 @@ img.cite {
 
 
 
+@media (max-width: 1350px) {
+	h1 {
+		text-align: center;
+	}
+
+	.asides {
+		flex-direction: column;
+	}
+
+	.action-buttons {
+		margin-bottom: 55px;
+	}
+}
+
 
 
 
