@@ -731,7 +731,7 @@ handle_path /old-prefix/* {
 ```
 
 
-X-Accel-Redirect support, i.e. serving static files as requested by the proxy upstream:
+`X-Accel-Redirect` support, i.e. serving static files as requested by the proxy upstream:
 
 ```caddy-d
 reverse_proxy localhost:8080 {
@@ -760,7 +760,7 @@ reverse_proxy localhost:8080 {
 ```
 
 
-Get backends dynamically from A/AAAA record DNS queries:
+Get backends dynamically from `A`/`AAAA` record DNS queries:
 
 ```caddy-d
 reverse_proxy {
@@ -769,7 +769,7 @@ reverse_proxy {
 ```
 
 
-Get backends dynamically from SRV record DNS queries:
+Get backends dynamically from `SRV` record DNS queries:
 
 ```caddy-d
 reverse_proxy {
