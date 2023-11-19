@@ -29,6 +29,7 @@ example.com {
 As usual, the first line is the site address. The [`root` directive](/docs/caddyfile/directives/root) specifies the path to the root of the site (the `*` means to match all requests, so as to disambiguate from a [path matcher](/docs/caddyfile/matchers#path-matchers))&mdash;change the path to your site if it isn't the current working directory. Finally, we enable the [static file server](/docs/caddyfile/directives/file_server).
 
 
+
 ## Reverse proxy
 
 Proxy all requests:
@@ -49,6 +50,11 @@ example.com {
 }
 ```
 
+This uses a [request matcher](/docs/caddyfile/matchers#syntax) to match only requests that start with `/api/` and proxy them to the backend. All other requests will be served from the site [`root`](/docs/caddyfile/directives/root) with the [static file server](/docs/caddyfile/directives/file_server). This also depends on the fact that `reverse_proxy` is higher on the [directive order](/docs/caddyfile/directives#directive-order) than `file_server`.
+
+There are many more [`reverse_proxy` examples here](/docs/caddyfile/directives/reverse_proxy#examples).
+
+
 
 ## PHP
 
@@ -63,9 +69,16 @@ example.com {
 }
 ```
 
-Customize the site root accordingly; this example assumes that your PHP app's webroot is within a `public` directory&mdash;requests for files that exist on disk will be served with `file_server`, and anything else will be routed to `index.php` for handling by the PHP app.
+Customize the site root accordingly; this example assumes that your PHP app's webroot is within a `public` directory&mdash;requests for files that exist on disk will be served with [`file_server`](/docs/caddyfile/directives/file_server), and anything else will be routed to `index.php` for handling by the PHP app.
+
+You may sometimes use a unix socket to connect to PHP-FPM:
+
+```caddy-d
+php_fastcgi unix//run/php/php8.2-fpm.sock
+```
 
 The [`php_fastcgi` directive](/docs/caddyfile/directives/php_fastcgi) is actually just a shortcut for [several pieces of configuration](/docs/caddyfile/directives/php_fastcgi#expanded-form).
+
 
 
 ## Redirect `www.` subdomain
@@ -94,7 +107,7 @@ example.com {
 ```
 
 
-To remove it for **multiple domains** at once; this uses the `{labels.*}` placeholders which are the parts of the hostname, 0-indexed from the right (e.g. 0=com, 1=example-one, 2=www):
+To remove it for **multiple domains** at once; this uses the `{labels.*}` placeholders which are the parts of the hostname, `0`-indexed from the right (e.g. `0`=`com`, `1`=`example-one`, `2`=`www`):
 
 ```caddy
 www.example-one.com, www.example-two.com {
@@ -104,6 +117,7 @@ www.example-one.com, www.example-two.com {
 example-one.com, example-two.com {
 }
 ```
+
 
 
 ## Trailing slashes
@@ -143,7 +157,7 @@ Using a redirect, the client will have to re-issue the request, enforcing a sing
 
 ## Wildcard certificates
 
-If you need to serve multiple subdomains with the same wildcard certificate, the best way to handle them is with a Caddyfile like this, making use of the [`handle`](/docs/caddyfile/directives/handle) directive and [`host`](/docs/caddyfile/matchers#host) matchers:
+If you need to serve multiple subdomains with the same wildcard certificate, the best way to handle them is with a Caddyfile like this, making use of the [`handle` directive](/docs/caddyfile/directives/handle) and [`host` matchers](/docs/caddyfile/matchers#host):
 
 ```caddy
 *.example.com {
@@ -168,7 +182,7 @@ If you need to serve multiple subdomains with the same wildcard certificate, the
 }
 ```
 
-Note that you must enable the [ACME DNS challenge](/docs/automatic-https#dns-challenge) to have Caddy automatically manage wildcard certificates.
+You must enable the [ACME DNS challenge](/docs/automatic-https#dns-challenge) to have Caddy automatically manage wildcard certificates.
 
 
 
@@ -176,7 +190,7 @@ Note that you must enable the [ACME DNS challenge](/docs/automatic-https#dns-cha
 
 When a web page does its own routing, servers may receive lots of requests for pages that don't exist server-side, but which are renderable client-side as long as the singular index file is served instead. Web applications architected like this are known as SPAs, or single-page apps.
 
-The main idea is to have the server "try files" to see if the requested file exists server-side, and if not, fall back to an index file where the client does the routing (usually with client-side JavaScript): `try_files {path} /index.html`
+The main idea is to have the server "try files" to see if the requested file exists server-side, and if not, fall back to an index file where the client does the routing (usually with client-side JavaScript).
 
 A typical SPA config usually looks something like this:
 
