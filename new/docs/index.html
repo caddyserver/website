@@ -5,13 +5,12 @@
 		{{import "/includes/head.html"}}
 		{{template "head"}}
 		<link rel="stylesheet" href="/resources/css/docs.css{{template "cacheBust"}}">
-		<link rel="stylesheet" href="/resources/css/docs-home.css{{template "cacheBust"}}">
 		<!-- <meta property="og:title" content="Caddy 2 - The Ultimate Server with Automatic HTTPS">
 		<meta name="twitter:title" value="Caddy 2 - The Ultimate Server with Automatic HTTPS"> -->
 
+		<script src="/resources/js/jquery-3.4.1.min.js"></script>
 		<script src="/resources/js/vendor/marked.min.js{{template "cacheBust"}}"></script>
 		<script src="/resources/js/docs.js{{template "cacheBust"}}"></script>
-		<script src="/resources/js/docs-home.js{{template "cacheBust"}}"></script>
 	</head>
 	<body>
 		{{include "/includes/header.html" ""}}
@@ -99,16 +98,7 @@
 					<h1>Documentation</h1>
 
 					<div class="fullspan">
-						<div class="box box-filled box-capped quick-assist">
-							<div class="box-cap quick-assist-history">
-								<a title="Click quick for slick trick (not AI)">Quick Assist</a>
-							</div>
-							<div>
-								<h3 class="quick-assist-question"></h3>
-								<div class="quick-assist-content"></div>
-								<div class="quick-assist-options"></div>
-							</div>
-						</div>
+						{{ include "/includes/quick-assist/core.html" }}
 
 						<div class="box">
 							<h3>Getting Started</h3>

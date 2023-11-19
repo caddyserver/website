@@ -1,0 +1,275 @@
+<script>
+const quickAssistStructure = {
+	start: {
+		prompt: "What are you looking for?",
+		options: [
+			{
+				text: "How to install Caddy",
+				next: "install"
+			},
+			{
+				text: "Help configuring Caddy",
+				next: "configure"
+			},
+			{
+				text: "A solution to a problem",
+				next: "solution"
+			},
+			{
+				text: "An example for my use case",
+				next: "example"
+			}
+		]
+	},
+	install: {
+		prompt: "How do you want to install Caddy?",
+		options: [
+			{
+				text: "OS package manager",
+				next: "install_pkgmgr"
+			},
+			{
+				text: "Docker",
+				next: "install_docker"
+			},
+			{
+				text: "Build from source",
+				next: "install_build"
+			},
+			{
+				text: "Build with plugins",
+				next: "install_with_plugins"
+			},
+			{
+				text: "Pre-built binary",
+				next: "install_binary"
+			}
+		]
+	},
+	install_pkgmgr: {
+		prompt: "Which OS are you using?",
+		options: [
+			{
+				text: "Linux (Debian, Ubuntu, Raspbian)",
+				next: "install_dpkg"
+			},
+			{
+				text: "Linux (Fedora, RedHat, CentOS)",
+				next: "install_rpm"
+			},
+			{
+				text: "Linux (Arch, Manjaro, Parabola)",
+				next: "install_arch"
+			},
+			{
+				text: "macOS",
+				next: "install_mac"
+			},
+			{
+				text: "Windows",
+				next: "install_windows"
+			},
+			{
+				text: "Nix/NixOS",
+				next: "install_nix"
+			},
+			{
+				text: "Android",
+				next: "install_android"
+			},
+			{
+				text: "Other",
+				next: "install_other"
+			}
+		]
+	},
+	install_dpkg: {
+		title: "Install Caddy on Debian-based systems",
+		options: [
+			{
+				text: "Learn more",
+				href: "/docs/install#debian-ubuntu-raspbian"
+			}
+		]
+	},
+	install_rpm: {
+		title: "Install Caddy via RPM",
+		options: [
+			{
+				text: "Learn more",
+				href: "/docs/install#fedora-redhat-centos"
+			}
+		]
+	},
+	install_arch: {
+		title: "Install Caddy on Arch/Manjaro/Parabola Linux",
+		options: [
+			{
+				text: "Learn more",
+				href: "/docs/install#arch-linux-manjaro-parabola"
+			}
+		]
+	},
+	install_mac: {
+		title: "Install Caddy on macOS",
+		options: [
+			{
+				text: "Learn more",
+				href: "/docs/install#homebrew"
+			}
+		]
+	},
+	install_windows: {
+		title: "Install Caddy on Windows",
+		options: [
+			{
+				text: "Learn more",
+				href: "/docs/install#windows"
+			}
+		]
+	},
+	install_nix: {
+		title: "Install Caddy on Nix/Nixpkgs/NixOS",
+		options: [
+			{
+				text: "Learn more",
+				href: "/docs/install#nixnixpkgsnixos"
+			}
+		]
+	},
+	install_android: {
+		title: "Install Caddy on Android",
+		content: ``,
+		options: [
+			{
+				text: "Learn more",
+				href: "/docs/install#termux"
+			}
+		]
+	},
+	install_other: {
+		title: "Miscellaneous install methods",
+		options: [
+			{
+				text: "Learn more",
+				href: "/docs/install#fedora-redhat-centos"
+			}
+		]
+	},
+	install_docker: {
+		title: "Official Docker image",
+		options: [
+			{
+				text: "Learn more",
+				href: "/docs/install#docker"
+			}
+		]
+	},
+	install_build: {
+		title: "Build Caddy from source",
+		options: [
+			{
+				text: "Learn more",
+				href: "/docs/build"
+			}
+		]
+	},
+	install_with_plugins: {
+		title: "Build Caddy with plugins",
+		options: [
+			{
+				text: "Learn more",
+				href: "/docs/build#xcaddy"
+			}
+		]
+	},
+	install_binary: {
+		title: "Install Caddy binary manually",
+		options: [
+			{
+				text: "Learn more",
+				href: "/docs/build#xcaddy"
+			}
+		]
+	},
+
+	configure: {
+		prompt: "What are you trying to configure?",
+		options: [
+			{
+				text: "On-demand TLS",
+				next: "cfg_ondemand"
+			},
+			{
+				text: "Authentication",
+				next: "cfg_authentication"
+			},
+			{
+				text: "Load balancing",
+				next: "cfg_loadbalancing"
+			}
+		]
+	},
+	cfg_ondemand: {
+		prompt: "Do you control the (DNS records of) the domain names you're serving?",
+		options: [
+			{
+				text: "Yes",
+				crumb: "I control the domains",
+				next: "cfg_ondemand_havecontrol"
+			},
+			{
+				text: "No",
+				crumb: "DNS out of my control",
+				next: "cfg_ondemand_ok"
+			}
+		]
+	},
+	cfg_ondemand_havecontrol: {
+		prompt: "Do you have hundreds or thousands of your own domain names to serve?",
+		options: [
+			{
+				text: "Yes",
+				crumb: "Lots of domains",
+				next: "cfg_ondemand_ok"
+			},
+			{
+				text: "No",
+				crumb: "Small scale",
+				next: "cfg_ondemand_smallscale"
+			}
+		]
+	},
+	cfg_ondemand_smallscale: {
+		title: "You likely don't need on-demand TLS.",
+		options: [
+			{
+				text: "Learn more",
+				href: "/docs/automatic-https#on-demand-tls"
+			}
+		]
+	},
+	cfg_ondemand_ok: {
+		prompt: "Are you using the Caddyfile or JSON to configure Caddy?",
+		options: [
+			{
+				text: "Caddyfile",
+				next: "cfg_ondemand_caddyfile"
+			},
+			{
+				text: "JSON",
+				next: "cfg_ondemand_json"
+			}
+		]
+	},
+	cfg_ondemand_caddyfile: {
+		title: "Setting up On-Demand TLS",
+		options: [
+			{
+				text: "Learn more",
+				href: "/docs/automatic-https#on-demand-tls"
+			}
+		]
+	},
+};
+</script>

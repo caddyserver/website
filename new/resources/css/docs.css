@@ -721,6 +721,55 @@ main nav ul > li:hover #autonav {
 
 
 
+.quick-assist-history {
+	font-size: 90%;
+
+	display: flex;
+	flex-wrap: wrap;
+	gap: .5em;
+}
+
+.quick-assist-history > a {
+	display: inline-block;
+	color: var(--text-color-muted);
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.quick-assist-history > a:hover {
+	color: #216688;
+	text-decoration: underline;
+}
+
+.quick-assist-history > a:not(:first-child):before {
+	content: '>';
+	margin-right: .5em;
+	display: inline-block;
+	color: #809783;
+}
+
+h3.quick-assist-question {
+	font-size: 150%;
+}
+
+.quick-assist-options {
+	margin-top: 1.5em;
+	display: grid;
+	gap: 1em;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.quick-assist-options > div {
+	display: contents;
+}
+
+.quick-assist button,
+.quick-assist .button {
+	font-size: 100%;
+	min-height: 3.5em;
+}
+
+
 
 
 
