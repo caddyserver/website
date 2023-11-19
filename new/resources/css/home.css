@@ -200,12 +200,15 @@ div.ap-wrapper:fullscreen div.ap-player {
 	transition: background-color 250ms;
 }
 
-.rollover-green.show { background-color: #41e68fc7; }
-.rollover-purple.show { background-color: #a52fa59d; }
-.rollover-blue.show { background-color: #0a62aaa3; }
-.rollover-yellow.show { background-color: #ffcb50; }
+.dark .rollover-green.show { background-color: #41e68e2b; }
+.dark .rollover-purple.show { background-color: #a52fa55f; }
+.dark .rollover-blue.show { background-color: #0a62aa5b; }
+.dark .rollover-yellow.show { background-color: #ffcb5064; }
 
-
+.light .rollover-green.show { background-color: #41e68e4b; }
+.light .rollover-purple.show { background-color: #a52fa545; }
+.light .rollover-blue.show { background-color: #0a62aa3a; }
+.light .rollover-yellow.show { background-color: #ffcb5064; }
 
 
 

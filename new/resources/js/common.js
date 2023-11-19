@@ -49,6 +49,63 @@ function cloneTemplate(tplSelector) {
 	// return document.importNode(elem.content, true);
 }
 
+// Find the first element matching a selector which contains the specified text
+function findWithContent(selector, text) {
+	const selected = document.querySelectorAll(selector);
+	let found = null;
+	selected.forEach(element => {
+		if (element.textContent.includes(text)) {
+			found = element;
+		}
+	});
+	return found;
+}
+
+// Find the next element containing the specified text
+function findNextText(startElement, nextText) {
+	let currentElement = startElement.nextSibling;
+	while (currentElement) {
+		if (currentElement.textContent.includes(nextText)) {
+			return currentElement;
+		}
+		currentElement = currentElement.nextSibling;
+	}
+	return null;
+}
+
+// Function to wrap the range between startElement and endElement in a new span
+function wrapRangeWithSpan(startElement, endElement, className) {
+    // Check if startElement and endElement are the same
+    if (startElement === endElement) {
+        const span = document.createElement('span');
+        span.className = className;
+        span.appendChild(startElement.cloneNode(true));
+        startElement.parentNode.replaceChild(span, startElement);
+        return span;
+    }
+
+    // Create a new span element
+    const span = document.createElement('span');
+    span.className = className;
+
+    // Reference the parent node of the common ancestor
+    const parent = startElement.parentNode;
+
+    // Iterate through siblings and wrap them in the span
+	const toRemove = [];
+    for (var node = startElement; node; node = node.nextSibling) {
+		var clonedNode = node.cloneNode(true);
+		span.appendChild(clonedNode);
+        if (node === endElement) {
+			parent.replaceChild(span, endElement);
+			toRemove.forEach(node => parent.removeChild(node));
+            break;
+        }
+		toRemove.push(node);
+    }
+
+    return span;
+}
 
 
 

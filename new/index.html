@@ -138,7 +138,7 @@
 					<span class="site-on">site on</span><br>
 					HTTPS
 				</div>
-				<h2>
+				<h2 id="every-site-https">
 					<b>By default, </b>Caddy <b>automatically obtains</b> and <b>renews</b> TLS certificates for <b>all your sites.</b>
 				</h2>
 
@@ -175,7 +175,7 @@
 			<section class="light">
 				<div class="section-upset">
 					<div class="wrapper">
-						<h2>The <b>most advanced</b> HTTPS server <b>in the world</b></h2>
+						<h2 id="most-advanced">The <b>most advanced</b> HTTPS server <b>in the world</b></h2>
 					</div>
 				</div>
 				<div class="wrapper">
@@ -220,7 +220,7 @@
 					</div>
 
 					<div class="demobox">
-						<h2>Experience it</h2>
+						<h2 id="on-demand-demo">Experience it</h2>
 						<p>
 							<b>Discover Caddy's automagic HTTPS features.</b>
 						</p>
@@ -263,7 +263,7 @@
 			<section class="diagonal up light gray feature">
 				<div class="wrapper">
 
-					<h2>Deploy your own PKI with Caddy</h2>
+					<h2 id="your-own-pki">Deploy your own PKI with Caddy</h2>
 					<p>
 						Not only is Caddy the industry leader in certificate automation, it also sports a fully-featured PKI suite for your own fully-automated internal PKI and private CAs.
 					</p>
@@ -278,17 +278,7 @@
 					<div class="asides">
 						<div>
 							<div class="display left">
-								<code class="light">localhost {
-	respond "Hello from HTTPS!"
-}
-
-192.168.1.10 {
-	respond "Also HTTPS!"
-}
-
-http://localhost {
-	respond "Plain HTTP"
-}</code>
+								{{ markdown (include "/includes/examples/local-https.md") }}
 							</div>
 						</div>
 						<div>
@@ -312,55 +302,16 @@ http://localhost {
 						</div>
 						<div>
 							<div class="display right">
-								<code class="light">{
-	pki {
-		ca corporate {
-			name "Our Corporation Authority"
-		}
-	}
-}
-
-internal.example.com {
-	<span class="comment"># ACME endpoint: /acme/corporate/directory</span>
-	acme_server {
-		ca corporate
-	}
-}</code></div>
-						<!-- <div class="display right">
-								<code class="light">{
-	pki {
-		ca our_own {
-			name "Our Own Authority"
-		}
-	}
-}
-
-internal.example.com {
-	tls {
-		issuer internal {
-			ca our_own
-		}
-	}
-}</code></div> -->
+								{{ markdown (include "/includes/examples/custom-ca.md") }}
+							</div>
 						</div>
 					</div>
 
 					<div class="asides">
 						<div>
 							<div class="display left">
-								<code class="light">{
-  "apps": {
-    "tls": {
-      "certificates": {
-        "automate": [
-          "example.com",
-		  "sub.example.com",
-          "example.net"
-        ]
-      }
-    }
-  }
-}</code></div>
+								{{ markdown (include "/includes/examples/json-automate-certs.md") }}
+							</div>
 						</div>
 						<div>
 							<h3 class="green">Keep certificates renewed</h3>
@@ -391,7 +342,7 @@ internal.example.com {
 
 			<section class="diagonal down dark feature">
 				<div class="wrapper">
-					<h2>A forward-thinking reverse proxy</h2>
+					<h2 id="reverse-proxy">A forward-thinking reverse proxy</h2>
 					<p>
 						Caddy's proxy was designed to be as forward-compatible as possible and has major batteries included: load balancing, active and passive health checks, dynamic upstreams, retries, pluggable transports, and of course, best-in-class TLS security.
 					</p>
@@ -419,34 +370,8 @@ internal.example.com {
 							</div>
 						</div>
 						<div>
-							<div class="display right">
-								<code class="dark">example.com
-
-<span class="comment"># Serve PHP sites</span>
-handle /blog/* {
-	root * /var/www/wordpress
-	<span class="rollover-php rollover-green">php_fastcgi localhost:9000</span>
-	file_server
-}
-
-<span class="comment"># Proxy an autoscaling API with dynamic backends</span>
-<span class="rollover-dynamic-backends rollover-purple">reverse_proxy /api/* {
-	dynamic srv _api._tcp.example.com
-}</span>
-
-<span class="comment"># Proxy a compute-heavy distributed service
-# with load balancing and health checks</span>
-<span class="rollover-ha rollover-blue">reverse_proxy /service/* {
-	to              10.0.1.1:80 10.0.1.2:80 10.0.1.3:80
-	lb_policy       least_conn
-	lb_try_duration 10s
-	fail_duration   5s
-}</span>
-
-<span class="comment"># Proxy everything else to an HTTPS upstream</span>
-reverse_proxy https://service.example.com {
-	header_up Host {upstream_hostport}
-}<div class="blinking"></div></code>
+							<div class="display right dark">
+								{{ markdown (include "/includes/examples/proxy.md") }}
 							</div>
 						</div>
 					</div>
@@ -482,7 +407,7 @@ reverse_proxy https://service.example.com {
 					</div>
 
 
-					<h2>Production-grade static file server</h2>
+					<h2 id="file-server">Production-grade static file server</h2>
 					<p>
 						Serving static files is a tried-and-true method of delivering sites to numerous clients efficiently. Caddy has a robust file server that can be combined with other middleware features for the ultimate effortless website.
 					</p>
@@ -516,33 +441,8 @@ reverse_proxy https://service.example.com {
 							</div>
 						</div>
 						<div>
-							<div class="display right">
-								<code class="light">example.com
-
-root * /var/www
-
-<span class="comment"># Serve precompressed files if present</span>
-<span class="rollover-compress rollover-blue">file_server /downloads/* {
-	precompressed gzip zstd br
-}</span>
-
-<span class="comment"># Compress everything else that would benefit</span>
-<span class="rollover-compress rollover-blue">encode zstd gzip</span>
-
-<span class="comment"># Get files from a database</span>
-<span class="rollover-vfs rollover-green">file_server /database/* {
-	fs sqlite data.sql 
-}</span>
-
-<span class="comment"># Get files from within the Caddy binary</span>
-<span class="rollover-vfs rollover-green">file_server /embedded/* {
-	fs embedded
-}</span>
-
-<span class="comment rollover-range rollover-yellow"># (Range/Etag/etc. all work without extra config)</span>
-
-<span class="comment"># Serve static site with directory listings as needed</span>
-<span class="rollover-browse rollover-purple">file_server browse</span></code>
+							<div class="display right light">
+								{{ markdown (include "/includes/examples/file-server.md") }}
 							</div>
 						</div>
 					</div>
@@ -560,7 +460,7 @@ root * /var/www
 
 			<section class="light feature">
 				<div class="wrapper">
-					<h2>Flexible configuration compatible with any workflow</h2>
+					<h2 id="flexible-config">Flexible configuration compatible with any workflow</h2>
 					<p>
 						Configure your server your way. Caddy's native configuration format is JSON, and with Caddy's config adapters, you can use any config format you prefer. All configuration is posted through a RESTful admin API, and Caddy's CLI helps you work with config files easily.
 					</p>
@@ -610,20 +510,8 @@ $ curl localhost:2019/config/ | jq<div class="blinking"></div></code>
 							</p>
 						</div>
 						<div>
-							<div class="display right">
-								<code class="light">caddyserver.com
-	
-root * src
-
-file_server
-templates
-encode zstd gzip
-
-redir   /docs/json   /docs/json/
-rewrite /docs/json/* /docs/json/index.html
-rewrite /docs/*      /docs/index.html
-
-reverse_proxy /api/* localhost:9002</code>
+							<div class="display right light">
+								{{ markdown (include "/includes/examples/website-caddyfile.md") }}
 								<div class="caption">Actual config used by this site.</div>
 							</div>
 						</div>
@@ -689,7 +577,7 @@ reverse_proxy /api/* localhost:9002</code>
 
 			<section class="diagonal up light gray feature">
 				<div class="wrapper">
-					<h2>Unparalleled extensibility</h2>
+					<h2 id="extensibility">Unparalleled extensibility</h2>
 					<p>
 						Caddy is the only server in the world with its novel, modular architecture. At its core, Caddy is a configuration manager that runs apps like an HTTP server, internal certificate authority, TLS certificate manager, process supervisor, and more.
 					</p>
@@ -722,7 +610,7 @@ reverse_proxy /api/* localhost:9002</code>
 
 			<section class="light feature">
 				<div class="wrapper">
-					<h2>The <span class="gold">gold standard</span> web server</h2>
+					<h2 id="gold-standard">The <span class="gold">gold standard</span> web server</h2>
 					<p>
 						Caddy has the most robust TLS stack on the market. With stronger memory safety guarantees than OpenSSL (Apache &amp; NGINX) and more advanced certificate automation logic than any other server or utility, Caddy keeps your sites online through problems when other servers... won't.
 					</p>
@@ -754,7 +642,7 @@ reverse_proxy /api/* localhost:9002</code>
 
 			<section class="light gray feature">
 				<div class="wrapper">
-					<h2>Recommended by experts</h2>
+					<h2 id="experts-recommend">Recommended by experts</h2>
 					<p>
 						Academic and industry experts recommend Caddy, which has been cited in peer-reviewed journals for its security defaults, best practices, and its uniquely advanced feature set.
 					</p>
