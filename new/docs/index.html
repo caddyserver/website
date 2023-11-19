@@ -2,15 +2,16 @@
 <html>
 	<head>
 		<title>Caddy Documentation</title>
-		{{include "/includes/head.html"}}
-		<link rel="stylesheet" href="/resources/css/docs.css">
-		<link rel="stylesheet" href="/resources/css/docs-home.css">
+		{{import "/includes/head.html"}}
+		{{template "head"}}
+		<link rel="stylesheet" href="/resources/css/docs.css{{template "cacheBust"}}">
+		<link rel="stylesheet" href="/resources/css/docs-home.css{{template "cacheBust"}}">
 		<!-- <meta property="og:title" content="Caddy 2 - The Ultimate Server with Automatic HTTPS">
 		<meta name="twitter:title" value="Caddy 2 - The Ultimate Server with Automatic HTTPS"> -->
 
-		<script src="/resources/js/vendor/marked.min.js"></script>
-		<script src="/resources/js/docs.js"></script>
-		<script src="/resources/js/docs-home.js"></script>
+		<script src="/resources/js/vendor/marked.min.js{{template "cacheBust"}}"></script>
+		<script src="/resources/js/docs.js{{template "cacheBust"}}"></script>
+		<script src="/resources/js/docs-home.js{{template "cacheBust"}}"></script>
 	</head>
 	<body>
 		{{include "/includes/header.html" ""}}

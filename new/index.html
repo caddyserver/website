@@ -2,14 +2,14 @@
 <html>
 	<head>
 		<title>Caddy - The Ultimate Server with Automatic HTTPS</title>
-		{{include "/includes/head.html"}}
+		{{import "/includes/head.html"}}
+		{{template "head"}}
+		<link rel="stylesheet" href="/resources/css/vendor/asciinema-player-3.6.1.css{{template "cacheBust"}}">
+		<script src="/resources/js/vendor/asciinema-player-3.6.1.min.js{{template "cacheBust"}}"></script>
+		<script src="/resources/js/home.js{{template "cacheBust"}}"></script>
 		
-		<link rel="stylesheet" href="/resources/css/vendor/asciinema-player-3.6.1.css">
-		<script src="/resources/js/vendor/asciinema-player-3.6.1.min.js"></script>
-		<script src="/resources/js/home.js"></script>
-		
-		<link rel="stylesheet" href="/resources/css/marketing.css">
-		<link rel="stylesheet" href="/resources/css/home.css">
+		<link rel="stylesheet" href="/resources/css/marketing.css{{template "cacheBust"}}">
+		<link rel="stylesheet" href="/resources/css/home.css{{template "cacheBust"}}">
 
 		<!-- <meta property="og:title" content="Caddy 2 - The Ultimate Server with Automatic HTTPS">
 			<meta name="twitter:title" value="Caddy 2 - The Ultimate Server with Automatic HTTPS"> -->

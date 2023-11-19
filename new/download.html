@@ -2,8 +2,9 @@
 <html>
 	<head>
 		<title>Download Caddy</title>
-		{{include "/includes/head.html"}}
-		<link rel="stylesheet" href="/resources/css/download.css">
+		{{import "/includes/head.html"}}
+		{{template "head"}}
+		<link rel="stylesheet" href="/resources/css/download.css{{template "cacheBust"}}">
 	</head>
 	<body>
 		<div class="hero">

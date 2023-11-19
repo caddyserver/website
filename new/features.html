@@ -2,9 +2,10 @@
 <html>
 	<head>
 		<title>All features of the Caddy Web Server</title>
-		{{include "/includes/head.html"}}
-		<link rel="stylesheet" href="/resources/css/marketing.css">
-		<link rel="stylesheet" href="/resources/css/features.css">
+		{{import "/includes/head.html"}}
+		{{template "head"}}
+		<link rel="stylesheet" href="/resources/css/marketing.css{{template "cacheBust"}}">
+		<link rel="stylesheet" href="/resources/css/features.css{{template "cacheBust"}}">
 	</head>
 	<body>
 		<div class="hero">
