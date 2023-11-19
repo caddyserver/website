@@ -1,6 +1,6 @@
 // AJQuery: https://github.com/coolaj86/ajquery.js (modified slightly by me)
-function $(sel, el) { return ((typeof el === 'string' ? $(el) : el) || document).querySelector(sel); }
-function $$(sel, el) { return (el || document).querySelectorAll(sel); }
+function $_(sel, el) { return ((typeof el === 'string' ? $_(el) : el) || document).querySelector(sel); }
+function $$_(sel, el) { return (el || document).querySelectorAll(sel); }
 
 function ready(fn) {
 	if (document.readyState !== 'loading') {
@@ -43,7 +43,7 @@ function cloneTemplate(tplSelector) {
 	// Ohhhhhh wow, we need to use firstElementChild when cloning the content of a template tag (!!!!):
 	// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template#avoiding_documentfragment_pitfall
 	// I spent way too long on this.
-	const elem = $(tplSelector);
+	const elem = $_(tplSelector);
 	if (!elem) return;
 	return elem.content.firstElementChild.cloneNode(true);
 	// return document.importNode(elem.content, true);
@@ -131,7 +131,7 @@ function setTheme(theme) {
 		theme = "system";
 	}
 	localStorage.setItem("theme", theme);
-	ready(function() { $('#current-theme').innerText = theme; });
+	ready(function() { $_('#current-theme').innerText = theme; });
 	let lightOrDarkTheme = theme;
 	if (lightOrDarkTheme == "system") {
 		lightOrDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "light";	
@@ -142,9 +142,9 @@ function setTheme(theme) {
 // applyTheme simply adds or removes the 'dark' class to the HTML.
 function applyTheme(lightOrDark) {
 	if (lightOrDark == "dark") {
-		$('html').classList.add('dark');
+		$_('html').classList.add('dark');
 	} else {
-		$('html').classList.remove('dark');
+		$_('html').classList.remove('dark');
 	}
 }
 

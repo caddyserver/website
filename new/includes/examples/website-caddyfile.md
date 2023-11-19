@@ -1,6 +1,6 @@
 <script>
-document.addEventListener("DOMContentLoaded", (event) => {
-	window.$('.ex-website-caddyfile pre.chroma').classList.add('light');
+ready(() => {
+	window.$_('.ex-website-caddyfile pre.chroma').classList.add('light');
 });
 </script>
 

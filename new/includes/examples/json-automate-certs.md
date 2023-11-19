@@ -1,6 +1,6 @@
 <script>
-document.addEventListener("DOMContentLoaded", (event) => {
-	window.$('.ex-json-automate-certs pre.chroma').classList.add('light');
+ready(() => {
+	window.$_('.ex-json-automate-certs pre.chroma').classList.add('light');
 });
 </script>
 

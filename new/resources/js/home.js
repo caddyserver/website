@@ -6,28 +6,28 @@ const resp = fetch("/resources/testimonials.json").then(async resp => {
 		for (let i = 0; i < testimonials.length; i++) {
 			const testimonial = testimonials[i];
 			const tpl = cloneTemplate('#tpl-testimonial');
-			$('.testimonial-picture', tpl).src = testimonial.picture || "";
-			$('.testimonial-quote', tpl).innerText = `"${testimonial.quote}"`;
+			$_('.testimonial-picture', tpl).src = testimonial.picture || "";
+			$_('.testimonial-quote', tpl).innerText = `"${testimonial.quote}"`;
 			if (testimonial.username) {
-				$('.testimonial-name', tpl).innerText = ` @${testimonial.username}`;
+				$_('.testimonial-name', tpl).innerText = ` @${testimonial.username}`;
 			} else {
-				$('.testimonial-name', tpl).innerText = testimonial.name || "";
+				$_('.testimonial-name', tpl).innerText = testimonial.name || "";
 			}
-			$('.testimonial-role', tpl).innerText = testimonial.role || "";
+			$_('.testimonial-role', tpl).innerText = testimonial.role || "";
 			if (testimonial.org) {
-				$('.testimonial-role', tpl).appendChild(document.createElement("br"));
-				$('.testimonial-role', tpl).appendChild(document.createTextNode(testimonial.org));
+				$_('.testimonial-role', tpl).appendChild(document.createElement("br"));
+				$_('.testimonial-role', tpl).appendChild(document.createTextNode(testimonial.org));
 			}
-			$(`.testimonial-col:nth-child(${i%3 + 1})`).append(tpl);
+			$_(`.testimonial-col:nth-child(${i%3 + 1})`).append(tpl);
 		}
 
 		on('mouseover', '.rollover', e => {
 			const target =  e.target.closest('.rollover') || e.target;
-			$$(`.${target.dataset.rollover}`).forEach(elem => elem.classList.add('show'));
+			$$_(`.${target.dataset.rollover}`).forEach(elem => elem.classList.add('show'));
 		});
 		on('mouseout', '.rollover', e => {
 			const target =  e.target.closest('.rollover') || e.target;
-			$$(`.${target.dataset.rollover}`).forEach(elem => elem.classList.remove('show'));
+			$$_(`.${target.dataset.rollover}`).forEach(elem => elem.classList.remove('show'));
 		});
 	});
 });

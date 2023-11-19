@@ -1,6 +1,6 @@
 // AJQuery: https://github.com/coolaj86/ajquery.js (modified slightly by me)
-function $(sel, el) { return ((typeof el === 'string' ? $(el) : el) || document).querySelector(sel); }
-function $$(sel, el) { return (el || document).querySelectorAll(sel); }
+function $_(sel, el) { return ((typeof el === 'string' ? $_(el) : el) || document).querySelector(sel); }
+function $$_(sel, el) { return (el || document).querySelectorAll(sel); }
 
 
 function ready(fn) {
@@ -40,7 +40,7 @@ function on(eventName, elemSelector, handler, capture) {
 
 function trigger(el, eventType) {
 	if (typeof el === 'string') {
-		el = $(el); // assume it was a selector, for convenience
+		el = $_(el); // assume it was a selector, for convenience
 	}
 
 	// from youmightnotneedjquery.com
@@ -60,7 +60,7 @@ function cloneTemplate(tplSelector) {
 	// Ohhhhhh wow, we need to use firstElementChild when cloning the content of a template tag (!!!!):
 	// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template#avoiding_documentfragment_pitfall
 	// I spent way too long on this.
-	const elem = $(tplSelector);
+	const elem = $_(tplSelector);
 	if (!elem) return;
 	return elem.content.firstElementChild.cloneNode(true);
 	// return document.importNode(elem.content, true);
@@ -69,7 +69,7 @@ function cloneTemplate(tplSelector) {
 // isVisible returns true if elem (an element or selector) is visible.
 function isVisible(elem) {
 	if (typeof elem === 'string') {
-		elem = $(elem);
+		elem = $_(elem);
 	}
 	return elem.offsetParent !== null;
 }

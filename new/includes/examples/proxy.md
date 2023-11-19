@@ -1,5 +1,5 @@
 <script>
-document.addEventListener("DOMContentLoaded", (event) => {
+ready(() => {
 	let startElement, endElement;
 
 	startElement = findWithContent('.ex-proxy pre.chroma code span', 'php_fastcgi');

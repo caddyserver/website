@@ -1,13 +1,13 @@
 ready(function() {
 	// highlight current page in left nav
-	let currentPageLink = $('main nav a[href="'+window.location.pathname+'"]');
+	let currentPageLink = $_('main nav a[href="'+window.location.pathname+'"]');
 	if (window.location.pathname.startsWith("/docs/json/")) {
 		// as a special case, highlight the JSON structure link anywhere within it
-		currentPageLink = $('main nav a[href="/docs/json/"]');
+		currentPageLink = $_('main nav a[href="/docs/json/"]');
 	}
 	if (window.location.pathname.startsWith("/docs/modules/")) {
 		// as another special case, highlight the modules link anywhere within it
-		currentPageLink = $('main nav a[href="/docs/modules/"]');
+		currentPageLink = $_('main nav a[href="/docs/modules/"]');
 	}
 	currentPageLink?.classList?.add('current');
 
@@ -16,22 +16,22 @@ ready(function() {
 	// TODO: support h3 too
 	const spacingMS = 50;
 	let delay = spacingMS;
-	const h2elems = $$('main article h2');
+	const h2elems = $$_('main article h2');
 	if (h2elems.length) {
-		$('#pagenav .heading').style.display = 'block';
+		$_('#pagenav .heading').style.display = 'block';
 		h2elems.forEach(elem => {
 			const a = document.createElement('a');
 			a.innerText = elem.innerText;
 			a.href = `#${elem.id}`;
 			setTimeout(function() {
-				$('#pagenav').append(a);
+				$_('#pagenav').append(a);
 			}, delay);
 			delay += spacingMS;
 		});
 	}
 
 	// add anchor links, inspired by https://github.com/bryanbraun/anchorjs
-	$$('article > h2[id], article > h3[id], article > h4[id], article > h5[id], article > h6[id]').forEach(function(elem) {
+	$$_('article > h2[id], article > h3[id], article > h4[id], article > h5[id], article > h6[id]').forEach(function(elem) {
 		const anchor = document.createElement('a');
 		anchor.href = `#${elem.id}`;
 		anchor.classList.add('anchor-link');
@@ -40,12 +40,12 @@ ready(function() {
 		elem.append(anchor);
 	});
 
-	const autonav = $('#autonav');
+	const autonav = $_('#autonav');
 
 	// when a left-side-nav-link is hovered, show the in-page nav in a popout to the side
 	on('mouseover', 'main nav li a:not(#autonav a)', async e => {
 		// only show the pop-out nav if not on mobile/narrow screen
-		if ($('#docs-menu').offsetParent != null) {
+		if ($_('#docs-menu').offsetParent != null) {
 			return;
 		}
 
@@ -75,7 +75,7 @@ ready(function() {
 			autonav.append(a);
 		}
 		
-		if ($('#autonav *')) {
+		if ($_('#autonav *')) {
 			const sections = document.createElement('div')
 			sections.classList.add('heading');
 			sections.innerText = 'Sections';
@@ -92,7 +92,7 @@ ready(function() {
 
 // toggle left-nav when menu link is clicked
 on('click', '#docs-menu', e => {
-	const nav = $('#docs-menu-container');
+	const nav = $_('#docs-menu-container');
 	if (!nav.offsetHeight) {
 		nav.style.height = `${nav.scrollHeight}px`;
 	} else {

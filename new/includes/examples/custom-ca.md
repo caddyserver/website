@@ -1,6 +1,6 @@
 <script>
-document.addEventListener("DOMContentLoaded", (event) => {
-	window.$('.ex-custom-ca pre.chroma').classList.add('light');
+ready(() => {
+	window.$_('.ex-custom-ca pre.chroma').classList.add('light');
 });
 </script>
 

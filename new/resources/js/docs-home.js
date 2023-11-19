@@ -365,9 +365,9 @@ quickAssist = function() {
 	// show renders the given state into the quick assist box
 	function show(state) {
 		// reset & show prompt/content
-		$('.quick-assist-question').innerHTML = state.prompt || state.title;
-		$('.quick-assist-content').innerHTML = state.content || '';
-		$('.quick-assist-options').innerHTML = '';
+		$_('.quick-assist-question').innerHTML = state.prompt || state.title;
+		$_('.quick-assist-content').innerHTML = state.content || '';
+		$_('.quick-assist-options').innerHTML = '';
 
 		// render options
 		let hasNext = false;
@@ -385,7 +385,7 @@ quickAssist = function() {
 				} else if (opt.href) {
 					btn.href = opt.href;
 				}
-				$('.quick-assist-options').append(btn);
+				$_('.quick-assist-options').append(btn);
 			}
 		}
 
@@ -395,7 +395,7 @@ quickAssist = function() {
 			const reset = document.createElement('a');
 			reset.classList.add('button', 'reset');
 			reset.innerText = "Reset";
-			$('.quick-assist-options').append(reset);
+			$_('.quick-assist-options').append(reset);
 		}
 
 		history.push(state);
@@ -429,12 +429,12 @@ quickAssist = function() {
 		const link = document.createElement('a');
 		link.innerText = event.target.dataset.breadcrumb || event.target.innerText;
 		link.dataset.index = history.length;
-		$('.quick-assist-history').append(link);
+		$_('.quick-assist-history').append(link);
 		show(states[event.target.dataset.next]);
 	});
 
 	on('click', '.quick-assist-options a.reset', event => {
-		$('.quick-assist-history a:first-child').dispatchEvent(new Event('click', { bubbles: true }));
+		$_('.quick-assist-history a:first-child').dispatchEvent(new Event('click', { bubbles: true }));
 	})
 
 	// when page loads, show the start of the quick assist

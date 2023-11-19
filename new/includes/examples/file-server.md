@@ -1,5 +1,5 @@
 <script>
-document.addEventListener("DOMContentLoaded", (event) => {
+ready(() => {
 	let startElement, endElement;
 
 	startElement = findWithContent('.ex-fs pre.chroma code span.line', 'file_server /downloads/* {');
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	endElement = findNextText(startElement, 'browse');
 	wrapRangeWithSpan(startElement, endElement, 'rollover-browse rollover-purple');
 
-	window.$('.ex-fs pre.chroma').classList.add('light');
+	window.$_('.ex-fs pre.chroma').classList.add('light');
 });
 </script>
 
