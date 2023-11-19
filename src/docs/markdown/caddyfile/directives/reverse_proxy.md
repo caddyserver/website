@@ -735,12 +735,13 @@ reverse_proxy 10.0.0.1:443 {
 ```
 
 
-Instead you may establish trust with the upstream by explicitly [trusting the upstream's certificate](#tls_trusted_ca_certs):
+Instead you may establish trust with the upstream by explicitly [trusting the upstream's certificate](#tls_trusted_ca_certs), and (optionally) setting TLS-SNI to match the hostname in the upstream's certificate:
 
 ```caddy-d
 reverse_proxy 10.0.0.1:443 {
 	transport http {
 		tls_trusted_ca_certs /path/to/cert.pem
+		tls_server_name app.example.com
 	}
 }
 ```
