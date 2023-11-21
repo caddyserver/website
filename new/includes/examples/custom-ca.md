@@ -1,9 +1,3 @@
-<script>
-ready(() => {
-	window.$_('.ex-custom-ca pre.chroma').classList.add('light');
-});
-</script>
-
 <div class="ex-custom-ca">
 
 ```caddy
@@ -24,3 +18,7 @@ internal.example.com {
 ```
 
 </div>
+
+<script>
+window.$_('.ex-custom-ca code').classList.add('light');
+</script>

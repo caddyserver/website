@@ -13,6 +13,8 @@ ready(() => {
 	startElement = findWithContent('.ex-proxy pre.chroma code span.line', 'reverse_proxy /service/* {');
 	endElement = findNextText(startElement, '}');
 	wrapRangeWithSpan(startElement, endElement, 'rollover-ha rollover-blue');
+
+	window.$_('.ex-proxy code').classList.add('dark');
 });
 </script>
 

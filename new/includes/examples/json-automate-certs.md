@@ -1,9 +1,3 @@
-<script>
-ready(() => {
-	window.$_('.ex-json-automate-certs pre.chroma').classList.add('light');
-});
-</script>
-
 <div class="ex-json-automate-certs">
 
 ```json
@@ -23,3 +17,6 @@ ready(() => {
 ```
 
 </div>
+<script>
+window.$_('.ex-json-automate-certs code').classList.add('light');
+</script>

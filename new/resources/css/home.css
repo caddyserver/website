@@ -109,7 +109,6 @@ h1 .subheading  {
 
 div.ap-wrapper div.ap-player {
 	box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.25);
-	transform: scale(1.1);
 	border-radius: 10px;
 }
 
@@ -121,93 +120,6 @@ div.ap-wrapper:fullscreen div.ap-player {
 	border-color: transparent;
 	background-color: transparent;
 }
-
-.display {
-	perspective: 1500px;
-}
-
-.display code {
-	border-radius: 10px;
-	width: 100%;
-}
-
-.display code {
-	max-width: 800px;
-	font-size: 110%;
-	display: block;
-	position: relative;
-	padding: 20px 40px;
-	white-space: pre;
-	font-weight: bold;
-	overflow-x: auto;
-	box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.1);
-}
-.display.left code {
-	box-shadow: -10px 10px 25px rgba(0, 0, 0, 0.1);
-}
-
-.display.right > * {
-	transform: rotateY(-25deg);
-}
-.display.left > * {
-	transform: rotateY(25deg);
-}
-
-.display code.light {
-	background: #fff linear-gradient(135deg, rgba(255,255,255,0) 0%,rgba(241,241,241,0.5) 46%,rgba(225,225,225,0.5) 46.25%,rgba(246,246,246,0) 100%);
-	color: #222;
-}
-
-.display code.dark,
-.ap-player {
-	/* background: #333 linear-gradient(135deg, rgba(0, 0, 0, 0) 0%,rgba(125, 125, 125, 0.3) 46%,rgba(45, 45, 45, 0.8) 46.8%,rgba(0, 0, 0, 0) 100%); */
-	background: rgb(0 0 0 / .7) linear-gradient(135deg, transparent 0%, rgb(200 200 200 / 0.25) 46%, rgb(200 200 200 / .15) 46.5%, transparent 100%);
-	color: #fff;
-}
-
-.light .display code.dark {
-	background: #333 linear-gradient(135deg, rgba(0, 0, 0, 0) 0%,rgba(125, 125, 125, 0.3) 46%,rgba(45, 45, 45, 0.8) 46.8%,rgba(0, 0, 0, 0) 100%);
-}
-
-.display .comment {
-	color: gray;
-}
-
-.blinking {
-	animation: blinking 1s infinite;
-	background-color: #fff;
-	width: .5em;
-	height: 1.2em;
-	position: relative;
-	top: 5px;
-	display: inline-block;
-}
-
-@keyframes blinking {
-	0%   { background-color: #fff; }
-	45%  { background-color: #fff; }
-	60%  { background-color: transparent; }
-	99%  { background-color: transparent; }
-	100% { background-color: #fff; }
-}
-
-
-.rollover-green,
-.rollover-purple,
-.rollover-blue,
-.rollover-yellow {
-	transition: background-color 250ms;
-}
-
-.dark .rollover-green.show { background-color: #41e68e2b; }
-.dark .rollover-purple.show { background-color: #a52fa55f; }
-.dark .rollover-blue.show { background-color: #0a62aa5b; }
-.dark .rollover-yellow.show { background-color: #ffcb5064; }
-
-.light .rollover-green.show { background-color: #41e68e4b; }
-.light .rollover-purple.show { background-color: #a52fa545; }
-.light .rollover-blue.show { background-color: #0a62aa3a; }
-.light .rollover-yellow.show { background-color: #ffcb5064; }
 
 
 

@@ -1,9 +1,3 @@
-<script>
-ready(() => {
-	window.$_('.ex-website-caddyfile pre.chroma').classList.add('light');
-});
-</script>
-
 <div class="ex-website-caddyfile">
 
 ```caddy
@@ -23,3 +17,7 @@ reverse_proxy /api/* localhost:9002
 ```
 
 </div>
+
+<script>
+window.$_('.ex-website-caddyfile code').classList.add('light');
+</script>

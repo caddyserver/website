@@ -25,7 +25,7 @@ ready(() => {
 	endElement = findNextText(startElement, 'browse');
 	wrapRangeWithSpan(startElement, endElement, 'rollover-browse rollover-purple');
 
-	window.$_('.ex-fs pre.chroma').classList.add('light');
+	window.$_('.ex-fs code').classList.add('light');
 });
 </script>
 

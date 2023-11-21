@@ -419,6 +419,12 @@ div.ap-wrapper:fullscreen div.ap-player {
 	perspective: 1500px;
 }
 
+.display .chroma,
+.display.dark .chroma,
+.display.light .chroma {
+	background: none;
+}
+
 .display code {
 	border-radius: 10px;
 	width: 100%;
@@ -435,6 +441,9 @@ div.ap-wrapper:fullscreen div.ap-player {
 	overflow-x: auto;
 	box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.1);
 }
+.display.dark code {
+	box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.5);
+}
 .display.left code {
 	box-shadow: -10px 10px 25px rgba(0, 0, 0, 0.1);
 }
@@ -446,7 +455,8 @@ div.ap-wrapper:fullscreen div.ap-player {
 	transform: rotateY(25deg);
 }
 
-.display code.light {
+.display code.light, 
+.display .chroma.light {
 	background: #fff linear-gradient(135deg, rgba(255,255,255,0) 0%,rgba(241,241,241,0.5) 46%,rgba(225,225,225,0.5) 46.25%,rgba(246,246,246,0) 100%);
 	color: #222;
 }
@@ -497,7 +507,15 @@ div.ap-wrapper:fullscreen div.ap-player {
 .rollover-blue.show { background-color: #0a62aaa3; }
 .rollover-yellow.show { background-color: #ffcb50; }
 
+.dark .rollover-green.show { background-color: #41e68e7c; }
+.dark .rollover-purple.show { background-color: #a52fa58c; }
+.dark .rollover-blue.show { background-color: #0a62aa96; }
+.dark .rollover-yellow.show { background-color: #ffcb5064; }
 
+.light .rollover-green.show { background-color: #41e68e4b; }
+.light .rollover-purple.show { background-color: rgba(230, 78, 230, 0.522); }
+.light .rollover-blue.show { background-color: #65b4f586; }
+.light .rollover-yellow.show { background-color: #ffcb50d5; }
 
 
 

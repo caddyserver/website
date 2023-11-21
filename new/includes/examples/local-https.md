@@ -1,9 +1,3 @@
-<script>
-ready(() => {
-	window.$_('.ex-local-https pre.chroma').classList.add('light');
-});
-</script>
-
 <div class="ex-local-https">
 
 ```caddy
@@ -21,3 +15,7 @@ http://localhost {
 ```
 
 </div>
+
+<script>
+window.$_('.ex-local-https code').classList.add('light');
+</script>
