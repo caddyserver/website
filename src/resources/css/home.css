@@ -138,10 +138,6 @@ code.rest {
 	text-align: center;
 }
 
-iframe.github-stars {
-	vertical-align: middle;
-}
-
 
 @media (max-width: 1100px) {
 	.side-by-side,

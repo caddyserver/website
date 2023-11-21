@@ -30,14 +30,13 @@ h1 .color-dodge {
 }
 
 h1 .the {
-	font-size: 75px;
+	font-size: 60%;
 	line-height: 1;
 }
 
 h1 .subheading  {
 	margin-top: .75em;
 }
-
 
 
 
@@ -513,36 +512,30 @@ img.cite {
 
 
 
+.franken {
+	background-color: #b3d133;
+	color: #390075;
+}
+
 
 @media (max-width: 1350px) {
 	h1 {
-		text-align: center;
+		font-size: 95px;
 	}
 
-	.asides {
-		flex-direction: column;
-	}
-
-	.action-buttons {
-		margin-bottom: 55px;
+	h1 .subheading {
+		font-size: 30px;
 	}
 }
 
 
+@media (max-width: 1000px) {
+	h1 {
+		text-align: center;
+	}
 
-
-@media (max-width: 720px) {
-	.display {
-		margin-top: 50px;
-		margin-bottom: 50px;
-	}
-	.display.right > * {
-		transform: none;
-	}
-	.display.left > * {
-		transform: none;
-	}
-	.asides > * { 
-		margin-right: 0;
+	.action-buttons {
+		margin-bottom: 55px;
+		justify-content: center;
 	}
 }

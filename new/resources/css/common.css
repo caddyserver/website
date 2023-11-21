@@ -286,6 +286,7 @@ button.primary,
 	color: #222;
 	font-weight: bold;
 	border: none;
+	box-shadow: 0 3px 5px rgba(0, 0, 0, 0.08);
 }
 
 button.primary:hover,
@@ -420,8 +421,8 @@ button.primary .hover-splash,
 	font-family: Poppins, ui-rounded;
 	font-weight: 600;
 	color: var(--dropdown-link-title-color);
-	font-size: 18px;
-	margin-bottom: 5px;
+	font-size: 20px;
+	margin-bottom: 14px;
 }
 
 .dropdown .col {

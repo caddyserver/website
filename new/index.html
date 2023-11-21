@@ -35,7 +35,7 @@
 							<div class="action-buttons">
 								<a href="/download" class="button primary">Download</a>
 								<a href="/docs/" class="button cool">Docs<sh></sh></a>
-								<iframe src="https://ghbtns.com/github-btn.html?user=caddyserver&amp;repo=caddy&amp;type=star&amp;count=true&amp;size=large" frameborder="0" scrolling="0" width="160px" height="30px" class="github-stars" style="margin: 0 auto; align-self: center;"></iframe>
+								<iframe src="https://ghbtns.com/github-btn.html?user=caddyserver&amp;repo=caddy&amp;type=star&amp;count=true&amp;size=large" frameborder="0" scrolling="0" width="160px" height="30px" class="github-stars"></iframe>
 							</div>
 						</div>
 						<div>
@@ -74,7 +74,7 @@
 								<img src="/resources/images/sponsors/tailscale.svg" alt="Tailscale" title="Tailscale" height="22">
 							</a>
 							<a href="https://les-tilleuls.coop/" target="_blank">
-								<img src="/resources/images/sponsors/les-tilleuls.svg" alt="Les-Tilleuls" title="Les-Tilleuls" height="25">
+								<img src="/resources/images/sponsors/les-tilleuls-white.svg" alt="Les-Tilleuls" title="Les-Tilleuls" height="25">
 							</a>
 							<a href="https://framer.com" target="_blank">
 								<img src="/resources/images/sponsors/framer.svg" alt="Framer" title="Framer" height="32">
@@ -222,7 +222,7 @@
 					<div class="demobox">
 						<h2 id="on-demand-demo">Experience it</h2>
 						<p>
-							<b>Discover Caddy's automagic HTTPS features.</b>
+							<b>Discover Caddy's automagic HTTPS features with our hosted demo.</b>
 						</p>
 						<p>
 							Point any subdomain named <b><code>caddydemo</code></b> to:
@@ -230,11 +230,11 @@
 						<p class="demo-ips">
 							<code>
 								<span class="record-type">A</span>
-								<span class="demo-ip">1.2.3.4</span>
+								<span class="demo-ip">138.68.4.62</span>
 							</code>
 							<code>
 								<span class="record-type">AAAA</span>
-								<span class="demo-ip">::f00</span>
+								<span class="demo-ip">2604:a880:2:d0::9dd:9001</span>
 							</code>
 						</p>
 						<p>
@@ -245,9 +245,10 @@
 						</p>
 						<div class="demo-help">
 							<p>
-								<b>Not working?</b> Make sure to use a subdomain of a registered domain, not a "sub-subdomain."
-								Verify you have created the public DNS records shown above with the correct values.
-								You may have to allow time for propagation. Consult your DNS provider's documentation or support for more information.
+								<b>Not working?</b> Make sure to use a direct subdomain of a registered domain, not a "sub-subdomain."
+								Verify you have created the public DNS records shown above with the correct addresses.
+								You may have to allow time for propagation. Consult your DNS provider's documentation or support for assistance.
+								Your client must set the TLS ServerName indication (most do).
 							</p>
 							<p>
 								<b>Example subdomains that could work:</b> <code>caddydemo.example.net</code>, <code>caddydemo.example.co.uk</code>
@@ -336,6 +337,11 @@
 						</div>
 					</div>
 
+					<div class="action-buttons">
+						<a href="/download" class="button primary">Download</a>
+						<a href="/docs/" class="button secondary">Docs<sh></sh></a>
+					</div>
+
 					
 				</div>
 			</section>
@@ -394,13 +400,13 @@
 									<div class="experience-quote">
 										"With its extensible architecture and on-line config API, Caddy powers many of Stripe's internal systems."
 									</div>
-									<div class="experience-credit">
+									<!-- <div class="experience-credit">
 										<img src="https://preview.tabler.io/static/avatars/002m.jpg" class="experience-picture">
 										<cite>
 											<b>Sean Lin</b>
 											Example product manager
 										</cite>
-									</div>
+									</div> -->
 								</div>
 							</div>
 						</div>
@@ -588,7 +594,7 @@ $ curl localhost:2019/config/ | jq<div class="blinking"></div></code>
 						<div class="col">
 							<h3 class="green">Unlimited power</h3>
 							<p>
-								Nearly every part of the config that "does something" is pluggable. Caddy offers so much in such a lean package.
+								Nearly every part of the config that "does something" is pluggable. Caddy offers unlimited capabilities in such a lean package.
 							</p>
 						</div>
 						<div class="col">

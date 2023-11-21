@@ -185,6 +185,17 @@ on('mouseover', '.button:not(.cool), button:not(.cool)', (e) => {
 });
 
 
+// mouseover highlights for feature sections that explain config
+on('mouseover', '.rollover', e => {
+	const target =  e.target.closest('.rollover') || e.target;
+	$$(`.${target.dataset.rollover}`).forEach(elem => elem.classList.add('show'));
+});
+on('mouseout', '.rollover', e => {
+	const target =  e.target.closest('.rollover') || e.target;
+	$$(`.${target.dataset.rollover}`).forEach(elem => elem.classList.remove('show'));
+});
+
+
 
 // immediately set the configured theme to avoid flash
 setTheme(getTheme());
