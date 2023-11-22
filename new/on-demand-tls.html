@@ -32,7 +32,7 @@
 						What happened?
 					</h2>
 					<p>
-						Caddy automatically obtained a certificate for your domain, <code>{{.Req.Host}}</code>,  without any change to the server's configuration. We call this technology On-Demand TLS, and it's an exclusive feature of Caddy.
+						Caddy automatically obtained a certificate for your domain, <code>{{.Req.Host}}</code>, without any change to the server's configuration. We call this technology On-Demand TLS, and it's an exclusive feature of Caddy.
 					</p>
 					<p>
 						With On-Demand TLS, no config changes are required to serve more domains over HTTPS. This is perfect for servers hosting content or APIs for customer-owned domains because your HTTPS deployment scales as tall and wide as your business does.
@@ -60,7 +60,7 @@
 							<div class="rollover" data-rollover="rollover-abuse">
 								<h3 class="purple">1. Prevent abuse</h3>
 								<p>
-									First, you'll configure an internal endpoint that Caddy can "ask" if a certificate should be allowed for a domain. This endpoint usually looks up the domain in a list or database and returns HTTP 200 if it's allowed.
+									First, you'll configure an internal endpoint that Caddy can "ask" if a certificate should be allowed for a domain. This endpoint usually looks up the domain in a list or database and returns <code>HTTP 200</code> if it's allowed. Make sure to reject domains you don't recognize. This means that customers <i>must</i> register their domain with your app first.
 								</p>
 							</div>
 							<div class="rollover" data-rollover="rollover-ondemand">
@@ -99,7 +99,7 @@
 							<div>
 								<h3 class="purple">1. Point DNS records</h3>
 								<p>
-									The owner of the domain sets A and/or AAAA records to point to your Caddy instance.
+									The customer sets a CNAME record on a domain or subdomain they control, so that <i>their</i> domain resolves to <i>your</i> domain's IP address.
 								</p>
 							</div>
 							<!-- <div class="rollover" data-rollover="rollover-ondemand">
@@ -111,13 +111,13 @@
 						</div>
 						<div>
 							<div class="display right">
-								<code class="light"><span class="comment"># Examples shown. In real life, users
-# point domains to your IP address.</span>
+								<code class="light"><span class="comment"># Customer's DNS (example domains)</span>
+your-app.customer.com   CNAME  ->  your-app.com
 
-A    -> 203.0.113.42
-
-AAAA -> 2001:db8:900d:1337</code>
-
+<span class="comment"># Your DNS (example IPs)</span>
+your-app.com            A      ->  198.51.100.1
+your-app.com            AAAA   ->  2001:db8:: 
+</code>
 							</div>
 						</div>
 					</div>
