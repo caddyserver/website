@@ -40,89 +40,6 @@ h1 .subheading  {
 
 
 
-.asides {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
-	margin: 100px auto 150px auto;
-	align-items: center;
-}
-
-.hero-content .asides {
-	margin-top: 0;
-	margin-bottom: 75px;
-}
-
-.asides.top {
-	align-items: stretch;
-}
-
-.asides > * { 
-	flex: 1;
-	margin-right: 50px;
-	min-width: 0; /* kind of a hack that allows proper sizing of pre children; see https://weblog.west-wind.com/posts/2016/feb/15/flexbox-containers-pre-tags-and-managing-overflow */
-	min-width: 300px;
-}
-
-.asides > :last-child {
-	margin-right: 0;
-}
-
-.asides-40-60 > :first-child { max-width: 40%; }
-.asides-40-60 > :last-child { max-width: 60%; }
-.asides-60-40 > :first-child { max-width: 60%; }
-.asides-60-40 > :last-child { max-width: 40%; }
-
-.asides h2 {
-	text-align: left;
-	max-width: none;
-}
-
-.asides p {
-	margin-left: 0;
-	margin-right: 0;
-}
-
-.action-buttons {
-	display: flex;
-	gap: 1.5em;
-	margin-top: 55px;
-}
-
-
-
-
-.caption {
-	margin-top: 10px;
-	font-size: 14px;
-	text-align: center;
-}
-
-.hero-content .caption {
-	color: #fff;
-}
-
-#video-demo {
-	display: block;
-	margin-bottom: 2em;
-}
-
-div.ap-wrapper div.ap-player {
-	box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.25);
-	border-radius: 10px;
-}
-
-div.ap-wrapper:fullscreen div.ap-player {
-	transform: none;
-}
-
-.ap-player pre.ap-terminal {
-	border-color: transparent;
-	background-color: transparent;
-}
-
-
-
 .sponsors-leaders {
 	position: relative;
 	text-align: center;
@@ -353,7 +270,10 @@ div.ap-wrapper:fullscreen div.ap-player {
 }
 
 img.cite {
-	max-width: 100%;
+	width: 100%;
+	max-width: 600px;
+	display: block;
+	margin: 0 auto;
 }
 
 
@@ -370,7 +290,7 @@ img.cite {
 .demobox h2 {
 	position: absolute;
 	top: -99px;
-	font-size: 90px;
+	font-size: min(90px, 50vw);
 	font-weight: 700;
 	white-space: nowrap;
 	max-width: none;
@@ -387,6 +307,7 @@ img.cite {
 
 .demo-ips {
 	display: flex;
+	flex-wrap: wrap;
 	gap: 2em;
 }
 
@@ -401,6 +322,7 @@ img.cite {
 .demo-ip {
 	display: block;
 	padding: 10px 20px;
+	overflow-wrap: anywhere;
 }
 
 .record-type {
@@ -449,5 +371,31 @@ img.cite {
 	.action-buttons {
 		margin-bottom: 55px;
 		justify-content: center;
+	}
+
+	.bgtext {
+		font-size: 25vw;
+		opacity: .25;
+	}
+
+	.wavy-top h2 {
+		font-size: 5vw;
+		width: 80%;
+		max-width: 700px;
+		line-height: 2em;
+	}
+
+	.section-upset {
+		padding: 50px 15px 0;
+	}
+
+	.section-upset h2 {
+		font-size: 50px;
+	}
+}
+
+@media (max-width: 700px) {
+	h1 {
+		font-size: 55px;
 	}
 }

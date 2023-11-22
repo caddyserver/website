@@ -565,6 +565,7 @@ footer a:hover {
 
 footer .wrapper {
 	display: flex;
+	flex-wrap: wrap;
 	gap: 75px;
 }
 

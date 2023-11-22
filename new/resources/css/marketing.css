@@ -335,6 +335,7 @@ section.dark h3.yellow {
 .asides {
 	display: flex;
 	flex-wrap: wrap;
+	gap: 50px;
 	justify-content: space-between;
 	margin: 100px auto 150px auto;
 	align-items: center;
@@ -351,20 +352,20 @@ section.dark h3.yellow {
 
 .asides > * { 
 	flex: 1;
-	margin-right: 50px;
-	min-width: 0; /* kind of a hack that allows proper sizing of pre children; see https://weblog.west-wind.com/posts/2016/feb/15/flexbox-containers-pre-tags-and-managing-overflow */
-	min-width: 300px;
-	width: 100%;
+	/* margin-right: 50px; */
+	/*min-width: 0;  kind of a hack that allows proper sizing of pre children; see https://weblog.west-wind.com/posts/2016/feb/15/flexbox-containers-pre-tags-and-managing-overflow */
+	/* min-width: 300px;
+	width: 100%; */
 }
 
-.asides > :last-child {
+/* .asides > :last-child {
 	margin-right: 0;
-}
+} */
 
-.asides-40-60 > :first-child { max-width: 40%; }
-.asides-40-60 > :last-child { max-width: 60%; }
-.asides-60-40 > :first-child { max-width: 60%; }
-.asides-60-40 > :last-child { max-width: 40%; }
+.asides-40-60 > :first-child { width: 40%; }
+.asides-40-60 > :last-child { width: 60%; }
+.asides-60-40 > :first-child { width: 60%; }
+.asides-60-40 > :last-child { width: 40%; }
 
 .asides h2 {
 	text-align: left;
@@ -414,6 +415,11 @@ div.ap-wrapper:fullscreen div.ap-player {
 	border-color: transparent;
 	background-color: transparent;
 }
+
+
+
+
+
 
 .display {
 	perspective: 1500px;
@@ -651,11 +657,11 @@ div.ap-wrapper:fullscreen div.ap-player {
 }
 
 @media (min-width: 1001px) {
-	.hero-content .display {
+	/* .hero-content .display {
 		transform: scale(1.1);
 		position: relative;
 		left: -7%;
-	}
+	} */
 
 	/* div.ap-wrapper div.ap-player {
 
