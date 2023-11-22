@@ -72,21 +72,7 @@
 						</div>
 						<div>
 							<div class="display right">
-								<code class="light">{
-<span class="rollover-abuse rollover-purple">	on_demand_tls {
-		ask http://localhost:9123/check
-	}</span>
-}
-
-https:// {
-<span class="rollover-ondemand rollover-green">	tls {
-		on_demand
-	}</span>
-	<span class="comment"># reverse_proxy, etc...</span>
-}
-
-<span class="comment"># other sites...</span></code>
-
+								{{ markdown (include "/includes/examples/on-demand.md") }}
 							</div>
 						</div>
 					</div>

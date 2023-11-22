@@ -20,14 +20,5 @@ const resp = fetch("/resources/testimonials.json").then(async resp => {
 			}
 			$_(`.testimonial-col:nth-child(${i%3 + 1})`).append(tpl);
 		}
-
-		on('mouseover', '.rollover', e => {
-			const target =  e.target.closest('.rollover') || e.target;
-			$$_(`.${target.dataset.rollover}`).forEach(elem => elem.classList.add('show'));
-		});
-		on('mouseout', '.rollover', e => {
-			const target =  e.target.closest('.rollover') || e.target;
-			$$_(`.${target.dataset.rollover}`).forEach(elem => elem.classList.remove('show'));
-		});
 	});
 });
