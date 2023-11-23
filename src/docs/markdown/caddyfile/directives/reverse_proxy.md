@@ -724,7 +724,7 @@ reverse_proxy https://example.com {
 ```
 
 
-Reverse proxy to an HTTPS upstream, but [⚠️ disable TLS verification](#tls_insecure_skip_verify). this is NOT RECOMMENDED, since it disables all security checks that HTTPS offers; proxying over over HTTP in private networks is preferred if possible, because it avoids the false sense of security:
+Reverse proxy to an HTTPS upstream, but [⚠️ disable TLS verification](#tls_insecure_skip_verify). this is NOT RECOMMENDED, since it disables all security checks that HTTPS offers; proxying over HTTP in private networks is preferred if possible, because it avoids the false sense of security:
 
 ```caddy-d
 reverse_proxy 10.0.0.1:443 {
