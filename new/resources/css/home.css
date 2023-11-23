@@ -288,12 +288,13 @@ img.cite {
 }
 
 .demobox h2 {
-	position: absolute;
-	top: -99px;
-	font-size: min(90px, 50vw);
+	font-size: 90px;
 	font-weight: 700;
+	max-width: 100%;
 	white-space: nowrap;
-	max-width: none;
+	overflow-x: auto;
+	white-space: nowrap;
+	margin-top: -1.65em;
 
 	background: linear-gradient(0deg, rgba(27,180,186,1) 10%, rgba(0,61,75,1) 50%);
 	-webkit-background-clip: text;
