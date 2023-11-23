@@ -39,12 +39,15 @@ The address part may be any of these forms:
 - `host:port`
 - `:port`
 - `/path/to/unix/socket`
+- `/path/to/unix/socket|0660`
 
 The host may be any hostname, resolvable domain name, or IP address.
 
 The port may be a single value (`:8080`) or an inclusive range (`:8080-8085`). A port range will be multiplied into singular addresses. Not all config fields accept port ranges. The special port `:0` means any available port.
 
 A unix socket path is only acceptable when using a `unix*` network type. The forward slash that separates the network and address is not considered part of the path.
+
+When a unix socket is used as a bind address, you may optionally specify a file permission mode after the path, separated by a pipe `|`. The default is `0660` (octal), i.e. `u=rw,g=rw,o=`. The leading `0` is optional.
 
 Valid examples:
 
@@ -57,6 +60,7 @@ tcp/localhost:8080
 tcp/localhost:8080-8085
 udp/localhost:9005
 unix//path/to/socket
+unix//path/to/socket|0660
 ```
 
 <aside class="tip">
@@ -64,6 +68,8 @@ unix//path/to/socket
 Caddy network addresses are not URLs. URLs couple the lower and higher layers of the [OSI model <img src="/resources/images/external-link.svg" class="external-link">](https://en.wikipedia.org/wiki/OSI_model#Layer_architecture), but Caddy often uses network addresses independently of a specific application, so combining them would be problematic. In Caddy, network addresses refer precisely to resources that can be dialed or bound at L3-L5, but URLs combine L3-L7, which is too many. A network address requires a host+port and path to be mutually exclusive, but URLs do not. Network addresses sometimes support port ranges, but URLs do not.
 
 </aside>
+
+
 
 
 ## Placeholders
@@ -99,6 +105,8 @@ Placeholder | Description
 `{time.now.year}` | The current year in YYYY format
 
 Not all config fields support placeholders, but most do where you would expect it.
+
+
 
 
 ## File locations
