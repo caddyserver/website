@@ -7,7 +7,7 @@ p.footnote {
 	--plan-border: 1px solid #eceff133;
 	border: var(--plan-border);
 	border-radius: 10px;
-	width: 50%;
+	flex: 1;
 	display: flex;
 	flex-direction: column;
 }
@@ -193,4 +193,41 @@ ul.check li.minus::before {
 .button.purple {
 	position: relative;
 	z-index: 2;
+}
+
+
+
+
+.sides {
+	display: flex;
+	gap: 50px;
+	align-items: center;
+	margin: 100px 0;
+}
+
+.sides > * {
+	flex: 1;
+}
+
+.side-flex {
+	display: flex;
+	gap: 2em;
+	flex: 1.5;
+}
+
+
+
+
+
+
+@media (max-width: 1150px) {
+	.sides {
+		flex-direction: column;
+	}
+}
+
+@media (max-width: 700px) {
+	.side-flex {
+		flex-direction: column;
+	}
 }

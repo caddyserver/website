@@ -3,6 +3,10 @@
 	padding-bottom: 50px;
 }
 
+h3 {
+	margin-left: 0;
+}
+
 /* .datagrid {
 	display: flex;
 	flex-wrap: wrap;
@@ -45,7 +49,6 @@
 
 .feature-row {
 	display: grid;
-	grid: auto / 1fr 2fr 1fr;
 	gap: 2em;
 	padding: 2em 0;
 	border-bottom: 2px dashed #a4c8ff25; /* #e6eaf0 */
@@ -105,11 +108,10 @@
 	flex: 1;
 	margin-right: 50px;
 	min-width: 0;
-	min-width: 300px;
 }
 
-.split img {
-	max-width: 100%;
+.split picture {
+	min-width: 0;
 }
 
 .split img,
@@ -122,13 +124,26 @@
 
 
 
-/* TODO: Figure this out */
-@media (max-width: 800px) {
+
+
+
+@media (min-width: 600px) and (max-width: 899px) {
+	.feature-row .detail {
+		grid-area: 1/2/span 3/2;
+	}
+	.feature-row .benefits {
+		grid-area: 2 / 1;
+	}
+}
+
+@media (min-width: 600px) {
 	.feature-row {
 		grid: repeat(3,auto) / 1fr 1fr;
 	}
+}
 
-	.feature-row .benefits {
-		grid-area: 2 / 1;
+@media (min-width: 900px) {
+	.feature-row {
+		grid: auto / 1fr 2fr 1fr;
 	}
 }

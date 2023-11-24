@@ -218,23 +218,6 @@ section.light.gray {
 	line-height: 1.65;
 }
 
-.sides {
-	display: flex;
-	gap: 50px;
-	align-items: center;
-	margin: 100px 0;
-}
-
-.sides > * {
-	flex: 1;
-}
-
-.side-flex {
-	display: flex;
-	gap: 2em;
-	flex: 1.5;
-}
-
 
 .cols, .spacing {
 	--gap: 50px;
@@ -259,14 +242,11 @@ section.dark .cols {
 	color: #aec6c3;
 }
 
+
 .cols .col {
 	min-width: 350px;
 	padding-left: 1em;
 	flex: 1;
-}
-
-.cols-big .col {
-	min-width: 450px;
 }
 
 h3 {
@@ -364,6 +344,10 @@ section.dark h3.yellow {
 .asides h2 {
 	text-align: left;
 	max-width: none;
+}
+
+.asides h3 {
+	margin-left: 0;
 }
 
 .asides p {
@@ -650,10 +634,16 @@ div.ap-wrapper:fullscreen div.ap-player {
 }
 
 @media (max-width: 1000px) {
+	h1,
+	h2 {
+		overflow-wrap: anywhere;
+	}
+	h1 {
+		font-size: 75px;
+	}
 	.asides {
 		flex-direction: column;
 	}
-
 	.display {
 		margin-top: 50px;
 		margin-bottom: 50px;
