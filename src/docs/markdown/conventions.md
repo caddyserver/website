@@ -39,7 +39,7 @@ The address part may be any of these forms:
 - `host:port`
 - `:port`
 - `/path/to/unix/socket`
-- `/path/to/unix/socket|0660`
+- `/path/to/unix/socket|0200`
 
 The host may be any hostname, resolvable domain name, or IP address.
 
@@ -47,7 +47,7 @@ The port may be a single value (`:8080`) or an inclusive range (`:8080-8085`). A
 
 A unix socket path is only acceptable when using a `unix*` network type. The forward slash that separates the network and address is not considered part of the path.
 
-When a unix socket is used as a bind address, you may optionally specify a file permission mode after the path, separated by a pipe `|`. The default is `0660` (octal), i.e. `u=rw,g=rw,o=`. The leading `0` is optional.
+When a unix socket is used as a bind address, you may optionally specify a file permission mode after the path, separated by a pipe `|`. The default is `0200` (octal), i.e. `u=w,g=,o=` (symbolic). The leading `0` is optional.
 
 Valid examples:
 
@@ -60,7 +60,7 @@ tcp/localhost:8080
 tcp/localhost:8080-8085
 udp/localhost:9005
 unix//path/to/socket
-unix//path/to/socket|0660
+unix//path/to/socket|0200
 ```
 
 <aside class="tip">
