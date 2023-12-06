@@ -23,6 +23,7 @@ Our [official packages](https://github.com/caddyserver/dist) come only with the 
 
 **Community-maintained:**
 
+- [Gentoo](#gentoo)
 - [Homebrew (Mac)](#homebrew-mac)
 - [Chocolatey (Windows)](#chocolatey-windows)
 - [Scoop (Windows)](#scoop-windows)
@@ -111,6 +112,16 @@ Those modifications include a custom start/stop behavior and additional sandboxi
 [**View on Docker Hub**](https://hub.docker.com/_/caddy)
 
 See our [recommended Docker Compose configuration](/docs/running#docker-compose) and usage instructions.
+
+
+
+## Gentoo
+
+_Note: This is a community-maintained installation method._
+
+<pre><code class="cmd">emerge www-servers/caddy</code></pre>
+
+[**View Gentoo Package**](https://packages.gentoo.org/packages/www-servers/caddy)
 
 
 
