@@ -357,6 +357,44 @@
 				</div>
 			</section>
 
+			<section class="light feature">
+				<div class="wrapper">
+					<h2 id="experts-recommend">Recommended by experts</h2>
+					<p>
+						Academic and industry experts recommend Caddy, which has been cited in peer-reviewed journals for its security defaults, best practices, and its uniquely advanced feature set.
+					</p>
+					<div class="cols">
+						<div class="col">
+							<a href="https://doi.org/10.1145/3319535.3363192"><img src="/resources/images/cites/aas.png" class="cite"></a>
+							<p>
+								"Servers running Caddy exhibit nearly ubiquitous HTTPS deployment and use modern TLS configurations. ... We hope to see other popular server software follow Caddy's lead."
+							</p>
+							<p class="cite">
+								&mdash;<b>Josh Aas, Richard Barnes, Benton Case, Zakir Durumeric, Peter Eckersley, Alan Flores-López, J. Alex Halderman, Jacob Hoffman-Andrews, James Kasten, Eric Rescorla, Seth Schoen, and Brad Warren.</b> 2019. <i>Let's Encrypt: An Automated Certificate Authority to Encrypt the Entire Web.</i> In Proceedings of the 2019 ACM SIGSAC Conference on Computer and Communications Security (CCS '19). Association for Computing Machinery, New York, NY, USA, 2473–2487. <a href="https://doi.org/10.1145/3319535.3363192">https://doi.org/10.1145/3319535.3363192</a>
+							</p>
+						</div>
+						<div class="col">
+							<a href="https://www.usenix.org/conference/usenixsecurity17/technical-sessions/presentation/krombholz"><img src="/resources/images/cites/krombholz.png" class="cite"></a>
+							<p>
+								"TLS must be enabled by default ... and the Caddy web server is a good and usable example."
+							</p>
+							<p class="cite">
+								&mdash;<b>Katharina Krombholz, Wilfried Mayer, Martin Schmiedecker, and Edgar Weippl.</b> 2017. <i>"I Have No Idea What I'm Doing" - On the Usability of Deploying HTTPS.</i> In 26th USENIX Security Symposium (USENIX Security 17), USENIX Association, Vancouver, BC, 1339-1356. Retrieved from <a href="https://www.usenix.org/conference/usenixsecurity17/technical-sessions/presentation/krombholz">https://www.usenix.org/conference/usenixsecurity17/technical-sessions/presentation/krombholz</a>
+							</p>
+						</div>
+						<div class="col">
+							<a href="https://doi.org/10.1145/2987443.2987480"><img src="/resources/images/cites/springall.png" class="cite"></a>
+							<p>
+								"No popular server software does [session ticket key rotation], with the exception of Caddy."
+							</p>
+							<p class="cite">
+								&mdash;<b>Drew Springall, Zakir Durumeric, and J. Alex Halderman.</b> 2016. <i>Measuring the Security Harm of TLS Crypto Shortcuts.</i> In Proceedings of the 2016 Internet Measurement Conference (IMC '16), Association for Computing Machinery, Santa Monica, California, USA, 33-47. <a href="https://doi.org/10.1145/2987443.2987480">https://doi.org/10.1145/2987443.2987480</a>
+							</p>
+						</div>
+					</div>
+				</div>
+			</section>
+
 			<section class="diagonal down dark feature">
 				<div class="wrapper">
 					<h2 id="reverse-proxy">A forward-thinking reverse proxy</h2>
@@ -523,7 +561,7 @@ $ curl localhost:2019/config/ | jq<div class="blinking"></div></code>
 						<div>
 							<h3>Caddyfile</h3>
 							<p>
-								Although JSON offers ultimate control, most people prefer to use a <a href="/docs/caddyfile">Caddyfile</a> because it lets you get a production-ready site up and running in just a few hand-written lines. It's not uncommon for Caddyfiles to be just <a href="https://twitter.com/yakczar/status/713712646147743744">~15% the size of a less-capable nginx config</a>.
+								Although JSON offers ultimate control, most people prefer to use a <a href="/docs/caddyfile">Caddyfile</a> because it lets you get a production-ready site up and running in just a few hand-written lines. It's not uncommon for Caddyfiles to be <a href="https://twitter.com/bwesterb/status/1708903488426512668">just ~15-25% the size of a less-capable nginx config</a>.
 							</p>
 						</div>
 						<div>
@@ -536,55 +574,25 @@ $ curl localhost:2019/config/ | jq<div class="blinking"></div></code>
 
 
 					<div class="asides">
-					<div>
-						<div class="display left">
-							<code class="dark">$ caddy run \
+						<div>
+							<div class="display left">
+								<code class="dark">$ caddy run \
 	--config nginx.conf \
 	--adapter nginx<div class="blinking"></div></code>
+							</div>
 						</div>
-					</div>
-					<div>
-						<h3>Config adapters</h3>
-						<p>
-							Power Caddy with anything, even NGINX config files!
-						</p>
-						<p>
-							With first-class support for <a href="/docs/config-adapters">config adaptation</a>, you can configure your web server with your favorite format: YAML, TOML, CUE, NGINX, HCL, Dhall, JSON with comments, or even a MySQL database... or anything else. The Caddyfile is a built-in config adapter.
-						</p>
-						<!-- <p>
-							Fewer moving parts means fewer failures, lower costs, and less sunk time.
-						</p> -->
-						<!-- <a href="/docs/config-adapters" class="gray button">Config adapters</a> -->
-					</div>
-				</div>
-
-
-					<!-- <div class="cols">
-						<div class="col">
-							<h3 class="green">Config adapters</h3>
+						<div>
+							<h3>Config adapters</h3>
 							<p>
-								Use whatever config format you like, such as NGINX config, YAML, TOML, CUE, HCL, Dhall, or even a MySQL database!
+								Power Caddy with anything, even NGINX config files!
 							</p>
-						</div>
-						<div class="col">
-							<h3 class="purple">Human-friendly Caddyfile</h3>
 							<p>
-								The Caddyfile is most people's preferred format for hand-written configurations because it is simple to read and write.
+								With first-class support for <a href="/docs/config-adapters">config adaptation</a>, you can configure your web server with your favorite format: YAML, TOML, CUE, NGINX, HCL, Dhall, JSON with comments, or even a MySQL database... or anything else. The Caddyfile is a built-in config adapter.
 							</p>
-						</div>
-						<div class="col">
-							<h3 class="blue">Admin API</h3>
-							<p>
-								Caddy's config is managed through an administration API that is programmable and makes dynamic changes a breeze.
-							</p>
-						</div>
-					</div> -->
-
-					<div class="testimonials-container">
-						<div class="testimonials">
-							<div class="testimonial-col"></div>
-							<div class="testimonial-col"></div>
-							<div class="testimonial-col"></div>
+							<!-- <p>
+								Fewer moving parts means fewer failures, lower costs, and less sunk time.
+							</p> -->
+							<!-- <a href="/docs/config-adapters" class="gray button">Config adapters</a> -->
 						</div>
 					</div>
 				</div>
@@ -603,7 +611,7 @@ $ curl localhost:2019/config/ | jq<div class="blinking"></div></code>
 					</p>
 					<div class="cols">
 						<div class="col">
-							<h3 class="green">Unlimited power</h3>
+							<h3 class="green"><a href="https://i.giphy.com/media/xUA7ba9aksCuKR9dgA/giphy.webp" target="_blank" title="Important visualization">Unlimited power</a></h3>
 							<p>
 								Nearly every part of the config that "does something" is pluggable. Caddy offers unlimited capabilities in such a lean package.
 							</p>
@@ -625,7 +633,7 @@ $ curl localhost:2019/config/ | jq<div class="blinking"></div></code>
 			</section>
 
 
-			<section class="light feature">
+			<section class="diagonal down light feature">
 				<div class="wrapper">
 					<h2 id="gold-standard">The <span class="gold">gold standard</span> web server</h2>
 					<p>
@@ -659,37 +667,15 @@ $ curl localhost:2019/config/ | jq<div class="blinking"></div></code>
 
 			<section class="light gray feature">
 				<div class="wrapper">
-					<h2 id="experts-recommend">Recommended by experts</h2>
+					<h2>Take everyone's word for it</h2>
 					<p>
-						Academic and industry experts recommend Caddy, which has been cited in peer-reviewed journals for its security defaults, best practices, and its uniquely advanced feature set.
+						We're biased. But Caddy is widely relied upon and praised by a diverse global user base because of its ease of use, secure defaults, powerful feature set, and business-changing cost reductions.
 					</p>
-					<div class="cols">
-						<div class="col">
-							<a href="https://doi.org/10.1145/3319535.3363192"><img src="/resources/images/cites/aas.png" class="cite"></a>
-							<p>
-								"Servers running Caddy exhibit nearly ubiquitous HTTPS deployment and use modern TLS configurations. ... We hope to see other popular server software follow Caddy's lead."
-							</p>
-							<p class="cite">
-								&mdash;<b>Josh Aas, Richard Barnes, Benton Case, Zakir Durumeric, Peter Eckersley, Alan Flores-López, J. Alex Halderman, Jacob Hoffman-Andrews, James Kasten, Eric Rescorla, Seth Schoen, and Brad Warren.</b> 2019. <i>Let's Encrypt: An Automated Certificate Authority to Encrypt the Entire Web.</i> In Proceedings of the 2019 ACM SIGSAC Conference on Computer and Communications Security (CCS '19). Association for Computing Machinery, New York, NY, USA, 2473–2487. <a href="https://doi.org/10.1145/3319535.3363192">https://doi.org/10.1145/3319535.3363192</a>
-							</p>
-						</div>
-						<div class="col">
-							<a href="https://www.usenix.org/conference/usenixsecurity17/technical-sessions/presentation/krombholz"><img src="/resources/images/cites/krombholz.png" class="cite"></a>
-							<p>
-								"TLS must be enabled by default ... and the Caddy web server is a good and usable example."
-							</p>
-							<p class="cite">
-								&mdash;<b>Katharina Krombholz, Wilfried Mayer, Martin Schmiedecker, and Edgar Weippl.</b> 2017. <i>"I Have No Idea What I'm Doing" - On the Usability of Deploying HTTPS.</i> In 26th USENIX Security Symposium (USENIX Security 17), USENIX Association, Vancouver, BC, 1339-1356. Retrieved from <a href="https://www.usenix.org/conference/usenixsecurity17/technical-sessions/presentation/krombholz">https://www.usenix.org/conference/usenixsecurity17/technical-sessions/presentation/krombholz</a>
-							</p>
-						</div>
-						<div class="col">
-							<a href="https://doi.org/10.1145/2987443.2987480"><img src="/resources/images/cites/springall.png" class="cite"></a>
-							<p>
-								"No popular server software does [session ticket key rotation], with the exception of Caddy."
-							</p>
-							<p class="cite">
-								&mdash;<b>Drew Springall, Zakir Durumeric, and J. Alex Halderman.</b> 2016. <i>Measuring the Security Harm of TLS Crypto Shortcuts.</i> In Proceedings of the 2016 Internet Measurement Conference (IMC '16), Association for Computing Machinery, Santa Monica, California, USA, 33-47. <a href="https://doi.org/10.1145/2987443.2987480">https://doi.org/10.1145/2987443.2987480</a>
-							</p>
+					<div class="testimonials-container">
+						<div class="testimonials">
+							<div class="testimonial-col"></div>
+							<div class="testimonial-col"></div>
+							<div class="testimonial-col"></div>
 						</div>
 					</div>
 				</div>
@@ -708,9 +694,9 @@ $ curl localhost:2019/config/ | jq<div class="blinking"></div></code>
 					<div class="testimonial-quote">
 
 					</div>
-					<div class="testimonial-name">
+					<a class="testimonial-name" target="_blank">
 
-					</div>
+					</a>
 					<div class="testimonial-role">
 
 					</div>

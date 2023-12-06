@@ -307,7 +307,6 @@ button.purple,
 	background: linear-gradient(165deg, rgba(170,81,212,1) 20%, rgba(37,159,235,1) 100%);
 	color: white !important; /* sigh... to prevent being stepped on by very specific link color rule on the sponsors page */
 	font-weight: bold;
-	font-size: 90%;
 	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25)
 }
 
@@ -563,6 +562,10 @@ footer a:hover {
 	color: #76b8b8;
 }
 
+footer .logo-area {
+	margin-right: auto;
+}
+
 footer .wrapper {
 	display: flex;
 	flex-wrap: wrap;
@@ -572,7 +575,7 @@ footer .wrapper {
 footer .nostalgia {
 	display: block;
 	text-align: center;
-	margin-top: 50px;
+	margin-top: 40px;
 }
 
 footer .nostalgia-badges {
@@ -582,6 +585,7 @@ footer .nostalgia-badges {
 	width: 100%;
 	display: flex;
 	flex-wrap: wrap;
+	margin-top: 40px;
 }
 
 footer .nostalgia p {

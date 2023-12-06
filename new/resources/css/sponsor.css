@@ -1,3 +1,7 @@
+.hero-content {
+	padding-bottom: 0;
+}
+
 p.footnote {
 	margin-top: 2em;
 	font-size: 12px;
@@ -189,8 +193,10 @@ ul.check li.minus::before {
 	background-color: rgb(0 0 0 / .75);
 }
 
-/* Keep the buttons above the glow effect for legibility */
 .button.purple {
+	font-size: 90%;
+
+	/* Keep the buttons above the glow effect for legibility */
 	position: relative;
 	z-index: 2;
 }

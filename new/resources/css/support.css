@@ -1,0 +1,74 @@
+h1 {
+	line-height: auto;
+	margin-bottom: 1em;
+}
+
+.plans {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 150px;
+}
+
+.plan {
+	background: white;
+	padding: 2em;
+	color: #222;
+	border-radius: 15px;
+	width: 100%;
+}
+
+.plan.community {
+	max-width: calc(min(400px, 85%));
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+	background: rgb(255 255 255 / .85)
+}
+
+.plan.sponsor {
+	max-width: 600px;
+	box-shadow: 0 0 25px rgb(0 0 0 / .5);
+}
+
+.plan-title {
+	font-size: 24px;
+	font-weight: bold;
+	color: black;
+}
+
+.plan.sponsor .plan-title {
+	color: #9227da;
+}
+
+.plan p,
+.plan ul {
+	margin: 1.5em 0;
+	line-height: 1.4;
+}
+
+.plan ul {
+	margin: -1em 0 2em 2em;
+}
+
+.plan a {
+	color: #3465f6;
+}
+
+.plan a:hover {
+	color: #7134f6;
+}
+
+@media (max-width: 900px) {
+	.plans {
+		flex-direction: column-reverse;
+	}
+
+	.plan {
+		min-width: 300px;
+	}
+
+	.plan.community {
+		border-top-left-radius: 0;
+		border-bottom-right-radius: 15px;
+	}
+}

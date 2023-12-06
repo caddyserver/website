@@ -85,6 +85,9 @@ button.primary:hover,
 .button.primary:hover {
 	color: white;
 }
+.button.purple:hover {
+	border: none;
+}
 
 
 main {

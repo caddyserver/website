@@ -1,13 +1,5 @@
 [
 	{
-		"name": "First last",
-		"role": "9999x developer",
-		"org": "Bigcorp",
-		"picture": "https://pbs.twimg.com/profile_images/1624497316366528512/fBMXDuiZ_400x400.jpg",
-		"quote": "Caddy is cool.",
-		"link": "https://..."
-	},
-	{
 		"name": "Brad Warren",
 		"role": "Lead Engineer of Certbot",
 		"org": "Electronic Frontier Foundation (EFF)",
@@ -26,10 +18,11 @@
 	{
 		"name": "Stripe",
 		"role": "Global Leader of Fintech",
+		"picture": "https://pbs.twimg.com/profile_images/1618575477781807105/iDuRlqTe_400x400.jpg",
 		"quote": "With its extensible architecture and on-line config API, Caddy powers many of Stripe's internal systems."
 	},
 	{
-		"name": "Robert Melton",
+		"name": "Robert M.",
 		"role": "Software Developer",
 		"quote": "Our client was in deep trouble: they were about to fail PCI compliance. We tossed Caddy in front hours before the deadline and went from 40 to 0 security errors in just minutes. … We have put over 1,000 domains on Caddy so far."
 	},
@@ -39,28 +32,185 @@
 		"link": "https://discord.com/channels/569842713239879680/569842713239879682/1161874875053527081"
 	},
 	{
+		"name": "(Anonymous)",
+		"role": "Security engineer",
+		"org": "Subcontractor, UK government",
+		"quote": "This is a brilliant piece of software. ... Even on first install, the defaults are sane. Truly, great work. … Seriously: Caddy makes it possible for hundreds of thousands of very needy folk to get treatment. It's the backbone of vital systems used by local Doctors Without Borders and local government ministries."
+	},
+	{
+		"name": "John Resig",
+		"role": "Creator of jQuery",
+		"picture": "https://pbs.twimg.com/profile_images/1090714620275245056/HS9xcEDk_400x400.jpg",
+		"quote": "Caddy is pretty incredible. A 3-line config yields a fully A-rated SSL site. Trivial!",
+		"link": "https://twitter.com/jeresig/status/821768122017398785"
+	},
+	{
 		"name": "Karim Naufal",
 		"role": "Tech founder",
 		"quote": "After working for 12 hours straight, unable to make Traefik work and almost going nuts, I switched to Caddy and was able to make it work in 3 lines of code, HTTPS included. Thank you Caddy team for this magically simple and awesome project."
 	},
 	{
-		"name": "Kenn White",
-		"role": "Security engineer",
-		"org": "Subcontractor, UK government",
-		"quote": "This is a brilliant piece of software. ... Even on first install, the defaults are sane. Truly, great work. … Seriously: Caddy makes it possible for hundreds of thousands of very needy folk to get treatment. It’s the backbone of vital systems used by local Doctors Without Borders and local government ministries."
+		"name": "owntag",
+		"username": "owntag",
+		"picture": "https://pbs.twimg.com/profile_images/1587758883048759296/kPcjpewD_400x400.jpg",
+		"quote": "We also use @caddyserver to provision SSL certificates for the tracking subdomains of our clients. It's such as breeze to work with, the whole on-demand-tls feature is just amazing.",
+		"link": "https://twitter.com/owntag/status/1716452404680327358"
 	},
 	{
-		"name": "John Resig",
-		"role": "Creator of jQuery",
-		"quote": "Caddy is pretty incredible. A 3-line config yields a fully A-rated SSL site. Trivial!",
-		"link": "https://twitter.com/jeresig/status/821768122017398785"
+		"name": "Pirsch Analytics",
+		"username": "PirschAnalytics",
+		"picture": "https://pbs.twimg.com/profile_images/1514620310913486855/G3cLT-l4_400x400.png",
+		"quote": "Caddy (@caddyserver) is a fantastic web server, load balancer, and reverse proxy. 👍 We use it for http://pirsch.io to dynamically provision SSL certificates for our fully white-labeled customer domains. ... To reduce complexity and overhead, [we removed] Traefik from the server cluster and let Caddy handle everything.",
+		"link": "https://pirsch.io/blog/how-we-use-caddy-to-provide-custom-domains-for-our-clients/"
+	},
+	{
+		"name": "Wes Bos",
+		"role": "Full stack JS dev",
+		"picture": "https://pbs.twimg.com/profile_images/877525007185858562/7G9vGTca_400x400.jpg",
+		"quote": "Caddy with wildcard domains - I use it on a ton of my projects. [Easy local proxy:] `caddy reverse-proxy --to localhost:80 --from my-project.localhost`. You can also put this config in a Caddyfile. As a bonus you get proper local https without fussin' with certs.",
+		"link": "https://twitter.com/wesbos/status/1693624280565612982"
 	},
 	{
 		"name": "Zack Siri",
 		"username": "zacksiri",
+		"picture": "https://pbs.twimg.com/profile_images/1638764493005287424/q3UB6-c1_400x400.jpg",
 		"role": "Founder",
-		"org": "Installar",
+		"org": "Instellar.app",
 		"quote": "It's a good thing we bet on Caddy. It's been a pleasure working with Caddy.",
 		"link": "https://twitter.com/zacksiri/status/1722636053939654992"
+	},
+	{
+		"name": "Denys Konovalov",
+		"username": "denyskon",
+		"role": "Open source maintainer",
+		"org": "Gitea",
+		"picture": "https://pbs.twimg.com/profile_images/1606649780356227073/oCZpt3gs_400x400.jpg",
+		"quote": "Haven't been so excited about a small piece of server software for a long time now... @caddyserver is awesome! Easiest config ever (reverse proxy in three lines per site), everything up-and-running without any problems in less than an hour for a server with many services 🤩",
+		"link": "https://twitter.com/denyskon/status/1729217386975273121"
+	},
+	{
+		"name": "Hirvesh",
+		"username": "hirvesh",
+		"picture": "https://pbs.twimg.com/profile_images/1673927322309898240/w3b5-nrN_400x400.jpg",
+		"role": "Indie hacker",
+		"quote": "Some time back I heard about @caddyserver and decided to give it a go. Setup was fast and I can now support custom domains + .assistflare.com subdomains easily with HTTPS support! This allows me to move away from Cloudflare for SaaS which charges $0.50 per custom hostname once you reach the threshold of 100 free custom hostnames. Caddy also allows me simplify my setup and provide a more straightforward way for end users to setup their custom domains. I will also be migrating @StomodHQ to use Caddy server down the line.",
+		"link": "https://twitter.com/hirvesh/status/1727193979211718825"
+	},
+	{
+		"name": "Schlez",
+		"username": "galstar",
+		"picture": "https://pbs.twimg.com/profile_images/1200413867437936640/SnCiBgrR_400x400.jpg",
+		"role": "Developer",
+		"org": "Vercel",
+		"quote": "Caddy is so easy it should be considered illegal at this point.",
+		"link": "https://twitter.com/galstar/status/1726116980082548809"
+	},
+	{
+		"name": "Attila Kun",
+		"username": "kunattila",
+		"picture": "https://pbs.twimg.com/profile_images/938381307809234944/Ovw5o3Zb_400x400.jpg",
+		"quote": "I use Caddy for Shopify app development. It's miles better than their default ngrok based solution because with Caddy, I don't have to tunnel my dev traffic through a public IP. Makes iteration a lot quicker.",
+		"link": "https://pbs.twimg.com/profile_images/938381307809234944/Ovw5o3Zb_400x400.jpg"
+	},
+	{
+		"name": "Liz Lovelace",
+		"username": "liz_love_lace",
+		"picture": "https://pbs.twimg.com/profile_images/1673859861895950336/hIv5l05W_400x400.png",
+		"quote": "Listen to me: i will only repeat this once: Caddy is the best thing in the world, it's a general-use server that has automatic certificate renewal. Download it, make a config (it's very simple compared to apache/nginx), and it just works forever.",
+		"link": "https://twitter.com/liz_love_lace/status/1716095188559417566"
+	},
+	{
+		"name": "Alice Maz",
+		"username": "alicemazzy",
+		"picture": "https://pbs.twimg.com/profile_images/1355382480312938499/qsJJGS5Q_400x400.jpg",
+		"quote": "true story I migrated from nginx to caddy after accidentally nuking my webserver and a few months later while visiting my site thought, \"wait I forgot to set up certbot why does https still work... why is this cert more recent than my migration???\" and learned [that Caddy renews it for you].",
+		"link": "https://twitter.com/alicemazzy/status/1716095955383291949"
+	},
+	{
+		"name": "Leo",
+		"username": "LeoVasanko",
+		"picture": "https://pbs.twimg.com/profile_images/1619711322488193025/oPxL0zsG_400x400.jpg",
+		"role": "Wizard of Code",
+		"quote": "I've replaced all my Nginx with Caddy. So much easier!",
+		"link": "https://twitter.com/LeoVasanko/status/1724336627965649232"
+	},
+	{
+		"name": "Schlez",
+		"username": "last0x00",
+		"picture": "https://pbs.twimg.com/profile_images/1421150986974924804/R9Ig1fn3_400x400.jpg",
+		"quote": "Caddy is the best reverse proxy when setting up red team exercises.",
+		"link": "https://twitter.com/last0x00/status/1717545355993084009"
+	},
+	{
+		"name": "Tom Moor",
+		"username": "tommoor",
+		"picture": "https://pbs.twimg.com/profile_images/1512150177024561158/OkpD2gRS_400x400.jpg",
+		"role": "Developer",
+		"org": "Linear",
+		"quote": "I, too, use Caddy in production for exactly this and would recommend over Cloudflare. Enterprise plans used to start at around $40k/year if I remember correctly.",
+		"link": "https://twitter.com/tommoor/status/1719389293414687018"
+	},
+	{
+		"name": "Shayan",
+		"username": "ImSh4yy",
+		"picture": "https://pbs.twimg.com/profile_images/1697511202908188672/hfMoNTSw_400x400.jpg",
+		"role": "Founder, Developer",
+		"org": "LogSnag",
+		"quote": "I was using Cloudflare for SaaS as it made generating SSL certs for vanity subdomains easy. So, I looked into their system and noticed that, yes, most domains are failing. ... I decided to entirely ditch Cloudflare and build my own setup instead. After some research, it turned out Caddy was the perfect tool for this job. It has a neat little feature called On-Demand TLS, which generates SSL certs on the fly. It also lets you specify a callback URL to verify the domain name. ... I got a solid setup up by 7 in the morning, and it worked like a charm. After a quick powernap, I pushed the fix to production, and we finally had a working product 24 hours after launch. ... The verification process is much easier and faster now; things are more reliable and cost me nothing to run. Details: https://logsnag.com/blog/setting-up-vanity-subdomains-for-your-saas-using-caddy",
+		"link": "https://twitter.com/ImSh4yy/status/1680646609330118657"
+	},
+	{
+		"name": "Tejas Dinkar",
+		"username": "tdinkar",
+		"picture": "https://dgraph.io/blog/images/people/tejas.jpg",
+		"role": "Developer",
+		"org": "Dgraph",
+		"quote": "Using Caddy, we were able to build an Ingress controller for Slash GraphQL in about a week. ... Nginx was really problematic, as there was no way to figure out if Nginx had picked up a new ingress or not. It often took 2-5 seconds after our code picked up a new ingress for Nginx to be ready to serve it, meaning that we had to add a lot of time.Sleep() type code, which no one ever wants to read. We briefly tried writing an Nginx module, but C++ makes me want to tear my hair out. ... I found Caddy the easiest to work with. As an added bonus, the Caddy http middleware module is very close to Go's ServeHTTP interface, and as a result, is very easy to build around and test. ... I believe Caddy and it's extensibility are a great fit if you are trying to build a smart proxy or API gateway. ... Caddy's author Matt Holt wrote that Caddy is not just a proxy, it's a powerful, extensible platform for HTTP apps. I couldn't agree more.",
+		"link": "https://dgraph.io/blog/post/building-a-kubernetes-ingress-controller-with-caddy/"
+	},
+	{
+		"name": "Bas Westerbaan",
+		"username": "bwesterb",
+		"picture": "https://pbs.twimg.com/profile_images/1361242338702557184/kL8qHOYw_400x400.jpg",
+		"role": "Software engineer, mathematician, post-quantum cryptographer",
+		"org": "Cloudflare",
+		"quote": "Replaced 140 lines of dense nginx config with a single 33 line Caddyfile. Caddy is great!",
+		"link": "https://twitter.com/bwesterb/status/1708903488426512668"
+	},
+	{
+		"username": "SwiftOnSecurity",
+		"picture": "https://pbs.twimg.com/profile_images/1710842853134315521/LImt45Gv_400x400.jpg",
+		"role": "Computer security person",
+		"quote": "Next public server I put up, I'm just sticking Caddy on it.",
+		"link": "https://twitter.com/bwesterb/status/1708903488426512668"
+	},
+	{
+		"username": "Zestyclose_Car1088",
+		"quote": "Caddy seems too good to be true? I just set it up and it works perfect, straight out of the box.",
+		"link": "https://www.reddit.com/r/selfhosted/comments/17ulz9n/caddy_seems_to_good_to_be_true_i_just_set_it_up/"
+	},
+	{
+		"username": "adamshand",
+		"picture": "https://styles.redditmedia.com/t5_21nd5b/styles/profileIcon_cazmki08aleb1.jpeg?width=256&height=256&crop=256:256,smart&s=d79c19162ba945486d047329aaca398832a1f519",
+		"quote": "I switched from Traefik to Caddy a few years ago and have no ragrets.",
+		"link": "https://www.reddit.com/r/selfhosted/comments/17ulz9n/comment/k94wge6/?context=3"
+	},
+	{
+		"username": "wtfblubby",
+		"picture": "https://styles.redditmedia.com/t5_ky06i/styles/profileIcon_snoob431ae32-bfaa-4d7f-8625-2f9ad077fa31-headshot.png?width=256&height=256&crop=256:256,smart&s=e7f2513f3fb3e8bc33a7a4c46d00517d14b51197",
+		"quote": "It just runs... Two years straight. Some more services since start of caddy... No worries. Recently added auth with authelia... Still straight forward. Easy setup, always online. That's it. Period.",
+		"link": "https://www.reddit.com/r/selfhosted/comments/17ulz9n/comment/k94nizy/?context=3"
+	},
+	{
+		"username": "jax7778",
+		"picture": "https://styles.redditmedia.com/t5_cffyd/styles/profileIcon_snoo6c3d35f6-cd7a-4f46-9b32-adaa2e5856c5-headshot.png?width=256&height=256&crop=256:256,smart&s=49d1f3a914e7c91e184d415680a5efdf8c73defa",
+		"quote": "Caddy is a great, easy web server. It honestly has some pretty good performance too.",
+		"link": "https://www.reddit.com/r/selfhosted/comments/17ulz9n/comment/k98e5ld/?context=3"
+	},
+	{
+		"username": "allocx",
+		"picture": "https://www.redditstatic.com/avatars/avatar_default_02_24A0ED.png",
+		"quote": "I moved over in the past year from traefik and it was well worth it. Traefik is over-abstracted and I found it to break randomly and unpredictably when using docker labels. Debugging was a PITA too with the best solution being turning it off and on again (i.e. restarting it, or the service it was proxying). Caddy, on the other hand, just works. The documentation is also orders of magnitude better than traefik (full of confusing abstractions).",
+		"link": "https://www.reddit.com/r/selfhosted/comments/17ulz9n/comment/k95oss3/?utm_source=share&utm_medium=web2x&context=3"
 	}
 ]

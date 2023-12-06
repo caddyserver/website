@@ -13,6 +13,9 @@ const resp = fetch("/resources/testimonials.json").then(async resp => {
 			} else {
 				$_('.testimonial-name', tpl).innerText = testimonial.name || "";
 			}
+			if (testimonial.link) {
+				$_('.testimonial-name', tpl).href = testimonial.link;
+			}
 			$_('.testimonial-role', tpl).innerText = testimonial.role || "";
 			if (testimonial.org) {
 				$_('.testimonial-role', tpl).appendChild(document.createElement("br"));

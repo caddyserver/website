@@ -44,19 +44,19 @@ file_server /downloads/* {
 # Compress everything else that would benefit
 encode zstd gzip
 
-# Get files from a database
+# Static site using database as file system
 file_server /database/* {
 	fs sqlite data.sql 
 }
 
-# Get files from within the Caddy binary
+# Static site embedded within the Caddy binary
 file_server /embedded/* {
 	fs embedded
 }
 
 # (Range/Etag/etc. all work without extra config)
 
-# Serve static site with directory listings as needed
+# Serve static site with directory listings
 file_server browse
 ```
 

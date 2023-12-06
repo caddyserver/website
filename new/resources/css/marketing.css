@@ -21,7 +21,6 @@ h1 {
 	font-weight: 800;
 	text-align: center;
 	color: #65D1C6;
-	line-height: .9;
 	margin-bottom: 1em;
 
 	background-image: linear-gradient(to right, #47E27C 25%, #4ED3FB 75%);
@@ -31,8 +30,7 @@ h1 {
 }
 
 h1 .subheading {
-	margin: 2em auto 0;
-	margin-top: 2em;
+	margin: 1em auto 0;
 	text-transform: none;
 	font-size: 42px;
 	font-weight: normal;
@@ -80,8 +78,13 @@ h2 {
 
 .hero-content {
 	padding-top: 100px;
+	margin-bottom: 0;
+	padding-bottom: 50px;
 }
 
+.email em {
+	display: none;
+}
 
 
 
@@ -174,7 +177,7 @@ section {
 
 .hero section.transparent {
 	background: none;
-	padding: 50px 0;
+	padding: 0;
 	color: #cbe2e4;
 }
 
@@ -643,6 +646,8 @@ div.ap-wrapper:fullscreen div.ap-player {
 	}
 	.asides {
 		flex-direction: column;
+		margin-top: 25px;
+		margin-bottom: 25px;
 	}
 	.display {
 		margin-top: 50px;
