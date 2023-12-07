@@ -60,7 +60,7 @@
 							<div class="rollover" data-rollover="rollover-abuse">
 								<h3 class="purple">1. Prevent abuse</h3>
 								<p>
-									First, you'll configure an internal endpoint that Caddy can "ask" if a certificate should be allowed for a domain. This endpoint usually looks up the domain in a list or database and returns <code>HTTP 200</code> if it's allowed. Make sure to reject domains you don't recognize. This means that customers <i>must</i> register their domain with your app first.
+									First, you'll configure an internal endpoint that Caddy can "ask" if a certificate should be allowed for a domain. This endpoint usually looks up the domain in a list or database and returns <code>HTTP 200</code> if it's allowed. Make sure to reject domains you don't recognize. (This implies that customers have to tell your app what their domain is first.)
 								</p>
 							</div>
 							<div class="rollover" data-rollover="rollover-ondemand">
@@ -99,7 +99,7 @@
 							<div>
 								<h3 class="purple">1. Point DNS records</h3>
 								<p>
-									The customer sets a CNAME record on a domain or subdomain they control, so that <i>their</i> domain resolves to <i>your</i> domain's IP address.
+									The customer sets either a CNAME record or A/AAAA records on a domain or subdomain they control, so that <i>their</i> domain resolves to <i>your</i> server's IP address.
 								</p>
 							</div>
 							<!-- <div class="rollover" data-rollover="rollover-ondemand">
@@ -124,6 +124,9 @@ your-app.com            AAAA   ->  2001:db8::
 
 					<p>
 						There is no step 2. Caddy will obtain and serve a certificate for their domain as soon as a connection is made to it. Caddy keeps the certificates renewed as long as connections keep coming in. Once they stop, Caddy will let the certificate expire and then delete it automatically.
+					</p>
+					<p>
+						And that is how you save tens of thousands of dollars in development and infrastructure costs every year.
 					</p>
 				</div>
 			</section>

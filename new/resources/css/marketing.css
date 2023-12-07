@@ -177,7 +177,7 @@ section {
 
 .hero section.transparent {
 	background: none;
-	padding: 0;
+	padding-top: 0;
 	color: #cbe2e4;
 }
 

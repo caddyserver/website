@@ -227,17 +227,17 @@
 							<b>Discover Caddy's automagic HTTPS features with our hosted demo.</b>
 						</p>
 						<p>
-							Point any subdomain named <b><code>caddydemo</code></b> to:
+							Point DNS records for any subdomain named <b><code>caddydemo</code></b> to either:
 						</p>
-						<!-- <p class="demo-ips">
+						<p class="demo-ips">
 							<code>
 								<span class="record-type">CNAME</span>
-								<span class="demo-ip">caddyserver.com</span>
+								<span class="demo-ip">demo.caddyserver.com</span>
 							</code>
 						</p>
-						<p>
-							Or:
-						</p> -->
+						<p class="or">
+							or:
+						</p>
 						<p class="demo-ips">
 							<code>
 								<span class="record-type">A</span>
@@ -257,12 +257,12 @@
 						<div class="demo-help">
 							<p>
 								<b>Not working?</b> Make sure to use a direct subdomain of a registered domain, not a "sub-subdomain."
-								Verify you have created the public DNS records shown above with the correct addresses.
+								Verify you have created the public DNS records shown above with the correct values.
 								You may have to allow time for propagation. Consult your DNS provider's documentation or support for assistance.
-								Your client must set the TLS ServerName indication (most do).
+								Your browser/client must set the TLS ServerName indication (most do).
 							</p>
 							<p>
-								<b>Example subdomains that could work:</b> <code>caddydemo.example.net</code>, <code>caddydemo.example.co.uk</code>
+								<b>Example subdomains that could work:</b> <code>caddydemo.example.net</code>, <code>caddydemo.example.com.au</code>
 							</p>
 							<p>
 								Caddy is capable of serving TLS for any domains and IPs. This demo is intentionally restricted.

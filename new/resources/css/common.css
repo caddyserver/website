@@ -413,7 +413,8 @@ button.primary .hover-splash,
 
 .dropdown .linkbox {
 	background: var(--dropdown-linkbox);
-	gap: 4em;
+	gap: 3em;
+	--link-padding-x: 10px;
 }
 
 .dropdown .links-header {
@@ -422,6 +423,7 @@ button.primary .hover-splash,
 	color: var(--dropdown-link-title-color);
 	font-size: 20px;
 	margin-bottom: 14px;
+	padding-left: var(--link-padding-x);
 }
 
 .dropdown .col {
@@ -432,12 +434,14 @@ button.primary .hover-splash,
 	display: block;
 	color: var(--dropdown-link-color);
 	text-decoration: none;
-	padding: 5px 0;
+	padding: 5px var(--link-padding-x);
+	border-radius: 1.5em;
 }
 
 
 .dropdown .col a:hover {
 	color: var(--dropdown-link-hover-color);
+	background-color: var(--dropdown-link-hover-bg);
 }
 
 .dropdown .flatlinks a,
