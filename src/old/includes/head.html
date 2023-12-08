@@ -9,52 +9,50 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- <link rel="preconnect" href="https://BH4D9OD16A-dsn.algolia.net" crossorigin /> -->
+<link rel="preconnect" href="https://BH4D9OD16A-dsn.algolia.net" crossorigin />
 
-<link rel="icon" href="/resources/images/favicon.png">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Gantari:wght@400;600;800&family=Figtree:wght@300..900&&family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600&family=Maven+Pro:wght@400;700&family=Poppins:wght@400;600;700;800&family=Albert+Sans:wght@400;600&family=Red+Hat+Text&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="/resources/css/common.css">
-<link rel="stylesheet" href="/resources/css/chroma.css">
-
-<script src="/resources/js/lib.js"></script>
-<script src="/resources/js/common.js"></script>
+<link rel="icon" href="/old/resources/images/favicon.png{{template "cacheBust"}}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,700|Maven+Pro:400,700,900|Montserrat:400,700|PT+Mono&display=swap">
+<link rel="stylesheet" href="/old/resources/css/common.css{{template "cacheBust"}}">
+<script src="/old/resources/js/common.js{{template "cacheBust"}}"></script>
 
 <!-- General metatags -->
-<!-- <meta name="author" content="Caddy Web Server">
+<meta name="author" content="Caddy Web Server">
 <meta name="description" content="Caddy is a powerful, enterprise-ready, open source web server with automatic HTTPS written in Go">
-<meta name="theme-color" content="#5ea9a2"> -->
+<meta name="theme-color" content="#5ea9a2">
 
 <!-- Open Graph tags -->
-<!-- <meta property="og:type" content="website">
+<meta property="og:type" content="website">
 <meta property="og:url" content="https://caddyserver.com/">
 <meta property="og:description" content="Caddy is a powerful, enterprise-ready, open source web server with automatic HTTPS written in Go">
-<meta property="og:image" content="https://caddyserver.com/resources/images/caddy-open-graph.jpg"> -->
+<meta property="og:image" content="https://caddyserver.com/resources/images/caddy-open-graph.jpg">
 
 <!-- Twitter card tags additive with the og: tags -->
-<!-- <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:domain" value="caddyserver.com">
 <meta name="twitter:description" value="Caddy is a powerful, enterprise-ready, open source web server with automatic HTTPS written in Go">
 <meta name="twitter:image" content="https://caddyserver.com/resources/images/caddy-open-graph.jpg">
-<meta name="twitter:url" value="https://caddyserver.com/"> -->
+<meta name="twitter:url" value="https://caddyserver.com/">
 
 <!-- Algolia DocSearch -->
-<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3"> -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
 
-<!-- Global site tag (gtag.js) - Google Analytics (ZeroSSL) -->
-<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-2DLB04LK4P"></script>
+<!-- Global site tag (gtag.js) - Google Analytics (Stack Holdings) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2DLB04LK4P"></script>
 <script>
 	window.dataLayer = window.dataLayer || [];
 	function gtag(){dataLayer.push(arguments);}
 	gtag('js', new Date());
 	gtag('config', 'G-2DLB04LK4P');
-</script> -->
+</script>
 
 <!-- Alpine.js to augment markdown docs -->
 <script src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
+<!-- TODO: These don't work -- color values need to be tweaked if they do work -- I think because background-color is set on the body. -->
+<meta name="theme-color" content="#123245" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#123245" media="(prefers-color-scheme: dark)">
+
 {{end}}
+

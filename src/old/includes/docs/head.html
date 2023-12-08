@@ -1,0 +1,13 @@
+{{define "docs-head"}}
+	{{import "/old/includes/head.html"}}
+	{{template "head"}}
+	<link rel="stylesheet" href="/old/resources/css/docs.css{{template "cacheBust"}}">
+	<link rel="stylesheet" href="/old/resources/css/chroma.css{{template "cacheBust"}}">
+	{{$directives := list }}
+	{{range $i, $file := (listFiles "/docs/markdown/caddyfile/directives")}}
+		{{$directives = append $directives ($file | trimSuffix ".md")}}
+	{{end}}
+	<script type="text/javascript">window.CaddyfileDirectives = {{$directives | toJson}};</script>
+	<script src="/old/resources/js/jquery-3.4.1.min.js"></script>
+	<script src="/old/resources/js/docs.js{{template "cacheBust"}}"></script>
+{{end}}

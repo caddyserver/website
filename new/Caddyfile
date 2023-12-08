@@ -4,7 +4,14 @@
 
 localhost {
 	file_server
-	templates
+	templates {
+		extensions {
+			hitCounter {
+				style bright_green
+				pad_digits 6
+			}
+		}
+	}
 
 	try_files {path}.html {path}
 

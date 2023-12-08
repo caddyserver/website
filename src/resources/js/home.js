@@ -1,6 +1,5 @@
 const resp = fetch("/resources/testimonials.json").then(async resp => {
 	const testimonials = await resp.json();
-	console.log(testimonials);
 
 	ready(function() {
 		for (let i = 0; i < testimonials.length; i++) {

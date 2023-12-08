@@ -748,7 +748,7 @@ reverse_proxy 10.0.0.1:443 {
 
 
 
-[Strip a path prefix](/docs/caddyfile/directives/handle_path) before proxying; but be aware of the [subfolder problem <img src="/resources/images/external-link.svg" class="external-link">](https://caddy.community/t/the-subfolder-problem-or-why-cant-i-reverse-proxy-my-app-into-a-subfolder/8575):
+[Strip a path prefix](/docs/caddyfile/directives/handle_path) before proxying; but be aware of the [subfolder problem <img src="/old/resources/images/external-link.svg" class="external-link">](https://caddy.community/t/the-subfolder-problem-or-why-cant-i-reverse-proxy-my-app-into-a-subfolder/8575):
 
 ```caddy-d
 handle_path /prefix/* {

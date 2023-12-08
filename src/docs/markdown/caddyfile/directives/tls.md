@@ -94,17 +94,17 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
 	- `secp384r1`
 	- `secp521r1`
 
-- **alpn** <span id="alpn"/> is the list of values to advertise in the [ALPN extension <img src="/resources/images/external-link.svg" class="external-link">](https://developer.mozilla.org/en-US/docs/Glossary/ALPN) of the TLS handshake.
+- **alpn** <span id="alpn"/> is the list of values to advertise in the [ALPN extension <img src="/old/resources/images/external-link.svg" class="external-link">](https://developer.mozilla.org/en-US/docs/Glossary/ALPN) of the TLS handshake.
 
 - **load** <span id="load"/> specifies a list of folders from which to load PEM files that are certificate+key bundles.
 
-- **ca** <span id="ca"/> changes the ACME CA endpoint. This is most often used to set [Let's Encrypt's staging endpoint <img src="/resources/images/external-link.svg" class="external-link">](https://letsencrypt.org/docs/staging-environment/) when testing, or an internal ACME server. (To change this value for the whole Caddyfile, use the `acme_ca` [global option](/docs/caddyfile/options) instead.)
+- **ca** <span id="ca"/> changes the ACME CA endpoint. This is most often used to set [Let's Encrypt's staging endpoint <img src="/old/resources/images/external-link.svg" class="external-link">](https://letsencrypt.org/docs/staging-environment/) when testing, or an internal ACME server. (To change this value for the whole Caddyfile, use the `acme_ca` [global option](/docs/caddyfile/options) instead.)
 
 - **ca_root** <span id="ca_root"/> specifies a PEM file that contains a trusted root certificate for the ACME CA endpoint, if not in the system trust store.
 
 - **key_type** <span id="key_type"/> is the type of key to use when generating CSRs. Only set this if you have a specific requirement.
 
-- **dns** <span id="dns"/> enables the [DNS challenge](/docs/automatic-https#dns-challenge) using the specified provider plugin, which must be plugged in from one of the [`caddy-dns` <img src="/resources/images/external-link.svg" class="external-link">](https://github.com/caddy-dns) repositories. Each provider plugin may have their own syntax following their name; refer to their docs for details. Maintaining support for each DNS provider is a community effort. [Learn how to enable the DNS challenge for your provider at our wiki.](https://caddy.community/t/how-to-use-dns-provider-modules-in-caddy-2/8148)
+- **dns** <span id="dns"/> enables the [DNS challenge](/docs/automatic-https#dns-challenge) using the specified provider plugin, which must be plugged in from one of the [`caddy-dns` <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/caddy-dns) repositories. Each provider plugin may have their own syntax following their name; refer to their docs for details. Maintaining support for each DNS provider is a community effort. [Learn how to enable the DNS challenge for your provider at our wiki.](https://caddy.community/t/how-to-use-dns-provider-modules-in-caddy-2/8148)
 
 - **propagation_timeout** <span id="propagation_timeout"/> is a [duration value](/docs/conventions#durations) that sets the maximum time to wait for the DNS TXT records to appear when using the DNS challenge. Set to `-1` to disable propagation checks. Default 2 minutes.
 
@@ -114,13 +114,13 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
 
 - **dns_challenge_override_domain** <span id="dns_challenge_override_domain"/> overrides the domain to use for the DNS challenge. This is to delegate the challenge to a different domain.
 
-  You may want to use this if your primary domain's DNS provider does not have a [DNS plugin <img src="/resources/images/external-link.svg" class="external-link">](https://github.com/caddy-dns) available. You can instead add a `CNAME` record with subdomain `_acme-challenge` to your primary domain, pointing to a secondary domain for which you _do_ have a plugin.
+  You may want to use this if your primary domain's DNS provider does not have a [DNS plugin <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/caddy-dns) available. You can instead add a `CNAME` record with subdomain `_acme-challenge` to your primary domain, pointing to a secondary domain for which you _do_ have a plugin.
   
   When ACME issuers try to solve the DNS challenge for your primary domain, they will then follow the `CNAME` to your secondary domain to find the `TXT` record.
 
 - **resolvers** <span id="resolvers"/> customizes the DNS resolvers used when performing the DNS challenge; these take precedence over system resolvers or any default ones. If set here, the resolvers will propagate to all configured certificate issuers.
 
-  This is typically a list of IP addresses. For example, to use [Google Public DNS <img src="/resources/images/external-link.svg" class="external-link">](https://developers.google.com/speed/public-dns):
+  This is typically a list of IP addresses. For example, to use [Google Public DNS <img src="/old/resources/images/external-link.svg" class="external-link">](https://developers.google.com/speed/public-dns):
 
   ```caddy-d
   resolvers 8.8.8.8 8.8.4.4
@@ -230,13 +230,13 @@ Obtains certificates using the ACME protocol. Note that `acme` is a default issu
 
 - **dns_challenge_override_domain** <span id="dns_challenge_override_domain"/> overrides the domain to use for the DNS challenge. This is to delegate the challenge to a different domain.
 
-  You may want to use this if your primary domain's DNS provider does not have a [DNS plugin <img src="/resources/images/external-link.svg" class="external-link">](https://github.com/caddy-dns) available. You can instead add a `CNAME` record with subdomain `_acme-challenge` to your primary domain, pointing to a secondary domain for which you _do_ have a plugin.
+  You may want to use this if your primary domain's DNS provider does not have a [DNS plugin <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/caddy-dns) available. You can instead add a `CNAME` record with subdomain `_acme-challenge` to your primary domain, pointing to a secondary domain for which you _do_ have a plugin.
   
   When ACME issuers try to solve the DNS challenge for your primary domain, they will then follow the `CNAME` to your secondary domain to find the `TXT` record.
 
 - **resolvers** <span id="resolvers"/> customizes the DNS resolvers used when performing the DNS challenge; these take precedence over system resolvers or any default ones. If set here, the resolvers will propagate to all configured certificate issuers.
 
-  This is typically a list of IP addresses. For example, to use [Google Public DNS <img src="/resources/images/external-link.svg" class="external-link">](https://developers.google.com/speed/public-dns):
+  This is typically a list of IP addresses. For example, to use [Google Public DNS <img src="/old/resources/images/external-link.svg" class="external-link">](https://developers.google.com/speed/public-dns):
 
   ```caddy-d
   resolvers 8.8.8.8 8.8.4.4
@@ -298,7 +298,7 @@ These manager modules come standard with the `tls` directive:
 
 #### tailscale
 
-Get certificates from a locally-running [Tailscale <img src="/resources/images/external-link.svg" class="external-link">](https://tailscale.com) instance. [HTTPS must be enabled in your Tailscale account](https://tailscale.com/kb/1153/enabling-https/) (or your open source [Headscale server <img src="/resources/images/external-link.svg" class="external-link">](https://github.com/juanfont/headscale)); and the Caddy process must either be running as root, or you must configure `tailscaled` to give your Caddy user [permission to fetch certificates](https://github.com/caddyserver/caddy/pull/4541#issuecomment-1021568348).
+Get certificates from a locally-running [Tailscale <img src="/old/resources/images/external-link.svg" class="external-link">](https://tailscale.com) instance. [HTTPS must be enabled in your Tailscale account](https://tailscale.com/kb/1153/enabling-https/) (or your open source [Headscale server <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/juanfont/headscale)); and the Caddy process must either be running as root, or you must configure `tailscaled` to give your Caddy user [permission to fetch certificates](https://github.com/caddyserver/caddy/pull/4541#issuecomment-1021568348).
 
 _**NOTE: This is usually unnecessary!** Caddy automatically uses Tailscale for all `*.ts.net` domains without any extra configuration._
 
