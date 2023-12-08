@@ -1,3 +1,7 @@
+:root {
+	--monospace-fonts: 'JetBrains Mono', monospace;
+}
+
 :root,
 .light {
 	--body-bg: white;
@@ -97,7 +101,7 @@
 }
 
 body {
-	font-family: Inter, Figtree, Gantari, 'Albert Sans', Inter, system-ui;
+	font-family: Inter, system-ui;
 	font-size: 18px;
 	/* -webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale; */
@@ -132,7 +136,7 @@ strong {
 }
 
 code {
-	font-family: 'JetBrains Mono', 'Chivo Mono', monospace;
+	font-family: var(--monospace-fonts);
 	font-feature-settings: "liga" 0; /* prevent the merging of chars like "fi", relevant for Chivo Mono especially */
 }
 
@@ -633,6 +637,10 @@ footer .link-col a:hover {
 
 
 
+/* Asciinema customizations */
+.ap-player pre.ap-terminal {
+	font-family: var(--monospace-fonts);
+}
 
 
 

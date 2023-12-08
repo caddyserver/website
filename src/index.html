@@ -3,7 +3,7 @@
 	<head>
 		<title>Caddy - The Ultimate Server with Automatic HTTPS</title>
 		{{import "/includes/head.html"}}
-		{{template "head"}}
+		{{template "head" .}}
 		<link rel="stylesheet" href="/resources/css/vendor/asciinema-player-3.6.1.css{{template "cacheBust"}}">
 		<script src="/resources/js/vendor/asciinema-player-3.6.1.min.js{{template "cacheBust"}}"></script>
 		<script src="/resources/js/home.js{{template "cacheBust"}}"></script>
@@ -705,7 +705,7 @@ $ curl localhost:2019/config/ | jq<div class="blinking"></div></code>
 		</template>
 
 		<script>
-			AsciinemaPlayer.create('/resources/321140.cast', $_('#video-demo'), {
+			AsciinemaPlayer.create('/resources/demo.cast', $_('#video-demo'), {
 				preload: true,
 				autoPlay: true,
 				controls: true
