@@ -92,7 +92,7 @@ You can see how the structured log is much more useful and contains much more in
 
 Because the logs are structured and strongly-typed, they can be encoded into any format. So if you don't want to work with JSON, logs can be encoded into any other representation. Caddy supports others through [log encoder modules](/docs/json/logging/logs/encoder/), and even more can be added.
 
-**Most importantly** in the distinction between structured logs and legacy formats, with a performance penalty a structured log [can be transformed into the legacy Common Log Format <img src="/resources/images/external-link.svg" class="external-link">](https://github.com/caddyserver/transform-encoder), but not the other way around. It is non-trivial (or at least inefficient) to go from CLF to structured formats, and impossible considering the lack of information.
+**Most importantly** in the distinction between structured logs and legacy formats, with a performance penalty a structured log [can be transformed into the legacy Common Log Format <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/caddyserver/transform-encoder), but not the other way around. It is non-trivial (or at least inefficient) to go from CLF to structured formats, and impossible considering the lack of information.
 
 In essence, efficient, structured logging generally promotes these philosophies:
 

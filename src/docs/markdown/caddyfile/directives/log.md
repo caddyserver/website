@@ -147,7 +147,7 @@ The **format** subdirective lets you customize how logs get encoded (formatted).
 
 <aside class="tip">
 
-**A note about Common Log Format (CLF):** CLF clashes with modern structured logs. To transform your access logs into the deprecated Common Log Format, please use the [`transform-encoder` plugin <img src="/resources/images/external-link.svg" class="external-link">](https://github.com/caddyserver/transform-encoder).
+**A note about Common Log Format (CLF):** CLF clashes with modern structured logs. To transform your access logs into the deprecated Common Log Format, please use the [`transform-encoder` plugin <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/caddyserver/transform-encoder).
 
 </aside>
 
@@ -440,7 +440,7 @@ log {
 }
 ```
 
-<span id="multiple-outputs" /> To write the access logs for a particular subdomain to two different files, with different formats (one with [`transform-encoder` plugin <img src="/resources/images/external-link.svg" class="external-link">](https://github.com/caddyserver/transform-encoder) and the other with [`json`](#json)). 
+<span id="multiple-outputs" /> To write the access logs for a particular subdomain to two different files, with different formats (one with [`transform-encoder` plugin <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/caddyserver/transform-encoder) and the other with [`json`](#json)). 
 
 This works by overriding the logger name as `foo` in the site block, then including the access logs produced by that logger in the two loggers in global options with `include http.log.access.foo`:
 

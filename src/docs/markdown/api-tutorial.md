@@ -153,7 +153,7 @@ You should see:
 
 <aside class="tip">
 
-You can use the [`jq` command <img src="/resources/images/external-link.svg" class="external-link">](https://stedolan.github.io/jq/) to prettify JSON output: **`curl ... | jq`**
+You can use the [`jq` command <img src="/old/resources/images/external-link.svg" class="external-link">](https://stedolan.github.io/jq/) to prettify JSON output: **`curl ... | jq`**
 
 </aside>
 

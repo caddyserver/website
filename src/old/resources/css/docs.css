@@ -1,0 +1,1106 @@
+body {
+	font-family: Maven Pro, sans-serif;
+	background: #f1f4f5;
+}
+
+header {
+	padding: 20px 40px;
+}
+
+#logo-container {
+	align-items: flex-start;
+}
+
+#logo-docs-container {
+	display: flex;
+	align-items: center;
+}
+
+#logo {
+	height: 35px;
+}
+
+#logo-docs {
+	font-family: Montserrat, sans-serif;
+	font-weight: bold;
+	text-transform: uppercase;
+	color: #0e495e;
+	margin-left: 10px;
+	font-size: 12px;
+}
+
+#zerossl-project {
+	padding-left: 2em;
+}
+
+#search {
+	margin-top: 0;
+}
+
+header nav {
+	font-size: 16px;
+	line-height: 2em;
+}
+
+header nav .button {
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
+.breadcrumbs {
+	padding: 10px 20px !important;
+	margin-bottom: 0 !important;
+	color: #2861aa;
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 1.75em;
+}
+
+#top-breadcrumb {
+	font-weight: bold;
+}
+
+#top-breadcrumb:not(:hover) {
+	color: #2861aa;
+}
+
+.breadcrumbs a {
+	font-weight: normal;
+	text-decoration: none;
+}
+
+.breadcrumb-siblings-title {
+	padding: 10px;
+	font-weight: bold;
+}
+
+.breadcrumb-siblings a {
+	display: block;
+	padding: 0 10px;
+	text-decoration: none;
+}
+
+.breadcrumb-siblings a+a {
+	padding-top: 10px;
+}
+
+.breadcrumb-siblings a:last-child {
+	padding-bottom: 10px;
+}
+
+main {
+	display: flex;
+	justify-content: space-between;
+}
+
+main > .sidebar {
+	width: 18%;
+	flex-shrink: 0;
+	flex-grow: 1;
+	padding: 20px;
+	max-width: 400px;
+}
+
+main > .sidebar:last-child {
+	flex-shrink: 1;
+}
+
+main > nav.sidebar {
+	position: relative;
+	font-size: 16px;
+}
+
+main nav li img,
+article li img,
+img.external-link {
+	max-height: .9em;
+}
+
+main nav ul {
+	list-style-type: none;
+}
+
+main nav li {
+	position: relative;
+}
+
+main nav li a {
+	display: block;
+	text-decoration: none;
+	color: inherit;
+	border-radius: 1.5em;
+	padding: 6px 18px 6px 28px;
+	color: #546c75;
+}
+
+
+
+main nav li a:hover {
+	color: #01324b;
+}
+
+main nav li a:before {
+	content: '\203A';
+	font-weight: bold;
+	font-size: 20px;
+	line-height: 1rem;
+	position: absolute;
+	opacity: 0;
+	left: 0;
+	transition: left .15s, opacity .15s;
+}
+
+main nav li a:hover:before {
+	opacity: 1;
+	left: .75em;
+}
+
+main nav li li a:hover:before {
+	left: 1.25em;
+}
+
+main nav li a.current {
+	background-color: #e0e8f0;
+}
+
+main nav li.heading {
+	font-weight: bold;
+	text-transform: uppercase;
+	font-size: 90%;
+	letter-spacing: 1px;
+	padding: 10px 20px 10px 2em;
+}
+
+main nav li.heading:not(:first-child) {
+	margin-top: 20px;
+}
+
+main nav li li a {
+	padding-top: 6px;
+	padding-bottom: 4px;
+	padding-left: 3em;
+	font-size: 90%;
+}
+
+.paper {
+	width: 100%;
+
+	background: white;
+	border-radius: 4px;
+	box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, .15);
+}
+
+#paper1,
+#paper2 {
+	background: #f8fafb;
+	max-height: 1500px;
+}
+
+#paper1 {
+	margin-top: -20px;
+	margin-left: 20px;
+	transform: rotate(3deg);
+	z-index: -1;
+}
+
+#paper2 {
+	margin-top: 30px;
+	margin-left: calc(-100% - 20px);
+	transform: rotate(-5deg);
+	z-index: -1;
+}
+
+.paper3 {
+	margin-top: 20px;
+	margin-left: -100%;
+}
+
+.article-container {
+	display: flex;
+	align-content: flex-start;
+	flex-grow: 1;
+	min-width: 0;
+	margin: 20px;
+	margin-bottom: 0;
+	width: 100%;
+	max-width: 1100px;
+}
+
+.pad {
+	padding-top: 8%;
+}
+
+article {
+	padding-top: 8%;
+	padding-bottom: 8%;
+	font-size: 20px;
+	word-wrap: break-word;
+}
+
+/*
+while we want most elements that are rendered
+server-side from markdown to have a constrained
+width, a few elements should be allowed to
+extend to the borders of the page
+*/
+article > :not(.fullwidth),
+article > .fullwidth > *,
+.pad {
+	padding-left: 8%;
+	padding-right: 8%;
+}
+article > :not(h1),
+dd,
+article p,
+article ol,
+article ul,
+article pre,
+article table {
+	margin-bottom: 1.5rem;
+}
+article > .fullwidth { margin-bottom: 1.5rem; }
+article > .fullwidth > * { margin-bottom: 0; }
+
+article > pre.chroma > code {
+	background: none;
+	padding: 0;
+}
+article > pre.chroma {
+	padding-top: 2em;
+	padding-bottom: 2em;
+}
+
+article ul,
+article ol,
+#hovercard ul,
+#hovercard ol {
+	margin-left: 2.5em;
+}
+
+article ul ul,
+article ol ol,
+article ol ul,
+article ul ol {
+	margin-bottom: 0;
+}
+
+article p,
+article li {
+	line-height: 1.5em;
+}
+
+article li p,
+article li ul,
+article li ol {
+	margin-bottom: .5em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	/* to ensure that the anchor-link icons stay inside the heading */
+	position: relative;
+}
+
+h1,
+h2 {
+	text-align: center;
+}
+
+h1 {
+	font-size: 72px;
+	color: #0e3e5b;
+	letter-spacing: -2px;
+	margin-bottom: 50px;
+}
+
+h2 {
+	font-size: 46px;
+	padding-bottom: 15px;
+	border-bottom: 4px solid #72abe8;
+	margin: 100px 0 40px !important;
+}
+
+h3 {
+	font-size: 40px;
+	margin: 50px 0 20px;
+}
+
+h4 {
+	font-size: 32px;
+	margin: 25px 0 15px;
+}
+
+h5 {
+	font-size: 26px;
+	margin: 2em 0 1em;
+}
+
+h6 {
+	font-size: 20px;
+	margin: 2em 0 1em;
+}
+
+.anchor-link {
+	opacity: 0;
+	font-size: .6em;
+	border-radius: 10px;
+	padding: .3em .5em;
+	margin-left: .25em;
+	position: absolute;
+	top: 5px;
+}
+
+*:hover > .anchor-link,
+.anchor-link:focus {
+	opacity: 1;
+	text-decoration: none;
+}
+
+.anchor-link:hover {
+	background-color: rgba(0, 0, 0, .075);
+}
+
+code,
+kbd {
+	background-color: #e9f1fb;
+	border-radius: 5px;
+}
+
+code.cmd {
+	background-color: #333;
+	color: #eaeaea;
+}
+
+pre > code,
+pre.chroma,
+.group {
+	display: block;
+	white-space: pre;
+}
+
+pre > code,
+article > pre {
+	padding: 1em;
+	overflow: auto;
+}
+
+pre > code.cmd {
+	border-radius: 5px;
+}
+
+code.cmd.bash,
+code.cmd .bash,
+code.cmd.bash-continuation,
+code.cmd .bash-continuation {
+	font-weight: bold;
+}
+
+code.cmd.bash::before,
+code.cmd .bash::before {
+	content: '$';
+	margin-right: .5rem;
+}
+
+code.cmd.bash-continuation::before,
+code.cmd .bash-continuation::before {
+	content: '>';
+	margin-right: .5rem;
+}
+
+dt:hover .inline-link {
+	visibility: visible;
+}
+
+dd {
+	margin-left: 1em;
+}
+
+#field-list-header {
+	display: none;
+}
+
+.field-name {
+	display: block;
+	font-family: 'Source Code Pro', monospace;
+	margin-top: 2em;
+	font-weight: bold;
+	margin-bottom: .5em;
+}
+
+.inline-link {
+	text-decoration: none;
+	position: absolute;
+	margin-left: -1.5em;
+	/* margin-top: -.1em; */
+	padding-right: .3em;
+	padding-left: .2em;
+	visibility: hidden;
+}
+
+.inline-link:hover {
+	text-decoration: none;
+}
+
+hr {
+	border: none;
+	border-top: 8px solid #34669b;
+	margin: 4em 0;
+}
+
+article img {
+	max-width: 100%;
+}
+
+iframe {
+	margin: 1em 0 2em;
+}
+
+.nonstandard-notice {
+	font-size: 14px;
+	max-width: 500px;
+	margin: 25px auto;
+	border: 1px solid #ecd200;
+	background: #fffddf;
+	border-radius: 5px;
+	padding: 10px;
+	color: #886c00;
+	line-height: 1.4em;
+	display: none;
+}
+
+.nonstandard {
+	color: rgb(214, 145, 16);
+}
+
+.standard-flag,
+.nonstandard-flag {
+	cursor: help;
+	font-size: 8px;
+	line-height: 1em;
+	padding: 4px 8px;
+	text-transform: uppercase;
+	font-weight: bold;
+	color: white;
+	border-radius: 4px;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+
+.standard-flag {
+	background-color: rgb(34, 163, 23);
+}
+
+.nonstandard-flag {
+	background-color: rgb(238, 167, 34);
+}
+
+.module-repo-differentiator {
+	font-size: 11px;
+	font-weight: bold;
+	color: #555;
+	line-height: 1em;
+}
+
+
+
+
+
+
+
+.json {
+	line-height: 1.5em;
+}
+.json .qu { color: #5c91bf; }
+.json .key { color: #1c83dc; font-weight: bold; }
+.json .str { color: #2f8598; }
+.json .num { color: #038a3f; }
+.json .bool { color: #9b5e14; }
+.json .key a:not([href]) { color: #222; }
+article .json a {
+	text-decoration: none;
+	font-weight: bold;
+}
+.json .has-popup { border-bottom: 1px dashed #222; }
+.json a[href].has-popup { border-bottom-color: #1c82dc; }
+.json .has-popup.module { border-bottom: none; }
+
+
+#hovercard {
+	max-width: 450px;
+	border-radius: 10px;
+	filter: drop-shadow(0 5px 5px rgba(0, 0, 0, .25));
+	position: absolute;
+	font-size: 16px;
+	transition: transform .25s ease-in-out, opacity .25s ease-in-out;
+	/* TODO: This would be nice, but it breaks the arrow-box... */
+	/* max-height: 50%;
+	overflow-y: auto; */
+}
+
+#hovercard:not(.popup) {
+	opacity: 0;
+	display: none;
+	transform: translateY(0);
+}
+
+.popup {
+	display: block;
+	opacity: 1;
+	transform: translateY(-10px);
+}
+
+.arrow-box {
+	position: relative;
+	background: white;
+}
+
+.arrow-box:after {
+	bottom: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-color: rgba(255, 255, 255, 0);
+	border-bottom-color: white;
+	border-width: 10px;
+	margin-left: -10px;
+}
+
+#hovercard p {
+	padding: 1em;
+	line-height: 1.4em;
+}
+
+#hovercard p+p {
+	padding-top: 0;
+}
+
+#hovercard li {
+	margin: .25em;
+}
+
+#hovercard pre > code {
+	border-radius: 0;
+}
+
+#hovercard li {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+#hovercard .nonstandard-flag {
+	float: right;
+}
+
+#hovercard .module-link {
+	display: block;
+	text-decoration: none;
+	font-size: 18px;
+	line-height: 1em;
+	font-weight: bold;
+	padding: .5em 1em;
+}
+
+#hovercard .module-link:hover {
+	background: #f5f5f5;
+}
+
+#hovercard .module-link:last-child {
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+#hovercard .module-link-description {
+	font-size: 14px;
+	color: #555;
+	margin-left: .5em;
+	font-weight: normal;
+}
+
+#hovercard-namespace-box,
+#hovercard-inline-link {
+	border: 0px solid #f0f6f7;
+}
+
+#hovercard-namespace-box {
+	border-bottom-width: 1px;
+}
+
+#hovercard-inline-link {
+	border-top-width: 1px;
+}
+
+#hovercard-inline-link a {
+	display: block;
+	padding: 8px 10px;
+	text-decoration: none;
+	font-size: 85%;
+	font-weight: bold;
+	text-align: center;
+}
+
+#hovercard-namespace {
+	font-weight: bold;
+}
+
+.explain {
+	font-style: italic;
+	color: #777;
+}
+
+article aside {
+	position: relative;
+	font-size: 16px;
+	margin: 2em auto 3em !important;
+	max-width: 800px;
+}
+
+article aside.tip,
+article aside.advice {
+	padding-left: calc(8% + 50px) !important;
+}
+
+article aside.tip::before,
+article aside.advice::before {
+	font-size: 45px;
+	position: absolute;
+	top: -4px;
+	left: 8%;
+}
+
+article aside.tip {
+	color: #706b95;
+}
+article aside.advice {
+	color: #826848;
+}
+
+article aside.tip:nth-child(even)::before {
+	content: '💁‍♀️';
+}
+article aside.tip:nth-child(odd)::before {
+	content: '💁‍♂️';
+}
+
+article aside.advice::before {
+	content: '🤦';
+}
+
+article aside.complete {
+	color: #6b6b6b;
+	border: 2px dotted #88db88;
+	text-align: center;
+	max-width: 500px;
+	padding: 15px 25px !important;
+}
+
+article aside.complete::before {
+	content: '✅ complete';
+	color: #39c849;
+	text-transform: uppercase;
+	font-size: 14px;
+	font-weight: bold;
+	letter-spacing: 1px;
+	margin-right: 2em;
+	margin-bottom: .5em;
+}
+
+table {
+	table-layout: fixed;
+	border-collapse: collapse;
+	font-size: 16px;
+}
+
+article > table {
+	margin: 25px auto;
+}
+
+th, td {
+	border-bottom: 1px solid #ddd;
+	padding: 10px;
+	line-height: 1.4em;
+	vertical-align: top;
+	word-wrap: break-word;
+}
+
+th {
+	text-align: left;
+	background: #eee;
+}
+
+td code {
+	font-size: 14px;
+	word-wrap: break-word;
+}
+
+blockquote {
+	background-color: #f0f5f1;
+	padding-top: 2em;
+	padding-bottom: 2em;
+}
+
+
+
+
+
+#module-docs-container,
+#module-list-container,
+#module-template {
+	display: none;
+}
+
+#module-list-container {
+	overflow-x: auto;
+}
+
+#module-list {
+	margin-top: 50px;
+}
+
+#module-list td:first-child {
+	word-wrap: break-word;
+	max-width: 400px;
+}
+
+#module-list .module-link {
+	font-weight: bold;
+	font-size: 20px;
+}
+
+
+#module-multiple-repos {
+	display: none;
+	margin: 25px;
+}
+
+.module-repo-selector {
+	font-size: 26px;
+	padding: 25px;
+	font-weight: bold;
+	border-bottom: 1px solid #888;
+	cursor: pointer;
+}
+
+.module-repo-selector:hover {
+	color: #009cda;
+	background: rgb(246, 250, 252);
+}
+
+.module-repo-selector-arrow {
+	margin: 10px;
+}
+
+
+
+
+.tabs .tab-buttons {
+	display: flex;
+	font-size: 0;
+	border-bottom: 2px solid #ccc;
+	border-radius: 0.5em;
+	margin: 0 16px 0 16px;
+}
+.tabs .tab-buttons button {
+	font-family: inherit;
+	border-radius: 0.5em 0.5em 0 0;
+	background-color: transparent;
+	border: 2px solid;
+	border-color: transparent;
+	font-size: 16px;
+	margin-bottom: 0;
+	margin-right: 8px;
+	margin-bottom: -2px;
+	transition: unset;
+	transform: unset;
+}
+.tabs .tab-buttons button:hover {
+	border-color: #ddd;
+	border-bottom-color: #ccc;
+}
+.tabs .tab-buttons button.active {
+	border-color: #ccc;
+	border-bottom-color: white;
+}
+
+.tabs .tab {
+	border-style: solid;
+	border-color: #ccc;
+	border-width: 0;
+	padding: 1.5rem 16px 0 20px;
+	margin-top: -2px;
+}
+.tabs .tab pre {
+	padding: 0;
+}
+.tabs .tab.bordered {
+	border-width: 2px;
+	border-radius: 8px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 1400px) {
+	table {
+		font-size: 14px;
+	}
+
+	h1 {
+		font-size: 60px;
+	}
+
+	h2 {
+		font-size: 38px;
+		margin-top: 65px;
+	}
+
+	h3 {
+		font-size: 28px;
+		margin-top: 40px;
+	}
+}
+
+@media (max-width: 1100px) {
+	header {
+		padding-bottom: 0;
+	}
+
+	main > .sidebar {
+		min-width: 200px;
+		padding: 20px 10px 0 0;
+	}
+
+	main > .sidebar:last-child {
+		display: none;
+	}
+
+	#paper1,
+	#paper2 {
+		display: none;
+	}
+	.paper3 {
+		margin-top: 0;
+		margin-left: 0;
+	}
+
+	article {
+		font-size: 18px;
+		padding-top: 40px;
+		padding-bottom: 40px;
+	}
+
+	article > :not(.fullwidth),
+	article > .fullwidth > * {
+		padding-left: 40px;
+		padding-right: 40px;
+	}
+	article > :not(h1) {
+		margin-bottom: 1.5rem;
+	}
+
+	article > pre.chroma {
+		padding-top: 1em;
+		padding-bottom: 1em;
+	}
+
+	h1 {
+		font-size: 45px;
+	}
+
+	h2 {
+		font-size: 32px;
+	}
+}
+
+@media (max-width: 900px) {
+	#logo-container {
+		align-items: center;
+	}
+
+	#logo {
+		height: 55px;
+	}
+
+	#logo-docs {
+		display: none;
+	}
+
+	main {
+		flex-direction: column-reverse;
+		align-items: center;
+	}
+
+	main > .sidebar {
+		width: 100%;
+		border-width: 0;
+		border-top-width: 2px;
+	}
+
+	.article-container {
+		max-width: 100%; /* TODO: why is this necessary?? without it, article overflows super wide on narrow screen */
+		margin: 20px 0;
+	}
+
+	.paper {
+		border-radius: 0;
+		box-shadow: none;
+	}
+}
+
+
+
+@media (prefers-color-scheme: dark) {
+	body {
+		background-color: #060e17;
+		color: #bdd6f7;
+	}
+
+	header nav .new {
+		color: black;
+	}
+
+	/* Algolia DocSearch */
+	#search {
+		--docsearch-searchbox-background: rgb(28, 52, 79);
+		--docsearch-searchbox-focus-background: rgb(28, 52, 79);
+		--docsearch-text-color: #bdd6f7;
+		--docsearch-muted-color: #96a9c4;
+		--docsearch-key-gradient: linear-gradient(-26.5deg, #060e17 0%, rgb(47, 62, 72) 100%);
+		--docsearch-key-shadow: inset 0 -2px 0 0 #4c4c56, inset 0 0 1px 1px rgb(70, 70, 70), 0 1px 2px 1px rgba(77, 79, 91, 0.4);
+	}
+	/* End Algolia DocSearch */
+
+	#paper1,
+	#paper2 {
+		background-color: #030a11;
+	}
+	.paper3 {
+		background-color: #051628;
+	}
+
+	#logo {
+		filter: invert(1) hue-rotate(180deg);
+	}
+	#zerossl-logo {
+		filter: invert(1) hue-rotate(180deg);
+	}
+	#footer-logo {
+		filter: invert(1) hue-rotate(180deg);
+	}
+
+	#logo-docs {
+		color: #5aa3dc;
+	}
+
+	.breadcrumbs {
+		color: #5aa3dc;
+	}
+
+	main nav li a {
+		color: #668d9b;
+	}
+
+	main nav ul li a:hover {
+		color: #5aa3dc;
+	}
+
+	main nav ul li a.current {
+		background-color: #061b35;
+	}
+
+	.breadcrumbs {
+		border-color: #061b35;
+	}
+
+	h1 {
+		color: #5aa3dc;
+	}
+
+	code,
+	kbd {
+		background-color: #122844;
+	}
+
+	code.cmd {
+		background-color: #000;
+		color: #ccc;
+	}
+	
+	.json .key a:not([href]) {
+		color: #bdd6f7
+	}
+
+	#hovercard,
+	.arrow-box {
+		background-color: #0a192b; 
+	}
+
+	.arrow-box:after {
+		border-bottom-color: #0a192b;
+	}
+
+	#hovercard .module-link:hover {
+		background: #0f2c50;
+	}
+
+	#hovercard .module-link-description {
+		color: rgb(167, 167, 167);
+	}
+
+	#hovercard-namespace-box,
+	#hovercard-inline-link {
+		border-color: #0a2b53;
+	}
+
+	article aside.tip {
+		color: #8c81e4;
+	}
+
+	th {
+		background-color: #142638;
+	}
+
+	th,
+	td {
+		border-bottom-color: #233444;
+	}
+
+	blockquote {
+		background-color: #101010;
+	}
+
+	.tabs .tab-buttons {
+		border-color: #33659a;
+	}
+	.tabs .tab-buttons button {
+		color: #bdd6f7;
+	}
+	.tabs .tab-buttons button:hover {
+		border-color: #284c71;
+		border-bottom-color: #33659a;
+	}
+	.tabs .tab-buttons button.active {
+		border-color: #33659a;
+		border-bottom-color: #051628;
+	}
+	.tabs .tab {
+		border-color: #33659a;
+	}
+}

@@ -39,7 +39,7 @@ Here's a 28-second video showing how it works:
 
 - Caddy serves IP addresses and local/internal hostnames over HTTPS using self-signed certificates that are automatically trusted locally (if permitted).
 	- Examples: `localhost`, `127.0.0.1`
-- Caddy serves public DNS names over HTTPS using certificates from a public ACME CA such as [Let's Encrypt <img src="/resources/images/external-link.svg" class="external-link">](https://letsencrypt.org) or [ZeroSSL <img src="/resources/images/external-link.svg" class="external-link">](https://zerossl.com).
+- Caddy serves public DNS names over HTTPS using certificates from a public ACME CA such as [Let's Encrypt <img src="/old/resources/images/external-link.svg" class="external-link">](https://letsencrypt.org) or [ZeroSSL <img src="/old/resources/images/external-link.svg" class="external-link">](https://zerossl.com).
 	- Examples: `example.com`, `sub.example.com`, `*.example.com`
 
 Caddy keeps all managed certificates renewed and redirects HTTP (default port `80`) to HTTPS (default port `443`) automatically.
@@ -89,7 +89,7 @@ Any of the following will prevent automatic HTTPS from being activated, either i
 
 **Special cases:**
 
-- Domains ending in `.ts.net` will not be managed by Caddy. Instead, Caddy will automatically attempt to get these certificates at handshake-time from the locally-running [Tailscale <img src="/resources/images/external-link.svg" class="external-link">](https://tailscale.com) instance. This requires that [HTTPS is enabled in your Tailscale account <img src="/resources/images/external-link.svg" class="external-link">](https://tailscale.com/kb/1153/enabling-https/) and the Caddy process must either be running as root, or you must configure `tailscaled` to give your Caddy user [permission to fetch certificates](https://github.com/caddyserver/caddy/pull/4541#issuecomment-1021568348).
+- Domains ending in `.ts.net` will not be managed by Caddy. Instead, Caddy will automatically attempt to get these certificates at handshake-time from the locally-running [Tailscale <img src="/old/resources/images/external-link.svg" class="external-link">](https://tailscale.com) instance. This requires that [HTTPS is enabled in your Tailscale account <img src="/old/resources/images/external-link.svg" class="external-link">](https://tailscale.com/kb/1153/enabling-https/) and the Caddy process must either be running as root, or you must configure `tailscaled` to give your Caddy user [permission to fetch certificates](https://github.com/caddyserver/caddy/pull/4541#issuecomment-1021568348).
 
 
 ## Effects
@@ -126,7 +126,7 @@ Caddy uses HTTPS automatically for all sites with a host (domain, IP, or hostnam
 
 To serve non-public sites over HTTPS, Caddy generates its own certificate authority (CA) and uses it to sign certificates. The trust chain consists of a root and intermediate certificate. Leaf certificates are signed by the intermediate. They are stored in [Caddy's data directory](/docs/conventions#data-directory) at `pki/authorities/local`.
 
-Caddy's local CA is powered by [Smallstep libraries <img src="/resources/images/external-link.svg" class="external-link">](https://smallstep.com/certificates/).
+Caddy's local CA is powered by [Smallstep libraries <img src="/old/resources/images/external-link.svg" class="external-link">](https://smallstep.com/certificates/).
 
 Local HTTPS does not use ACME nor does it perform any DNS validation. It works only on the local machine and is trusted only where the CA's root certificate is installed.
 
@@ -158,7 +158,7 @@ Unlike the root certificate, intermediate certificates have a much shorter lifet
 
 To test or experiment with your Caddy configuration, make sure you [change the ACME endpoint](/docs/modules/tls.issuance.acme#ca) to a staging or development URL, otherwise you are likely to hit rate limits which can block your access to HTTPS for up to a week, depending on which rate limit you hit.
 
-One of Caddy's default CAs is [Let's Encrypt <img src="/resources/images/external-link.svg" class="external-link">](https://letsencrypt.org/), which has a [staging endpoint <img src="/resources/images/external-link.svg" class="external-link">](https://letsencrypt.org/docs/staging-environment/) that is not subject to the same [rate limits <img src="/resources/images/external-link.svg" class="external-link">](https://letsencrypt.org/docs/rate-limits/):
+One of Caddy's default CAs is [Let's Encrypt <img src="/old/resources/images/external-link.svg" class="external-link">](https://letsencrypt.org/), which has a [staging endpoint <img src="/old/resources/images/external-link.svg" class="external-link">](https://letsencrypt.org/docs/staging-environment/) that is not subject to the same [rate limits <img src="/old/resources/images/external-link.svg" class="external-link">](https://letsencrypt.org/docs/rate-limits/):
 
 ```
 https://acme-staging-v02.api.letsencrypt.org/directory
@@ -166,7 +166,7 @@ https://acme-staging-v02.api.letsencrypt.org/directory
 
 ## ACME challenges
 
-Obtaining a publicly-trusted TLS certificate requires validation from a publicly-trusted, third-party authority. These days, this validation process is automated with the [ACME protocol <img src="/resources/images/external-link.svg" class="external-link">](https://tools.ietf.org/html/rfc8555), and can be performed one of three ways ("challenge types"), described below.
+Obtaining a publicly-trusted TLS certificate requires validation from a publicly-trusted, third-party authority. These days, this validation process is automated with the [ACME protocol <img src="/old/resources/images/external-link.svg" class="external-link">](https://tools.ietf.org/html/rfc8555), and can be performed one of three ways ("challenge types"), described below.
 
 The first two challenge types are enabled by default. If multiple challenges are enabled, Caddy chooses one at random to avoid accidental dependence on a particular challenge. Over time, it learns which challenge type is most successful and will begin to prefer it first, but will fall back to other available challenge types if necessary.
 
@@ -245,7 +245,7 @@ Here's what happens if there's an error obtaining or renewing a certificate:
 	- Maximum of 1 day between attempts
 	- For up to 30 days
 
-During retries with Let's Encrypt, Caddy switches to their [staging environment <img src="/resources/images/external-link.svg" class="external-link">](https://letsencrypt.org/docs/staging-environment/) to avoid rate limit concerns. This isn't a perfect strategy, but in general it's helpful.
+During retries with Let's Encrypt, Caddy switches to their [staging environment <img src="/old/resources/images/external-link.svg" class="external-link">](https://letsencrypt.org/docs/staging-environment/) to avoid rate limit concerns. This isn't a perfect strategy, but in general it's helpful.
 
 ACME challenges take at least a few seconds, and internal rate limiting helps mitigate accidental abuse. Caddy uses internal rate limiting in addition to what you or the CA configure so that you can hand Caddy a platter with a million domain names and it will gradually -- but as fast as it can -- obtain certificates for all of them. Caddy's internal rate limit is currently 10 attempts per ACME account per 10 seconds.
 
@@ -255,7 +255,7 @@ To avoid leaking resources, Caddy aborts in-flight tasks (including ACME transac
 
 Caddy is the first (and so far only) server to support fully-redundant, automatic failover to other CAs in the event it cannot successfully get a certificate.
 
-By default, Caddy enables two ACME-compatible CAs: [**Let's Encrypt** <img src="/resources/images/external-link.svg" class="external-link">](https://letsencrypt.org) and [**ZeroSSL** <img src="/resources/images/external-link.svg" class="external-link">](https://zerossl.com). If Caddy cannot get a certificate from Let's Encrypt, it will try with ZeroSSL; if both fail, it will backoff and retry again later. In your config, you can customize which issuers Caddy uses to obtain certificates, either universally or for specific names.
+By default, Caddy enables two ACME-compatible CAs: [**Let's Encrypt** <img src="/old/resources/images/external-link.svg" class="external-link">](https://letsencrypt.org) and [**ZeroSSL** <img src="/old/resources/images/external-link.svg" class="external-link">](https://zerossl.com). If Caddy cannot get a certificate from Let's Encrypt, it will try with ZeroSSL; if both fail, it will backoff and retry again later. In your config, you can customize which issuers Caddy uses to obtain certificates, either universally or for specific names.
 
 
 ## Storage
@@ -277,4 +277,4 @@ If using the Caddyfile, Caddy takes site names literally with regards to the cer
 
 Wildcard certificates represent a wide degree of authority and should only be used when you have so many subdomains that managing individual certificates for them would strain the PKI or cause you to hit CA-enforced rate limits.
 
-**Note:** [Let's Encrypt requires <img src="/resources/images/external-link.svg" class="external-link">](https://letsencrypt.org/docs/challenge-types/) the [DNS challenge](#dns-challenge) to obtain wildcard certificates.
+**Note:** [Let's Encrypt requires <img src="/old/resources/images/external-link.svg" class="external-link">](https://letsencrypt.org/docs/challenge-types/) the [DNS challenge](#dns-challenge) to obtain wildcard certificates.

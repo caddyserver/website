@@ -323,7 +323,7 @@ Skips the attempts to install the local CA's root into the system trust store, a
 
 
 ##### `acme_ca`
-Specifies the URL to the ACME CA's directory. It is strongly recommended to set this to Let's Encrypt's [staging endpoint <img src="/resources/images/external-link.svg" class="external-link">](https://letsencrypt.org/docs/staging-environment/) for testing or development. Default: ZeroSSL and Let's Encrypt's production endpoints.
+Specifies the URL to the ACME CA's directory. It is strongly recommended to set this to Let's Encrypt's [staging endpoint <img src="/old/resources/images/external-link.svg" class="external-link">](https://letsencrypt.org/docs/staging-environment/) for testing or development. Default: ZeroSSL and Let's Encrypt's production endpoints.
 
 Note that a globally-configured ACME CA may not apply to all sites; see the [hostname requirements](/docs/automatic-https#hostname-requirements) for using the default ACME issuer(s).
 
@@ -642,7 +642,7 @@ Events typically include a metadata payload. The best way to learn about events 
 
 Binds an event handler to the named event. Specify the name of the event handler module, followed by its configuration.
 
-For example, to run a command after a certificate is obtained ([third-party plugin <img src="/resources/images/external-link.svg" class="external-link">](https://github.com/mholt/caddy-events-exec) required), with a part of the event payload being passed to the script using a placeholder:
+For example, to run a command after a certificate is obtained ([third-party plugin <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/mholt/caddy-events-exec) required), with a part of the event payload being passed to the script using a placeholder:
 
 ```caddy
 {
@@ -656,7 +656,7 @@ For example, to run a command after a certificate is obtained ([third-party plug
 
 These standard events are emitted by Caddy:
 
-- [`tls` events <img src="/resources/images/external-link.svg" class="external-link">](https://github.com/caddyserver/certmagic#events)
+- [`tls` events <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/caddyserver/certmagic#events)
 - [`reverse_proxy` events](/docs/caddyfile/directives/reverse_proxy#events)
 
 Plugins may also emit events, so check their documentation for details.

@@ -1,87 +1,105 @@
-$(function() {
-	function hasPrefix(str, prefix) {
-		if (!prefix) return true;
-		if (!str)    return false;
-		return str.indexOf(prefix) === 0;
-	}
-
+ready(function() {
 	// highlight current page in left nav
-	var $currentPageLink = $('main nav a[href="'+window.location.pathname+'"]');
-	if (hasPrefix(window.location.pathname, "/docs/json/")) {
+	let currentPageLink = $_('main nav a[href="'+window.location.pathname+'"]');
+	if (window.location.pathname.startsWith("/docs/json/")) {
 		// as a special case, highlight the JSON structure link anywhere within it
-		$currentPageLink = $('main nav a[href="/docs/json/"]');
+		currentPageLink = $_('main nav a[href="/docs/json/"]');
 	}
-	if (hasPrefix(window.location.pathname, "/docs/modules/")) {
+	if (window.location.pathname.startsWith("/docs/modules/")) {
 		// as another special case, highlight the modules link anywhere within it
-		$currentPageLink = $('main nav a[href="/docs/modules/"]');
+		currentPageLink = $_('main nav a[href="/docs/modules/"]');
 	}
-	$currentPageLink.addClass('current');
+	currentPageLink?.classList?.add('current');
+
+	// generate in-page nav before adding anchor links to headings;
+	// only show sidebar if there are any navigable headers
+	// TODO: support h3 too
+	const spacingMS = 50;
+	let delay = spacingMS;
+	const h2elems = $$_('main article h2');
+	if (h2elems.length) {
+		$_('#pagenav .heading').style.display = 'block';
+		h2elems.forEach(elem => {
+			const a = document.createElement('a');
+			a.innerText = elem.innerText;
+			a.href = `#${elem.id}`;
+			setTimeout(function() {
+				$_('#pagenav').append(a);
+			}, delay);
+			delay += spacingMS;
+		});
+	}
 
 	// add anchor links, inspired by https://github.com/bryanbraun/anchorjs
-	$('article > h1[id], article > h2[id], article > h3[id], article > h4[id], article > h5[id], article > h6[id]').each(function() {
-		var $anchor = $('<a href="#'+this.id+'" class="anchor-link" title="Direct link">🔗</a>');
-		$(this).append($anchor);
+	$$_('article > h2[id], article > h3[id], article > h4[id], article > h5[id], article > h6[id]').forEach(function(elem) {
+		const anchor = document.createElement('a');
+		anchor.href = `#${elem.id}`;
+		anchor.classList.add('anchor-link');
+		anchor.title = "Link to this section";
+		anchor.innerText = '🔗';
+		elem.append(anchor);
 	});
 
-	// the server-side markdown renderer annoyingly renders
-	// colored code blocks differently from plain ones, in that
-	// colorized ones do not have the additional <code> inside
-	// the <pre>; this line finds those and adds a .chroma class
-	// to the outer pre element, and our CSS file has a style to
-	// ensure the inner code block does not produce extra padding
-	$('article > pre:not(.chroma) > code:not(.cmd)').parent().addClass('chroma');
+	const autonav = $_('#autonav');
 
-	// Add links to Caddyfile directive tokens in code blocks.
-	// See include/docs-head.html for the whitelist bootstrapping logic
-	$('pre.chroma .k')
-		.filter((k, item) =>
-			window.CaddyfileDirectives.includes(item.innerText)
-				|| item.innerText === '<directives...>'
-		)
-		.map(function(k, item) {
-			let text = item.innerText;
-			let url = text === '<directives...>'
-				? '/docs/caddyfile/directives'
-				: '/docs/caddyfile/directives/' + text;
-			text = text.replace(/</g,'&lt;').replace(/>/g,'&gt;');
-			$(item).html('<a href="' + url + '" style="color: inherit;" title="Directive">' + text + '</a>');
-		});
+	// when a left-side-nav-link is hovered, show the in-page nav in a popout to the side
+	on('mouseover', 'main nav li a:not(#autonav a)', async e => {
+		// only show the pop-out nav if not on mobile/narrow screen
+		if ($_('#docs-menu').offsetParent != null) {
+			return;
+		}
 
-	// Add links to [<matcher>] or named matcher tokens in code blocks.
-	// The matcher text includes <> characters which are parsed as HTML,
-	// so we must use text() to change the link text.
-	$('pre.chroma .nd')
-		.map(function(k, item) {
-			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
-			$(item).html('<a href="/docs/caddyfile/matchers#syntax" style="color: inherit;" title="Matcher token">' + text + '</a>');
-		});
+		const response = await fetch("/temporary-markdown-proxy"+e.target.getAttribute('href'));
+		const markdown = await response.text();
+		const tokens = marked.lexer(markdown);
+
+		// empty the container
+		autonav.replaceChildren();
+		
+		let seenH1 = false;
+		for (const tkn of tokens) {
+			if (tkn.type != "heading") continue;
+			if (tkn.depth == 1) {
+				seenH1 = true;
+			}
+			if (!seenH1 || tkn.depth != 2) continue;
+
+			// this includes HTML entities like &lt; (i.e. not user-facing text), but
+			// that's how the server-side markdown renderer does it too ¯\_(ツ)_/¯
+			const anchor = anchorID(tkn.text);
+
+			const a = document.createElement('a');
+			a.classList.add('autonav-link');
+			a.innerHTML = marked.parseInline(tkn.text);
+			a.href = `${e.target.href}#${anchor}`;
+			autonav.append(a);
+		}
+		
+		if ($_('#autonav *')) {
+			const sections = document.createElement('div')
+			sections.classList.add('heading');
+			sections.innerText = 'Sections';
+			autonav.prepend(sections);
+			e.target.closest('li').append(autonav);
+			autonav.style.display = ''; // unhide the container
+		} else {
+			// no links; hide the container so we don't see an empty box
+			autonav.style.display = 'none';
+		}
+
+	});
 });
 
-// addLinkaddLinksToSubdirectivessToAnchors finds all the ID anchors
-// in the article, and turns any directive or subdirective span into
-// links that have an ID on the page. This is opt-in for each page,
-// because it's not necessary to run everywhere.
-function addLinksToSubdirectives() {
-	let anchors = $('article *[id]').map((i, el) => el.id).toArray();
-	$('pre.chroma .k')
-		.filter((k, item) => anchors.includes(item.innerText))
-		.map(function(k, item) {
-			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
-			let url = '#' + item.innerText;
-			$(item).html('<a href="' + url + '" style="color: inherit;" title="' + text + '">' + text + '</a>');
-		});
-}
+// toggle left-nav when menu link is clicked
+on('click', '#docs-menu', e => {
+	const nav = $_('#docs-menu-container');
+	if (!nav.offsetHeight) {
+		nav.style.height = `${nav.scrollHeight}px`;
+	} else {
+		nav.style.height = 0;
+	}
+});
 
-function stripScheme(url) {
-	return url.substring(url.indexOf("://")+3);
-}
-
-// splitTypeName splits a fully qualified type name into
-// its package path and type name components, for example:
-// "github.com/foo/bar.Type" => "github.com/foo/bar" and "Type".
-function splitTypeName(fqtn) {
-	let lastDotPos = fqtn.lastIndexOf('.');
-	let pkg = fqtn.substr(0, lastDotPos);
-	let typeName = fqtn.substr(lastDotPos+1);
-	return {pkg: pkg, typeName: typeName};
+function anchorID(text) {
+	return text.trim().toLowerCase().replace(/\s/g, '-').replace(/[^\w-]/g, '');
 }

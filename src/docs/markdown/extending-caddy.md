@@ -9,8 +9,8 @@ Caddy is easy to extend because of its modular architecture. Most kinds of Caddy
 **Prerequisites:**
 - Basic understanding of [Caddy's architecture](/docs/architecture)
 - Go language proficiency
-- [`go` <img src="/resources/images/external-link.svg" class="external-link">](https://golang.org/doc/install)
-- [`xcaddy` <img src="/resources/images/external-link.svg" class="external-link">](https://github.com/caddyserver/xcaddy)
+- [`go` <img src="/old/resources/images/external-link.svg" class="external-link">](https://golang.org/doc/install)
+- [`xcaddy` <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/caddyserver/xcaddy)
 
 
 ## Quick Start

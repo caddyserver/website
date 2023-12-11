@@ -1,24 +1,49 @@
-<div class="wrapper">
-	<footer>
-		<div>
-			<img src="/resources/images/caddy-logo.svg" alt="Caddy" id="footer-logo">
-			An <a href="https://github.com/caddyserver/caddy">open source</a> Go community project
+<footer>
+	<div class="wrapper">
+		<div class="logo-area">
+			<img src="/resources/images/logo-dark.svg" class="logo" alt="Caddy web server">
+			<p>
+				A free <a href="https://github.com/caddyserver/caddy">open source</a> project
+				that relies on <a href="/sponsor">sponsors</a>.
+			</p>
+			<p>
+				<a href="https://usefathom.com/ref/AUKNWU">Privacy-respecting analytics</a> by Fathom
+			</p>
 			<br>
-			in partnership with <a href="https://www.ardanlabs.com/">Ardan Labs</a>
-			<br>
-			<small><a href="https://usefathom.com/ref/AUKNWU">Privacy-respecting analytics by Fathom</a></small>
+			<p>
+				&copy; {{now | date "2006"}} ZeroSSL. All rights reserved.
+			</p>
 		</div>
-		<div class="copyright">
-			&copy; {{now | date "2006"}} ZeroSSL. All rights reserved.
-			<br>
-			Caddy&reg; is a registered trademark of ZeroSSL GmbH.
+		<div class="link-col">
+			<div class="col-header">Project</div>
+			<a href="/features">Features</a>
+			<a href="/download">Download</a>
+			<a href="/docs">Documentation</a>
 		</div>
-	</footer>
-</div>
-
-<!-- Fathom - beautiful, simple website analytics -->
-<script src="https://cdn.usefathom.com/script.js" site="GVMGKAKP" honor-dnt="true" defer></script>
-<!-- / Fathom -->
-
-<!-- Algolia DocSearch -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@docsearch/js@3"></script>
+		<div class="link-col">
+			<div class="col-header">Business services</div>
+			<a href="/support">Support</a>
+			<a href="/sponsor">Sponsorships</a>
+		</div>
+		<div class="link-col">
+			<div class="col-header">Community</div>
+			<a href="https://caddy.community">Forum</a>
+			<a href="https://github.com/caddyserver">GitHub</a>
+			<a href="https://twitter.com/caddyserver">Twitter / X</a>
+			<a href="https://scholar.google.com/scholar?q=caddy+web+server">Research</a>
+		</div>
+	</div>
+	<div class="wrapper nostalgia">
+		<p>Caddy supports an open Web that promotes privacy, preserves data ownership, fosters innovation, freely allows varieties of client software, and safeguards human sanctity.</p>
+		<div class="nostalgia-badges">
+			<img src="/resources/images/nostalgia/get.gif" title="Honoring early Web clients">
+			<img src="/resources/images/nostalgia/microsoft-ie.gif" title="Honoring early Web clients">
+			<img src="/resources/images/nostalgia/now_anim.gif" title="Honoring early Web clients">
+			<div class="w3c">
+				<img src="/resources/images/nostalgia/valid_html5_yellow.png" title="This site uses HTML 5">
+				<img src="/resources/images/nostalgia/valid_css3_blue.png" title="This site uses CSS 3">
+			</div>
+			<div title="Don't forget to sign our guestbook!">{{ maybe "hitCounter" .OriginalReq.URL.Path }}</div>
+		</div>
+	</div>
+</footer>

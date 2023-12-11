@@ -1,0 +1,283 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: Inter, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	tab-size: 4;
+	-moz-tab-size: 4;
+}
+
+.wrapper {
+	max-width: 1400px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.float-right {
+	float: right;
+}
+
+a {
+	color: #0694f1;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #ff3f2c;
+}
+
+header {
+	display: flex;
+	justify-content: space-between;
+	padding: 25px 0;
+}
+
+#logo-container {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+}
+
+#logo {
+	height: 50px;
+}
+
+#zerossl-project {
+	font-size: 12px;
+	margin-top: -5px;
+}
+
+#zerossl-logo {
+	height: 1.5em;
+	vertical-align: middle;
+}
+
+header nav {
+	text-align: right;
+	line-height: 40px;
+}
+
+header nav > a {
+	display: inline-block;
+	padding-left: 12px;
+	padding-right: 12px;
+	text-decoration: none;
+	color: inherit;
+}
+
+header nav > a:hover {
+	color: #ff3f2c;
+}
+
+header nav > a.current {
+	font-weight: bold;
+}
+
+/* Algolia DocSearch */
+#search {
+	display: inline-block;
+	vertical-align: middle;
+}
+.DocSearch-Container {
+	color: initial;
+}
+.DocSearch-Footer {
+	margin-top: 0;
+}
+/* End Algolia DocSearch */
+
+header nav .new {
+	background-color: #ffe300;
+	font-size: 75%;
+	vertical-align: top;
+	padding: 4px 8px;
+	border-radius: 1em;
+}
+
+header nav .button {
+	margin: 0 0 0 10px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}  
+
+button,
+.button {
+	border-radius: 2em;
+	padding: 10px 20px;
+	margin: 15px 0;
+	height: auto;
+	transition: all .2s;
+	text-decoration: none;
+	display: inline-block;
+	border: 0;
+	cursor: pointer;
+}
+
+button:hover,
+.button:hover {
+	transform: scale(1.05);
+}
+
+button:active,
+.button:active {
+	transform: translateY(2px);
+}
+
+button.red,
+.button.red {
+	background-color: #d9552b;
+	color: white;
+}
+
+button.red:hover,
+.button.red:hover {
+	background-color: #fd511a;
+}
+
+button.blue,
+.button.blue {
+	background-color: #0082d0;
+	color: white;
+}
+
+button.blue:hover,
+.button.blue:hover {
+	background-color: #00aaff;
+}
+
+button.gray,
+.button.gray {
+	background-color: #4c6a79;
+	color: white;
+}
+
+button.gray:hover,
+.button.gray:hover {
+	background-color: #4f8098;
+}
+
+button.big,
+.button.big {
+	font-size: 125%;
+	text-transform: uppercase;
+	font-weight: bold;
+	padding: 20px 50px;
+	margin-right: 20px;
+}
+
+button.disabled,
+.button.disabled,
+button:disabled,
+.button:disabled {
+	background-color: #aaa !important;
+	color: white !important;
+	transform: none !important;
+	cursor: not-allowed;
+}
+
+
+p button,
+p .button {
+	font-size: 18px;
+	padding: 12px 30px;
+}
+
+
+article a:hover {
+	text-decoration: underline;
+}
+
+pre,
+code,
+kbd {
+	font-family: 'PT Mono', 'Source Code Pro', monospace;
+	padding: 3px 6px;
+	font-size: 95%;
+	line-height: 1.5em;
+}
+
+kbd {
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	font-size: 80%;
+	font-weight: bold;
+}
+
+
+footer {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 100px;
+	padding-bottom: 100px;
+	line-height: 125%;
+}
+
+footer > div {
+	width: 50%;
+}
+
+#footer-logo {
+	float: left;
+	max-width: 150px;
+	margin-right: 35px;
+	vertical-align: middle;
+	margin-top: -4px;
+}
+
+.copyright {
+	text-align: right;
+	font-size: 14px;
+	color: #999;
+}
+
+@media (max-width: 900px) {
+	header {
+		flex-direction: column;
+		gap: 1em;
+	}
+
+	#logo-container {
+		align-items: center;
+	}
+
+	header nav {
+		text-align: center;
+	}
+
+	footer {
+		flex-direction: column;
+		margin-top: 0;
+		padding: 20px 0;
+	}
+
+	footer > div {
+		width: initial;
+		text-align: center;
+		margin: 10px 0;
+	}
+
+	#footer-logo {
+		float: none;
+		display: block;
+		margin: 0 auto 25px;
+	}
+
+	.copyright {
+		text-align: center;
+	}
+}

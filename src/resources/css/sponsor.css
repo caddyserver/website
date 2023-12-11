@@ -1,0 +1,239 @@
+.hero-content {
+	padding-bottom: 0;
+}
+
+p.footnote {
+	margin-top: 2em;
+	font-size: 12px;
+}
+
+.plan {
+	--plan-border: 1px solid #eceff133;
+	border: var(--plan-border);
+	border-radius: 10px;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+:not(.overlay) .plan {
+	background-image: linear-gradient(220deg, rgba(76, 170, 255, 0.31) 0%, rgba(77, 101, 141, 0.26) 52%, rgba(112, 174, 255, 0.18) 54%, rgba(13, 58, 93, 0.08) 100%);
+}
+
+
+
+.plan-header,
+.plan-content {
+	padding: 1.5em;
+}
+
+.plan-header {
+	display: flex;
+	border-bottom: var(--plan-border);
+}
+
+.plan-name {
+	color: #fff;
+	font-size: 115%;
+	font-weight: bold;
+}
+
+.plan-price {
+	font-weight: bold;
+	margin-left: auto;
+}
+
+.plan-period {
+	font-size: 75%;
+	font-weight: normal;
+}
+
+.plan-content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	font-size: 16px;
+}
+
+.plan p,
+.plan li {
+	font-weight: normal;
+	font-size: 90%;
+	margin-top: 0;
+}
+
+.plan p {
+	margin-bottom: 1em;
+	line-height: 1.25;
+}
+
+.plan p:last-child {
+	margin-bottom: 0;
+}
+
+.plan-action {
+	margin-top: auto;
+	text-align: center;
+	font-size: 18px;
+}
+
+section ul,
+section ol {
+	margin: 1em 0;
+}
+
+section li {
+	margin: .75em 0 .75em 2.5em;
+}
+
+ul.check,
+ul.minus {
+	list-style: none;
+}
+
+ul.check li::before,
+ul.minus li.check::before,
+ul.minus li::before,
+ul.check li.minus::before {
+	display: block;
+	position: absolute;
+	margin-left: -1.75em;
+}
+
+ul.check li::before,
+ul.minus li.check::before {
+	content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' width='16' title='check' fill='%23dddddd'%3E%3Cpath d='M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z' /%3E%3C/svg%3E");
+}
+
+ul.minus li::before,
+ul.check li.minus::before {
+	content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-minus' width='24' height='24' viewBox='0 0 24 24' stroke-width='4' stroke='%23dddddd' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'%3E%3C/path%3E%3Cpath d='M5 8l11 0'%3E%3C/path%3E%3C/svg%3E");
+}
+
+
+
+
+
+
+
+/* Hover glowy effect taken from here: https://codepen.io/inescodes/pen/PoxMyvX */
+.plans {
+	position: relative;
+}
+
+.plan {
+	--hsl: var(--hue), var(--saturation), var(--lightness);
+}
+
+.plan.indie {
+	--hue: 120;
+	--saturation: 90%;
+	--lightness: 40%;
+}
+.plan.indie .plan-price { color: #38d959; }
+.plan.startup {
+	--hue: 290;
+	--saturation: 95%;
+	--lightness: 61%;
+}
+.plan.startup .plan-price { color: #e66dff; }
+.plan.business {
+	--hue: 180;
+	--saturation: 100%;
+	--lightness: 50%;
+}
+.plan.business .plan-price { color: #50e6ff; }
+.plan.enterprise {
+	--hue: 0;
+	--saturation: 0%;
+	--lightness: 50%;
+}
+.plan.enterprise .plan-price { color: white; }
+
+.overlay {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	user-select: none;
+	opacity: var(--opacity, 0);
+	-webkit-mask: radial-gradient(25rem 25rem at var(--x) var(--y),
+			#000 1%,
+			transparent 50%);
+	mask: radial-gradient(25rem 25rem at var(--x) var(--y),
+			#000 1%,
+			transparent 50%);
+	transition: 400ms mask ease;
+	will-change: mask;
+}
+
+.overlay .plan {
+	position: absolute;
+	background-color: hsla(var(--hsl), 0.15); /* alpha channel here is how intense the radial gradient is */
+	border-color: hsla(var(--hsl), 1);
+	box-shadow: 0 0 0 1px inset hsl(var(--hsl));
+}
+
+:not(.overlay) > .plan {
+	transition: 400ms background ease;
+	will-change: background;
+}
+
+.overlay .plan:nth-child(2n-1):hover{
+	background-color: hsla(var(--hsl), 0.2);
+}
+
+.plan:nth-child(2n):hover {
+	--lightness: 25%;
+	background-color: hsla(var(--hsl), 0.4);
+}
+
+/* as a special case, the enterprise ones should go dark */
+.plan.enterprise:hover {
+	background-color: rgb(0 0 0 / .75);
+}
+
+.button.purple {
+	font-size: 90%;
+
+	/* Keep the buttons above the glow effect for legibility */
+	position: relative;
+	z-index: 2;
+}
+
+
+
+
+.sides {
+	display: flex;
+	gap: 50px;
+	align-items: center;
+	margin: 100px 0;
+}
+
+.sides > * {
+	flex: 1;
+}
+
+.side-flex {
+	display: flex;
+	gap: 2em;
+	flex: 1.5;
+}
+
+
+
+
+
+
+@media (max-width: 1150px) {
+	.sides {
+		flex-direction: column;
+	}
+}
+
+@media (max-width: 700px) {
+	.side-flex {
+		flex-direction: column;
+	}
+}

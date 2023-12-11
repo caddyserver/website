@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Caddy is the best web server for HTTPS</title>
+		{{import "/includes/head.html"}}
+		{{template "head" .}}
+		<link rel="stylesheet" href="/resources/css/marketing.css">
+		<link rel="stylesheet" href="/resources/css/on-demand.css">
+		<link rel="canonical" href="https://caddyserver.com/on-demand-tls">
+	</head>
+	<body>
+		<div class="hero">
+			{{include "/includes/header.html" "dark-header"}}
+			
+			<div class="wrapper">
+				<div class="hero-content">
+					<h1>
+						You just got served
+						<div class="subheading">
+							... a dynamically-provisioned TLS certificate by Caddy!
+						</div>
+					</h1>
+				</div>
+			</div>
+		</div>
+
+		<main>
+
+			<section class="diagonal up feature">
+				<div class="wrapper">
+					<h2>
+						What happened?
+					</h2>
+					<p>
+						Caddy automatically obtained a certificate for your domain, <code>{{.Req.Host}}</code>, without any change to the server's configuration. We call this technology On-Demand TLS, and it's an exclusive feature of Caddy.
+					</p>
+					<p>
+						With On-Demand TLS, no config changes are required to serve more domains over HTTPS. This is perfect for servers hosting content or APIs for customer-owned domains because your HTTPS deployment scales as tall and wide as your business does.
+					</p>
+					<p>
+						Caddy's technology is the secret sauce of many SaaS products that offer custom domains. It generates hundreds of thousands of dollars in revenue every year while saving businesses tens of thousands of dollars in development and maintenance costs.
+					</p>
+					<p>
+						Fun fact: this feature earned standing ovations at more than one tech demo back in 2015 and 2016 when it was first introduced.
+					</p>
+				</div>
+			</section>
+
+			<section class="diagonal down gray feature">
+				<div class="wrapper">
+					<h2>
+						Easy, self-hosted HTTPS for customer domains
+					</h2>
+					<p>
+						Use On-Demand TLS to grow your custom-domain SaaS business in a matter of minutes. A minimal config looks like this:
+					</p>
+					
+					<div class="asides">
+						<div class="spacing">
+							<div class="rollover" data-rollover="rollover-abuse">
+								<h3 class="purple">1. Prevent abuse</h3>
+								<p>
+									First, you'll configure an internal endpoint that Caddy can "ask" if a certificate should be allowed for a domain. This endpoint usually looks up the domain in a list or database and returns <code>HTTP 200</code> if it's allowed. Make sure to reject domains you don't recognize. (This implies that customers have to tell your app what their domain is first.)
+								</p>
+							</div>
+							<div class="rollover" data-rollover="rollover-ondemand">
+								<h3 class="green">2. Enable On-Demand TLS</h3>
+								<p>
+									To finish, enable On-Demand TLS for a catch-all site.
+								</p>
+							</div>
+						</div>
+						<div>
+							<div class="display right">
+								{{ markdown (include "/includes/examples/on-demand.md") }}
+							</div>
+						</div>
+					</div>
+
+					<p>
+						Actual production configs typically have more, but this is the minimal configuration needed to serve domain names that aren't in your control. All that's left is for the domain owner to set their DNS records (described below).
+					</p>
+
+				</div>
+			</section>
+
+
+			<section class="diagonal up feature">
+				<div class="wrapper">
+					<h2>
+						Brilliant customer experience
+					</h2>
+					<p>
+						For domain owners, the flow is even simpler: set DNS records. The first visit to their site will provision a TLS certificate. Works like magic!
+					</p>
+					
+					<div class="asides">
+						<div class="spacing">
+							<div>
+								<h3 class="purple">1. Point DNS records</h3>
+								<p>
+									The customer sets either a CNAME record or A/AAAA records on a domain or subdomain they control, so that <i>their</i> domain resolves to <i>your</i> server's IP address.
+								</p>
+							</div>
+							<!-- <div class="rollover" data-rollover="rollover-ondemand">
+								<h3 class="green">2. Visit site</h3>
+								<p>
+									Once the DNS propagates, the first request with their domain to your server will provision a TLS certificate.
+								</p>
+							</div> -->
+						</div>
+						<div>
+							<div class="display right">
+								<code class="light"><span class="comment"># Customer's DNS (example domains)</span>
+your-app.customer.com   CNAME  ->  your-app.com
+
+<span class="comment"># Your DNS (example IPs)</span>
+your-app.com            A      ->  198.51.100.1
+your-app.com            AAAA   ->  2001:db8:: 
+</code>
+							</div>
+						</div>
+					</div>
+
+					<p>
+						There is no step 2. Caddy will obtain and serve a certificate for their domain as soon as a connection is made to it. Caddy keeps the certificates renewed as long as connections keep coming in. Once they stop, Caddy will let the certificate expire and then delete it automatically.
+					</p>
+					<p>
+						And that is how you save tens of thousands of dollars in development and infrastructure costs every year.
+					</p>
+				</div>
+			</section>
+
+		</main>
+
+
+		{{include "/includes/footer.html"}}
+	</body>
+</html>

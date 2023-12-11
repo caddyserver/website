@@ -1,0 +1,103 @@
+{{ include "/includes/quick-assist/structure.html" }}
+<script>
+document.addEventListener('alpine:init', () => {
+	Alpine.data('quick_assist', () => ({
+		current: 'start',
+		crumbs: [],
+		structure: quickAssistStructure,
+
+		getQuestion() {
+			const data = this.structure[this.current];
+			return data ? (data.title ?? data.prompt) : "";
+		},
+		getContent() {
+			const content = document.getElementById(`qa-content-${this.current}`);
+			return content ? content.innerHTML : "";
+		},
+		getOptions() {
+			const data = this.structure[this.current];
+			return data ? (data.options ?? []) : [];
+		},
+		hasNext() {
+			return this.getOptions().some(opt => opt.next);
+		},
+		crumbTitle(crumb) {
+			if (crumb.title) {
+				return crumb.title;
+			}
+			const data = this.structure[crumb.id];
+			return data ? (data.title ?? data.prompt) : "";
+		},
+		goto(next, title = null) {
+			if (!next) return true;
+
+			// Do nothing if last crumb is the same as the next state
+			const count = this.crumbs.length;
+			if (count && this.crumbs[count - 1].id === next) return true;
+			
+			// Change the page
+			this.current = next;
+
+			// Read backwards through the crumbs and if we find it pop everything after it
+			for (let i = count - 1; i >= 0; i--) {
+				if (this.crumbs[i].id === next) {
+					this.crumbs.splice(i + 1);		
+					return false;
+				}
+			}
+
+			// Insert the crumb
+			this.crumbs.push({ id: next, title: title });
+			return false;
+		},
+		reset() {
+			this.current = 'start';
+			this.crumbs = [];
+		}
+	}));
+});
+</script>
+
+<div x-data="quick_assist" class="box box-filled box-capped quick-assist">
+	<div class="box-cap quick-assist-history">
+		<a title="Click quick for slick trick (not AI)" @click="reset()">Quick Assist</a>
+		<template x-for="crumb in crumbs">
+			<a x-text="crumbTitle(crumb)" @click="goto(crumb.id)" />
+		</template>
+	</div>
+	<div>
+		<h3 class="quick-assist-question" x-text="getQuestion()"></h3>
+		<div class="quick-assist-content" x-html="getContent()"></div>
+		<div class="quick-assist-options">
+			<template x-for="opt in getOptions()">
+				<div>
+					<a
+						x-show="opt.href ?? false"
+						:href="opt.href"
+						x-text="opt.text ?? ''"
+						class="button reset"
+					/>
+					<a
+						x-show="!opt.href"
+						@click.prevent="goto(opt.next, opt.crumb ?? opt.text)"
+						x-text="opt.text ?? ''"
+						class="button reset"
+					/>
+				</div>
+			</template>
+			<a
+				x-show="!hasNext()"
+				@click="reset()"
+				class="button reset"
+			>
+				Reset
+			</a>
+		</div>
+	</div>
+</div>
+
+
+<!-- All the markdown content is hidden by default and loaded by ID -->
+<div style="display: none;">
+{{ markdown (include "/includes/quick-assist/content.md") }}
+</div>

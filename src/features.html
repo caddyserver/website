@@ -1,0 +1,1726 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>All features of the Caddy Web Server</title>
+		{{import "/includes/head.html"}}
+		{{template "head" .}}
+		<link rel="stylesheet" href="/resources/css/marketing.css{{template "cacheBust"}}">
+		<link rel="stylesheet" href="/resources/css/features.css{{template "cacheBust"}}">
+	</head>
+	<body>
+		<div class="hero">
+			{{include "/includes/header.html" "dark-header"}}
+			
+			<div class="wrapper">
+				<div class="hero-content">
+					<h1>
+						All features
+						<div class="subheading">
+							You might want to sit down for this.
+						</div>
+					</h1>
+				</div>
+			</div>
+		</div>
+
+		<main>
+
+			<section class="diagonal up feature">
+				<div class="wrapper">
+					<div class="legend">
+						Features in <span class="nonstandard">this color</span> are provided by optional plugins.
+					</div>
+
+					<h2>
+						Overview
+					</h2>
+					<p>
+						Caddy is essentially a configuration management system that can run various apps like an HTTP server, TLS certificate manager, PKI facilities, and more. It can be extended with plugins known as config modules.
+					</p>
+					<p>
+						Caddy sports a flexible and powerful HTTP reverse proxy, on-line configuration API, and a robust, production-ready static file server, and serves all sites over HTTPS by default with automagic TLS certificates.
+					</p>
+
+					<h3 class="green">Overall program technical specifications</h3>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>Language</h4>
+							<div class="benefits">
+								The language choice is crucial for a web server. Language impacts development speed and ease, performance, testing, deployment complexity, ecosystem reliability, dependencies, tooling, error handling and reliability, and much, much more. Go offers strong advantages in all these areas, allowing for rapid development, robust production performance, and high scalability.
+							</div>
+							<div class="detail">
+								Go
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Memory safety guarantees</h4>
+							<div class="benefits">
+								Most servers (NGINX, Apache, HAProxy, etc.) and their dependencies are written in C, which are vulnerable to catastrophic memory safety bugs (such as buffer overflows) like Heartbleed. Go programs like Caddy are impervious to a whole class of security vulnerabilities.
+							</div>
+							<div class="detail">
+								Strong
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Build artifacts</h4>
+							<div class="benefits">
+								Caddy compiles directly to native CPU instructions. There is no interpreter required; and many instructions are architecture-optimized. Static binaries are also <a href="https://www.phoronix.com/news/Glibc-LD-Nasty-Root-Bug">more secure</a> because there is no dynamic linking.
+							</div>
+							<div class="detail">
+								Platform-native static binary
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Runtime dependencies</h4>
+							<div class="benefits">
+								Caddy is statically compiled. Dynamically-linked applications can easily break in production and <a href="https://www.qualys.com/2023/10/03/cve-2023-4911/looney-tunables-local-privilege-escalation-glibc-ld-so.txt">may be less secure</a> as shared executable resources are loaded from various places around the system. Generally, Caddy binaries do not necessarily require external libraries &mdash; not even libc.
+							</div>
+							<div class="detail">
+								None
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Compile time</h4>
+							<div class="benefits">
+								On consumer hardware, standard Caddy builds compile in just a few seconds. This is crucial for rapid iteration, plugin development, and low-cost deployments. Other servers written in C/C++ can take several minutes.
+							</div>
+							<div class="detail">
+								~30 seconds cold build,<br>~2 seconds hot
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Deployment environments</h4>
+							<div class="benefits">
+								Caddy can go practically anywhere and be deployed a variety of ways. In general, upgrading is as simple as replacing the binary.
+							</div>
+							<ul class="detail">
+								<li>Command line interface</li>
+								<li>System service</li>
+								<li>Containers</li>
+								<li>Kubernetes</li>
+								<li>Embedded</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Supply chain and releases</h4>
+							<div class="benefits">
+								Go modules verify the integrity of our dependencies and we cryptographically sign our release artifacts so you know what you can trust.
+							</div>
+							<div class="detail">
+								Cryptographically verified
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Operating systems</h4>
+							<div class="benefits">
+								Caddy runs on every major platform for which Go compiles.
+							</div>
+							<ul class="detail">
+								<li>Linux</li>
+								<li>Windows</li>
+								<li>macOS</li>
+								<li>FreeBSD</li>
+								<li>OpenBSD</li>
+								<li>NetBSD</li>
+								<li>Android</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Microarchitectures</h4>
+							<div class="benefits">
+								Run Caddy with native code on numerous CPU platforms.
+							</div>
+							<ul class="detail">
+								<li>x86 (i386, i686)</li>
+								<li>x86-64 (AMD64)</li>
+								<li>ARM</li>
+								<li>ARM 64 (AArch64)</li>
+								<li>MIPS</li>
+								<li>MIPS64[LE]</li>
+								<li>PPC64[LE]</li>
+								<li>RISCV64</li>
+								<li>S390X</li>
+								<li>Apple Silicon (Apple ARM; M1, M2, etc.)</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Regular expression engine</h4>
+							<div class="benefits">
+								Caddy's regular expression language is <a href="https://swtch.com/~rsc/regexp/regexp1.html">based on the Thompson NFA and has numerous performance improvements over PCRE</a> used by other web servers. It guarantees the runtime cost increases linearly instead of exponentially. This is ideal when evaluating untrusted input.
+								<p>
+									<a href="https://github.com/google/re2/wiki/Syntax">RE2 Syntax</a>
+								</p>
+							</div>
+							<div class="detail">
+								RE2
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Concurrency model</h4>
+							<div class="benefits">
+								Go's runtime optimizes scheduled CPU time in smarter ways than the operating system can using lightweight user-space threads called goroutines. Caddy utilizes all CPU cores and easily handles hundreds of thousands of requests per second.
+							</div>
+							<div class="detail">
+								Goroutines (epoll + kqueue)
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Plugin model</h4>
+							<div class="benefits">
+								Caddy can be extended by compile-time plugins, which compile as native code, in a way that cannot be broken during deployments or by system upgrades. With no IPC or RPC calls, Caddy extensions perform equally well with native code.
+							</div>
+							<div class="detail">
+								Compile-time static
+							</div>
+						</div>
+					</div>
+
+					<h3 class="purple">High-level capabilities</h3>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>Configuration changes</h4>
+							<div class="benefits">
+								With zero-downtime graceful reloads, Caddy's configuration can be changed while it is running. It's programmable/scriptable for powerful automation.
+							</div>
+							<ul class="detail">
+								<li>RESTful HTTP API</li>
+								<li>Config files</li>
+								<li>Secure remote access</li>
+								<!-- <li>Optimistic concurrency</li> -->
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>App modules</h4>
+							<div class="benefits">
+								Top-level configuration structures are called app modules, or Caddy apps. They provide the bulk of Caddy's functionality. Anyone can write app modules, and Caddy comes with several standard apps built-in.
+							</div>
+							<ul class="detail">
+								<li>HTTP</li>
+								<li>TLS</li>
+								<li>PKI</li>
+								<li>Events</li>
+								<li class="nonstandard">Raw TCP & UDP</li>
+								<li class="nonstandard">SSH</li>
+								<li class="nonstandard">PHP</li>
+								<li class="nonstandard">Dynamic DNS</li>
+								<li class="nonstandard">Security</li>
+								<li class="nonstandard">Process supervision</li>
+								<li class="nonstandard">Profiling</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Logs</h4>
+							<div class="benefits">
+								All Caddy modules use Caddy's centralized logging facilities. Caddy's logging can be configured as to format, verbosity, output, and more.
+							</div>
+							<ul class="detail">
+								<li>Leveled</li>
+								<li>Structured</li>
+								<li>High efficiency, zero-allocation</li>
+								<li>Extensible</li>
+								<li>Delete, filter, redact, and censor fields</li>
+								<li>IP masking</li>
+								<li>Hash values</li>
+								<li>Regex replacement</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Storage</h4>
+							<div class="benefits">
+								Assets and state, including certificates and OCSP staples, are stored in configurable storage backends. In fact, multiple instances of Caddy configured with the same storage are considered part of a cluster and can coordinate automatically.
+							</div>
+							<ul class="detail">
+								<li>File system</li>
+								<li>Embedded (in-memory)</li>
+								<li class="nonstandard">Postgres</li>
+								<li class="nonstandard">Redis</li>
+								<li class="nonstandard">Vault</li>
+								<li class="nonstandard">Consul</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</section>
+
+
+
+
+
+
+			<section class="diagonal down gray feature">
+				<div class="wrapper">
+					<h2>
+						Command line interface
+					</h2>
+					<p>
+						Caddy's CLI is not only useful&mdash;it's <i>helpful</i>. While most server CLIs merely run the process and reload config, Caddy's CLI goes the extra lightyear to help make administering your modern web server a breeze.
+					</p>
+					<p>
+						Plugins can register their own subcommands to extend Caddy's CLI. 
+					</p>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>Command help</h4>
+							<div class="benefits">
+								If you misspell a command or flag, miss an argument, or don't know the subcommand, help text is automatically printed. You can also access overall command help or subcommand help with <code>caddy help</code> or <code>-h</code>.
+							</div>
+							<div class="detail">
+								Built-in, automatic (<code>man</code> pages can also be generated)
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Admin API wrappers</h4>
+							<div class="benefits">
+								Several subcommands use administration API endpoints for use with the CLI to help you perform common tasks like loading config from files or stopping the server.
+							</div>
+							<ul class="detail">
+								<li>Adapt config to JSON</li>
+								<li>Start the server, optionally with config</li>
+								<li>Gracefully reload configuration</li>
+								<li>Stop the server</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Binary utilities</h4>
+							<div class="benefits">
+								Since custom builds of Caddy are so common, several commands exist to help you manage and get detailed information about your build.
+							</div>
+							<ul class="detail">
+								<li>Detailed build metadata</li>
+								<li>List installed config modules</li>
+								<li>List dependencies</li>
+								<li>Add and remove plugin packages</li>
+								<li>Print the version</li>
+								<li>Upgrade the Caddy binary</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Configuration utilities</h4>
+							<div class="benefits">
+								If you choose to use configuration files, Caddy's CLI helps you manage them.
+							</div>
+							<ul class="detail">
+								<li>Format Caddyfile</li>
+								<li>Validate configuration</li>
+								<li>List dependencies</li>
+								<li>Add and remove plugin packages</li>
+								<li>Print the version</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Module utilities</h4>
+							<div class="benefits">
+								Modules may register their own subcommands to provide common functionality that can be utilized without a config document.
+							</div>
+							<ul class="detail">
+								<li>Static file server</li>
+								<li>HTTP reverse proxy</li>
+								<li>Static HTTP responses (templateable)</li>
+								<li>Storage import/export (backup/restore)</li>
+								<li>Hash password for use with HTTP basic auth</li>
+								<li>Export file browse template</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Integration utilities</h4>
+							<div class="benefits">
+								Several subcommands can help you integrate Caddy into your shell environment.
+							</div>
+							<ul class="detail">
+								<li>Generate shell completion script</li>
+								<li>Print the environment</li>
+								<li>Generate <code>man</code> pages</li>
+								<li>Install Caddy-managed root CA into trust stores</li>
+								<li>Remove Caddy-managed root CA from trust stores</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>System signals</h4>
+							<div class="benefits">
+								Caddy has support for common operating system signals/interrupts, with subtle differences in behavior for each one.
+								<p>
+									<a href="/docs/command-line#signals">Signal documentation</a>
+								</p>
+							</div>
+							<ul class="detail">
+								<li>INT (graceful stop)</li>
+								<li>QUIT</li>
+								<li>TERM</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Exit codes</h4>
+							<div class="benefits">
+								Whether Caddy exits successfully or with an error, the <a href="/docs/command-line#exit-codes">exit code</a> can give a hint to your process supervisor or script how to handle that.
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</section>
+
+
+			<section class="feature">
+				<div class="wrapper">
+					<h2>
+						Configuration
+					</h2>
+					<p>
+						We've designed Caddy so that its configuration not only provides access to features, but <i>it IS a feature</i> in and of itself.
+					</p>
+					<p>
+						No more quibbling over which config file format is the best: use whatever you want! Caddy's <a href="/docs/config-adapters">config adapters</a> allow you to use whatever config format you prefer.
+					</p>
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>Native config format</h4>
+							<div class="benefits">
+								Caddy's native configuration format is ubiquitous: it has tooling in nearly every operating system, platform, programming language, and API ecosystem. Almost all other formats can be translated down into JSON, which balances human readability and programmability. You'll find it a powerful ally of your web server.
+							</div>
+							<div class="detail">
+								JSON
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Config adapters</h4>
+							<div class="benefits">
+								You can always write your config in another format and with config adapters, Caddy will implicitly translate it into JSON for you so you can work with what you like.
+							</div>
+							<ul class="detail">
+								<li>Caddyfile</li>
+								<li class="nonstandard">JSON 5</li>
+								<li class="nonstandard">JSON-C</li>
+								<li class="nonstandard">NGINX Conf</li>
+								<li class="nonstandard">YAML</li>
+								<li class="nonstandard">CUE</li>
+								<li class="nonstandard">TOML</li>
+								<li class="nonstandard">HCL</li>
+								<li class="nonstandard">Dhall</li>
+								<li class="nonstandard">MySQL</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Human-friendly config</h4>
+							<div class="benefits">
+								The Caddyfile is most users' favorite way to write their web server config by hand because its syntax is forgiving while also being designed with a structure that makes it easy to read and write. It is translated to JSON automatically.
+							</div>
+							<div class="detail">
+								Caddyfile
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Export</h4>
+							<div class="benefits">
+								Caddy's administration API allows you to have runtime access to the current configuration in JSON format with a simple GET request.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Config API</h4>
+							<div class="benefits">
+								Caddy receives its configuration through an API endpoint, which can accept JSON or any other format it has a config adapter for.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Config files</h4>
+							<div class="benefits">
+								If you prefer normal shell commands for managing configuration, Caddy's CLI wraps the API endpoints for you.
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</section>
+
+
+
+
+			<section class="diagonal up dark feature">
+				<div class="wrapper">
+					<h2>
+						Automatic HTTPS
+					</h2>
+					<p>
+						Our flagship feature, powered by <a href="https://github.com/caddyserver/certmagic">CertMagic</a>. Caddy is the first and only major server that enables HTTPS by default, and automatically procures and renews certificates for all your sites.
+					</p>
+					<p>
+						Fully-native, integrated auto-HTTPS is far superior to any solution that requires external tooling or cron jobs. Caddy's certificate maintenance is the best in the industry because it is more robust, reliable, and scalable than any other solution. Caddy simplifies your infrastructure instead of complexifying it.
+					</p>
+					<p>
+						Sure, you can try deploying 100,000 sites with Certbot and a cron job&mdash;but if that doesn't fall over by itself, the web server will. Only Caddy is designed to massively scale TLS certificates both horizontally and vertically.
+					</p>
+					<p>
+						Never manually generate a CSR again. Never click a link in an email to download a certificate. Never (mis)configure your web server to use them. Never miss reminders to renew your certificates, one-by-one, every few months before they expire. You won't even have to think about certificates or TLS.
+					</p>
+					<p>
+						It's truly automagic.
+					</p>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>Compliance</h4>
+							<div class="benefits">
+								Caddy's TLS <i>defaults</i> are secure without any additional configuration, and passes compliance tests across various industries.
+							</div>
+							<ul class="detail">
+								<li>PCI DSS compliant</li>
+								<li>NIST compliant</li>
+								<li>HIPAA compliant</li>
+								<li>Industry best practices</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>On-Demand TLS</h4>
+							<div class="benefits">
+								Serving domains that aren't yours? Or have lots of them? No problem! With just a few lines of config, On-Demand TLS gets certificates dynamically during TLS handshakes, scaling your deployments to tens of thousands of certs. This functionality is exclusive to Caddy.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Certificate issuers</h4>
+							<div class="benefits">
+								Get certificates from any issuing authority in a way compatible with them. Certificate issuers take a CSR and return a certificate resource. Most sites will simply use ACME to get certificates. But Caddy can also issue its own self-signed certificates for internal use, testing, or development. Caddy's issuer sources are pluggable, so Caddy can automate certificates from any issuer modules.
+							</div>
+							<ul class="detail">
+								<li>ACME</li>
+								<li>Internal (self-signed)</li>
+								<li class="nonstandard">Microsoft Active Directory Certificate Services</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Certificate managers</h4>
+							<div class="benefits">
+								Unlike issuers, which take a CSR and return a certificate that Caddy has to manage, certificate managers are modules that can return always-valid certificates on-demand; that is, they are managing the certificates for us. Caddy can get interface with HTTP endpoints or Tailscale to get certificates in this manner, with other ways available through plugins.
+							</div>
+							<ul class="detail">
+								<li>HTTP</li>
+								<li>Tailscale</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Cluster coordination</h4>
+							<div class="benefits">
+								Across all Caddy instances configured with the same storage, Caddy automatically coordinates and shares resources across the cluster. This includes certificate operations and the certificates themselves, OCSP staples, and session ticket keys. This results in reduced latency for your clients and higher scalability.
+							</div>
+							<ul class="detail">
+								<li>Obtaining &amp; renewing certificates</li>
+								<li>Loading existing certificates</li>
+								<li>OCSP staples</li>
+								<li>Session ticket keys (STEKs)</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Redirect HTTP to HTTPS</h4>
+							<div class="benefits">
+								By default, HTTP requests will be redirected to HTTPS.
+							</div>
+							<div class="detail">
+								Automatic redirects
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>OCSP</h4>
+							<div class="benefits">
+								OCSP indicates when certificates are revoked. Servers should staple OCSP responses to certificates to provide clients with better security and privacy. Caddy is the first and only server to do this automatically and by default. It also caches responses to weather OCSP responder outages, and shares them across its cluster. This can all be disabled if needed.
+							</div>
+							<div class="detail">
+								Automatic OCSP stapling with caching
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Must-Staple</h4>
+							<div class="benefits">
+								Caddy can obtain certificates that force OCSP stapling if the CA supports it. This may grant a higher degree of security in the case of revocation.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Revocation handling</h4>
+							<div class="benefits">
+								Revoked certificates automatically get replaced. Because Caddy staples and refreshes OCSP responses, it can detect if your certificate has been revoked, and if so, it will replace i
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Session ticket hardening</h4>
+							<div class="benefits">
+								TLS connections are pointless if an attacker steals the key to encrypt session tickets. Caddy has been <a href="https://jhalderm.com/pub/papers/forward-secrecy-imc16.pdf">academically cited</a> as the only server to rotate these keys regularly to limit attack windows.
+							</div>
+							<div class="detail">
+								Automatic STEK rotation
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Key types</h4>
+							<div class="benefits">
+								You can customize the type of key used for your certificates.
+							</div>
+							<ul class="detail">
+								<li>Ed25519</li>
+								<li>ECDSA P256</li>
+								<li>ECDSA P384</li>
+								<li>RSA 2048</li>
+								<li>RSA 4096</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Certificate lifetimes</h4>
+							<div class="benefits">
+								<p>Most ACME clients assume 90-day certificates, or don't expect certificates shorter than 7 days. Caddy can successfully manage certificates with lifetimes on the order of hours and minutes.</p>
+								<p>Instead of hard-coding a certain age before renewing, Caddy computes the age relative to the lifespan of each certificate, called a Renewal Window Ratio. By default, Caddy renews certificates after 2/3 of their usable lifetime. This ratio works for most validity periods, but can be adjusted.</p>
+							</div>
+							<div class="detail">
+								Any lifetime
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Intelligent error handling</h4>
+							<div class="benefits">
+								If Caddy can't get a certificate, errors are logged and Caddy will backoff exponentially and retry as long as needed until it succeeds (typically up to 30 days but could be longer). Caddy makes every reasonable effort to keep your certificate renewed.
+							</div>
+							<div class="detail">
+								Exponential backoff
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Built-in throttling</h4>
+							<div class="benefits">
+								Caddy conforms to best practices and doesn't blast CAs with requests for certificates; instead, each order is carefully timed to avoid overwhelming CA servers.
+							</div>
+						</div>
+					</div>
+
+					<h3 class="purple">ACME</h3>
+
+					<p>
+						Caddy's ACME client is best-in-class, with higher reliability and more production experience than any other integrated ACME client available today. Caddy has been using ACME since before the public availability of Let's Encrypt, and Caddy works with any ACME-compatible CA.
+					</p>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>Compatibility</h4>
+							<div class="benefits">
+								Some ACME clients are only tested with Let's Encrypt. Caddy is guaranteed compatible with all ACME-capable CAs.
+							</div>
+							<div class="detail">
+								All RFC 8555-compliant certificate authorities, such as:
+								<ul>
+									<li>Let's Encrypt</li>
+									<li>ZeroSSL</li>
+									<li>Google Trust Services</li>
+									<li>BuyPass</li>
+									<li>DigiCert</li>
+									<li>GlobalSign</li>
+									<li>SSL.com</li>
+									<li>Smallstep</li>
+								</ul>
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Test endpoints</h4>
+							<div class="benefits">
+								By default, Caddy will fall back to a CA's test or staging endpoint (if there is one) after a failed attempt at getting a certificate to avoid hitting CA-enforced production rate limits. This could also be an ACME server you set up solely for the purpose of validating DNS configurations.
+							</div>
+							<div class="detail">
+								Let's Encrypt (others configurable)
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>External account binding</h4>
+							<div class="benefits">
+								Optionally configure External Account Binding (EAB) to enable Caddy to work with CAs that require you to have a separate account with them.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Challenge types</h4>
+							<div class="benefits">
+								Caddy supports all major ACME challenge types for Web PKI and can also be extended to support others.
+							</div>
+							<ul class="detail">
+								<li>HTTP-01</li>
+								<li>TLS-ALPN-01</li>
+								<li>DNS-01</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Alternate challenge ports</h4>
+							<div class="benefits">
+								While certain ACME challenges must use the standardized ports 80 and 443, Caddy supports listening for these on alternate ports if you are forwarding them through a router.
+							</div>
+							<ul class="detail">
+								<li>HTTP (default 80)</li>
+								<li>TLS-ALPN (default 443)</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Smart challenge selection</h4>
+							<div class="benefits">
+								Caddy learns what challenge types are most likely to succeed and tries those first. For example, if port 80 is blocked, it will learn to prefer the TLS-ALPN challenge which does not use port 80.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>DNS challenge integrations</h4>
+							<div class="benefits">
+								The DNS challenge is the only one that does not require the CA being able to access your server. Solve the DNS challenge with integrations for dozens of DNS providers via <a href="https://github.com/libdns">libdns</a>. <b>This list is incomplete;</b> <a href="https://github.com/caddy-dns">see the full list of DNS providers</a>.
+							</div>
+							<ul class="detail">
+								<li class="nonstandard">ACME-DNS</li>
+								<li class="nonstandard">AliDNS</li>
+								<li class="nonstandard">Cloudflare</li>
+								<li class="nonstandard">DigitalOcean</li>
+								<li class="nonstandard">DNSPod</li>
+								<li class="nonstandard">DuckDNS</li>
+								<li class="nonstandard">DynDNS</li>
+								<li class="nonstandard">EasyDNS</li>
+								<li class="nonstandard">Gandi</li>
+								<li class="nonstandard">GoDaddy</li>
+								<li class="nonstandard">Google Cloud DNS</li>
+								<li class="nonstandard">Hetzner</li>
+								<li class="nonstandard">Linode</li>
+								<li class="nonstandard">Name.com</li>
+								<li class="nonstandard">Namecheap</li>
+								<li class="nonstandard">Namesilo</li>
+								<li class="nonstandard">Netlify</li>
+								<li class="nonstandard">OVH</li>
+								<li class="nonstandard">Porkbun</li>
+								<li class="nonstandard">PowerDNS</li>
+								<li class="nonstandard">RFC 2136</li>
+								<li class="nonstandard">Route 53</li>
+								<li class="nonstandard">Scaleway</li>
+								<li class="nonstandard">Vercel</li>
+								<li class="nonstandard">Vultr</li>
+								<li><a href="https://github.com/caddy-dns">See all...</a></li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Trusted CA certificates</h4>
+							<div class="benefits">
+								Optionally configure root certificates you trust when interacting with your CA of choice; this is helpful for internal PKI where trust is established without public CAs.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Preferred chains</h4>
+							<div class="benefits">
+								When the CA offers multiple certificate chains, Caddy gives you the ability to customize which one to download and use.
+							</div>
+							<ul class="detail">
+								<li>Smallest</li>
+								<li>CommonName of root</li>
+								<li>CommonName of any</li>
+							</ul>
+						</div>
+					</div>
+
+				</div>
+			</section>
+
+
+
+
+
+			<section class="diagonal down feature">
+				<div class="wrapper">
+					<h2>
+						HTTP server
+					</h2>
+					<p>
+						Caddy's HTTP server is one-of-a-kind: powerful, extensible, efficient, and modern.
+					</p>
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>HTTP versions</h4>
+							<div class="benefits">
+								Caddy's HTTP server supports all major versions of HTTP and enables them by default (except H2C which is insecure, but available). You can customize exactly which versions you want to serve.
+							</div>
+							<ul class="detail">
+								<li>HTTP/1.1</li>
+								<li>HTTP/2</li>
+								<li>HTTP/2 over cleartext (H2C)</li>
+								<li>HTTP/3</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>HTTPS</h4>
+							<div class="benefits">
+								Caddy's flagship feature is enabling HTTPS automatically and by default. You can control how it works or disable aspects: HTTP redirects, certificate management, certain hostnames, etc.
+							</div>
+							<div class="detail">
+								Automatic
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Listen interfaces</h4>
+							<div class="benefits">
+								Each HTTP server can bind to one or more sockets and network interfaces. For ports, you can specify specific host interface or all interfaces with just a port. All varieties of unix sockets are also supported.
+							</div>
+							<ul class="detail">
+								<li>TCP</li>
+								<li>UDP</li>
+								<li>Unix sockets</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Listener wrappers</h4>
+							<div class="benefits">
+								Listeners can be wrapped by modules that operate at the connection-accept level.
+							</div>
+							<ul class="detail">
+								<li>Redirect HTTP on HTTPS port</li>
+								<li>PROXY protocol</li>
+								<li class="nonstandard">Tailscale</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Timeouts</h4>
+							<div class="benefits">
+								Setting timeouts is an important defensive measure for production environments, but must be tuned carefully to accommodate legitimate slow clients with large downloads or uploads.
+							</div>
+							<ul class="detail">
+								<li>Read timeout</li>
+								<li>Read HTTP header timeout</li>
+								<li>Write timeout</li>
+								<li>Idle timeout</li>
+								<li>TCP keepalive interval</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Full duplex communication</h4>
+							<div class="benefits">
+								Concurrent reading and writing of HTTP/1 is not supported by all clients, but can be enabled for certain clients and applications that require it.
+							</div>
+							<ul class="detail">
+								<li>Configurable for HTTP/1</li>
+								<li>Default for HTTP/2</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Error handling</h4>
+							<div class="benefits">
+								Caddy gives you full control over handling errors to give you clients the best/desired experience.
+							</div>
+							<div class="detail">
+								Custom error routes
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>TLS termination</h4>
+							<div class="benefits">
+								Terminate TLS (formerly "SSL") with sensible defaults that you can customize to give you fine-grained control over TLS handshakes. You can assign policies to clients based on various factors such as ServerName (SNI) or remote IP.
+							</div>
+							<ul class="detail">
+								<li>TLS 1.2</li>
+								<li>TLS 1.3</li>
+								<li>Client authentication (TLS mutual auth; mTLS)</li>
+								<li>Client auth modes: request, require, verify if given, require and verify</li>
+								<li>Cipher suites</li>
+								<li>Curves</li>
+								<li>ALPN</li>
+								<li>Limit protocol versions</li>
+								<li>Default SNI</li>
+								<li>Fallback SNI</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Cross-site security</h4>
+							<div class="benefits">
+								Caddy often serves multiple sites on the same socket, so Caddy automatically enables protections to keep your sites safe if any of them have TLS client auth enabled.
+							</div>
+							<div class="detail">
+								Verification that TLS ServerName and HTTP Host header match
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Access logs</h4>
+							<div class="benefits">
+								Enable zero-allocation, structured access logs for the ultimate understanding of client requests and responses. Customize using Caddy's built-in logging configuration or the use of third-party modules.
+							</div>
+							<ul class="detail">
+								<li>More useful than Common Log Format (CLF)</li>
+								<li>Request headers (except sensitive fields)</li>
+								<li>Response headers</li>
+								<li>Remote IP</li>
+								<li>Latency</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Observability</h4>
+							<div class="benefits">
+								Your web server can be monitored using standards-compatible metrics.
+							</div>
+							<div class="detail">
+								Prometheus metrics, open telemetry
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Request handling</h4>
+							<div class="benefits">
+								The HTTP server handles requests using custom routes consisting of specific handlers in the order you define. A separate error route can be defined for custom error handling. You have a high degree of flexibility with HTTP handling. See below for available HTTP handler modules.
+							</div>
+							<div class="detail">
+								Composable routes (and separate error handling routes)
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Request filters</h4>
+							<div class="benefits">
+								Apply handlers to only certain requests using matchers, which classify requests based on various properties. Matchers are also used for filtering. They are extensible and pluggable, so there's no limit to how specific and custom your routes can be! Some matchers support regular expressions. All are quite fast. And matchers can be combined in sets so they can be joined with AND, OR, and NOT logic.
+							</div>
+							<ul class="detail">
+								<li>Host</li>
+								<li>Path </li>
+								<li>Method</li>
+								<li>Headers</li>
+								<li>Protocol</li>
+								<li>Remote IP</li>
+								<li>Arbitrary CEL expression</li>
+								<li>File (existence, size, modify date)</li>
+								<li>HTTP route variable</li>
+								<li>Logical NOT</li>
+								<li class="nonstandard">Geolocation</li>
+								<li class="nonstandard">Remote host</li>
+							</ul>
+						</div>
+					</div>
+
+					<h3 class="blue">HTTP handlers</h3>
+
+					<p>
+						Handlers are modules that can be composed together to handle incoming requests precisely the way you want. Handler modules are, like the rest of Caddy, extensible and pluggable. It is not really feasible for us to list all the handlers here.
+					</p>
+					<p>
+						In practice, handlers are paired with matchers which filter or classify requests based on various properties such as their path, headers, query string, method, and more. This allows you to selectively apply any and all of these handlers to certain requests.
+					</p>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>ACME server</h4>
+							<div class="benefits">
+								Right out of the box, Caddy ships with a production-ready ACME server, perfect for your internal PKI. Automate mTLS certificates inside your infrastructure with ease. Powered by <a href="https://smallstep.com">Smallstep</a> libraries.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4 class="nonstandard">Authelia</h4>
+							<div class="benefits">
+								Secure routes with authentication using Authelia.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Authentication</h4>
+							<div class="benefits">
+								Authenticate users with an extensible authentication module. Extended by auth providers, this handler returns an error if the user cannot be authenticated by any configured providers. HTTP basicauth is included standard, and unlike other servers, passwords are hashed when setting up basicauth (since it's essentially a password database), enhancing security.
+							</div>
+							<ul class="detail">
+								<li>HTTP Basic authentication</li>
+								<li class="nonstandard">JWT</li>
+								<li class="nonstandard">Discord</li>
+								<li class="nonstandard">Forms</li>
+								<li class="nonstandard">SAML</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4 class="nonstandard">Advanced auth</h4>
+							<div class="benefits">
+								With a full suite of authentication and authorization features, the caddy-security module provides a variety of robust auth solutions.
+							</div>
+							<ul class="detail nonstandard">
+								<li>Form-based</li>
+								<li>Local</li>
+								<li>Basic</li>
+								<li>LDAP</li>
+								<li>OpenID Connect</li>
+								<li>OAuth 2</li>
+								<li>SAML</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4 class="nonstandard">Cache</h4>
+							<div class="benefits">
+								Easily enable caching to serve more clients and increase performance. This cache module is compliant with RFC 7234 and supports tag-based cache purge, distributed and local storage, key generation tweaking, and more. Multiple backends are supported!
+							</div>
+							<ul class="detail nonstandard">
+								<li>Badger</li>
+								<li>Etcd</li>
+								<li>NutsDB</li>
+								<li>Olric</li>
+								<li>Redis</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Encode</h4>
+							<div class="benefits">
+								Compress, encode, or otherwise transform HTTP responses on-the-fly with pluggable encoding modules. Compressing responses is as easy as a single line of configuration, and encodings won't be applied to responses that are already in a compressed format or are too small to be worthwhile.
+							</div>
+							<ul class="detail">
+								<li>Gzip</li>
+								<li>Zstandard (zstd)</li>
+								<li class="nonstandard">Brotli</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>File server</h4>
+							<div class="benefits">
+								A powerful, flexible, and efficient static file server that is described in detail below.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4 class="nonstandard">Go package vanity paths</h4>
+							<div class="benefits">
+								A simple handler that implements vanity import paths for Go packages.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4 class="nonstandard">gRPC-Web bridging</h4>
+							<div class="benefits">
+								Bridge/convert gRPC-Web requests to gRPC for your backend app.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Header manipulation</h4>
+							<div class="benefits">
+								Modify HTTP request and response headers. Adding, setting, deleting, and replacing substrings in header fields is fast, but regular expressions are also supported for advanced use. Response header manipulations can be deferred until the very end when the response starts to be written, and can even be made conditional on response status code or header values.
+							</div>
+							<ul class="detail">
+								<li>Add</li>
+								<li>Set (overwrite)</li>
+								<li>Delete</li>
+								<li>Substring replace</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4 class="nonstandard">Image filtering</h4>
+							<div class="benefits">
+								Perform adjustments on images on-the-fly.
+							</div>
+							<ul class="detail nonstandard">
+								<li>Crop</li>
+								<li>Fit</li>
+								<li>Flip</li>
+								<li>Resize</li>
+								<li>Rotate</li>
+								<li>Sharpen</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Map</h4>
+							<div class="benefits">
+								Assign variable/placeholder values based on input values; similar to a lookup table.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4 class="nonstandard">Mercure</h4>
+							<div class="benefits">
+								Make your Caddy instance a Mercure hub: an open, easy, fast, reliable and battery-efficient solution for real-time communications.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Metrics</h4>
+							<div class="benefits">
+								Expose a /metrics endpoint for use with Prometheus-compatible systems and other monitoring tools.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>HTTP/2 server push</h4>
+							<div class="benefits">
+								Proactively push resources to clients before they request it when HTTP/2 is used. (May be deprecated by browsers, but Caddy still has a valid implementation that is useful in certain applications.)
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4 class="nonstandard">Rate limiting</h4>
+							<div class="benefits">
+								Advanced, enterprise-grade rate limiter implemented using a ring buffer and sliding window algorithm that scales massively based on zone keys. Configure a cluster of Caddy instances with the same storage to distribute rate limiting across your fleet. No memory bound required like with other enterprise servers.
+							</div>
+							<ul class="nonstandard">
+								<li>Local or distributed</li>
+								<li>Multiple zones</li>
+								<li>Buffer pooling</li>
+								<li>Only 1 goroutine</li>
+								<li>Configurable O(Kn) memory management</li>
+								<li>State persisted through reloads</li>
+								<li>Sets Retry-After header</li>
+								<li>Optional jitter</li>
+								<li>Highly programmable</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Request body controls</h4>
+							<div class="benefits">
+								Restrict the size of the request body by rejecting requests that are too large.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Reverse proxy</h4>
+							<div class="benefits">
+								Caddy has a world-class reverse proxy, described in detail in a section below.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Rewrite requests</h4>
+							<div class="benefits">
+								Make internal changes to requests before continuing to process them. This is useful to accept requests that need to be changed to conform to an expectation later on. Various aspects of the request can be changed such as method and URI.
+							</div>
+							<ul class="detail">
+								<li>Method</li>
+								<li>URI (path, query string)</li>
+								<li>Strip path prefix or suffix</li>
+								<li>Regular expression support</li>
+								<li>Intelligent URL-encoding and forward-slash handling</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Static responses</h4>
+							<div class="benefits">
+								Hard-code a static response into your config, with the ability to set the status code, header fields, and body. (This is often used to respond with HTTP redirects.) The connection may then be gracefully closed, or forcefully aborted if needed.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Subrouting</h4>
+							<div class="benefits">
+								Group handlers into a "subroute" to treat several handlers as one, making certain logic easier to reason about.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Templates</h4>
+							<div class="benefits">
+								Responses can be evaluated as templates, which give you the ability to turn proxied or static content into rich, dynamic content with variables, if statements, markdown rendering (with front matter support), and more.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Tracing</h4>
+							<div class="benefits">
+								Support for distributed tracing using OpenTelemetry.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Variables</h4>
+							<div class="benefits">
+								Read and write variables that can be used internally as you process requests.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4 class="nonstandard">WebDAV</h4>
+							<div class="benefits">
+								Become a WebDAV server with one or two lines of config. Compatible with most WebDAV clients.
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+
+
+			<section class="diagonal up gray feature">
+				<div class="wrapper">
+					<h2>
+						Reverse proxy
+					</h2>
+					<p>
+						Caddy has the most flexible general-purpose reverse proxy in the world, featuring advanced request and response handling, dynamic routing, health checking, load balancing, circuit breaking, and more.
+					</p>
+					<p>
+						What makes Caddy's proxy unique is its design. Only the client-facing side of the proxy needs to be HTTP; the transport underlying the roundtrip with the backend can be fulfilled with any protocol!
+					</p>
+					<p>
+						Moreover, our proxy can be programmed with highly dynamic upstreams. That is, the available upstreams can change during in-flight requests! If no backends are available, Caddy can hold onto the request until one is.
+					</p>
+
+					<h3 class="blue">High-level proxy features</h3>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>Transports</h4>
+							<div class="benefits">
+								Transports are how Caddy gets the response from the backend. Caddy's proxy can be a front for protocols other than HTTP by using alternate transport modules. This allows Caddy to generate HTTP responses from backends that don't even speak HTTP!
+							</div>
+							<ul class="detail">
+								<li>HTTP</li>
+								<li>FastCGI</li>
+								<li class="nonstandard">NTLM</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Load balancing</h4>
+							<div class="benefits">
+								Selecting upstreams is a crucial function of any modern reverse proxy. Caddy has a variety of built-in load balancing policies to choose from to suit any production services. Some policies are extremely fast and lightweight; others provide upstream affinity based on properties of the client or request; others strive for even distribution by counting connections or using randomness and weights.
+							</div>
+							<ul class="detail">
+								<li>Random</li>
+								<li>Random Choose-N</li>
+								<li>Least connections</li>
+								<li>Round robin</li>
+								<li>Weighted round robin</li>
+								<li>First available</li>
+								<li>Remote IP hash</li>
+								<li>Client IP hash</li>
+								<li>URI hash</li>
+								<li>Query hash</li>
+								<li>Header hash</li>
+								<li>Cookie hash</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Circuit breaking</h4>
+							<div class="benefits">
+								A circuit breaker module can temporarily mark a backend as down before it actually goes down, to keep it up.
+							</div>
+							<div class="detail nonstandard">
+								Latency-based
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Health checking</h4>
+							<div class="benefits">
+								Health checks detect when upstreams are unavailable. Passive health checks infer status from actual requests. Active health checks work in the background, out-of-band of client requests.
+							</div>
+							<ul class="detail">
+								<li>Active</li>
+								<li>Passive</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Observability</h4>
+							<div class="benefits">
+								The admin API exposes an endpoint to retrieve the traffic count and health status of the proxy upstreams.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Upstream sources</h4>
+							<div class="benefits">
+								Caddy can get the list of upstreams in various ways. The most common is to write them into the configuration (static). Other ways are dynamic, by which a list of upstreams are returned for each request (these utilize configurable caching to enhance performance). 
+							</div>
+							<ul class="detail">
+								<li>Static</li>
+								<li>Dynamic: A records</li>
+								<li>Dynamic: SRV records</li>
+								<li>Dynamic: Multiple sources combined</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Retries</h4>
+							<div class="benefits">
+								Requests can be retried until a backend is available to successfully handle the request. During this time, the list of upstreams may even be updated while the request is still pending!
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Streaming</h4>
+							<div class="benefits">
+								Responses can be streamed directly to the client, or for better wire performance, buffered slightly and flushed periodically.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Trusted proxies</h4>
+							<div class="benefits">
+								In order to use proxy-related headers like X-Forwarded-For, you can specify a list of IP ranges of proxies you trust. By default Caddy doesn't trust the clients.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Header manipulation</h4>
+							<div class="benefits">
+								Headers can be modified in the request going up to the backend and the response coming back down from the backend. This is similar to the general HTTP server's header handler, but this is applied while proxying.
+							</div>
+							<ul class="detail">
+								<li>Add</li>
+								<li>Set (overwrite)</li>
+								<li>Delete</li>
+								<li>Substring replace</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Buffering</h4>
+							<div class="benefits">
+								The proxy can optionally read the entire body before flushing it. This uses more memory but can be required by some backend applications or clients in some cases.
+							</div>
+							<ul class="detail">
+								<li>Requests</li>
+								<li>Responses</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Request rewriting</h4>
+							<div class="benefits">
+								Rewriting is a different concern from proxying and is normally handled separately, but sometimes you need to rewrite requests using information from the proxy like the chosen upstream. Caddy's proxy lets you do this.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Response interception</h4>
+							<div class="benefits">
+								By default, Caddy's proxy simply writes responses to the client. However, you can intercept the upstream's response and handle it in other ways. This includes matching only certain responses and invoking a custom handler chain you specify.
+							</div>
+						</div>
+					</div>
+
+					<h3 class="green">Active health checks</h3>
+					<p>
+						Active health checks assume a backend is down by default until that is confirmed otherwise by a health check.
+					</p>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>HTTP request parameters</h4>
+							<div class="benefits">
+								Active health checks are performed against an HTTP endpoint on the upstream. You can customize the parameters for these HTTP requests to work for you.
+							</div>
+							<ul class="detail">
+								<li>Path &amp; query string</li>
+								<li>Port</li>
+								<li>Headers</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Timing</h4>
+							<div class="benefits">
+								You can customize the interval at which active health checks are performed.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Success criteria</h4>
+							<div class="benefits">
+								Each active health check can be customized with a set of criteria to determine healthy or unhealthy status.
+							</div>
+							<ul class="detail">
+								<li>Response timeout</li>
+								<li>HTTP status code</li>
+								<li>Regular expression match on body</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Failure safety</h4>
+							<div class="benefits">
+								Backends that are experiencing bugs and difficulties may sometimes respond with unexpectedly large response bodies. Caddy lets you limit this to preserve proxy resources.
+							</div>
+							<div class="detail">
+								Limit response size
+							</div>
+						</div>
+					</div>
+
+					<h3 class="purple">Passive health checks</h3>
+					<p>
+						Passive health checks assume a backend is up by default until failure criteria are met in the course of proxying requests.
+					</p>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>Failure criteria</h4>
+							<div class="benefits">
+								All passive health checks count connection failures. In addition, you can set more criteria needed to deem a backend as healthy during a request.
+							</div>
+							<ul class="detail">
+								<li>Concurrent request limit exceeded</li>
+								<li>HTTP Status</li>
+								<li>Latency</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Failure memory</h4>
+							<div class="benefits">
+								You can customize how long to remember failures and how many failures need to be in memory to consider a backend to be down.
+							</div>
+						</div>
+					</div>
+
+
+					<h3 class="blue">HTTP transport</h3>
+					<p>
+						This is the default transport module. It crafts a proxied HTTP request to obtain an HTTP response from the backend.
+					</p>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>DNS resolvers</h4>
+							<div class="benefits">
+								The system resolvers are used by default, but you can specify custom DNS resolvers per proxy handler.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>TLS</h4>
+							<div class="benefits">
+								Caddy can be configured to support TLS (formerly known as SSL) to the upstream.
+							</div>
+							<ul class="detail">
+								<li>Custom root CA pool</li>
+								<li>Client authentication to backend</li>
+								<li>Custom handshake timeout</li>
+								<li>Server Name Indicator (SNI)</li>
+								<li>Renegotiation level</li>
+								<li>Exempt certain ports from TLS</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Connection pooling</h4>
+							<div class="benefits">
+								Connections to backends are pooled for maximum efficiency and minimal latency.
+							</div>
+							<ul class="detail">
+								<li>HTTP Keep-Alive</li>
+								<li>Custom probe interval</li>
+								<li>Maximum idle connections (total and per-host)</li>
+								<li>Idle connection timeout</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Compression</h4>
+							<div class="benefits">
+								Caddy can compress requests for the roundtrip with the backend.
+							</div>
+							<div class="detail">
+								Gzip
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Connection limit</h4>
+							<div class="benefits">
+								You can limit the number of connections per host.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>PROXY Protocol</h4>
+							<div class="benefits">
+								The PROXY Protocol v1 and v2 are both supported when connecting to upstreams.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Timeouts</h4>
+							<div class="benefits">
+								Various timeouts can be configured; some have sensible default values.
+							</div>
+							<ul class="detail">
+								<li>Connection (dial)</li>
+								<li>RFC 6555 fallback</li>
+								<li>Reading response headers</li>
+								<li>Expect continue</li>
+								<li>Read</li>
+								<li>Write</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Custom buffer sizes</h4>
+							<div class="benefits">
+								Tune the size of read/write buffers if you find that your application performs better with certain settings.
+							</div>
+							<ul class="detail">
+								<li>Read buffers</li>
+								<li>Write buffers</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>HTTP versions</h4>
+							<div class="benefits">
+								Caddy's proxy supports multiple HTTP versions with the backend. By default, HTTP/1.1 and HTTP/2 are supported.
+							</div>
+							<ul class="detail">
+								<li>HTTP/1.1</li>
+								<li>HTTP/2</li>
+								<li>H2C (HTTP/2 over cleartext)</li>
+							</ul>
+						</div>
+					</div>
+
+					<h3 class="green">FastCGI transport</h3>
+					<p>
+						FastCGI is typically used to serve PHP applications via php-fpm. FastCGI responders may require additional information about the script being run such as script name, path relative to root, etc., and Caddy's FastCGI transport takes care of all of that and makes it configurable.
+					</p>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>Highly efficient</h4>
+							<div class="benefits">
+								Caddy's FastCGI client implementation has been optimized to rival the performance of memory-unsafe clients written in C, sometimes even surpassing their performance.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Path splitting</h4>
+							<div class="benefits">
+								The path can be split, usually at the extension, to compute the proper PATH_INFO variable.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Resolve root symlink</h4>
+							<div class="benefits">
+								Optionally require paths declared to symlinks to be updated if the symlink changes without php-fpm being restarted.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Environment variables</h4>
+							<div class="benefits">
+								Read from the parent environment, and also set custom environment variables for your CGI script.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Timeouts</h4>
+							<div class="benefits">
+								Set timeouts to conserve resources.
+							</div>
+							<ul class="detail">
+								<li>Dial (connect)</li>
+								<li>Read</li>
+								<li>Write</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Capture stderr</h4>
+							<div class="benefits">
+								Caddy can capture the output to stderr from the upstream and log them for visibility.
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</section>
+
+
+			<section class="feature">
+				<div class="wrapper">
+					<h2>
+						Static file server
+					</h2>
+					<p>
+						Caddy's file server is the premier way of serving static files for your website. 
+					</p>
+					<p>
+						It's simple: specify a root directory from which to serve the files, then each request path is automatically appended to the root to get the full path of the file to serve.
+					</p>
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>Kernel acceleration</h4>
+							<div class="benefits">
+								Caddy bypasses user-space buffers whenever possible to speed up file downloads by a significant factor.
+							</div>
+							<div class="detail">
+								sendfile
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Virtual file systems</h4>
+							<div class="benefits">
+								By default, Caddy serves files from a directory you specify on the local disk, but this file access is pluggable and can be replaced by any virtualized file system modules. This allows you to serve static files from any file store such as databases, cloud storage, or even assets embedded directly in the web server binary!
+							</div>
+							<ul class="detail">
+								<li>Local disk</li>
+								<li class="nonstandard">Embedded assets</li>
+								<li class="nonstandard">Amazon AWS S3</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Precompressed files</h4>
+							<div class="benefits">
+								If your deployment pipeline compresses site resources, Caddy can automatically detect them and serve them in their "precompressed" encoding for higher efficiency and greater throughput.
+							</div>
+							<ul class="detail">
+								<li>Gzip</li>
+								<li>Brotli</li>
+								<li>Zstandard</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Hide files and folders</h4>
+							<div class="benefits">
+								Increase your security posture by proactively hiding potentially-sensitive files and folders that do or could exist in your site root. You can specify individual file/folder paths, filenames regardless of their path, or glob matches to hide files/folders with a particular pattern.
+							</div>
+							<div class="detail">
+								Exact paths, filenames, globular matching
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Index filenames</h4>
+							<div class="benefits">
+								Index files are files that are served if a directory is requested by the client. The filenames of index files to look for are customizable. Directory browsing can optionally be enabled if an index file is not found in a requested directory.
+							</div>
+							<div class="detail">
+								index.html, index.txt (customizable)
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Conditional requests</h4>
+							<div class="benefits">
+								Etag, Last-Modified, and related headers are supported.
+							</div>
+							<ul class="detail">
+								<li>Etag</li>
+								<li>Last-Modified</li>
+								<li>If-Match</li>
+								<li>If-None-Match</li>
+								<li>If-Modified-Since</li>
+								<li>If-Unmodified-Since</li>
+								<li>If-Range</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Range requests</h4>
+							<div class="benefits">
+								Common for streaming large files and resuming downloads, clients requesting certain ranges of files will not be disappointed or surprised. Caddy properly handles HTTP requests with Range headers.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Canonical paths</h4>
+							<div class="benefits">
+								In general, there are multiple URIs for a single file or directory. For example: /, /index.html, and /index.html/ represent the same resource. Caddy uses HTTP redirects to enforce path canonicalization (removing trailing slashes from files, and adding them for directories).
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Pass-thru mode</h4>
+							<div class="benefits">
+								Sometimes you only want to serve a file if it exists, otherwise continue with the next handler in the chain, rather than returning an error to the client.
+							</div>
+						</div>
+					</div>
+
+					
+
+					<div class="split">
+						<div>
+							<h3 class="blue">File browser</h3>
+							<p>
+								Caddy's file server comes alive through its modern file browser that looks attractive on mobile and desktop. It has more features and utility than any other standard HTTP file server!
+							</p>
+						</div>
+						<picture>
+							<source srcset="/resources/images/file-browser/browse-corner-dark.png" media="(prefers-color-scheme: dark)">
+							<img src="/resources/images/file-browser/browse-corner-light.png">
+						</picture>
+					</div>
+
+					<div class="feature-list">
+						<div class="feature-row">
+							<h4>Folder listings</h4>
+							<div class="benefits">
+								Show the list of files in a folder when no index file (below) exists in that folder.
+							</div>
+							<div class="detail">
+								Exact paths, filenames, globular matching
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Day and night themes</h4>
+							<div class="benefits">
+								The color scheme automatically adjusts to match the system theme, whether it be light or dark, to avoid blinding you or being hard to read.
+								<picture>
+									<source srcset="/resources/images/file-browser/browse-themes-2.png" media="(prefers-color-scheme: dark)">
+									<img src="/resources/images/file-browser/browse-themes.png">
+								</picture>
+							</div>
+							<ul class="detail">
+								<li>Light mode</li>
+								<li>Dark mode</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Sort by columns</h4>
+							<div class="benefits">
+								Quickly distill information about each directory and find items faster with sticky column sorting.
+							</div>
+							<ul class="detail">
+								<li>File/directory</li>
+								<li>Name</li>
+								<li>Size</li>
+								<li>Date modified</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Filter</h4>
+							<div class="benefits">
+								Every page load automatically focuses the cursor on a search box, so you can start typing a filename and filter large listings instantly.
+								<picture>
+									<source srcset="/resources/images/file-browser/browse-search-dark.png" media="(prefers-color-scheme: dark)">
+									<img src="/resources/images/file-browser/browse-search-light.png">
+								</picture>
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Layout</h4>
+							<div class="benefits">
+								Files can be shown in different layouts depending on how you want to view the listing. For example, the grid view is great for galleries.
+								<picture>
+									<source srcset="/resources/images/file-browser/browse-gallery-dark.png" media="(prefers-color-scheme: dark)">
+									<img src="/resources/images/file-browser/browse-gallery-light.png">
+								</picture>
+							</div>
+							<ul class="detail">
+								<li>List</li>
+								<li>Grid</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Responsive design</h4>
+							<div class="benefits">
+								The page width fluidly adjusts to accommodate screens of all sizes. Links are sufficiently sized to be easily tappable on touchscreens while still being information-dense enough to be useful.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>JSON API</h4>
+							<div class="benefits">
+								Requests with an <code>Accept-Encoding: application/json</code> header will be replied to with a JSON payload for programmatic or scripted access to your file listing.
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>Customizable listing template</h4>
+							<div class="benefits">
+								If the default template isn't a good fit or you want to spice things up, customize the browse template to look and act any way you want!
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>File size visualization</h4>
+							<div class="benefits">
+								File sizes are indicated by the length of the bar behind them, making it quick and easy to find outlier large and small files or to compare relative sizes at a glance.
+								<picture>
+									<source srcset="/resources/images/file-browser/browse-size-dark.png" media="(prefers-color-scheme: dark)">
+									<img src="/resources/images/file-browser/browse-size-light.png">
+								</picture>
+							</div>
+						</div>
+						<div class="feature-row">
+							<h4>File type icons</h4>
+							<div class="benefits">
+								The file server recognizes dozens of common file types and shows associated icons to make identification easier when scanning the page.
+								<picture>
+									<source srcset="/resources/images/file-browser/icons-all-dark.png" media="(prefers-color-scheme: dark)">
+									<img src="/resources/images/file-browser/icons-all-light.png">
+								</picture>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="diagonal down gray feature">
+					<div class="construction">
+						<div class="construction-images">
+							{{$n := randInt 0 5}}
+							{{if eq $n 1}}
+							<img src="/resources/images/nostalgia/under-construction-caution-tape.gif">
+							<img src="/resources/images/nostalgia/under-construction-sign.gif">
+							<img src="/resources/images/nostalgia/under-construction-caution-tape.gif">
+							{{else if eq $n 2}}
+							<img src="/resources/images/nostalgia/under-construction-blink.gif">
+							<img src="/resources/images/nostalgia/under-construction-blink.gif">
+							<img src="/resources/images/nostalgia/under-construction-blink.gif">
+							{{else if eq $n 3}}
+							<img src="/resources/images/nostalgia/under-construction-barricade.gif">
+							{{else if eq $n 4}}
+							<img src="/resources/images/nostalgia/sorry-under-construction.gif">
+							{{else}}
+							<img src="/resources/images/nostalgia/under-construction-cones.gif">
+							{{end}}
+						</div>
+						<p>
+							Caddy is a living project with a TON of features. This page is not yet a comprehensive list of all the features and benefits provided by Caddy because there's so many to mention. We welcome <a href="https://github.com/caddyserver/website">contributions</a> on GitHub!
+						</p>
+					</div>
+					
+				</div>
+			</section>
+
+
+			<!--
+
+				TODO:
+					- Admin API (including debug endpoints)
+					- HTTP handlers
+					- PKI facilities
+					- 
+			-->
+
+		</main>
+
+
+		{{include "/includes/footer.html"}}
+	</body>
+</html>
