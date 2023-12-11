@@ -7,7 +7,7 @@ This is the source of the Caddy website, [caddyserver.com](https://caddyserver.c
 ## Requirements
 
 - Caddy v2.7.6 or newer (installed in your PATH as `caddy`)
-- To display the retro hit counter (just for fun), the [caddy-hitcounter](https://github.com/mholt/caddy-hitcounter) plugin.
+- To display the retro hit counter (just for fun), the [caddy-hitcounter](https://github.com/mholt/caddy-hitcounter) plugin. Then uncomment the relevant lines in the Caddyfile.
 
 
 ## Quick start

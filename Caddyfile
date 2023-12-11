@@ -5,10 +5,11 @@ root * src
 file_server
 templates {
 	extensions {
-		hitCounter {
-			style bright_green
-			pad_digits 6
-		}
+		# Uncomment this if you have the caddy-hitcounter plugin (https://github.com/mholt/caddy-hitcounter):
+		# hitCounter {
+		# 	style bright_green
+		# 	pad_digits 6
+		# }
 	}
 }
 encode zstd gzip
