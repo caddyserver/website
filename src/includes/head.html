@@ -28,17 +28,10 @@
 
 <!-- Open Graph tags -->
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://{{.Req.Host}}/">
+<meta property="og:site_name" content="Caddy Web Server">
+<meta property="og:url" content="https://{{.Req.Host}}{{.OriginalReq.URL}}">
 <meta property="og:description" content="Caddy is a powerful, enterprise-ready, open source web server with automatic HTTPS written in Go">
-<meta property="og:image" content="https://{{.Req.Host}}/resources/images/open-graph-square.png">
-
-<!-- Twitter card tags additive with the og: tags -->
-<meta name="twitter:card" content="summary">
-<meta name="twitter:domain" value="{{.Req.Host}}">
-<meta name="twitter:site" value="@caddyserver">
-<meta name="twitter:description" value="Caddy is a powerful, enterprise-ready, open source web server with automatic HTTPS written in Go">
-<meta name="twitter:image" content="https://{{.Req.Host}}/resources/images/open-graph-square.png{{template "cacheBust"}}">
-<meta name="twitter:url" value="https://{{.Req.Host}}{{.OriginalReq.URL}}">
+<meta property="og:image" content="https://{{.Req.Host}}/resources/images/open-graph-square.png{{template "cacheBust"}}">
 
 <!-- Global site tag (gtag.js) - Google Analytics (ZeroSSL) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-2DLB04LK4P"></script>
