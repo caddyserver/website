@@ -420,4 +420,33 @@ img.cite {
 	h1 {
 		font-size: 55px;
 	}
+
+	.action-buttons {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.demobox h2 {
+		font-size: 40px;
+		margin-top: -1.5em;
+	}
+
+	.demobox {
+		font-size: 16px;
+		padding: 30px;
+	}
+
+	.demobox .record-type {
+		word-wrap: break-word;
+		padding: 10px 15px;
+	}
+
+	.demobox .demo-ip {
+		padding: 10px 10px;
+	}
+
+	.display code {
+		font-size: 90%;
+		padding: 20px;
+	}
 }
