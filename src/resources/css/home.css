@@ -364,6 +364,9 @@ img.cite {
 	margin: 10px 0;
 }
 
+.experts a {
+	word-break: break-word;
+}
 
 
 
