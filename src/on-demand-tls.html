@@ -32,7 +32,7 @@
 						What happened?
 					</h2>
 					<p>
-						Caddy automatically obtained a certificate for your domain, <code>{{.Req.Host}}</code>, without any change to the server's configuration. We call this technology On-Demand TLS, and it's an exclusive feature of Caddy.
+						Caddy automatically obtained a certificate for your domain, <code>{{.Req.Header.Get "X-Forwarded-Host"}}</code>, without any change to the server's configuration. We call this technology On-Demand TLS, and it's an exclusive feature of Caddy.
 					</p>
 					<p>
 						With On-Demand TLS, no config changes are required to serve more domains over HTTPS. This is perfect for servers hosting content or APIs for customer-owned domains because your HTTPS deployment scales as tall and wide as your business does.
