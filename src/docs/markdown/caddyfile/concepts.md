@@ -25,7 +25,7 @@ This document will help you learn about the HTTP Caddyfile in detail.
 
 The Caddyfile's structure can be described visually:
 
-![Caddyfile structure](/resources/images/caddyfile-visual.png)
+![Caddyfile structure](/old/resources/images/caddyfile-visual.png)
 
 Key points:
 

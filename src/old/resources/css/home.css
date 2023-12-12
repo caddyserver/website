@@ -3,7 +3,7 @@ body {
 }
 
 .hero {
-	background-image: url('/resources/images/bg-teal.jpg');
+	background-image: url('/old/resources/images/bg-teal.jpg');
 	background-repeat: no-repeat;
 	background-size: cover;
 	padding-bottom: 100px;

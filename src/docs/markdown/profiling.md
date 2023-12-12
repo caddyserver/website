@@ -400,7 +400,7 @@ Bingo. Nearly half of memory is allocated strictly for read and write buffers fr
 
 If we instead run the `svg` or `web` commands, we'll get a visualization of the profile:
 
-![CPU profile visualization](/resources/images/profile.png)
+![CPU profile visualization](/old/resources/images/profile.png)
 
 This is a CPU profile but similar graphs are available for other profile types.
 
@@ -436,7 +436,7 @@ As you can see, we reduced memory allocations by about half!
 
 Diffs can be visualized, too:
 
-![CPU profile visualization](/resources/images/profile-diff.png)
+![CPU profile visualization](/old/resources/images/profile-diff.png)
 
 This makes it really obvious how the changes affected the performance of certain parts of the program.
 
