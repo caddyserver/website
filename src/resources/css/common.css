@@ -663,7 +663,7 @@ footer .link-col a:hover {
 	}
 }
 
-@media (max-width: 950px) {
+@media (max-width: 1000px) {
 	header nav ul {
 		justify-content: space-evenly;
 	}
@@ -672,6 +672,11 @@ footer .link-col a:hover {
 		justify-content: center;
 		flex-wrap: wrap;
 		gap: 0;
+		padding: 0;
+	}
+
+	.topbar a {
+		padding: 10px 5px 8px;
 	}
 
 	.logo {
@@ -693,7 +698,6 @@ footer .link-col a:hover {
 	}
 
 	.navbar nav > ul > li > a {
-		padding-top: 10px;
-		padding-bottom: 10px;
+		padding: 8px;
 	}
 }
