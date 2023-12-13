@@ -240,7 +240,7 @@ The differs from the [`log` directive](/docs/caddyfile/directives/log), which on
 
 - **output** configures where to write the logs. See the [`log` directive](/docs/caddyfile/directives/log#output-modules) for complete documentation.
 - **format** describes how to encode, or format, the logs. See the [`log` directive](/docs/caddyfile/directives/log#format-modules) for complete documentation.
-- **level** is the minimum entry level to log. Default: `INFO`.
+- **level** is the minimum entry level to log. Possible values: `DEBUG`, `INFO`, `WARN`, `ERROR`, `PANIC`, `FATAL`. Default: `INFO`.
 - **include** specifies the log names to be included in this logger. For example, to include only logs emitted by the admin API, you would include `admin.api`. By default, this list is empty (i.e. all logs are included).
 - **exclude** specifies the log names to be excluded from this logger. For example, to exclude only HTTP access logs, you would exclude `http.log.access`. By default, this list is empty (i.e. no logs are excluded).
 
