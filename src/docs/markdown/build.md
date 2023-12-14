@@ -85,6 +85,7 @@ Procedure:
 <span class="bash">sudo mv ./caddy /usr/bin/caddy.custom</span>
 <span class="bash">sudo update-alternatives --install /usr/bin/caddy caddy /usr/bin/caddy.default 10</span>
 <span class="bash">sudo update-alternatives --install /usr/bin/caddy caddy /usr/bin/caddy.custom 50</span>
+<span class="bash">sudo systemctl restart caddy</span>
 </code></pre>
 
 
@@ -92,6 +93,8 @@ Procedure:
 
 `update-alternatives` will create a symlink from the desired caddy binary to `/usr/bin/caddy`
 
+`systemctl restart caddy` will shut down the default version of the Caddy server and start the custom one.
+
 You can change between the custom and default `caddy` binaries by executing
 <pre><code class="cmd bash">update-alternatives --config caddy</code></pre>
-and following the on screen information.
+and following the on screen information, then restarting the Caddy service.
