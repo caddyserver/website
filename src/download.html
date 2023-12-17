@@ -2,32 +2,33 @@
 <html>
 	<head>
 		<title>Download Caddy</title>
-		{{import "/old/includes/head.html"}}
-		{{template "head"}}
-		<link rel="stylesheet" href="/old/resources/css/download.css{{template "cacheBust"}}">
-		<script src="/old/resources/js/jquery-3.4.1.min.js"></script>
-		<script src="/old/resources/js/sweetalert.min.js"></script>
-		<script src="/old/resources/js/download.js{{template "cacheBust"}}"></script>
+		{{import "/includes/head.html"}}
+		{{template "head" .}}
+		<link rel="stylesheet" href="/resources/css/marketing.css{{template "cacheBust"}}">
+		<link rel="stylesheet" href="/resources/css/features.css{{template "cacheBust"}}">
+		<link rel="stylesheet" href="/resources/css/download.css{{template "cacheBust"}}">
 	</head>
 	<body>
-		<div class="wrapper">
-			<header>
-				<div id="logo-container">
-					<a href="/"><img src="/old/resources/images/caddy-logo.svg" id="logo" alt="Caddy"></a>
-					<div id="zerossl-project">a <a href="https://zerossl.com"><img src="/old/resources/images/zerossl-logo.svg" id="zerossl-logo"></a> project</div>
+		<div class="hero">
+			{{include "/includes/header.html" "dark-header"}}
+			
+			<div class="wrapper">
+				<div class="hero-content">
+					<h1>
+						Download
+						<div class="subheading">
+							Build your own caddy binary with modules.
+						</div>
+					</h1>
 				</div>
-				{{include "/old/includes/header-nav.html"}}
-			</header>
-
-			<div class="notice">
-				⚠️ <b>Due to <a href="https://github.com/golang/go/issues/56494">multiple</a> outstanding <a href="https://github.com/golang/go/issues/53905">bugs</a> in the <code>go</code> command, we are aware that some downloads may hang or fail.</b> In the meantime, you can download Caddy from <b><a href="https://github.com/caddyserver/caddy/releases">the latest release on GitHub</a></b>, or use <b><a href="https://github.com/caddyserver/xcaddy">xcaddy</a></b> for custom builds. (Remember, this download page comes with no guarantees or SLAs.) Sorry for the inconvenience.
 			</div>
-
-			<div class="download-bar">
-				<div>
-					<div>
-						<b>Platform:</b>
-						<select size="1" id="platform" selected="linux-amd64">
+		</div>
+		<main>
+			<div id="download" class="wrapper">
+				<div class="shadow-lg">
+					<div id="downloader">
+						<span>Download the caddy binary <span id="modules-count"></span> for</span>
+						<select size="1" selected="linux-amd64" id="platform" class="shadow">
 							<option value="dragonfly-amd64">Dragonfly amd64</option>
 							<option value="freebsd-amd64">FreeBSD amd64</option>
 							<option value="freebsd-arm-6">FreeBSD arm 6</option>
@@ -56,39 +57,61 @@
 							<option value="windows-arm-7">Windows arm 7</option>
 							<option value="windows-arm64">Windows arm64</option>
 						</select>
+						<a id="download-link" href="/api/download">
+							<button class="primary">
+								Download
+							</button>
+						</a>
+					</div>
+	
+					<div id="command" onclick="copyCommand()">
+						<pre>
+							<span id="command-builder">xcaddy build</span>
+						</pre>
+						<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="24"
+							height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+							stroke-linecap="round" stroke-linejoin="round">
+							<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+							<path d="M8 8m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z"></path>
+							<path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+						</svg>
 					</div>
 				</div>
-				<div>
-					<div>
-						<b>Standard features:</b> <span title="All official Caddy builds come with standard plugins">&#9745;&#65039;</span>
-					</div>
+			</div>
+	
+			<div class="wrapper filters">
+				<input id="search-package" placeholder="Search package: e.g. cloudflare" class="shadow" />
+				<select id="sort-package" class="shadow">
+					<option value="download">Sort by most popular</option>
+					<option value="alphabetically">Sort alphabetically</option>
+					<option value="type">Group by module namespace</option>
+				</select>
+			</div>
+	
+			<div class="wrapper list">
+				<div id="side-panel-packages">
 				</div>
-				<div>
-					<div>
-						<b>Extra features:</b> <span id="package-count">0</span>
-					</div>
-				</div>
-				<div>
-					<a href="/api/download" class="blue button" id="download">Download</a>
+				<div id="packages">
 				</div>
 			</div>
+		</main>
 
-			<input type="search" id="filter" placeholder="Filter packages and modules...">
+		{{include "/includes/footer.html"}}
 
-			<div class="text-center">
-				<span class="warning">⚠️ Only choose plugins you need and trust</span>
-			</div>
-			<div class="text-center" id="darwin-warning">
-				<span class="warning">⚠️ Run the following against the downloaded binary:
-					<code>xattr -d com.apple.quarantine </code>
-				</span>
-			</div>
-
-			<div id="optional-packages">
-				<!-- Populated by JavaScript -->
-			</div>
-		</div>
-
-		{{include "/old/includes/footer.html"}}
+		<script type="text/javascript">
+			let groupBy = 'download';
+			const getCardTemplate = item => `{{ include "/includes/card.html" }}`;
+			const modulesCount = document.getElementById('modules-count');
+	
+			document.getElementById('search-package').addEventListener('input', ({ target: { value } }) => {
+				packageManager.setFilterValue(value.toLowerCase());
+				renderList(packageManager.group(groupBy))
+			})
+			document.getElementById('sort-package').addEventListener('change', ({ target: { value } }) => {
+				groupBy = value;
+				renderList(packageManager.group(value))
+			})
+		</script>
+		<script src="/resources/js/download.js"></script>
 	</body>
 </html>
