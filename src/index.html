@@ -633,6 +633,46 @@ $ curl localhost:2019/config/ | jq<div class="blinking"></div></code>
 			</section>
 
 
+			<section class="frankenphp dark feature">
+				<div class="wrapper">
+					<div class="asides">
+						<div>
+							<div class="left">
+								<h2 id="extensibility">4x faster PHP apps</h2>
+								<p>
+									With <a href="https://frankenphp.dev">FrankenPHP</a>, Caddy acts as a PHP application server that delivers PHP pages about <a href="https://blog.laravel.com/octane-frankenphp">4x faster</a> than Swoole or RoadRunner: no need for php-fpm (FastCGI).
+								</p>
+								<p>
+									Deploy your PHP application as a single static binary without needing to install PHP and php-fpm separately. Caddy with FrankenPHP is all you need for high-performing PHP apps!
+								</p>
+								<a href="https://frankenphp.dev" title="FrankenPHP"><img src="/resources/images/frankenphp-logo.svg" alt="FrankenPHP - Modern PHP app server" class="franken-logo"></a>
+								<p class="endnote">
+									Benchmarks compare total response times using worker mode with Octane. FrankenPHP runs in-process with the server, so it's generally faster than FPM/mod_php in most cases. PHP execution is not accelerated.
+								</p>
+							</div>
+						</div>
+						<img src="/resources/images/frankenphp-dab.svg" class="franken-mascot">
+					</div>
+					
+					<div class="asides">
+						<div>
+							<div class="display left">
+								{{ markdown (include "/includes/examples/frankenphp.md") }}
+							</div>
+						</div>
+						<div>
+							<p>
+								Serving your PHP app is as simple as this Caddyfile. The PHP interpreter is completely embedded within the Caddy binary and your application files will be served from the current working directory. No need for php-fpm or separate PHP installs!
+							</p>
+							<p>
+								<a href="https://frankenphp.dev" class="franken button">Learn more</a>
+							</p>
+						</div>
+					</div>
+				</div>
+			</section>
+
+
 			<section class="diagonal down light feature">
 				<div class="wrapper">
 					<h2 id="gold-standard">The <span class="gold">gold standard</span> web server</h2>

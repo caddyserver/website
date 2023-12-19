@@ -273,7 +273,8 @@ h3 a {
 
 
 
-.smallstep {
+.smallstep,
+.franken-logo {
 	max-width: 150px;
 	margin-top: 1em;
 }
@@ -371,9 +372,23 @@ img.cite {
 
 
 
-.franken {
-	background-color: #b3d133;
-	color: #390075;
+.frankenphp.dark {
+	background-color: rgb(35, 1, 67);
+}
+.frankenphp h2 {
+	color: #b3d133;
+}
+.frankenphp img.franken-mascot {
+	max-height: 500px;
+}
+.franken.button {
+	background: #b3d133;
+	color: rgb(35, 1, 67);
+	border: 0;
+}
+p.endnote {
+	font-size: 75%;
+	opacity: .65;
 }
 
 
