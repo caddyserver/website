@@ -144,6 +144,12 @@ For example, if you need to define environment variables for use in your config,
 Environment="CF_API_TOKEN=super-secret-cloudflare-tokenvalue"
 ```
 
+Similarly, if you prefer to maintain a separate file to maintain the environment variables (envfile), you may use the [`EnvironmentFile`](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html#EnvironmentFile=) directive as such:
+```systemd
+[Service]
+EnvironmentFile=/path/to/envfile.env
+```
+
 Or, for example if you need to change the config file from the default of the Caddyfile, to instead using a JSON file (note that `Exec*` directives [must be reset with empty strings](https://www.freedesktop.org/software/systemd/man/systemd.service.html#ExecStart=) before setting a new value):
 ```systemd
 [Service]
