@@ -18,29 +18,30 @@ An unmarshaler's job is simply to set up your module's type, e.g. by populating 
 //     gizmo <name> [<option>]
 //
 func (g *Gizmo) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
-	for d.Next() {
-		if !d.Args(&g.Name) {
-			// not enough args
-			return d.ArgErr()
-		}
-		if d.NextArg() {
-			// optional arg
-			g.Option = d.Val()
-		}
-		if d.NextArg() {
-			// too many args
-			return d.ArgErr()
-		}
+	d.Next() // consume directive name
+
+	if !d.Args(&g.Name) {
+		// not enough args
+		return d.ArgErr()
 	}
+	if d.NextArg() {
+		// optional arg
+		g.Option = d.Val()
+	}
+	if d.NextArg() {
+		// too many args
+		return d.ArgErr()
+	}
+
 	return nil
 }
 ```
 
 It is a good idea to document the syntax in the godoc comment for the method. See the [godoc for the `caddyfile` package](https://pkg.go.dev/github.com/caddyserver/caddy/v2/caddyconfig/caddyfile?tab=doc) for more information about parsing the Caddyfile.
 
-It is also important for an unmarshaler to accept multiple occurrences of its directive (rare, but can happen in some cases). Since the first token will typically be the module's name or directive (and can often be skipped by the unmarshaler), this usually means wrapping your parsing logic in a `for d.Next() { ... }` loop.
+The directive name token can be consumed/skipped with a simple `d.Next()` call.
 
-Make sure to check for missing or excess arguments.
+Make sure to check for missing and/or excess arguments with `d.NextArg()` or `d.RemainingArgs()`. Use `d.ArgErr()` for a simple "invalid case" message, or use `d.Errf("some message")` to craft a helpful error message with an explanation of the problem (and ideally, a suggested solution).
 
 You should also add an [interface guard](/docs/extending-caddy#interface-guards) to ensure the interface is satisfied properly:
 
@@ -122,9 +123,9 @@ This table describes each class with exported types that is recognized by the HT
 Class name | Expected type | Description
 ---------- | ------------- | -----------
 bind | `[]string` | Server listener bind addresses
-tls.connection_policy | `*caddytls.ConnectionPolicy` | TLS connection policy
 route | `caddyhttp.Route` | HTTP handler route
 error_route | `*caddyhttp.Subroute` | HTTP error handling route
+tls.connection_policy | `*caddytls.ConnectionPolicy` | TLS connection policy
 tls.cert_issuer | `certmagic.Issuer` | TLS certificate issuer
 tls.cert_loader | `caddytls.CertificateLoader` | TLS certificate loader
 

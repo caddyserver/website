@@ -373,11 +373,15 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 
 // UnmarshalCaddyfile implements caddyfile.Unmarshaler.
 func (m *Middleware) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
-	for d.Next() {
-		if !d.Args(&m.Output) {
-			return d.ArgErr()
-		}
+	d.Next() // consume directive name
+
+	// require an argument
+	if !d.NextArg() {
+		return d.ArgErr()
 	}
+
+	// store the argument
+	m.Output = d.Val()
 	return nil
 }
 
