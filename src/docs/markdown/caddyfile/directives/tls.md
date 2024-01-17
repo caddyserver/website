@@ -114,9 +114,11 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
 
 - **dns_challenge_override_domain** <span id="dns_challenge_override_domain"/> overrides the domain to use for the DNS challenge. This is to delegate the challenge to a different domain.
 
-  You may want to use this if your primary domain's DNS provider does not have a [DNS plugin <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/caddy-dns) available. You can instead add a `CNAME` record with subdomain `_acme-challenge` to your primary domain, pointing to a secondary domain for which you _do_ have a plugin.
+  You may want to use this if your primary domain's DNS provider does not have a [DNS plugin <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/caddy-dns) available. You can instead add a `CNAME` record with subdomain `_acme-challenge` to your primary domain, pointing to a secondary domain for which you _do_ have a plugin. This option _does not_ require special support from the plugin.
   
   When ACME issuers try to solve the DNS challenge for your primary domain, they will then follow the `CNAME` to your secondary domain to find the `TXT` record.
+
+  **Note:** Use full canonical name from the CNAME record as value here - `_acme-challenge` subdomain won't be prepended automatically.
 
 - **resolvers** <span id="resolvers"/> customizes the DNS resolvers used when performing the DNS challenge; these take precedence over system resolvers or any default ones. If set here, the resolvers will propagate to all configured certificate issuers.
 
@@ -230,9 +232,11 @@ Obtains certificates using the ACME protocol. Note that `acme` is a default issu
 
 - **dns_challenge_override_domain** <span id="dns_challenge_override_domain"/> overrides the domain to use for the DNS challenge. This is to delegate the challenge to a different domain.
 
-  You may want to use this if your primary domain's DNS provider does not have a [DNS plugin <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/caddy-dns) available. You can instead add a `CNAME` record with subdomain `_acme-challenge` to your primary domain, pointing to a secondary domain for which you _do_ have a plugin.
+  You may want to use this if your primary domain's DNS provider does not have a [DNS plugin <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/caddy-dns) available. You can instead add a `CNAME` record with subdomain `_acme-challenge` to your primary domain, pointing to a secondary domain for which you _do_ have a plugin. This option _does not_ require special support from the plugin.
   
   When ACME issuers try to solve the DNS challenge for your primary domain, they will then follow the `CNAME` to your secondary domain to find the `TXT` record.
+
+  **Note:** Use full canonical name from the CNAME record as value here - `_acme-challenge` subdomain won't be prepended automatically.
 
 - **resolvers** <span id="resolvers"/> customizes the DNS resolvers used when performing the DNS challenge; these take precedence over system resolvers or any default ones. If set here, the resolvers will propagate to all configured certificate issuers.
 
