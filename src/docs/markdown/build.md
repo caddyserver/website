@@ -4,9 +4,23 @@ title: "Build from source"
 
 # Build from source
 
+There are 2 ways to build Caddy, as opposed to installation of pre-built executable:
+- Build from Git repo
+- Build using `xcaddy`
+
 Requirements:
 
 - [Go](https://golang.org/doc/install) 1.20 or newer
+
+You can easily cross-compile, i.e. build Caddy on one operating system or architecture for a different, using the same tooling. You'll find details on this in the respective section.
+
+The latest section contains instructions for users who installed Caddy using the APT command on Debian-derivative system yet need the custom build executable for their operations.
+
+## Build from Git repo
+
+Requirements:
+
+- Go installed (see above)
 
 Clone the repository:
 
@@ -26,8 +40,17 @@ Due to [a bug in Go](https://github.com/golang/go/issues/29228), these basic ste
 
 </aside>
 
+Go programs are easy to compile for other platforms. Just set the `GOOS`, `GOARCH`, and/or `GOARM` environment variables that are different. ([See the go documentation for details.](https://golang.org/doc/install/source#environment))
 
-## xcaddy
+For example, to compile Caddy for Windows when you're not on Windows:
+
+<pre><code class="cmd bash">GOOS=windows go build</code></pre>
+
+Or similarly for Linux ARMv6 when you're not on Linux or on ARMv6:
+
+<pre><code class="cmd bash">GOOS=linux GOARCH=arm GOARM=6 go build</code></pre>
+
+## Build using `xcaddy`
 
 The [`xcaddy` command](https://github.com/caddyserver/xcaddy) is the easiest way to build Caddy with version information and/or plugins.
 
@@ -50,22 +73,7 @@ To build with plugins, use `--with`:
 
 As you can see, you can customize the versions of plugins with `@` syntax. Versions can be a tag name, commit SHA, or branch.
 
-Cross-platform compilation with `xcaddy` works the same as with the `go` command (see below).
-
-
-## Cross-platform
-
-Go programs are easy to compile for other platforms. Just set the `GOOS`, `GOARCH`, and/or `GOARM` environment variables that are different. ([See the go documentation for details.](https://golang.org/doc/install/source#environment))
-
-For example, to compile Caddy for Windows when you're not on Windows:
-
-<pre><code class="cmd bash">GOOS=windows go build</code></pre>
-
-Or similarly for Linux ARMv6 when you're not on Linux or on ARMv6:
-
-<pre><code class="cmd bash">GOOS=linux GOARCH=arm GOARM=6 go build</code></pre>
-
-The same works for `xcaddy`. To cross-compile for macOS:
+Cross-platform compilation with `xcaddy` works the same as with the `go` command. For example, to cross-compile for macOS:
 
 <pre><code class="cmd bash">GOOS=darwin xcaddy build</code></pre>
 
