@@ -1,0 +1,37 @@
+{
+	debug
+	order psl first
+	order replace after encode
+	on_demand_tls {
+		ask http://localhost:8012
+	}
+}
+
+:443 {
+	tls {
+		on_demand
+	}
+	log
+
+	@notDemoResource not path /on-demand-tls /resources/*
+	rewrite @notDemoResource /on-demand-tls
+
+	reverse_proxy 10.138.88.42:80 {
+		header_up Accept-Encoding identity
+		header_up Host {upstream_hostport}
+	}
+
+	replace stream {
+		` src="/` ` src="https://caddyserver.com/`
+		` href="/` ` href="https://caddyserver.com/`
+	}
+}
+
+:8012 {
+	bind 127.0.0.1 ::1
+	psl
+	#@allowed `{query.domain} == "caddydemo."+{qs.domain.registered_domain}`
+	@allowed query domain=caddydemo.{qs.domain.public_registered_domain}
+	respond @allowed 200
+	respond 400
+}
