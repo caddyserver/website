@@ -7,14 +7,13 @@ title: "Build from source"
 There are 2 ways to build Caddy, as opposed to installation of pre-built executable:
 - Build from Git repo
 - Build using `xcaddy`
+- Build custom Docker image
 
 Requirements:
 
 - [Go](https://golang.org/doc/install) 1.20 or newer
 
-You can easily cross-compile, i.e. build Caddy on one operating system or architecture for a different, using the same tooling. You'll find details on this in the respective section.
-
-The latest section contains instructions for users who installed Caddy using the APT command on Debian-derivative system yet need the custom build executable for their operations.
+The [last section](#package-support-files-for-custom-builds-for-debianubunturaspbian) contains instructions for users who installed Caddy using the APT command on Debian-derivative system yet need the custom build executable for their operations.
 
 ## Build from Git repo
 
@@ -76,6 +75,42 @@ As you can see, you can customize the versions of plugins with `@` syntax. Versi
 Cross-platform compilation with `xcaddy` works the same as with the `go` command. For example, to cross-compile for macOS:
 
 <pre><code class="cmd bash">GOOS=darwin xcaddy build</code></pre>
+
+## Build Custom Docker Image
+
+Most users deploying production sites will not want to rely on mounting files into a container, but will instead base their own images on `caddy`:
+
+```Dockerfile
+# note: never use the :latest tag in a production site
+FROM caddy:<version>
+
+COPY Caddyfile /etc/caddy/Caddyfile
+COPY site /srv
+```
+
+#### Adding custom Caddy modules
+
+Caddy is extendable through the use of "modules". See https://caddyserver.com/docs/extending-caddy for full details. You can find a list of available modules on [the Caddy website's download page](https://caddyserver.com/download).
+
+You can use the `:builder` image as a short-cut to building a new Caddy binary:
+
+```Dockerfile
+FROM caddy:<version>-builder AS builder
+
+RUN xcaddy build \
+    --with github.com/caddyserver/nginx-adapter \
+    --with github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0
+
+FROM caddy:<version>
+
+COPY --from=builder /usr/bin/caddy /usr/bin/caddy
+```
+
+Note the second `FROM` instruction - this produces a much smaller image by simply overlaying the newly-built binary on top of the regular `caddy` image.
+
+The [`xcaddy`](https://caddyserver.com/docs/build#xcaddy) tool is used to [build a new Caddy entrypoint](https://github.com/caddyserver/caddy/blob/4217217badf220d7d2c25f43f955fdc8454f2c64/cmd/caddy/main.go#L15..L25), with the provided modules. You can specify just a module name, or a name with a version (separated by `@`). You can also specify a specific version (can be a version tag or commit hash) of Caddy to build from. Read more about [`xcaddy` usage](https://github.com/caddyserver/xcaddy#command-usage).
+
+Note that the "standard" Caddy modules ([`github.com/caddyserver/caddy/master/modules/standard`](https://github.com/caddyserver/caddy/tree/master/modules/standard)) are always included.
 
 ## Package support files for custom builds for Debian/Ubuntu/Raspbian
 
