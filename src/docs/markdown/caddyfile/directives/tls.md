@@ -67,26 +67,21 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
   
   Default min: `tls1.2`, Default max: `tls1.3`
 
-- **ciphers** <span id="ciphers"/> specifies the list of cipher suite names in descending preference order. DO NOT change these unless you know what you're doing. Note that cipher suites are not customizable for TLS 1.3; and not all TLS 1.2 ciphers are enabled by default. The supported names are (in no particular order here):
-	- `TLS_RSA_WITH_3DES_EDE_CBC_SHA`
-	- `TLS_RSA_WITH_AES_128_CBC_SHA`
-	- `TLS_RSA_WITH_AES_256_CBC_SHA`
-	- `TLS_RSA_WITH_AES_128_GCM_SHA256`
-	- `TLS_RSA_WITH_AES_256_GCM_SHA384`
+- **ciphers** <span id="ciphers"/> specifies the list of cipher suite names in descending preference order. DO NOT change these unless you know what you're doing. Note that cipher suites are not customizable for TLS 1.3; and not all TLS 1.2 ciphers are enabled by default. The supported names are (in order of preference by the Go stdlib):
 	- `TLS_AES_128_GCM_SHA256`
-	- `TLS_AES_256_GCM_SHA384`
 	- `TLS_CHACHA20_POLY1305_SHA256`
-	- `TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA`
-	- `TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA`
-	- `TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA`
-	- `TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA`
-	- `TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA`
+	- `TLS_AES_256_GCM_SHA384`
 	- `TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256`
-	- `TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384`
 	- `TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256`
+	- `TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384`
 	- `TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384`
-	- `TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256`
 	- `TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256`
+	- `TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256`
+	- `TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA`
+	- `TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA`
+	- `TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA`
+	- `TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA`
+	- `TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA`
 
 - **curves** <span id="curves"/> specifies the list of EC curves to support. It is recommended to not change these. Supported values are:
 	- `x25519`
