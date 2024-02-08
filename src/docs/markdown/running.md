@@ -188,29 +188,23 @@ To tag the `caddy` binary, you can use the following command:
 
 ## Windows service
 
-There are two ways to run Caddy as a service on Windows: sc.exe or WinSW.
+There are two ways to run Caddy as a service on Windows: [sc.exe](#scexe) or [WinSW](#winsw).
 
 ### sc.exe
 
 To create the service, run:
 
-```
-sc.exe create caddy start= auto binPath= "YOURPATH\caddy.exe run"
-```
+<pre><code class="cmd bash">sc.exe create caddy start= auto binPath= "YOURPATH\caddy.exe run"</code></pre>
 
-(replace YOURPATH with the actual path to your `caddy.exe`)
+(replace `YOURPATH` with the actual path to your `caddy.exe`)
 
 To start:
 
-```
-sc.exe start caddy
-```
+<pre><code class="cmd bash">sc.exe start caddy</code></pre>
 
 To stop:
 
-```
-sc.exe stop caddy
-```
+<pre><code class="cmd bash">sc.exe stop caddy</code></pre>
 
 
 ### WinSW
@@ -270,11 +264,9 @@ This assumes you're using [Docker Compose V2](https://docs.docker.com/compose/re
 
 ### Setup
 
-First, create a file `docker-compose.yml` (or add this service to your existing file):
+First, create a file `compose.yml` (or add this service to your existing file):
 
 ```yaml
-version: "3.9"
-
 services:
   caddy:
     image: caddy:<version>
@@ -304,7 +296,7 @@ What this does:
 - Bind mounts the `site` directory to serve your site's static files from `/srv`.
 - Named volumes for `/data` and `/config` to [persist important information](/docs/conventions#file-locations).
 
-Then, create a file named `Caddyfile` beside the `docker-compose.yml`, and write your [Caddyfile](/docs/caddyfile/concepts) configuration.
+Then, create a file named `Caddyfile` beside the `compose.yml`, and write your [Caddyfile](/docs/caddyfile/concepts) config.
 
 If you have static files to serve, you may place them in a `site/` directory beside the configs, then set the [`root`](/docs/caddyfile/directives/root) using `root * /srv`. If you don't, then you may remove the `/srv` volume mount.
 
@@ -313,6 +305,10 @@ If you have static files to serve, you may place them in a `site/` directory bes
 If you're using Caddy to [reverse proxy](/docs/caddyfile/directives/reverse_proxy) to another container, remember that in Docker networking, `localhost` means "this container", not "this machine". So for example, do not use `reverse_proxy localhost:8080`, instead use `reverse_proxy other-container:8080` 
 
 </aside>
+
+If you need a custom build of Caddy with plugins, follow the [Docker build instructions](/docs/build#docker) to create a custom Docker image. Create the `Dockerfile` beside your `compose.yml`, then replace the `image:` line in your `compose.yml` with `build: .` instead.
+
+
 
 ### Usage
 

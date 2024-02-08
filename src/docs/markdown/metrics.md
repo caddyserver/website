@@ -11,10 +11,9 @@ In other words, you're going to want to be able to _monitor_ Caddy.
 
 ## Enabling metrics
 
-You'll need to turn metrics on. If using a Caddyfile, enable metrics [in global options](/docs/caddyfile/options#metrics):
+You'll need to turn metrics on.
 
-> **Note**
-> Caddy 2.6 made metrics opt-in. To enable them, use either [Caddyfile global options](/docs/caddyfile/options#metrics) or [the `metrics` parameter](/docs/json/apps/http/servers/metrics/) of a server's JSON config.
+If using a Caddyfile, enable metrics [in global options](/docs/caddyfile/options#metrics):
 
 ```caddy
 {
@@ -24,7 +23,7 @@ You'll need to turn metrics on. If using a Caddyfile, enable metrics [in global 
 }
 ```
 
-If using JSON, enable metrics in your [server configuration](/docs/json/apps/http/servers/) by adding `"metrics": {}`.
+If using JSON, add `"metrics": {}` to your [`apps > http > servers` configuration](/docs/json/apps/http/servers/).
 
 ## Prometheus
 
