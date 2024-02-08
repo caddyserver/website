@@ -1,0 +1,48 @@
+<div class="card shadow">
+    <div class="card-header flex">
+        <div class="card-title-name">
+            <h3>
+                ${item.name}
+            </h3>
+            <a href="${item.repo}" target="_blank" rel="noopener noreferer">
+                ${item.path}
+            </a>
+        </div>
+        <div class="card-title-info">
+            <span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-download" width="24"
+                    height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>
+                    <path d="M7 11l5 5l5 -5"></path>
+                    <path d="M12 4l0 12"></path>
+                </svg>
+                ${item.downloads}
+            </span>
+            <span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-git-commit" width="24"
+                    height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+                    <path d="M12 3l0 6"></path>
+                    <path d="M12 15l0 6"></path>
+                </svg>
+                <input class="package-version" placeholder="latest"
+                    value="${item.state && item.state !== 'latest' ? item.state : ''}"
+                    oninput="updateVersion(event, '${item.path}')" />
+            </span>
+        </div>
+    </div>
+    <div class="card-description">
+        <p>
+            ${item.description}
+        </p>
+        <div class="card-actions">
+            <button type="button" class="button card-button" data-module="${item.path}" onclick="togglePackage(event)">
+                ${item.state ? 'Remove' : 'Add'} this module
+            </button>
+        </div>
+    </div>
+</div>
