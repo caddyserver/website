@@ -4,16 +4,18 @@ title: "Build from source"
 
 # Build from source
 
-There are 2 ways to build Caddy if you need to customize Caddy:
+There are multiple options for building Caddy, if you need a customized build (e.g. with plugins):
 - [Git](#git): Build from Git repo
 - [`xcaddy`](#xcaddy): Build using `xcaddy`
-- [Docker](#docker) Build custom Docker image
+- [Docker](#docker): Build a custom Docker image
 
 Requirements:
 
 - [Go](https://golang.org/doc/install) 1.20 or newer
 
-The [last section](#package-support-files-for-custom-builds-for-debianubunturaspbian) contains instructions for users who installed Caddy using the APT command on Debian-derivative system yet need the custom build executable for their operations.
+The [Package Support Files](#package-support-files-for-custom-builds-for-debianubunturaspbian) section contains instructions for users who installed Caddy using the APT command on Debian-derivative system yet need the custom build executable for their operations.
+
+
 
 ## Git
 
@@ -49,6 +51,8 @@ Or similarly for Linux ARMv6 when you're not on Linux or on ARMv6:
 
 <pre><code class="cmd bash">GOOS=linux GOARCH=arm GOARM=6 go build</code></pre>
 
+
+
 ## xcaddy
 
 The [`xcaddy` command](https://github.com/caddyserver/xcaddy) is the easiest way to build Caddy with version information and/or plugins.
@@ -56,7 +60,7 @@ The [`xcaddy` command](https://github.com/caddyserver/xcaddy) is the easiest way
 Requirements:
 
 - Go installed (see above)
-- Make sure [`xcaddy`](https://github.com/caddyserver/xcaddy/releases) is in your PATH
+- Make sure [`xcaddy`](https://github.com/caddyserver/xcaddy/releases) is in your `PATH`
 
 You do **not** need to download the Caddy source code (it will do that for you).
 
@@ -76,6 +80,8 @@ Cross-platform compilation with `xcaddy` works the same as with the `go` command
 
 <pre><code class="cmd bash">GOOS=darwin xcaddy build</code></pre>
 
+
+
 ## Docker
 
 You can use the `:builder` image as a short-cut to building a new Caddy binary with custom modules:
@@ -92,9 +98,15 @@ FROM caddy:<version>
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 ```
 
-Note the second `FROM` instruction - this produces a much smaller image by simply overlaying the newly-built binary on top of the regular `caddy` image.
+Make sure to replace `<version>` with the latest version of Caddy to start.
 
-The builder uses `xcaddy` to Caddy with the provided modules, similar to the process outlined in the [`xcaddy`](#xcaddy) section.
+Note the second `FROM` instruction — this produces a much smaller image by simply overlaying the newly-built binary on top of the regular `caddy` image.
+
+The builder uses `xcaddy` to Caddy with the provided modules, similar to the process [outlined above](#xcaddy).
+
+To use Docker Compose, see our recommended [`compose.yml`](/docs/running#docker-compose) and usage instructions.
+
+
 
 ## Package support files for custom builds for Debian/Ubuntu/Raspbian
 
@@ -103,9 +115,9 @@ This procedure aims to simplify running custom `caddy` binaries while keeping su
 This procedure allows users to take advantage of the default configuration, systemd service files and bash-completion from the official package.
 
 Requirements:
-- Install `caddy` package according to these [instructions](/docs/install#debian-ubuntu-raspbian)
-- Build your custom `caddy` binary according to the procedure listed in this document. (see above)
-- Your custom `caddy` binary should be located in the current directory.
+- Install the `caddy` package according to [these instructions](/docs/install#debian-ubuntu-raspbian)
+- Build your custom `caddy` binary (see above sections), or [download](/download) a custom build
+- Your custom `caddy` binary should be located in the current directory
 
 Procedure:
 <pre><code class="cmd"><span class="bash">sudo dpkg-divert --divert /usr/bin/caddy.default --rename /usr/bin/caddy</span>
@@ -115,13 +127,16 @@ Procedure:
 <span class="bash">sudo systemctl restart caddy</span>
 </code></pre>
 
+Explanation:
 
-`dpkg-divert` will move `/usr/bin/caddy` binary to `/usr/bin/caddy.default` and put a diversion in place in case any package want to install a file to this location.
+- `dpkg-divert` will move `/usr/bin/caddy` binary to `/usr/bin/caddy.default` and put a diversion in place in case any package want to install a file to this location.
 
-`update-alternatives` will create a symlink from the desired caddy binary to `/usr/bin/caddy`
+- `update-alternatives` will create a symlink from the desired caddy binary to `/usr/bin/caddy`
 
-`systemctl restart caddy` will shut down the default version of the Caddy server and start the custom one.
+- `systemctl restart caddy` will shut down the default version of the Caddy server and start the custom one.
 
-You can change between the custom and default `caddy` binaries by executing
+You can change between the custom and default `caddy` binaries by executing the below, and following the on screen information. Then, restart the Caddy service.
+
 <pre><code class="cmd bash">update-alternatives --config caddy</code></pre>
-and following the on screen information, then restarting the Caddy service.
+
+To upgrade Caddy after this point, you may run [`caddy upgrade`](/docs/command-line#caddy-upgrade). This attempts to [download](/download) a build with the same plugins as your current build, with the latest version of Caddy, then replace the current binary with the new one.
