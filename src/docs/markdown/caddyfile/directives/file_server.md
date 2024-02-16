@@ -85,9 +85,11 @@ file_server /static/*
 
 The `file_server` directive is usually paired with the [`root` directive](root) to set the root path from which to serve files:
 
-```caddy-d
-root * /home/user/public_html
-file_server
+```caddy
+example.com {
+	root * /srv
+	file_server
+}
 ```
 
 <aside class="tip">

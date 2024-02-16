@@ -15,6 +15,7 @@ These are not drop-in solutions; you will have to customize your domain name, po
 - [Trailing slashes](#trailing-slashes)
 - [Wildcard certificates](#wildcard-certificates)
 - [Single-page apps (SPAs)](#single-page-apps-spas)
+- [Caddy proxying to another Caddy](#caddy-proxying-to-another-caddy)
 
 
 ## Static file server
@@ -58,6 +59,8 @@ There are many more [`reverse_proxy` examples here](/docs/caddyfile/directives/r
 
 ## PHP
 
+### PHP-FPM
+
 With a PHP FastCGI service running, something like this works for most modern PHP apps:
 
 ```caddy
@@ -79,6 +82,23 @@ php_fastcgi unix//run/php/php8.2-fpm.sock
 
 The [`php_fastcgi` directive](/docs/caddyfile/directives/php_fastcgi) is actually just a shortcut for [several pieces of configuration](/docs/caddyfile/directives/php_fastcgi#expanded-form).
 
+
+### FrankenPHP
+
+Alternatively, you may use [FrankenPHP](https://frankenphp.dev/), which is a distribution of Caddy which calls PHP directly using CGO (Go to C bindings). This can be up to 4x faster than with PHP-FPM, and even better if you can use the worker mode.
+
+```caddy
+{
+    frankenphp
+    order php_server before file_server
+}
+
+example.com {
+	root * /srv/public
+    encode zstd br gzip
+    php_server
+}
+```
 
 
 ## Redirect `www.` subdomain
@@ -196,7 +216,7 @@ A typical SPA config usually looks something like this:
 
 ```caddy
 example.com {
-	root * /path/to/site
+	root * /srv
 	encode gzip
 	try_files {path} /index.html
 	file_server
@@ -214,9 +234,50 @@ example.com {
 	}
 
 	handle {
-		root * /path/to/site
+		root * /srv
 		try_files {path} /index.html
 		file_server
 	}
 }
 ```
+
+
+## Caddy proxying to another Caddy
+
+If you have one Caddy instance publicly accessible (let's call it "front"), and another Caddy instance in your private network (let's call it "back") serving your actual app, you can use the [`reverse_proxy` directive](/docs/caddyfile/directives/reverse_proxy) to pass requests through.
+
+Front instance:
+
+```caddy
+foo.example.com, bar.example.com {
+	reverse_proxy 10.0.0.1:80
+}
+```
+
+Back instance:
+
+```caddy
+{
+	servers {
+		trusted_proxies static private_ranges
+	}
+}
+
+http://foo.example.com {
+	reverse_proxy foo-app:8080
+}
+
+http://bar.example.com {
+	reverse_proxy bar-app:9000
+}
+```
+
+- This example serves two different domains, proxying both to the same back Caddy instance, on port `80`. Your back instance is serving the two domains different ways, so it's configured with two separate site blocks.
+
+- On the back, [`http://`](/docs/caddyfile/concepts#addresses) is used to accept HTTP on port `80`. The front instance terminates TLS, and the traffic between front and back are on a private network, so there's no need to re-encrypt it.
+
+- You may use a different port like `8080` on the back instance if you need to; just append `:8080` to each site address on the back's config, OR set the [`http_port` global option](/docs/caddyfile/options#http_port) to `8080`.
+
+- On the back, the [`trusted_proxies` global option](/docs/caddyfile/options#trusted_proxies) is used to tell Caddy to trust the front instance as a proxy. This ensures the real client IP is preserved.
+
+- Going further, you could have more than one back instance that you [load balance](/docs/caddyfile/directives/reverse_proxy#load-balancing) between. You could set up mTLS (mutual TLS) using the [`acme_server`](/docs/caddyfile/directives/acme_server) on the front instance such that it acts like the CA for the back instance (useful if the traffic between front and back cross untrusted networks).

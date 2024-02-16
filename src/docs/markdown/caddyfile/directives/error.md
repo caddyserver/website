@@ -23,6 +23,7 @@ error [<matcher>] <status>|<message> [<status>] {
 
 To clarify, the first non-matcher argument can be either a 3-digit status code, or an error message string. If it is an error message, the next argument can be the status code.
 
+
 ## Examples
 
 Trigger an error on certain request paths, and use [`handle_errors`](handle_errors) to write a response:

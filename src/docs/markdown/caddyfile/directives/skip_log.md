@@ -20,8 +20,15 @@ skip_log [<matcher>]
 
 Skip access logging for static files stored in a subpath:
 
-```caddy-d
-skip_log /static*
+```caddy
+example.com {
+	root * /srv
+
+	log
+	skip_log /static*
+
+	file_server
+}
 ```
 
 

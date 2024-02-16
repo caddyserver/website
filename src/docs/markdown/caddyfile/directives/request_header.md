@@ -8,6 +8,8 @@ Manipulates HTTP header fields on the request. It can set, add, and delete heade
 
 If you intend to manipulate headers for proxying, use the [`header_up` subdirective](/docs/caddyfile/directives/reverse_proxy#header_up) of `reverse_proxy` instead, as those manipulations are proxy-aware.
 
+To manipulate HTTP response headers, you may use the [`header`](header) directive.
+
 
 ## Syntax
 
@@ -15,7 +17,9 @@ If you intend to manipulate headers for proxying, use the [`header_up` subdirect
 request_header [<matcher>] [[+|-]<field> [<value>|<find>] [<replace>]]
 ```
 
-- **&lt;field&gt;** is the name of the header field. By default, will overwrite any existing field of the same name.
+- **&lt;field&gt;** is the name of the header field.
+
+  With no prefix, the field is set (overwritten).
 
   Prefix with `+` to add the field instead of overwriting (setting) the field if it already exists; header fields can appear more than once in a request.
 

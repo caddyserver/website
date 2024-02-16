@@ -4,9 +4,11 @@ title: header (Caddyfile directive)
 
 # header
 
-Manipulates HTTP header fields on the response. It can set, add, and delete header values, or perform replacements using regular expressions.
+Manipulates HTTP response header fields. It can set, add, and delete header values, or perform replacements using regular expressions.
 
 By default, header operations are performed immediately unless any of the headers are being deleted (`-` prefix) or setting a default value (`?` prefix). In those cases, the header operations are automatically deferred until the time they are being written to the client.
+
+To manipulate HTTP request headers, you may use the [`request_header`](request_header) directive.
 
 
 ## Syntax
@@ -38,7 +40,9 @@ header [<matcher>] [[+|-|?|>]<field> [<value>|<find>] [<replace>]] {
 }
 ```
 
-- **&lt;field&gt;** is the name of the header field. By default, will overwrite any existing field of the same name.
+- **&lt;field&gt;** is the name of the header field.
+
+  With no prefix, the field is set (overwritten).
 
   Prefix with `+` to add the field instead of overwriting (setting) the field if it already exists; header fields can appear more than once in a request.
 
@@ -48,7 +52,7 @@ header [<matcher>] [[+|-|?|>]<field> [<value>|<find>] [<replace>]] {
 
   Prefix with `>` to set the field, and enable `defer`, as a shortcut.
 
-- **&lt;value&gt;** is the header field value, if adding or setting a field.
+- **&lt;value&gt;** is the header field value, when adding or setting a field.
 
 - **&lt;find&gt;** is the substring or regular expression to search for.
 
@@ -58,7 +62,7 @@ header [<matcher>] [[+|-|?|>]<field> [<value>|<find>] [<replace>]] {
 
 For multiple header manipulations, you can open a block and specify one manipulation per line in the same way.
 
-When using the `?` prefix to set a default header value, it is recommended to separate this into its own `header` directive. [Under the hood](/docs/modules/http.handlers.headers#response/require), using `?` configures a response matcher which applies to the directive's entire handler which only applies the header operations if the field is not yet set. For example, if in the same directive, you have these two manipulations: `-Hidden` and `?Foo default`, then the `Hidden` header is _only_ removed if `Foo` is empty, which is typically not the intended effect.
+When using the `?` prefix to set a default header value, it is recommended to separate this into its own `header` directive. [Under the hood](/docs/modules/http.handlers.headers#response/require), using `?` configures a response matcher which applies to the directive's entire handler, which only applies the header operations if the field is not yet set. For example, in the same directive, you have these two manipulations: `-Hidden` and `?Foo default`, then the `Hidden` header is _only_ removed if `Foo` is empty, which is typically not the intended effect.
 
 
 ## Examples

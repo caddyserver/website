@@ -75,8 +75,8 @@ Because HTTPS utilizes a shared, public infrastructure, you as the server admin 
 Caddy implicitly activates automatic HTTPS when it knows a domain name (i.e. hostname) or IP address it is serving. There are various ways to tell Caddy your domain/IP, depending on how you run or configure Caddy:
 
 - A [site address](/docs/caddyfile/concepts#addresses) in the [Caddyfile](/docs/caddyfile)
-- A [host matcher](/docs/json/apps/http/servers/routes/match/host/) in a [JSON route](/docs/modules/http#servers/routes)
-- Command line flags like [--domain](/docs/command-line#caddy-file-server) or [--from](/docs/command-line#caddy-reverse-proxy)
+- A [host matcher](/docs/json/apps/http/servers/routes/match/host/) at the top-level in the [JSON routes](/docs/modules/http#servers/routes)
+- Command line flags like [`--domain`](/docs/command-line#caddy-file-server) or [`--from`](/docs/command-line#caddy-reverse-proxy)
 - The [automate](/docs/json/apps/tls/certificates/automate/) certificate loader
 
 Any of the following will prevent automatic HTTPS from being activated, either in whole or in part:
@@ -96,11 +96,12 @@ Any of the following will prevent automatic HTTPS from being activated, either i
 
 When automatic HTTPS is activated, the following occurs:
 
-- Certificates are obtained and renewed for [all domain names](#hostname-requirements)
-- The default port (if any) is changed to the [HTTPS port](/docs/modules/http#https_port) `443`
+- Certificates are obtained and renewed for [all qualifying domain names](#hostname-requirements)
 - HTTP is redirected to HTTPS (this uses [HTTP port](/docs/modules/http#http_port) `80`)
 
-Automatic HTTPS never overrides explicit configuration.
+Automatic HTTPS never overrides explicit configuration, it only augments it.
+
+If you already have a [server](/docs/json/apps/http/servers/) listening on the HTTP port, the HTTP->HTTPS redirect routes will be inserted after your routes with a host matcher, but before a user-defined catch-all route.
 
 You can [customize or disable automatic HTTPS](/docs/json/apps/http/servers/automatic_https/) if necessary; for example, you can skip certain domain names or disable redirects (for Caddyfile, do this with [global options](/docs/caddyfile/options)).
 

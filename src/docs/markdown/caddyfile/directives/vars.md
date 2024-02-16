@@ -27,11 +27,13 @@ vars [<matcher>] [<name> <value>] {
 
 To set a single variable, the value being conditional based on the request path, then responding with the value:
 
-```caddy-d
-vars /foo* isFoo "yep"
-vars isFoo "nope"
+```caddy
+example.com {
+	vars /foo* isFoo "yep"
+	vars isFoo "nope"
 
-respond {vars.isFoo}
+	respond {vars.isFoo}
+}
 ```
 
 To set multiple variables, each converted to the appropriate scalar type:

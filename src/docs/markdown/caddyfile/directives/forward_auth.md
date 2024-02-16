@@ -2,6 +2,29 @@
 title: forward_auth (Caddyfile directive)
 ---
 
+<script>
+window.$(function() {
+	// Fix > in code blocks
+	window.$('pre.chroma .k:contains(">")')
+		.each(function() {
+			const e = window.$(this);
+			// Skip if ends with >
+			if (e.text().trim().endsWith('>')) return;
+			// Replace > with <span class="p">&gt;</span>
+			e.html(e.html().replace(/&gt;/g, '<span class="p">&gt;</span>'));
+		});
+
+	// Fix uri subdirective, gets parsed as matcher arg because of "uri" directive
+	window.$('.k:contains("uri") + .nd')
+		.each(function() {
+			window.$(this)
+				.removeClass('nd')
+				.addClass('s')
+				.text(window.$(this).text());
+		});
+});
+</script>
+
 # forward_auth
 
 An opinionated directive which proxies a clone of the request to an authentication gateway, which can decide whether handling should continue, or needs to be sent to a login page.

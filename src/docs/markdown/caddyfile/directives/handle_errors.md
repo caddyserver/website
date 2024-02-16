@@ -97,12 +97,12 @@ To handle specific error codes differently, use an [`expression`](/docs/caddyfil
 
 ```caddy-d
 handle_errors {
-	@404-410 expression `{err.status_code} in [404, 410]`
+	@404-410 `{err.status_code} in [404, 410]`
 	handle @404-410 {
 		respond "It's a 404 or 410 error!"
 	}
 
-	@5xx expression `{err.status_code} >= 500 && {err.status_code} < 600`
+	@5xx `{err.status_code} >= 500 && {err.status_code} < 600`
 	handle @5xx {
 		respond "It's a 5xx error."
 	}
