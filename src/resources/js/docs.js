@@ -49,7 +49,14 @@ ready(function() {
 			return;
 		}
 
-		const response = await fetch("/temporary-markdown-proxy"+e.target.getAttribute('href'));
+		// transform user-facing URL to direct link to markdown file for the hover submenu
+		let href = e.target.getAttribute('href');
+		const trimPrefix = "/docs/";
+		if (href.startsWith(trimPrefix)) {
+			href = href.slice(trimPrefix.length);
+		}
+
+		const response = await fetch(`/docs/markdown/${href}.md`);
 		const markdown = await response.text();
 		const tokens = marked.lexer(markdown);
 

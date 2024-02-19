@@ -264,7 +264,7 @@ main nav li ul {
 
 
 article {
-	font-family: 'Albert Sans', system-ui; /* considered: Figtree, Asisstant, Red Hat Text, Be Vietnam Pro
+	font-family: 'Albert Sans', Figree, Assistant, 'Red Hat Text', 'Be Vietnam Pro', system-ui;
 	font-size: 20px;
 	word-wrap: break-word;
 
@@ -772,7 +772,11 @@ h3.quick-assist-question {
 	min-height: 3.5em;
 }
 
-
+main nav li img,
+article li img,
+img.external-link {
+	max-height: .9em;
+}
 
 
 

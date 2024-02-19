@@ -8,24 +8,187 @@
 <html>
 	<head>
 		<title>{{$title}} &mdash; Caddy Documentation</title>
-		{{import "/old/includes/docs/head.html"}}
-		{{template "docs-head"}}
+		{{import "/includes/head.html"}}
+		{{template "head" .}}
 		<meta property="og:title" content="{{$title}} - Caddy Documentation">
 		<meta name="twitter:title" value="{{$title}} - Caddy Documentation">
+
+		<link rel="stylesheet" href="/resources/css/docs.css{{template "cacheBust"}}">
+
+		<script src="/resources/js/vendor/marked.min.js{{template "cacheBust"}}"></script>
+		<script src="/resources/js/docs.js{{template "cacheBust"}}"></script>
 	</head>
 	<body>
-		{{include "/old/includes/docs/header.html"}}
+		{{include "/includes/header.html" ""}}
+
+		<div id="autonav"></div>
+
 		<main>
-			{{include "/old/includes/docs/nav.html"}}
-			<div class="article-container">
-				<div class="paper" id="paper1"></div>
-				<div class="paper" id="paper2"></div>
-				<div class="paper paper3">
-					<article>{{markdown $markdownFile.Body}}</article>
-				</div>
+			<div class="docs wrapper">
+				<nav>
+					<div id="docs-menu">
+						<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-menu-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+							<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+							<path d="M4 6l16 0"></path>
+							<path d="M4 12l16 0"></path>
+							<path d="M4 18l16 0"></path>
+						</svg>
+						Pages
+					</div>
+					<div id="docs-menu-container">
+						<ul>
+							<li class="heading">Get Caddy</li>
+							<li>
+								<a href="/docs/install" class="current">Install</a>
+								<ul>
+									<li><a href="/docs/install/packages">OS packages</a></li>
+									<li><a href="/docs/install/downloads">Static binaries</a></li>
+									<li><a href="/docs/install/plugins">With plugins</a></li>
+								</ul>
+							</li>
+							<li><a href="/docs/build">Build from source</a></li>
+						</ul>
+						
+						<ul>
+							<li class="heading">Tutorials</li>
+							<li><a href="/docs/basics">Caddy basics</a></li>
+							<li><a href="/docs/troubleshooting">How to fix problems</a></li>
+							<li><a href="/docs/static-files">Static files</a></li>
+							<li><a href="/docs/reverse-proxy">Reverse proxy</a></li>
+							<li><a href="/docs/reverse-proxy">Custom domains</a></li>
+							<li><a href="/docs/reverse-proxy">Automate mTLS</a></li>
+						</ul>
+
+						<ul>
+							<li class="heading">Reference</li>
+							<li><a href="/docs/command-line">Command line</a></li>
+							<li><a href="/docs/api">API</a></li>
+							<li><a href="/docs/json/">JSON config</a></li>
+							<li>
+								<a href="/docs/caddyfile">Caddyfile</a>
+								<ul>
+									<li><a href="/docs/caddyfile/concepts">Concepts</a></li>
+									<li><a href="/docs/caddyfile/directives">Directives</a></li>
+									<li><a href="/docs/caddyfile/matchers">Request matchers</a></li>
+									<li><a href="/docs/caddyfile/options">Global options</a></li>
+									<li><a href="/docs/caddyfile/patterns">Common patterns</a></li>
+								</ul>
+							</li>
+							<!-- <li><a href="/docs/caddyfile">Caddyfile</a></li> -->
+							<li><a href="/docs/automatic-https">Automatic HTTPS</a></li>
+							<li><a href="/docs/automatic-https">Modules</a></li>
+						</ul>
+
+						<ul>
+							<li class="heading">Articles</li>
+							<!-- <li><a href="/docs/v2-upgrade">Upgrading to Caddy 2</a></li> -->
+							<li><a href="/docs/conventions">Conventions</a></li>
+							<li><a href="/docs/config-adapters">Config Adapters</a></li>
+							<li><a href="/docs/logging">How Logging Works</a></li>
+							<li><a href="/docs/metrics">Monitoring Caddy</a></li>
+							<li><a href="/docs/architecture">Caddy Architecture</a></li>
+							<li><a href="/docs/running">Keep Caddy Running</a></li>
+							<li><a href="/docs/signature-verification">Verifying Asset Signatures</a></li>
+						</ul>
+
+						<ul>
+							<li class="heading">Develop</li>
+							<li><a href="/docs/architecture">Caddy architecture</a></li>
+							<li><a href="/docs/contribute">Contribute</a></li>
+							<li><a href="/docs/extend">Write a module</a></li>
+						</ul>
+					</ul>
+				</nav>
+
+				<article>
+					<!-- TODO: This should only be on the docs homepage. Also, I can't get it to work. lol -->
+					<div class="fullspan">
+						{{ include "/includes/quick-assist/core.html" }}
+					</div>
+
+					{{markdown $markdownFile.Body}}
+
+					<h1>Documentation</h1>
+
+					<div class="fullspan">
+						{{ include "/includes/quick-assist/core.html" }}
+					</div>
+
+					<!-- TODO: Playing with ideas for the new docs homepage -->
+					
+						<!-- <div class="box">
+							<h3>Getting Started</h3>
+							<p>
+								New here? Welcome! As usual, before running any server software, please make sure you:
+							</p>
+							<ul>
+								<li>know how to use your terminal / command line</li>
+								<li>are familiar with installing and using non-graphical software</li>
+								<li>can edit text files to configure programs</li>
+								<li>understand how your operating system's network stack and permissions model work</li>
+							</ul>
+							<p>
+								
+							</p>
+						</div>
+						<div class="box">
+							<h3>Caddyfile Directives</h3>
+							<p>
+								Quick access to all standard Caddyfile directives:
+							</p>
+							<ul>
+								<li><code><a href="/docs/caddyfile/directives/abort">abort</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/acme_server">acme_server</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/basicauth">basicauth</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/bind">bind</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/encode">encode</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/error">error</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/file_server">file_server</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/forward_auth">forward_auth</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/handle">handle</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/handle_errors">handle_errors</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/handle_path">handle_path</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/header">header</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/import">import</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/log">log</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/map">map</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/method">method</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/metrics">metrics</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/php_fastcgi">php_fastcgi</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/push">push</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/redir">redir</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/request_body">request_body</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/request_header">request_header</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/respond">respond</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/reverse_proxy">reverse_proxy</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/rewrite">rewrite</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/root">root</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/route">route</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/skip_log">skip_log</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/templates">templates</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/tls">tls</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/tracing">tracing</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/try_files">try_files</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/uri">uri</a></code></li>
+								<li><code><a href="/docs/caddyfile/directives/vars">vars</a></code></li>
+							</ul>
+						</div>
+						<div class="box">
+							<h3>Examples</h3>
+							<p>
+								
+							</p>
+						</div> -->
+					<!-- </div> -->
+
+
+					{{markdown $markdownFile.Body}}
+				</article>
+
+				<nav id="pagenav">
+					<div class="heading">On this page</div>
+				</nav>
 			</div>
-			<div class="sidebar"></div>
 		</main>
-		{{include "/old/includes/footer.html"}}
 	</body>
 </html>
