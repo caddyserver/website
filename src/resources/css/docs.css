@@ -7,8 +7,8 @@
 	--nav-current-bg: linear-gradient(to right, #ecf1f3, transparent);
 	--nav-link-hover-shadow-color: rgba(0, 0, 0, 0.15);
 	--nav-link-hover-before-bg: #d2e5e7;
+	--nav-link-hover-bg: #f4f7f9;
 	--autonav-bg: #fff;
-	--pagenav-hover-bg: #f4f7f9;
 	--cmd-bg: #333;
 	--tip-color: #5c50bb;
 	--menu-toggle-bg: #e4f1f2;
@@ -23,8 +23,8 @@
 	--nav-current-bg: linear-gradient(to right, #1a3c4d, transparent);
 	--nav-link-hover-shadow-color: rgba(255, 255, 255, 0.15);
 	--nav-link-hover-before-bg: #32494f;
+	--nav-link-hover-bg: #18262f;
 	--autonav-bg: #34404d;
-	--pagenav-hover-bg: #18262f;
 	--cmd-bg: black;
 	--tip-color: #a6b2f7;
 	--menu-toggle-bg: #274d5c;
@@ -41,8 +41,8 @@ body {
 
 body {
 	background-image:
-		radial-gradient(at calc(50% - min(25vw, 800px)) -10%, hsl(137.64deg, 100%, 92.42%) 0px, transparent min(15%, 500px)),
-		radial-gradient(at calc(50% + min(25vw, 800px)) -10%, hsl(201.2deg, 68%, 90.2%) 0px, transparent min(15%, 500px));
+		radial-gradient(circle at 30% top, hsl(137.64deg, 100%, 92.42%) 0px, transparent min(15%, 500px)),
+		radial-gradient(circle at 70% top, hsl(201.2deg, 68%, 90.2%) 0px, transparent min(15%, 500px)); 
 	background-repeat: no-repeat;
 }
 
@@ -191,6 +191,7 @@ main nav li:hover > a,
 #autonav a:hover,
 #pagenav a:hover {
 	color: var(--main-nav-link-hover-color);
+	background: var(--nav-link-hover-bg);
 }
 
 
@@ -693,11 +694,6 @@ main nav ul > li:hover #autonav {
 	border-radius: 0;
 }
 
-#autonav a:hover {
-	color: #01324b;
-	background: #f1f7fb;
-}
-
 
 
 
@@ -710,10 +706,6 @@ main nav ul > li:hover #autonav {
 	animation: fadeIn 500ms;
 	padding: .75em;
 	font-size: 90%;
-}
-
-#pagenav a:hover {
-	background: var(--pagenav-hover-bg);
 }
 
 @keyframes fadeIn {
