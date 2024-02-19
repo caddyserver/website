@@ -212,5 +212,174 @@
 		"picture": "https://www.redditstatic.com/avatars/avatar_default_02_24A0ED.png",
 		"quote": "I moved over in the past year from traefik and it was well worth it. Traefik is over-abstracted and I found it to break randomly and unpredictably when using docker labels. Debugging was a PITA too with the best solution being turning it off and on again (i.e. restarting it, or the service it was proxying). Caddy, on the other hand, just works. The documentation is also orders of magnitude better than traefik (full of confusing abstractions).",
 		"link": "https://www.reddit.com/r/selfhosted/comments/17ulz9n/comment/k95oss3/?utm_source=share&utm_medium=web2x&context=3"
+	},
+	{
+		"name": "Paul Frybarger",
+		"username": "pfrybar",
+		"picture": "https://avatars.githubusercontent.com/u/1022924?v=4",
+		"quote": "First off, I want to say thanks so much for Caddy. It's so simple to get started and the performance is outstanding. Additionally, it's the only reverse proxy I could find which properly load balances across multiple IPs returned from a single A record (dynamic upstreams) while also supporting keepalives ⭐",
+		"link": "https://github.com/caddyserver/caddy/issues/4211#issuecomment-1952694745"
+	},
+	{
+		"name": "Paul Frybarger",
+		"username": "pfrybar",
+		"picture": "https://avatars.githubusercontent.com/u/1022924?v=4",
+		"quote": "First off, I want to say thanks so much for Caddy. It's so simple to get started and the performance is outstanding. Additionally, it's the only reverse proxy I could find which properly load balances across multiple IPs returned from a single A record (dynamic upstreams) while also supporting keepalives ⭐",
+		"link": "https://github.com/caddyserver/caddy/issues/4211#issuecomment-1952694745"
+	},
+	{
+		"name": "William Desportes",
+		"username": "wdesportes",
+		"picture": "https://pbs.twimg.com/profile_images/1704796083409289216/L8eMjvmp_400x400.jpg",
+		"quote": "Caddy with auto provisioning made my email autoconfig deployment by domain so easy, my company started to sponsor your right now! I will open a PR some day to improve the docs on how to configure an example auto provision server. Great amazing work!",
+		"link": "https://twitter.com/wdesportes/status/1758645382559531230"
+	},
+	{
+		"name": "Nick Williams",
+		"username": "WickyNilliams",
+		"picture": "https://pbs.twimg.com/profile_images/1704796083409289216/L8eMjvmp_400x400.jpg",
+		"quote": "[Caddy is] one of those rare pieces of software that is as powerful as it is easy to use.",
+		"link": "https://twitter.com/WickyNilliams/status/1750621509813477796"
+	},
+	{
+		"name": "Matthew Phillips",
+		"role": "Co-creator",
+		"org": "Astro.build",
+		"username": "matthewcp",
+		"picture": "https://pbs.twimg.com/profile_images/1758242509652647936/JuXuCA4z_400x400.jpg",
+		"quote": "I was an early adopter of @caddyserver many years ago and just booted up the latest version and.... my god it's gotten even better.",
+		"link": "https://twitter.com/matthewcp/status/1750609671889510476"
+	},
+	{
+		"name": "Luke",
+		"username": "luke_warlow",
+		"picture": "https://pbs.twimg.com/profile_images/1662918180925235204/LnUKQWgK_400x400.jpg",
+		"quote": "It's amazing isn't it. I've been using Caddy for a couple of years now and I can never go back.",
+		"link": "https://twitter.com/luke_warlow/status/1750615074652422475"
+	},
+	{
+		"name": "Sam Meech Ward",
+		"username": "Meech_Ward",
+		"picture": "https://pbs.twimg.com/profile_images/1562896334700814341/MnaI9P_g_400x400.png",
+		"quote": "It turns out i've been overcomplicating things. This is how you manage SSL certificates, forward http to https, and handle traffic as a reverse proxy:\n\nsudo vim /etc/caddy/Caddyfile\nmy.domain {\n  reverse_proxy localhost:3000\n}\n\nThat's it, nothing else. Thank you @caddyserver",
+		"link": "https://twitter.com/Meech_Ward/status/1747868826887463186"
+	},
+	{
+		"username": "GitMaxd",
+		"picture": "https://pbs.twimg.com/profile_images/1754747581211852800/DjBx4EMt_400x400.jpg",
+		"quote": "You gotta try Caddy sometime. It's ridiculous.",
+		"link": "https://twitter.com/GitMaxd/status/1744515505296437687"
+	},
+	{
+		"username": "____Snazzy",
+		"picture": "https://pbs.twimg.com/profile_images/1575244134121705473/D7r0HQBC_400x400.jpg",
+		"quote": "I used to use either Apache and NGINX for everything. After trying @caddyserver for the last few days, I don't think I'll be going back.",
+		"link": "https://twitter.com/____Snazzy/status/1741378448260489271"
+	},
+	{
+		"name": "Steffen Busch",
+		"username": "SteffenBusch",
+		"picture": "https://pbs.twimg.com/profile_images/1744577285666283520/RedtfjU4_400x400.jpg",
+		"quote": "The request matchers of @caddyserver are awesome 👏🏻 and the JSON access logs together with `jq` is simply perfect for analyzing or troubleshooting. This is a prime example of the capabilities expected from a contemporary webserver.",
+		"link": "https://twitter.com/SteffenBusch/status/1740350237057618182"
+	},
+	{
+		"name": "Darshil Rathod",
+		"username": "yesdarshil",
+		"picture": "https://pbs.twimg.com/profile_images/1704796083409289216/L8eMjvmp_400x400.jpg",
+		"quote": "Can't believe how simple it is to setup and serve dynamic SSL certificates with @caddyserver and the features it offers, spent countless hours on Nginx and Openresty trying to achieve the same thing",
+		"link": "https://twitter.com/yesdarshil/status/1739994351881875468"
+	},
+	{
+		"name": "Diwaker Gupta",
+		"username": "diwakergupta",
+		"picture": "https://pbs.twimg.com/profile_images/1584636193173544964/scK8FVe-_400x400.jpg",
+		"quote": "I've been running my blog (powered by @Ghost) behind @caddyserver since last summer -- pretty happy with the setup. Caddy is so cool!",
+		"link": "https://twitter.com/diwakergupta/status/1755026074226893003"
+	},
+	{
+		"name": "Pieter Claerhout",
+		"username": "pieterclaerhout",
+		"picture": "https://pbs.twimg.com/profile_images/1293846667695923200/N1L3J5FB_400x400.jpg",
+		"quote": "I've also been running Caddy instead of nginx for a long time and it works like a charm. I even wrote a blog post about how to switch from nginx to Caddy for a Laravel app.",
+		"link": "https://twitter.com/pieterclaerhout/status/1754503964555354599"
+	},
+	{
+		"name": "Mr Alexandre J-S William ELISÉ",
+		"username": "mralexandrelise",
+		"picture": "https://pbs.twimg.com/profile_images/1569392561189539840/UGZSOMJ0_400x400.jpg",
+		"quote": "Lovin' @caddyserver more and more... Learning to master it. There is a learning curve, but when you get it...It's wonderland! Thx for your hard work @mholt6",
+		"link": "https://twitter.com/mralexandrelise/status/1756863318088659155"
+	},
+	{
+		"name": "Jarriq Rolle",
+		"username": "JarriqR",
+		"picture": "https://pbs.twimg.com/profile_images/1581520631560126465/3N5xJ3l-_400x400.jpg",
+		"quote": "I've been using caddy for a few years. It's so easy. Most times I'm just using it as a reverse proxy. So simple to get started and very easy to reason about.",
+		"link": "https://twitter.com/JarriqR/status/1754463748511744434"
+	},
+	{
+		"name": "Rajesh Sharma",
+		"username": "broncha",
+		"picture": "https://pbs.twimg.com/profile_images/1362436777374490626/HZTrYCS9_400x400.jpg",
+		"quote": "We recently switched from haproxy as TLS termination and nginx to @caddyserver and On-Demand TLS. Also deleted a ton of code handling cert issuance and renewal.",
+		"link": "https://twitter.com/broncha/status/1753364955632746649"
+	},
+	{
+		"org": "Skip2 Networks",
+		"username": "skip2networks",
+		"picture": "https://pbs.twimg.com/profile_images/1685426301660745728/YTqskyMQ_400x400.png",
+		"quote": "Honestly, Caddy is so easy to write configs for that you don't even need ChatGPT.",
+		"link": "https://twitter.com/skip2networks/status/1752892086880280637"
+	},
+	{
+		"name": "Yash Chandra",
+		"username": "yashchandra",
+		"picture": "https://pbs.twimg.com/profile_images/1574902138743947264/kBERsN8i_400x400.jpg",
+		"quote": "Just set up my personal blog on Caddy as a reverse proxy to a Go binary. Was a breeze and took 10 mins.",
+		"link": "https://twitter.com/yashchandra/status/1752776551169405097"
+	},
+	{
+		"name": "Anwar",
+		"username": "getanwar",
+		"org": "Dorik.com",
+		"picture": "https://pbs.twimg.com/profile_images/1256965184905756673/RxR3SZVI_400x400.jpg",
+		"quote": "I use Caddy to handle automatic SSL for thousands of domain I manage. The experience is seamless for all our customers. Thanks for making Caddy.",
+		"link": "https://twitter.com/getanwar/status/1750733373159735306"
+	},
+	{
+		"name": "Joel Eriksson",
+		"username": "OwariDa",
+		"picture": "https://pbs.twimg.com/profile_images/1461294485086871560/7BKKVXoh_400x400.jpg",
+		"quote": "Glad I just moved from nginx to caddy.",
+		"link": "https://twitter.com/OwariDa/status/1758391682591064563"
+	},
+	{
+		"name": "Nick Soolo",
+		"username": "nick_soolo",
+		"picture": "https://pbs.twimg.com/profile_images/1754152453262422017/WjZfzpVR_400x400.png",
+		"quote": "I used nginx since its release, but recently switched to Caddy.",
+		"link": "https://twitter.com/nick_soolo/status/1758292718068154695"
+	},
+	{
+		"name": "Filipe Almeida",
+		"username": "filipe_almeida",
+		"picture": "https://pbs.twimg.com/profile_images/1484803530560991233/Cp0Yc8xs_400x400.jpg",
+		"quote": "Resurrecting this thread after a while. Recently I become a huge fan of @caddyserver for personal projects given the simplicity and how concise the config is. It's just very intuitive to config, making both Apache and @nginx feel over-engineered",
+		"link": "https://twitter.com/filipe_almeida/status/1758026454778978631"
+	},
+	{
+		"org": "Gitea",
+		"username": "giteaio",
+		"picture": "https://pbs.twimg.com/profile_images/1333975554694017026/srNAY73p_400x400.png",
+		"quote": "Glad we have @caddyserver examples in our docs, as it has the simplest HTTPS configuration (none, it just does it by default) 😃",
+		"link": "https://twitter.com/giteaio/status/1757897166469681558"
+	},
+	{
+		"name": "Antonio Pagano",
+		"username": "paganotoni",
+		"picture": "https://pbs.twimg.com/profile_images/675305310056259586/JFaKTdR9_400x400.jpg",
+		"quote": "I was quickly able to run the app on @Hetzner_Online! One thing I used to provision SSL was @caddyserver's #certmagic. Yes, It's magic ✨.",
+		"link": "https://twitter.com/paganotoni/status/1757042179535503784"
 	}
 ]
