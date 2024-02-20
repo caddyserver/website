@@ -17,13 +17,16 @@ try_files <files...> {
 
 - **<files...>** is the list of files to try. The URI path will be rewritten to the first one that exists.
 
-  To match directories, append a trailing forward slash `/` to the path. All file paths are relative to the site [root](/docs/caddyfile/directives/root), and [glob patterns](https://pkg.go.dev/path/filepath#Match) will be expanded.
+  To match directories, append a trailing forward slash `/` to the path. All file paths are relative to the site [root](root), and [glob patterns](https://pkg.go.dev/path/filepath#Match) will be expanded.
 
   Each argument may also contain a query string, in which case the query string will also be changed if it matches that particular file.
 
-  If the `try_policy` is `first_exist` (the default), then the last item in the list may be a number prefixed by `=` (e.g. `=404`), which as a fallback, will emit an error with that code; the error can be caught and handled with [`handle_errors`](/docs/caddyfile/directives/handle_errors).
+  If the `try_policy` is `first_exist` (the default), then the last item in the list may be a number prefixed by `=` (e.g. `=404`), which as a fallback, will emit an error with that code; the error can be caught and handled with [`handle_errors`](handle_errors).
 
-- **policy** is the policy for choosing the file among the list of files. Default: `first_exist`
+- **policy** is the policy for choosing the file among the list of files. 
+
+  Default: `first_exist`
+
 
 
 ## Expanded form
@@ -40,15 +43,16 @@ Note that this directive does not accept a matcher token. If you need more compl
 See the [`file` matcher](/docs/caddyfile/matchers#file) for more details.
 
 
+
 ## Examples
 
-If the request does not match any static files, rewrite to an index/router file:
+If the request does not match any static files, rewrite to your PHP index/router entrypoint:
 
 ```caddy-d
 try_files {path} /index.php
 ```
 
-Same, but adding the original path to the query string:
+Same, but adding the original path to the query string (required by some legacy PHP apps):
 
 ```caddy-d
 try_files {path} /index.php?{query}&p={path}
@@ -60,7 +64,7 @@ Same, but also match directories:
 try_files {path} {path}/ /index.php?{query}&p={path}
 ```
 
-Attempt to rewrite to a file or directory if it exists, otherwise emit a 404 error (which can be caught and handled with [`handle_errors`](/docs/caddyfile/directives/handle_errors)):
+Attempt to rewrite to a file or directory if it exists, otherwise emit a 404 error (which can be caught and handled with [`handle_errors`](handle_errors)):
 
 ```caddy-d
 try_files {path} {path}/ =404

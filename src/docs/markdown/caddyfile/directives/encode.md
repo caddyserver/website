@@ -55,9 +55,11 @@ encode [<matcher>] <formats...> {
   }
   ```
 
+
 ## Response matcher
 
 **Response matchers** can be used to filter (or classify) responses by specific criteria.
+
 
 ### status
 
@@ -69,9 +71,11 @@ By HTTP status code.
 
 - **&lt;code...&gt;** is a list of HTTP status codes. Special cases are `2xx`, `3xx`, ... which match against all status codes in the range of 200-299, 300-399, ... respectively
 
+
 ### header
 
 See the [header](/docs/caddyfile/matchers#header) request matcher for the supported syntax.
+
 
 ## Examples
 
@@ -85,4 +89,14 @@ Enable Zstandard and Gzip compression (with Zstandard implicitly preferred, sinc
 
 ```caddy-d
 encode zstd gzip
+```
+
+And in a full site, compressing static files served by [`file_server`](file_server):
+
+```caddy
+example.com {
+	root * /srv
+	encode zstd gzip
+	file_server
+}
 ```

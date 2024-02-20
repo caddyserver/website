@@ -30,12 +30,17 @@ The Caddyfile's structure can be described visually:
 Key points:
 
 - An optional [**global options block**](#global-options) can be the very first thing in the file.
+
 - [Snippets](#snippets) or [named routes](#named-routes) may optionally appear next.
+
 - Otherwise, the first line of the Caddyfile is **always** the [address(es)](#addresses) of the site to serve.
+
 - All [directives](#directives) and [matchers](#matchers) **must** go in a site block. There is no global scope or inheritance across site blocks.
+
 - If there is only one site block, its curly braces `{ }` are optional.
 
 A Caddyfile consists of at least one or more site blocks, which always starts with one or more [addresses](#addresses) for the site. Any directives appearing before the address will be confusing to the parser.
+
 
 ### Blocks
 
@@ -48,6 +53,7 @@ Opening and closing a **block** is done with curly braces:
 ```
 
 - The open curly brace `{` must be at the end of its line and preceded by a space.
+
 - The close curly brace `}` must be on its own line.
 
 When there is only one site block, the curly braces (and indentation) are optional. This is for convenience to quickly define a single site, for example, this:
@@ -120,7 +126,7 @@ localhost {
 
 Here, `lb_policy` is a subdirective to [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy) (it sets the load balancing policy to use between backends).
 
-**Unless otherwise documented, directives cannot be used within other directive blocks.** For example, `basicauth` cannot be used within `file_server` because the file server does not know how to do authentication; but you can use directives within [`route`](/docs/caddyfile/directives/route), [`handle`](/docs/caddyfile/directives/handle), and [`handle_path`](/docs/caddyfile/directives/handle_path) blocks because they are specifically designed to group directives together.
+**Unless otherwise documented, directives cannot be used within other directive blocks.** For example, [`basicauth`](/docs/caddyfile/directives/basicauth) cannot be used within [`file_server`](/docs/caddyfile/directives/file_server) because the file server does not know how to do authentication; but you can use directives within [`route`](/docs/caddyfile/directives/route), [`handle`](/docs/caddyfile/directives/handle), and [`handle_path`](/docs/caddyfile/directives/handle_path) blocks because they are specifically designed to group directives together.
 
 Note that when the HTTP Caddyfile is adapted, HTTP handler directives are sorted according to a specific default [directive order](/docs/caddyfile/directives#directive-order) unless in a [`route`](/docs/caddyfile/directives/route) block, so the order of appearance of the directives does not matter except in `route` blocks.
 
@@ -202,7 +208,15 @@ If present, it must be the very first block in the config.
 
 It is used to set options that apply globally, or not to any one site in particular. Inside, only global options can be set; you cannot use regular site directives in them.
 
-[Learn more](/docs/caddyfile/options) about the global options block.
+For example, to enable the `debug` global option, which is commonly used to produce verbose logs for troubleshooting:
+
+```caddy
+{
+	debug
+}
+```
+
+**[Read the Global Options page](/docs/caddyfile/options) to learn more.**
 
 
 
@@ -212,20 +226,28 @@ An address always appears at the top of the site block, and is usually the first
 
 These are examples of valid addresses:
 
-- `localhost`
-- `example.com`
-- `:443`
-- `http://example.com`
-- `localhost:8080`
-- `127.0.0.1`
-- `[::1]:2015`
-- `*.example.com`
-- `http://`
+| Address              | Effect                            |
+|----------------------|-----------------------------------|
+| `example.com`        | HTTPS with managed [publicly-trusted certificate](/docs/automatic-https#hostname-requirements) |
+| `*.example.com`      | HTTPS with managed [wildcard publicly-trusted certificate](/docs/caddyfile/patterns#wildcard-certificates) |
+| `localhost`          | HTTPS with managed [locally-trusted certificate](/docs/automatic-https#local-https) |
+| `http://`            | HTTP catch-all, affected by [`http_port`](/docs/caddyfile/options#http-port) |
+| `https://`           | HTTPS catch-all, affected by [`https_port`](/docs/caddyfile/options#http-port) |
+| `http://example.com` | HTTP explicitly, with a `Host` matcher |
+| `example.com:443`    | HTTPS due to matching the [`https_port`](/docs/caddyfile/options#http-port) default |
+| `:443`               | HTTPS catch-all due to matching the [`https_port`](/docs/caddyfile/options#http-port) default |
+| `:8080`              | HTTP on non-standard port, no `Host` matcher |
+| `localhost:8080`     | HTTPS on non-standard port, due to having a valid domain |
+| `https://example.com:443` | HTTPS, but both `https://` and `:443` are redundant |
+| `127.0.0.1` | HTTPS, with a locally-trusted IP certificate |
+| `http://127.0.0.1` | HTTP, with an IP address `Host` matcher (rejects `localhost`) |
 
 
 <aside class="tip">
 
-[Automatic HTTPS](/docs/automatic-https) is enabled if your site's address contains a hostname or IP address. This behavior is purely implicit, however, so it never overrides any explicit configuration. For example, if the site's address is `http://example.com`, auto-HTTPS will not activate because the scheme is explicitly `http://`.
+[Automatic HTTPS](/docs/automatic-https) is enabled if your site's address contains a hostname or IP address. This behavior is purely implicit, however, so it never overrides any explicit configuration.
+
+For example, if the site's address is `http://example.com`, auto-HTTPS will not activate because the scheme is explicitly `http://`.
 
 </aside>
 
@@ -238,21 +260,44 @@ Wildcards (`*`) may be used, but only to represent precisely one label of the ho
 
 To catch all hosts, omit the host portion of the address, for example, simply `https://`. This is useful when using [On-Demand TLS](/docs/automatic-https#on-demand-tls), when you don't know the domains ahead of time.
 
-If multiple sites share the same definition, you can list all of them together; notice how the commas indicate the continuation of addresses:
+If multiple sites share the same definition, you can list all of them together, either with spaces or commas. The following three examples are equivalent:
 
 ```caddy
-localhost:8080, example.com, www.example.com
+# Comma separated site addresses
+localhost:8080, example.com, www.example.com {
+	...
+}
 ```
 
 or
 
 ```caddy
-localhost:8080,
-example.com,
-www.example.com
+# Space separated site addresses
+localhost:8080 example.com www.example.com {
+	...
+}
 ```
 
-An address must be unique; you cannot specify the same address more than once. [Placeholders](#placeholders) **cannot** be used in addresses, but you may use Caddyfile-style [environment variables](#environment-variables) in them.
+or
+
+```caddy
+# Comma and new-line separated site addresses
+localhost:8080,
+example.com,
+www.example.com {
+	...
+}
+```
+
+An address must be unique; you cannot specify the same address more than once.
+
+[Placeholders](#placeholders) **cannot** be used in addresses, but you may use Caddyfile-style [environment variables](#environment-variables) in them:
+
+```caddy
+{$DOMAIN:localhost} {
+	...
+}
+```
 
 By default, sites bind on all network interfaces. If you wish to override this, use the [`bind` directive](/docs/caddyfile/directives/bind) or the [`default_bind` global option](/docs/caddyfile/options#default-bind) to do so.
 
@@ -260,7 +305,7 @@ By default, sites bind on all network interfaces. If you wish to override this, 
 
 ## Matchers
 
-HTTP handler directives apply to all requests by default (unless otherwise documented).
+HTTP handler [directives](#directives) apply to all requests by default (unless otherwise documented).
 
 [Request matchers](/docs/caddyfile/matchers) can be used to classify requests by a given criteria. With matchers, you can specify exactly which requests a certain directive applies to.
 
@@ -274,7 +319,7 @@ root @post       /var/www  # matcher token: @post
 
 Matcher tokens can be omitted entirely to match all requests; for example, `*` does not need to be given if the next argument does not look like a path matcher.
 
-**[Read the page about request matchers](/docs/caddyfile/matchers) to learn more.**
+**[Read the Request Matchers page](/docs/caddyfile/matchers) to learn more.**
 
 
 
@@ -328,27 +373,41 @@ You can use any [Caddy placeholders](/docs/conventions#placeholders) in the Cadd
 You can define special blocks called snippets by giving them a name surrounded in parentheses:
 
 ```caddy
-(redirect) {
-	@http {
-		protocol http
+(logging) {
+	log {
+		output file /var/log/caddy.log
+		format json
 	}
-	redir @http https://{host}{uri}
 }
 ```
 
-And then you can reuse this anywhere you need:
+And then you can reuse this anywhere you need, using the special [`import`](/docs/caddyfile/directives/import) directive:
 
-```caddy-d
-import redirect
+```caddy
+example.com {
+	import logging
+}
+
+www.example.com {
+	import logging
+}
 ```
 
-The [`import`](/docs/caddyfile/directives/import) directive can also be used to include other files in its place. As a special case, it can appear almost anywhere within the Caddyfile.
+The [`import`](/docs/caddyfile/directives/import) directive can also be used to include other files in its place. If the argument does not match a defined snippet, it will be tried as a file. It also supports globs to import multiple files. As a special case, it can appear anywhere within the Caddyfile (except as an argument to another directive), including outside of site blocks:
 
-You can pass arguments to imported configuration and use them like so:
+```caddy
+{
+	email admin@example.com
+}
+
+import sites/*
+```
+
+You can pass arguments to an imported configuration (snippets or files) and use them like so:
 
 ```caddy
 (snippet) {
-  respond "Yahaha! You found {args[0]}!"
+	respond "Yahaha! You found {args[0]}!"
 }
 
 a.example.com {
@@ -360,10 +419,12 @@ b.example.com {
 }
 ```
 
+**[Read the `import` directive page](/docs/caddyfile/directives/import) to learn more.**
+
 
 ## Named Routes
 
-<i>⚠️ Experimental</i>
+⚠️ <i>Experimental</i>
 
 Named routes use syntax similar to [snippets](#snippets); they're a special block defined outside of site blocks, prefixed with `&(` and ending in `)` with the name in between.
 
@@ -375,13 +436,20 @@ Named routes use syntax similar to [snippets](#snippets); they're a special bloc
 
 And then you can reuse this named route within any site:
 
-```caddy-d
-invoke app-proxy
+```caddy
+example.com {
+	invoke app-proxy
+}
+
+www.example.com {
+	invoke app-proxy
+}
 ```
 
 This is particularly useful to reduce memory usage if the same route is needed in many different sites, or if multiple different matcher conditions are needed to invoke the same route.
 
-See the [`invoke` directive](/docs/caddyfile/directives/invoke) documentation for more details.
+**[Read the `invoke` directive page](/docs/caddyfile/directives/invoke) to learn more.**
+
 
 
 ## Comments
@@ -402,16 +470,35 @@ The hash character `#` for a comment cannot appear in the middle of a token (i.e
 If your configuration relies on environment variables, you can use them in the Caddyfile:
 
 ```caddy
-{$SITE_ADDRESS}
+{$ENV}
 ```
 
-Environment variables in this form are substituted before Caddyfile parsing begins, so they can expand to empty values, partial tokens, complete tokens, or even multiple tokens and lines.
+Environment variables in this form are substituted **before Caddyfile parsing begins**, so they can expand to empty values (i.e. `""`), partial tokens, complete tokens, or even multiple tokens and lines.
+
+For example, a environement variable `UPSTREAMS="app1:8080 app2:8080 app3:8080"` would expand to multiple [tokens](#tokens-and-quotes):
+
+```caddy
+example.com {
+	reverse_proxy {$UPSTREAMS}
+}
+```
 
 A default value can be specified for when the environment variable is not found, by using `:` as the delimiter between the variable name and the default value:
 
 ```caddy
-{$DOMAIN:localhost}
+{$DOMAIN:localhost} {
+
+}
 ```
 
-If you want to defer the substitution of an environment variable until runtime, you can use the [standard `{env.*}` placeholders](/docs/conventions#placeholders). Note that not all config parameters support these placeholders though, since module developers need to add a line of code to perform the replacement. If it doesn't seem to work, please file an issue to request support for it.
+If you want to **defer the substitution** of an environment variable until runtime, you can use the [standard `{env.*}` placeholders](/docs/conventions#placeholders). Note that not all config parameters support these placeholders though, since module developers need to add a line of code to perform the replacement. If it doesn't seem to work, please file an issue to request support for it.
 
+For example, if you have the [`caddy-dns/cloudflare` plugin <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/caddy-dns/cloudflare) installed and wish to configure the [DNS challenge](/docs/automatic-https#dns-challenge), you can pass your `CLOUDFLARE_API_TOKEN` environment variable to the plugin like this:
+
+```caddy
+{
+	acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+}
+```
+
+If you're running Caddy as a systemd service, see [these instructions](/docs/running#overrides) for setting service overrides to define your environment variables.

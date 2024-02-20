@@ -168,7 +168,7 @@ These issuers come standard with the `tls` directive:
 
 Obtains certificates using the ACME protocol. Note that `acme` is a default issuer (using Let's Encrypt), so configuring it explicitly is usually unnecessary.
 
-```caddy
+```caddy-d
 ... acme [<directory_url>] {
 	dir      <directory_url>
 	test_dir <test_directory_url>
@@ -253,7 +253,7 @@ Obtains certificates using the ACME protocol. Note that `acme` is a default issu
 
 Obtains certificates using the ACME protocol, specifically with ZeroSSL. Note that `zerossl` is a default issuer, so configuring it explicitly is usually unnecessary.
 
-```caddy
+```caddy-d
 ... zerossl [<api_key>] {
 	...
 }
@@ -269,7 +269,7 @@ When explicitly configuring `zerossl`, configuring an `email` is required so tha
 
 Obtains certificates from an internal certificate authority.
 
-```caddy
+```caddy-d
 ... internal {
 	ca       <name>
 	lifetime <duration>
@@ -324,66 +324,82 @@ get_certificate http <url>
 
 ## Examples
 
-Use a custom certificate and key:
+Use a custom certificate and key. The certificate should have [SANs](https://en.wikipedia.org/wiki/Subject_Alternative_Name) that match the site address:
 
-```caddy-d
-tls cert.pem key.pem
+```caddy
+example.com {
+	tls cert.pem key.pem
+}
 ```
 
-Use locally-trusted certificates for all hosts on the current site block, rather than public certificates via ACME / Let's Encrypt (useful in dev environments):
+Use [locally-trusted](/docs/automatic-https#local-https) certificates for all hosts on the current site block, rather than public certificates via ACME / Let's Encrypt (useful in dev environments):
 
-```caddy-d
-tls internal
+```caddy
+example.com {
+	tls internal
+}
 ```
 
-Use locally-trusted certificates, but managed on-demand instead of in the background:
+Use locally-trusted certificates, but managed [On-Demand](/docs/automatic-https#on-demand-tls) instead of in the background. This allows you to point any domain at your Caddy instance and have it automatically provision a certificate for you. This SHOULD NOT be used if your Caddy instance is publicly accessible, since an attacker could use it to exhaust your server's resources:
 
-```caddy-d
-tls internal {
-	on_demand
+```caddy
+https:// {
+	tls internal {
+		on_demand
+	}
 }
 ```
 
 Use custom options for the internal CA (cannot use the `tls internal` shortcut):
 
-```caddy-d
-tls {
-	issuer internal {
-		ca foo
+```caddy
+example.com {
+	tls {
+		issuer internal {
+			ca foo
+		}
 	}
 }
 ```
 
 Specify an email address for your ACME account (but if only one email is used for all sites, we recommend the `email` [global option](/docs/caddyfile/options) instead):
 
-```caddy-d
-tls your@email.com
-```
-
-Enable the DNS challenge for a domain managed on Cloudflare with account credentials in an environment variable:
-
-```caddy-d
-tls {
-	dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+```caddy
+example.com {
+	tls your@email.com
 }
 ```
 
-Get the certificate chain via HTTP, instead of having Caddy manage it:
+Enable the DNS challenge for a domain managed on Cloudflare with account credentials in an environment variable. This unlocks wildcard certificate support, which requires DNS validation:
 
-```caddy-d
-tls {
-	get_certificate http http://localhost:9007/certs
+```caddy
+*.example.com {
+	tls {
+		dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+	}
+}
+```
+
+Get the certificate chain via HTTP, instead of having Caddy manage it. Note that [`get_certificate`](#certificate-managers) implies [`on_demand`](#on_demand) is enabled, fetching certificates using a module instead of triggering ACME issuance:
+
+```caddy
+https:// {
+	tls {
+		get_certificate http http://localhost:9007/certs
+	}
 }
 ```
 
 Enable TLS Client Authentication and require clients to present a valid certificate that is verified against all the provided CA's via `trusted_ca_cert_file`
 
-```caddy-d
-tls {
-	client_auth {
-		mode                 require_and_verify
-		trusted_ca_cert_file ../caddy.ca.cer
-		trusted_ca_cert_file ../root.ca.cer
+```caddy
+example.com {
+	tls {
+		client_auth {
+			mode                 require_and_verify
+			trusted_ca_cert_file ../caddy.ca.cer
+			trusted_ca_cert_file ../root.ca.cer
+		}
 	}
 }
 ```

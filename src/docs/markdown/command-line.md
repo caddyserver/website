@@ -471,7 +471,9 @@ Runs Caddy and blocks indefinitely; i.e. "daemon" mode.
 `--watch` will watch the config file and automatically reload it after it changes. ⚠️ This feature is intended for use only in local development environments!
 
 <aside class="advice">
-	Do not stop the server to change configuration while running in production! That will result in downtime. (This should be obvious but you'd be surprised how many complaints we get about it.) Use the <a href="#caddy-reload">caddy reload</a> command instead.
+
+Do not stop the server to change configuration while running in production! That will result in downtime. (This should be obvious but you'd be surprised how many complaints we get about it.) Use the [`caddy reload`](#caddy-reload) command instead.
+
 </aside>
 
 

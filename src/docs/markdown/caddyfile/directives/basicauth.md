@@ -37,11 +37,30 @@ basicauth [<matcher>] [<hash_algorithm> [<realm>]] {
 
 ## Examples
 
-Protect all resources in /secret so only Bob can access them with the password "hiccup":
+Require authentication for all requests to `example.com`:
 
-```caddy-d
-basicauth /secret/* {
-	Bob $2a$14$Zkx19XLiW6VYouLHR5NmfOFU0z2GTNmpkT/5qqR7hx4IjWJPDhjvG
+```caddy
+example.com {
+	basicauth {
+		# Username "Bob", password "hiccup"
+		Bob $2a$14$Zkx19XLiW6VYouLHR5NmfOFU0z2GTNmpkT/5qqR7hx4IjWJPDhjvG
+	}
+	respond "Welcome, {http.auth.user.id}" 200
+}
+```
+
+Protect files in `/secret/` so only `Bob` can access them (and anyone can see other paths):
+
+```caddy
+example.com {
+	root * /srv
+
+	basicauth /secret/* {
+		# Username "Bob", password "hiccup"
+		Bob $2a$14$Zkx19XLiW6VYouLHR5NmfOFU0z2GTNmpkT/5qqR7hx4IjWJPDhjvG
+	}
+
+	file_server
 }
 ```
 

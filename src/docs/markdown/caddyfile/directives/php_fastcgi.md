@@ -175,8 +175,14 @@ app2.example.com {
 
 For a PHP site which does not use `index.php` as an entrypoint, you may fallback to emitting a `404` error instead. The error may be caught and handled with the [`handle_errors` directive](handle_errors):
 
-```caddy-d
-php_fastcgi localhost:9000 {
-	try_files {path} {path}/index.php =404
+```caddy
+example.com {
+	php_fastcgi localhost:9000 {
+		try_files {path} {path}/index.php =404
+	}
+
+	handle_errors {
+		respond "{err.status_code} {err.status_text}"
+	}
 }
 ```

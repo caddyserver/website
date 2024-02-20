@@ -530,7 +530,7 @@ transport http {
 
 - **max_response_header** <span id="max_response_header"/> is the maximum amount of bytes to read from response headers. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). Default: `10MiB`.
 
-- **proxy_protocol** <span id="proxy_protocol"/> enables [PROXY protocol](https://www.haproxy.org/download/1.8/doc/proxy-protocol.txt) (popularized by HAProxy) on the connection to the upstream, prepending the real client IP data. This is best paired with the [`servers > trusted_proxies` global option](/docs/caddyfile/options#trusted-proxies) if Caddy is behind another proxy. Versions `v1` and `v2` are supported. This should only be used if you know the upstream server is able to parse PROXY protocol. By default, this is disabled.
+- **proxy_protocol** <span id="proxy_protocol"/> enables [PROXY protocol](https://github.com/haproxy/haproxy/blob/master/doc/proxy-protocol.txt) (popularized by HAProxy) on the connection to the upstream, prepending the real client IP data. This is best paired with the [`servers > trusted_proxies` global option](/docs/caddyfile/options#trusted-proxies) if Caddy is behind another proxy. Versions `v1` and `v2` are supported. This should only be used if you know the upstream server is able to parse PROXY protocol. By default, this is disabled.
 
 - **dial_timeout** <span id="dial_timeout"/> is the maximum [duration](/docs/conventions#durations) to wait when connecting to the upstream socket. Default: `3s`.
 
@@ -672,44 +672,54 @@ See the [`header`](/docs/caddyfile/matchers#header) request matcher for the supp
 
 Reverse proxy all requests to a local backend:
 
-```caddy-d
-reverse_proxy localhost:9005
+```caddy
+example.com {
+	reverse_proxy localhost:9005
+}
 ```
 
 
 [Load-balance](#load-balancing) all requests [between 3 backends](#upstreams):
 
-```caddy-d
-reverse_proxy node1:80 node2:80 node3:80
+```caddy
+example.com {
+	reverse_proxy node1:80 node2:80 node3:80
+}
 ```
 
 
 Same, but only requests within `/api`, and sticky by using the [`cookie` policy](#lb_policy):
 
-```caddy-d
-reverse_proxy /api/* node1:80 node2:80 node3:80 {
-	lb_policy cookie api_sticky
+```caddy
+example.com {
+	reverse_proxy /api/* node1:80 node2:80 node3:80 {
+		lb_policy cookie api_sticky
+	}
 }
 ```
 
 
 Using [active health checks](#active-health-checks) to determine which backends are healthy, and enabling [retries](#lb_try_duration) on failed connections, holding the request until a healthy backend is found:
 
-```caddy-d
-reverse_proxy node1:80 node2:80 node3:80 {
-	health_uri /healthz
-	lb_try_duration 5s
+```caddy
+example.com {
+	reverse_proxy node1:80 node2:80 node3:80 {
+		health_uri /healthz
+		lb_try_duration 5s
+	}
 }
 ```
 
 
 Configure some [transport options](#transports):
 
-```caddy-d
-reverse_proxy localhost:8080 {
-	transport http {
-		dial_timeout 2s
-		response_header_timeout 30s
+```caddy
+example.com {
+	reverse_proxy localhost:8080 {
+		transport http {
+			dial_timeout 2s
+			response_header_timeout 30s
+		}
 	}
 }
 ```
@@ -717,19 +727,23 @@ reverse_proxy localhost:8080 {
 
 Reverse proxy to an [HTTPS upstream](#https):
 
-```caddy-d
-reverse_proxy https://example.com {
-	header_up Host {upstream_hostport}
+```caddy
+example.com {
+	reverse_proxy https://example.com {
+		header_up Host {upstream_hostport}
+	}
 }
 ```
 
 
-Reverse proxy to an HTTPS upstream, but [⚠️ disable TLS verification](#tls_insecure_skip_verify). this is NOT RECOMMENDED, since it disables all security checks that HTTPS offers; proxying over HTTP in private networks is preferred if possible, because it avoids the false sense of security:
+Reverse proxy to an HTTPS upstream, but [⚠️ disable TLS verification](#tls_insecure_skip_verify). This is NOT RECOMMENDED, since it disables all security checks that HTTPS offers; proxying over HTTP in private networks is preferred if possible, because it avoids the false sense of security:
 
-```caddy-d
-reverse_proxy 10.0.0.1:443 {
-	transport http {
-		tls_insecure_skip_verify
+```caddy
+example.com {
+	reverse_proxy 10.0.0.1:443 {
+		transport http {
+			tls_insecure_skip_verify
+		}
 	}
 }
 ```
@@ -737,46 +751,54 @@ reverse_proxy 10.0.0.1:443 {
 
 Instead you may establish trust with the upstream by explicitly [trusting the upstream's certificate](#tls_trusted_ca_certs), and (optionally) setting TLS-SNI to match the hostname in the upstream's certificate:
 
-```caddy-d
-reverse_proxy 10.0.0.1:443 {
-	transport http {
-		tls_trusted_ca_certs /path/to/cert.pem
-		tls_server_name app.example.com
+```caddy
+example.com {
+	reverse_proxy 10.0.0.1:443 {
+		transport http {
+			tls_trusted_ca_certs /path/to/cert.pem
+			tls_server_name app.example.com
+		}
 	}
 }
 ```
 
 
 
-[Strip a path prefix](/docs/caddyfile/directives/handle_path) before proxying; but be aware of the [subfolder problem <img src="/old/resources/images/external-link.svg" class="external-link">](https://caddy.community/t/the-subfolder-problem-or-why-cant-i-reverse-proxy-my-app-into-a-subfolder/8575):
+[Strip a path prefix](handle_path) before proxying; but be aware of the [subfolder problem <img src="/old/resources/images/external-link.svg" class="external-link">](https://caddy.community/t/the-subfolder-problem-or-why-cant-i-reverse-proxy-my-app-into-a-subfolder/8575):
 
-```caddy-d
-handle_path /prefix/* {
-	reverse_proxy localhost:9000
+```caddy
+example.com {
+	handle_path /prefix/* {
+		reverse_proxy localhost:9000
+	}
 }
 ```
 
 
-Replace a path prefix before proxying, using a [rewrite](/docs/caddyfile/directives/rewrite):
+Replace a path prefix before proxying, using a [`rewrite`](/docs/caddyfile/directives/rewrite):
 
-```caddy-d
-handle_path /old-prefix/* {
-	rewrite * /new-prefix{path}
-	reverse_proxy localhost:9000
+```caddy
+example.com {
+	handle_path /old-prefix/* {
+		rewrite * /new-prefix{path}
+		reverse_proxy localhost:9000
+	}
 }
 ```
 
 
 `X-Accel-Redirect` support, i.e. serving static files as requested, by [intercepting the response](#intercepting-responses):
 
-```caddy-d
-reverse_proxy localhost:8080 {
-	@accel header X-Accel-Redirect *
-	handle_response @accel {
-		root    * /path/to/private/files
-		rewrite * {rp.header.X-Accel-Redirect}
-		method  * GET
-		file_server
+```caddy
+example.com {
+	reverse_proxy localhost:8080 {
+		@accel header X-Accel-Redirect *
+		handle_response @accel {
+			root    * /path/to/private/files
+			rewrite * {rp.header.X-Accel-Redirect}
+			method  * GET
+			file_server
+		}
 	}
 }
 ```
@@ -784,13 +806,15 @@ reverse_proxy localhost:8080 {
 
 Custom error page for errors from upstream, by [intercepting error responses](#intercepting-responses) by status code:
 
-```caddy-d
-reverse_proxy localhost:8080 {
-	@error status 500 503
-	handle_response @error {
-		root    * /path/to/error/pages
-		rewrite * /{rp.status_code}.html
-		file_server
+```caddy
+example.com {
+	reverse_proxy localhost:8080 {
+		@error status 500 503
+		handle_response @error {
+			root    * /path/to/error/pages
+			rewrite * /{rp.status_code}.html
+			file_server
+		}
 	}
 }
 ```
@@ -798,18 +822,22 @@ reverse_proxy localhost:8080 {
 
 Get backends [dynamically](#dynamic-upstreams) from [`A`/`AAAA` record](#aaaaa) DNS queries:
 
-```caddy-d
-reverse_proxy {
-	dynamic a example.com 9000
+```caddy
+example.com {
+	reverse_proxy {
+		dynamic a example.com 9000
+	}
 }
 ```
 
 
 Get backends [dynamically](#dynamic-upstreams) from [`SRV` record](#srv) DNS queries:
 
-```caddy-d
-reverse_proxy {
-	dynamic srv _api._tcp.example.com
+```caddy
+example.com {
+	reverse_proxy {
+		dynamic srv _api._tcp.example.com
+	}
 }
 ```
 

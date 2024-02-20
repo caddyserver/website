@@ -4,11 +4,9 @@ title: tracing (Caddyfile directive)
 
 # tracing
 
-It provides integration with OpenTelemetry tracing facilities.
+Enables integration with OpenTelemetry tracing facilities, using [`opentelemetry-go` <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/open-telemetry/opentelemetry-go).
 
 When enabled, it will propagate an existing trace context or initialize a new one.
-
-It is based on [github.com/open-telemetry/opentelemetry-go](https://github.com/open-telemetry/opentelemetry-go).
 
 It uses [gRPC](https://github.com/grpc/) as an exporter protocol and  W3C [tracecontext](https://www.w3.org/TR/trace-context/) and [baggage](https://www.w3.org/TR/baggage/) as propagators.
 
@@ -47,11 +45,20 @@ export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://my-otlp-endpoint:55680
 
 Here is a **Caddyfile** example:
 
-```caddy-d
-handle /example* {
-	tracing {
-		span example
+```caddy
+example.com {
+	handle /api* {
+		tracing {
+			span api
+		}
+		reverse_proxy localhost:8081
 	}
-	reverse_proxy 127.0.0.1:8081
+
+	handle {
+		tracing {
+			span app
+		}
+		reverse_proxy localhost:8080
+	}
 }
 ```
