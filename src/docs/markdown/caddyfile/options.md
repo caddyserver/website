@@ -86,7 +86,10 @@ Possible options are (click on each option to jump to its documentation):
 	skip_install_trust
 	acme_ca <directory_url>
 	acme_ca_root <pem_file>
-	acme_eab <key_id> <mac_key>
+	acme_eab {
+		key_id <key_id>
+		mac_key <mac_key>
+	}
 	acme_dns <provider> ...
 	on_demand_tls {
 		ask      <endpoint>
@@ -517,7 +520,10 @@ For example, with mock ZeroSSL credentials:
 
 ```caddy
 {
-	acme_eab GD-VvWydSVFuss_GhBwYQQ MjXU3MH-Z0WQ7piMAnVsCpD1shgMiWx6ggPWiTmydgUaj7dWWWfQfA
+	acme_eab {
+		key_id GD-VvWydSVFuss_GhBwYQQ
+		mac_key MjXU3MH-Z0WQ7piMAnVsCpD1shgMiWx6ggPWiTmydgUaj7dWWWfQfA
+	}
 }
 ```
 
