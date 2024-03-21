@@ -571,7 +571,7 @@ transport http {
 
 - **keepalive** <span id="keepalive"/> is either `off` or a [duration value](/docs/conventions#durations) that specifies how long to keep connections open (timeout). Default: `2m`.
 
-- **keepalive_interval** <span id="keepalive"/> is the [duration](/docs/conventions#durations) between liveness probes. Default: `30s`.
+- **keepalive_interval** <span id="keepalive_interval"/> is the [duration](/docs/conventions#durations) between liveness probes. Default: `30s`.
 
 - **keepalive_idle_conns** <span id="keepalive_idle_conns"/> defines the maximum number of connections to keep alive. Default: No limit.
 
