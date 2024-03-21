@@ -447,7 +447,7 @@ It is strongly recommended that you configure this via the [`servers > trusted_p
 
 <aside class="tip">
 
-If you're using Cloudflare in front of Caddy, be aware that you may be vulnerable to spoofing of the `X-Forwarded-For` header. Our friends at [Authelia](https://www.authelia.com) have documented a [workaround](https://www.authelia.com/integration/proxies/fowarded-headers/) to configure Cloudflare to ignore incoming values for this header.
+If you're using Cloudflare in front of Caddy, be aware that you may be vulnerable to spoofing of the `X-Forwarded-For` header. Our friends at [Authelia](https://www.authelia.com) have documented a [workaround](https://www.authelia.com/integration/proxies/forwarded-headers/) to configure Cloudflare to ignore incoming values for this header.
 
 </aside>
 
