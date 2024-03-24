@@ -241,7 +241,7 @@ Add a `caddy-service.xml` in the same directory:
 You can now install the service using:
 <pre><code class="cmd bash">caddy-service install</code></pre>
 
-You might want to start the Windows Services Console to see if the service is runnnig correctly:
+You might want to start the Windows Services Console to see if the service is running correctly:
 <pre><code class="cmd bash">services.msc</code></pre>
 
 Be aware that Windows services cannot be reloaded, so you have to tell caddy directly to reload:
