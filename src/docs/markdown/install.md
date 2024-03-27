@@ -31,6 +31,7 @@ Our [official packages](https://github.com/caddyserver/dist) come only with the 
 - [Ansible](#ansible)
 - [Termux](#termux)
 - [Nix/Nixpkgs/NixOS](#nixnixpkgsnixos)
+- [Unikraft](#unikraft)
 
 
 ## Static binaries
@@ -201,3 +202,21 @@ _Note: This is a community-maintained installation method._
 - NixOS module: [`services.caddy`](https://search.nixos.org/options?channel=unstable&show=services.caddy.enable&query=services.caddy)
 
 [**View Caddy in the Nixpkgs search**](https://search.nixos.org/packages?channel=unstable&show=caddy&query=caddy) and [**the NixOS options search**](https://search.nixos.org/options?channel=unstable&show=services.caddy.enable&query=services.caddy)
+
+
+
+## Unikraft
+
+_Note: This is a community-maintained installation method._
+
+First install Unikraft's companion tool, [`kraft`](https://unikraft.org/docs/cli):
+
+<pre><code class="cmd">curl --proto '=https' --tlsv1.2 -sSf https://get.kraftkit.sh | sh</code></pre>
+
+Then run Caddy with Unikraft using:
+
+<pre><code class="cmd">kraft run --rm -p 2015:2015 --plat qemu --arch x86_64 -M 256M caddy:2.7</code></pre>
+
+To allow non-localhost incoming connections, you need to [connect the unikernel instance to a network](https://unikraft.org/docs/cli/running#connecting-a-unikernel-instance-to-a-network).
+
+[**View the Unikraft application catalog**](https://github.com/unikraft/catalog/tree/main/examples/caddy) and [**the KraftCloud platform examples (powered by Unikraft)**](https://github.com/kraftcloud/examples/tree/main/caddy).
