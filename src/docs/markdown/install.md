@@ -32,6 +32,7 @@ Our [official packages](https://github.com/caddyserver/dist) come only with the 
 - [Termux](#termux)
 - [Nix/Nixpkgs/NixOS](#nixnixpkgsnixos)
 - [Unikraft](#unikraft)
+- [OPNsense](#opnsense)
 
 
 ## Static binaries
@@ -220,3 +221,14 @@ Then run Caddy with Unikraft using:
 To allow non-localhost incoming connections, you need to [connect the unikernel instance to a network](https://unikraft.org/docs/cli/running#connecting-a-unikernel-instance-to-a-network).
 
 [**View the Unikraft application catalog**](https://github.com/unikraft/catalog/tree/main/examples/caddy) and [**the KraftCloud platform examples (powered by Unikraft)**](https://github.com/kraftcloud/examples/tree/main/caddy).
+
+
+
+## OPNsense
+
+_Note: This is a community-maintained installation method._
+
+<pre><code class="cmd">pkg install os-caddy</code></pre>
+
+[**View the FreeBSD caddy-custom makefile**](https://github.com/opnsense/ports/blob/master/www/caddy-custom/Makefile) and [**the os-caddy plugin source**](https://github.com/opnsense/plugins/tree/master/www/caddy)
+
