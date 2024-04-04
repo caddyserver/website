@@ -48,6 +48,7 @@ global:
 
 scrape_configs:
   - job_name: caddy
+    metrics_path: /metrics
     static_configs:
       - targets: ['localhost:2019']
 ```
