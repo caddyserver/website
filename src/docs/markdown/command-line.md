@@ -247,18 +247,13 @@ Formats or prettifies a Caddyfile, then exits. The result is printed to stdout u
 
 <pre><code class="cmd bash">caddy hash-password
 	[-p, --plaintext &lt;password&gt;]
-	[-a, --algorithm &lt;name&gt;]
-	[-s, --salt &lt;string&gt;]</code></pre>
+	[-a, --algorithm &lt;name&gt;]</code></pre>
 
 Convenient way to hash a plaintext password. The resulting hash is written to stdout as a format usable directly in your Caddy config.
 
 `--plaintext` is the plaintext form of the password. If omitted, interactive mode will be assumed and the user will be shown a prompt to enter the password manually.
 
 `--algorithm` may be `bcrypt` or any installed hash algorithm. Default is `bcrypt`.
-
-`--salt` is used only if the algorithm requires an external salt (like `scrypt`).
-
-Note that `scrypt` is deprecated. Please use `bcrypt` instead.
 
 
 
