@@ -57,6 +57,8 @@ Directive | Description
 **[import](/docs/caddyfile/directives/import)** | Include snippets or files
 **[invoke](/docs/caddyfile/directives/invoke)** | Invoke a named route
 **[log](/docs/caddyfile/directives/log)** | Enables access/request logging
+**[log_append](/docs/caddyfile/directives/log_append)** | Append a field to the access log
+**[log_skip](/docs/caddyfile/directives/log_skip)** | Skip access logging for matched requests
 **[map](/docs/caddyfile/directives/map)** | Maps an input value to one or more outputs
 **[method](/docs/caddyfile/directives/method)** | Change the HTTP method internally
 **[metrics](/docs/caddyfile/directives/metrics)** | Configures the Prometheus metrics exposition endpoint
@@ -70,7 +72,6 @@ Directive | Description
 **[rewrite](/docs/caddyfile/directives/rewrite)** | Rewrites the request internally
 **[root](/docs/caddyfile/directives/root)** | Set the path to the site root
 **[route](/docs/caddyfile/directives/route)** | A group of directives treated literally as single unit
-**[skip_log](/docs/caddyfile/directives/skip_log)** | Skip access logging for matched requests
 **[templates](/docs/caddyfile/directives/templates)** | Execute templates on the response
 **[tls](/docs/caddyfile/directives/tls)** | Customize TLS settings
 **[tracing](/docs/caddyfile/directives/tracing)** | Integration with OpenTelemetry tracing
@@ -123,7 +124,8 @@ map
 vars
 fs
 root
-skip_log
+log_append
+log_skip
 
 header
 copy_response_headers # only in reverse_proxy's handle_response block

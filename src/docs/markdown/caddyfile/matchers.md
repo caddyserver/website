@@ -456,18 +456,35 @@ expression header_regexp('<name>', '<field>', '<regexp>')
 expression header_regexp('<field>', '<regexp>')
 ```
 
-Like [`header`](#header), but supports regular expressions. Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) like `{re.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
+Like [`header`](#header), but supports regular expressions.
 
 The regular expression language used is RE2, included in Go. See the [RE2 syntax reference](https://github.com/google/re2/wiki/Syntax) and the [Go regexp syntax overview](https://pkg.go.dev/regexp/syntax).
+
+As of v2.8.0, if `name` is _not_ provided, the name will be taken from the named matcher's name. For example a named matcher `@foo` will cause this matcher to be named `foo`. The main advantage of specifying a name is if more than one regexp matcher is used in the same named matcher.
+
+Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) in directives after matching:
+- `{re.<name>.<capture_group>}` where:
+  - `<name>` is the name of the regular expression,
+  - `<capture_group>` is either the name or number of the capture group in the expression.
+
+- `{re.<capture_group>}` without a name, is also populated for convenience. The caveat is that if multiple regexp matchers are used in sequence, then the placeholder values will be overwritten by the next matcher.
+
+Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on. So `{re.foo.1}` or `{re.1}` will both hold the value of the first capture group.
 
 Only one regular expression is supported per header field. Multiple different fields will be AND'ed.
 
 #### Example:
 
-Match requests where the Cookie header contains `login_` followed by a hex string, with a capture group that can be accessed with `{re.login.1}`.
+Match requests where the Cookie header contains `login_` followed by a hex string, with a capture group that can be accessed with `{re.login.1}` or `{re.1}`.
 
 ```caddy-d
 @login header_regexp login Cookie login_([a-f0-9]+)
+```
+
+This can be simplified by omitting the name, which will be inferred from the named matcher:
+
+```caddy-d
+@login header_regexp Cookie login_([a-f0-9]+)
 ```
 
 Or the same, using a [CEL expression](#expression):
@@ -684,26 +701,41 @@ expression path_regexp('<name>', '<regexp>')
 expression path_regexp('<regexp>')
 ```
 
-Like [`path`](#path), but supports regular expressions. Write the pattern on the URI-decoded/unescaped form of the path.
+Like [`path`](#path), but supports regular expressions. Runs against the URI-decoded/unescaped path.
 
 The regular expression language used is RE2, included in Go. See the [RE2 syntax reference](https://github.com/google/re2/wiki/Syntax) and the [Go regexp syntax overview](https://pkg.go.dev/regexp/syntax).
 
-Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) like `{re.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
+As of v2.8.0, if `name` is _not_ provided, the name will be taken from the named matcher's name. For example a named matcher `@foo` will cause this matcher to be named `foo`. The main advantage of specifying a name is if more than one regexp matcher is used in the same named matcher.
+
+Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) in directives after matching:
+- `{re.<name>.<capture_group>}` where:
+  - `<name>` is the name of the regular expression,
+  - `<capture_group>` is either the name or number of the capture group in the expression.
+
+- `{re.<capture_group>}` without a name, is also populated for convenience. The caveat is that if multiple regexp matchers are used in sequence, then the placeholder values will be overwritten by the next matcher.
+
+Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on. So `{re.foo.1}` or `{re.1}` will both hold the value of the first capture group.
 
 There can only be one `path_regexp` pattern per named matcher.
 
 #### Example:
 
-Match requests where the path ends a 6 character hex string followed by `.css` or `.js` as the file extension, with capture groups that can be accessed with `{re.static.1}` and `{re.static.2}` for each part enclosed in `( )`, respectively:
+Match requests where the path ends a 6 character hex string followed by `.css` or `.js` as the file extension, with capture groups (parts enclosed in `( )`),  that can be accessed with `{re.static.1}` and `{re.static.2}` (or `{re.1}` and `{re.2}`), respectively:
 
 ```caddy-d
 @static path_regexp static \.([a-f0-9]{6})\.(css|js)$
 ```
 
+This can be simplified by omitting the name, which will be inferred from the named matcher:
+
+```caddy-d
+@static path_regexp \.([a-f0-9]{6})\.(css|js)$
+```
+
 Or the same, using a [CEL expression](#expression), also validating that the [`file`](#file) exists on disk:
 
 ```caddy-d
-@static `path_regexp('static', '\.([a-f0-9]{6})\.(css|js)$') && file()`
+@static `path_regexp('\.([a-f0-9]{6})\.(css|js)$') && file()`
 ```
 
 
@@ -851,16 +883,33 @@ vars {magic_number} 3 5
 vars_regexp [<name>] <variable> <regexp>
 ```
 
-Like [`vars`](#vars), but supports regular expressions. Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) like `{re.name.capture_group}` where `name` is the name of the regular expression (optional, but recommended) and `capture_group` is either the name or number of the capture group in the expression. Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on.
+Like [`vars`](#vars), but supports regular expressions.
 
 The regular expression language used is RE2, included in Go. See the [RE2 syntax reference](https://github.com/google/re2/wiki/Syntax) and the [Go regexp syntax overview](https://pkg.go.dev/regexp/syntax).
+
+As of v2.8.0, if `name` is _not_ provided, the name will be taken from the named matcher's name. For example a named matcher `@foo` will cause this matcher to be named `foo`. The main advantage of specifying a name is if more than one regexp matcher is used in the same named matcher.
+
+Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) in directives after matching:
+- `{re.<name>.<capture_group>}` where:
+  - `<name>` is the name of the regular expression,
+  - `<capture_group>` is either the name or number of the capture group in the expression.
+
+- `{re.<capture_group>}` without a name, is also populated for convenience. The caveat is that if multiple regexp matchers are used in sequence, then the placeholder values will be overwritten by the next matcher.
+
+Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on. So `{re.foo.1}` or `{re.1}` will both hold the value of the first capture group.
 
 There can only be one `vars_regexp` matcher per named matcher.
 
 #### Example:
 
-Match an output of the [`map` directive](/docs/caddyfile/directives/map) named `magic_number` for a value starting with `4`, capturing the value in a capture group:
+Match an output of the [`map` directive](/docs/caddyfile/directives/map) named `magic_number` for a value starting with `4`, capturing the value in a capture group that can be accessed with `{re.magic.1}` or `{re.1}`:
 
 ```caddy-d
-vars_regexp magic {magic_number} ^(4.*)
+@magic vars_regexp magic {magic_number} ^(4.*)
+```
+
+This can be simplified by omitting the name, which will be inferred from the named matcher:
+
+```caddy-d
+@magic vars_regexp {magic_number} ^(4.*)
 ```
