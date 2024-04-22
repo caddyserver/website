@@ -54,6 +54,7 @@ When configured, by default all requests to the site will be logged. To conditio
 	- [cookie](#cookie)
 	- [regexp](#regexp)
 	- [hash](#hash)
+  - [append](#append)
 - [Examples](#examples)
 
 Since Caddy v2.5, by default, headers with potentially sensitive information (`Cookie`, `Set-Cookie`, `Authorization` and `Proxy-Authorization`) will be logged with empty values. This behaviour can be disabled with the [`log_credentials`](/docs/caddyfile/options#log-credentials) global server option.
@@ -281,15 +282,15 @@ format json
 
 #### filter
 
-Wraps another encoder module, allowing per-field filtering.
+Allows per-field filtering.
 
 ```caddy-d
 format filter {
-	wrap <encode_module> ...
 	fields {
 		<field> <filter> ...
 	}
 	<field> <filter> ...
+	wrap <encode_module> ...
 }
 ```
 
@@ -300,6 +301,7 @@ The following fields are fundamental to the log and cannot be filtered because t
 Specifying `wrap` is optional; if omitted, a default is chosen depending on whether the current output module is [`stderr`](#stderr) or [`stdout`](#stdout), and is an interactive terminal, in which case [`console`](#console) is chosen, otherwise [`json`](#json) is chosen.
 
 As a shortcut, the `fields` block can be omitted and the filters can be specified directly within the `filter` block.
+
 
 These are the available filters:
 
@@ -416,6 +418,26 @@ Useful to obscure the value if it's sensitive, while being able to notice whethe
 <field> hash
 ```
 
+#### append
+
+Appends field(s) to all log entries.
+
+```caddy-d
+format append {
+	fields {
+		<field> <value>
+	}
+	<field> <value>
+	wrap <encode_module> ...
+}
+```
+
+It is most useful for adding information about the Caddy instance that is producing the log entries, possibly via an environment variable. The field values may be global placeholders (e.g. `{env.*}`), but _not_ per-request placeholders due to logs being written outside of the HTTP request context.
+
+Specifying `wrap` is optional; if omitted, a default is chosen depending on whether the current output module is [`stderr`](#stderr) or [`stdout`](#stdout), and is an interactive terminal, in which case [`console`](#console) is chosen, otherwise [`json`](#json) is chosen.
+
+The `fields` block can be omitted and the fields can be specified directly within the `append` block.
+
 
 
 ## Examples
@@ -496,6 +518,22 @@ example.com {
 		format filter {
 			request>remote_ip ip_mask 16 32
 			request>client_ip ip_mask 16 32
+		}
+	}
+}
+```
+
+
+To append a server ID from an environment variable to all log entries, and chain it with a `filter` to delete a header:
+
+```caddy
+example.com {
+	log {
+		format append {
+			server_id {env.SERVER_ID}
+			wrap filter {
+				request>headers>Cookie delete
+			}
 		}
 	}
 }

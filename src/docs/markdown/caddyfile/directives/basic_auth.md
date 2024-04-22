@@ -21,7 +21,7 @@ Prior to v2.8.0, this directive was named `basicauth`, but was renamed for consi
 
 ```caddy-d
 basic_auth [<matcher>] [<hash_algorithm> [<realm>]] {
-	<username> <hashed_password> [<salt_base64>]
+	<username> <hashed_password>
 	...
 }
 ```
@@ -33,8 +33,6 @@ basic_auth [<matcher>] [<hash_algorithm> [<realm>]] {
 - **&lt;username&gt;** is a username or user ID.
 
 - **&lt;hashed_password&gt;** is the password hash.
-
-- **&lt;salt_base64&gt;** is the base-64 encoding of the password salt, if an external salt is required. This was only needed for the `scrypt` algorithm which is now deprecated. Subject to removal.
 
 
 ## Examples
