@@ -749,7 +749,7 @@ expression query({'<key>': ['<vals...>']})
 
 By query string parameters. Should be a sequence of `key=value` pairs. Keys are matched exactly (case-sensitively) but also support `*` to match any value. Values can use placeholders.
 
-There can be multiple `query` matchers per named matcher, and pairs with the same keys will be OR'ed together.
+There can be multiple `query` matchers per named matcher, and pairs with the same keys will be OR'ed together. Different keys will be AND'ed together. So, all keys in the matcher must have at least one matching value.
 
 Illegal query strings (bad syntax, unescaped semicolons, etc.) will fail to parse and thus will not match.
 
@@ -781,17 +781,16 @@ Matching both `q` and `sort`, with a [CEL expression](#expression):
 ### remote_ip
 
 ```caddy-d
-remote_ip [forwarded] <ranges...>
+remote_ip <ranges...>
 
 expression remote_ip('<ranges...>')
-expression remote_ip('forwarded', '<ranges...>')
 ```
 
 By remote IP address (i.e. the IP address of the immediate peer). Accepts exact IPs or CIDR ranges. IPv6 zones are supported.
 
 As a shortcut, `private_ranges` can be used to match all private IPv4 and IPv6 ranges. It's the same as specifying all of these ranges: `192.168.0.0/16 172.16.0.0/12 10.0.0.0/8 127.0.0.1/8 fd00::/8 ::1`
 
-⚠️ The `forwarded` option is deprecated, and will be removed in a future version. Its implementation is insecure. Use the [`client_ip`](#client-ip) matcher instead, which allows for securely matching the real client IP if parsed from an HTTP header. If enabled, then the first IP in the `X-Forwarded-For` request header, if present, will be preferred as the reference IP, rather than the immediate peer's IP, which is the default.
+if you wish to match the "real IP" of the client, as parsed from HTTP headers, use the [`client_ip`](#client-ip) matcher instead.
 
 There can be multiple `remote_ip` matchers per named matcher, and their ranges will be merged and OR'ed together.
 

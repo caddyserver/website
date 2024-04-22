@@ -1,18 +1,20 @@
 ---
-title: skip_log (Caddyfile directive)
+title: log_skip (Caddyfile directive)
 ---
 
-# skip_log
+# log_skip
 
 Skips access logging for matched requests.
 
 This should be used alongside the [`log` directive](/docs/caddyfile/directives/log) to skip logging requests that are not relevant for your needs.
 
+Prior to v2.8.0, this directive was named `skip_log`, but was renamed for consistency with other directives.
+
 
 ## Syntax
 
 ```caddy-d
-skip_log [<matcher>]
+log_skip [<matcher>]
 ```
 
 
@@ -25,7 +27,7 @@ example.com {
 	root * /srv
 
 	log
-	skip_log /static*
+	log_skip /static*
 
 	file_server
 }
@@ -36,7 +38,7 @@ Skip access logging for requests matching a pattern; in this case, for files wit
 
 ```caddy-d
 @skip path_regexp \.(js|css|png|jpe?g|gif|ico|woff|otf|ttf|eot|svg|txt|pdf|docx?|xlsx?)$
-skip_log @skip
+log_skip @skip
 ```
 
 
@@ -45,7 +47,7 @@ The matcher is not needed if it's found within a route which is already within a
 ```caddy-d
 handle_path /static* {
 	root * /srv/static
-	skip_log
+	log_skip
 	file_server
 }
 ```

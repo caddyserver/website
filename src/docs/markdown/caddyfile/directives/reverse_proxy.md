@@ -509,6 +509,7 @@ transport http {
 	tls
 	tls_client_auth <automate_name> | <cert_file> <key_file>
 	tls_insecure_skip_verify
+	tls_curves <curves...>
 	tls_timeout <duration>
 	tls_trusted_ca_certs <pem_files...>
 	tls_server_name <server_name>
@@ -551,6 +552,8 @@ transport http {
 - **tls_client_auth** <span id="tls_client_auth"/> enables TLS client authentication one of two ways: (1) by specifying a domain name for which Caddy should obtain a certificate and keep it renewed, or (2) by specifying a certificate and key file to present for TLS client authentication with the backend.
 
 - **tls_insecure_skip_verify** <span id="tls_insecure_skip_verify"/> turns off TLS handshake verification, making the connection insecure and vulnerable to man-in-the-middle attacks. _Do not use in production._
+
+- **tls_curves** <span id="tls_curves"/> is a list of elliptic curves to support for the upstream connection. Caddy's defaults are modern and secure, so you should only need to configure this if you have specific requirements.
 
 - **tls_timeout** <span id="tls_timeout"/> is the maximum [duration](/docs/conventions#durations) to wait for the TLS handshake to complete. Default: No timeout.
 

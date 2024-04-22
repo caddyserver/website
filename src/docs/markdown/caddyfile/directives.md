@@ -29,7 +29,7 @@ title: Caddyfile Directives
 
 # Caddyfile Directives
 
-Directives are functional keywords that appear within site [blocks](/docs/caddyfile/concepts#blocks). Sometimes, they may open blocks of their own which can contain _subdirectives_, but directives **cannot** be used within other directives unless noted. For example, you can't use `basicauth` inside a `file_server` block, because `file_server` does not know how to do authentication. However, you _may_ use some directives within special directive blocks like `handle` and `route` because they are specifically designed to group HTTP handler directives.
+Directives are functional keywords that appear within site [blocks](/docs/caddyfile/concepts#blocks). Sometimes, they may open blocks of their own which can contain _subdirectives_, but directives **cannot** be used within other directives unless noted. For example, you can't use `basic_auth` inside a `file_server` block, because `file_server` does not know how to do authentication. However, you _may_ use some directives within special directive blocks like `handle` and `route` because they are specifically designed to group HTTP handler directives.
 
 - [Syntax](#syntax)
 - [Directive Order](#directive-order)
@@ -43,12 +43,13 @@ Directive | Description
 ----------|------------
 **[abort](/docs/caddyfile/directives/abort)** | Aborts the HTTP request
 **[acme_server](/docs/caddyfile/directives/acme_server)** | An embedded ACME server
-**[basicauth](/docs/caddyfile/directives/basicauth)** | Enforces HTTP Basic Authentication
+**[basic_auth](/docs/caddyfile/directives/basic_auth)** | Enforces HTTP Basic Authentication
 **[bind](/docs/caddyfile/directives/bind)** | Customize the server's socket address
 **[encode](/docs/caddyfile/directives/encode)** | Encodes (usually compresses) responses
 **[error](/docs/caddyfile/directives/error)** | Trigger an error
 **[file_server](/docs/caddyfile/directives/file_server)** | Serve files from disk
 **[forward_auth](/docs/caddyfile/directives/forward_auth)** | Delegate authentication to an external service
+**[fs](/docs/caddyfile/directives/fs)** | Set the file system to use for file I/O
 **[handle](/docs/caddyfile/directives/handle)** | A mutually-exclusive group of directives
 **[handle_errors](/docs/caddyfile/directives/handle_errors)** | Defines routes for handling errors
 **[handle_path](/docs/caddyfile/directives/handle_path)** | Like handle, but strips path prefix
@@ -120,6 +121,7 @@ tracing
 
 map
 vars
+fs
 root
 skip_log
 
@@ -136,7 +138,7 @@ uri
 try_files
 
 # middleware handlers; some wrap responses
-basicauth
+basic_auth
 forward_auth
 request_header
 encode

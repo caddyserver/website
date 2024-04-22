@@ -38,12 +38,14 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 	resolvers <dns_servers...>
 	eab       <key_id> <mac_key>
 	on_demand
+	reuse_private_keys
 	client_auth {
 		mode                   [request|require|verify_if_given|require_and_verify]
 		trusted_ca_cert        <base64_der>
 		trusted_ca_cert_file   <filename>
 		trusted_leaf_cert      <base64_der>
 		trusted_leaf_cert_file <filename>
+		verifier 			   <module>
 	}
 	issuer          <issuer_name>  [<params...>]
 	get_certificate <manager_name> [<params...>]
@@ -127,6 +129,8 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
 
 - **on_demand** <span id="on_demand"/> enables [On-Demand TLS](/docs/automatic-https#on-demand-tls) for the hostnames given in the site block's address(es). **Security warning:** Doing so in production is insecure unless you also configure the [`on_demand_tls` global option](/docs/caddyfile/options#on-demand-tls) to mitigate abuse.
 
+- **reuse_private_keys** <span id="reuse_private_keys"/> enables reuse of private keys when renewing certificates. By default, a new key is created for every new certificate to mitigate pinning and reduce the scope of key compromise. Key pinning is against industry best practices. This option is not recommended unless you have a specific reason to use it; this may be subject to removal in a future version.
+
 - **client_auth** <span id="client_auth"/> enables and configures TLS client authentication:
   - **mode** <span id="mode"/> is the mode for authenticating the client. Allowed values are:
 
@@ -148,6 +152,8 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
   - **trusted_leaf_cert_file** <span id="trusted_leaf_cert_file"/> is a path to a PEM CA certificate file against which to validate client certificates.
 
     Multiple `trusted_*` directives may be used to specify multiple CA or leaf certificates. Client certificates which are not listed as one of the leaf certificates or signed by any of the specified CAs will be rejected according to the **mode**.
+
+  - **verifier** <span id="verifier"/> enables the use of a custom client certificate verifier module. These can perform custom client authentication checks, such as ensuring the certificate is not revoked.
 
 - **issuer** <span id="issuer"/> configures a custom certificate issuer, or a source from which to obtain certificates.
 

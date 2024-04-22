@@ -45,13 +45,39 @@ encode [<matcher>] <formats...> {
 
   ```caddy-d
   match {
-      header Content-Type text/*
-      header Content-Type application/json*
-      header Content-Type application/javascript*
-      header Content-Type application/xhtml+xml*
-      header Content-Type application/atom+xml*
-      header Content-Type application/rss+xml*
-      header Content-Type image/svg+xml*
+  	header Content-Type application/atom+xml*
+  	header Content-Type application/eot*
+  	header Content-Type application/font*
+  	header Content-Type application/geo+json*
+  	header Content-Type application/graphql+json*
+  	header Content-Type application/javascript*
+  	header Content-Type application/json*
+  	header Content-Type application/ld+json*
+  	header Content-Type application/manifest+json*
+  	header Content-Type application/opentype*
+  	header Content-Type application/otf*
+  	header Content-Type application/rss+xml*
+  	header Content-Type application/truetype*
+  	header Content-Type application/ttf*
+  	header Content-Type application/vnd.api+json*
+  	header Content-Type application/vnd.ms-fontobject*
+  	header Content-Type application/wasm*
+  	header Content-Type application/x-httpd-cgi*
+  	header Content-Type application/x-javascript*
+  	header Content-Type application/x-opentype*
+  	header Content-Type application/x-otf*
+  	header Content-Type application/x-perl*
+  	header Content-Type application/x-protobuf*
+  	header Content-Type application/x-ttf*
+  	header Content-Type application/xhtml+xml*
+  	header Content-Type application/xml*
+  	header Content-Type font/*
+  	header Content-Type image/svg+xml*
+  	header Content-Type image/vnd.microsoft.icon*
+  	header Content-Type image/x-icon*
+  	header Content-Type multipart/bag*
+  	header Content-Type multipart/mixed*
+  	header Content-Type text/*
   }
   ```
 
