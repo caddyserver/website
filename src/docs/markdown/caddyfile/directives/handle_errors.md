@@ -20,7 +20,7 @@ You may use the [`error`](error) directive to explicitly trigger an error based 
 ## Syntax
 
 ```caddy-d
-handle_errors <status_codes...> {
+handle_errors [<status_codes...>] {
 	<directives...>
 }
 ```
