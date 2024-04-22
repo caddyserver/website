@@ -327,8 +327,8 @@ You can use any [Caddy placeholders](/docs/conventions#placeholders) in the Cadd
 | `{cookie.*}`    | `{http.request.cookie.*}`         |
 | `{client_ip}`   | `{http.vars.client_ip}`           |
 | `{dir}`         | `{http.request.uri.path.dir}`     |
-| `{err.*}`       | `{http.error.*}` |
-| `{file_match.*}` | `{http.matchers.file.*}` |
+| `{err.*}`       | `{http.error.*}`                  |
+| `{file_match.*}` | `{http.matchers.file.*}`         |
 | `{file.base}`   | `{http.request.uri.path.file.base}` |
 | `{file.ext}`    | `{http.request.uri.path.file.ext}`  |
 | `{file}`        | `{http.request.uri.path.file}`    |
@@ -342,11 +342,11 @@ You can use any [Caddy placeholders](/docs/conventions#placeholders) in the Cadd
 | `{port}`        | `{http.request.port}`             |
 | `{query.*}`     | `{http.request.uri.query.*}`      |
 | `{query}`       | `{http.request.uri.query}`        |
-| `{re.*.*}`      | `{http.regexp.*.*}` |
+| `{re.*}`        | `{http.regexp.*}`                 |
 | `{remote_host}` | `{http.request.remote.host}`      |
 | `{remote_port}` | `{http.request.remote.port}`      |
 | `{remote}`      | `{http.request.remote}`           |
-| `{rp.*}`        | `{http.reverse_proxy.*}` |
+| `{rp.*}`        | `{http.reverse_proxy.*}`          |
 | `{scheme}`      | `{http.request.scheme}`           |
 | `{tls_cipher}`  | `{http.request.tls.cipher_suite}` |
 | `{tls_client_certificate_der_base64}` | `{http.request.tls.client.certificate_der_base64}` |

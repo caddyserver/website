@@ -6,7 +6,7 @@ title: log_skip (Caddyfile directive)
 
 Skips access logging for matched requests.
 
-This should be used alongside the [`log` directive](/docs/caddyfile/directives/log) to skip logging requests that are not relevant for your needs.
+This should be used alongside the [`log` directive](log) to skip logging requests that are not relevant for your needs.
 
 Prior to v2.8.0, this directive was named `skip_log`, but was renamed for consistency with other directives.
 

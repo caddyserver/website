@@ -32,7 +32,9 @@ To configure Caddy's runtime logs, see the [`log` global option](/docs/caddyfile
 
 The `log` directive applies to the hostnames of the site block it appears in, unless overridden with the `hostnames` subdirective.
 
-When configured, by default all requests to the site will be logged. To conditionally skip some requests from logging, use the [`skip_log` directive](skip_log).
+When configured, by default all requests to the site will be logged. To conditionally skip some requests from logging, use the [`log_skip` directive](log_skip).
+
+To add custom fields to the log entries, use the [`log_append` directive](log_append).
 
 
 - [Syntax](#syntax)
