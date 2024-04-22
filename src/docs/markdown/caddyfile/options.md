@@ -128,6 +128,11 @@ Possible options are (click on each option to jump to its documentation):
 		strict_sni_host [on|insecure_off]
 	}
 
+	# File Systems
+	filesystem <name> <module> {
+		<options...>
+	}
+
 	# PKI Options
 	pki {
 		ca [<id>] {
@@ -557,7 +562,7 @@ The ask endpoint should return _as fast as possible_, in a few milliseconds, ide
 
 </aside>
 
-- **interval** and **burst** allows `<n>` certificate operations within `<duration>` interval.
+- **interval** and **burst** allows `<n>` certificate operations within `<duration>` interval. These are deprecated and will be removed in a future version, due to not working as intended.
 
 ```caddy
 {
@@ -966,6 +971,44 @@ This option will automatically be turned on if [client authentication](/docs/cad
 	servers {
 		strict_sni_host on
 	}
+}
+```
+
+
+
+## File Systems
+
+The `filesystem` global option allows declaring one or more file systems that can be used for file I/O.
+
+This could let you connect to a remote filesystem running in the cloud, or a database with a file-like interface, or even to read from files embedded within the Caddy binary.
+
+File systems are declared with a name to identify them. This means you can connect to more than one file system of the same type, if you need to.
+
+By default, Caddy doesn't have any file system modules, so you'll need to build Caddy with a plugin for the file system you want to use.
+
+#### Example
+
+Using an imaginary `custom` file system module, you could declare two file systems:
+
+```caddy
+{
+	filesystem foo custom {
+		...
+	}
+
+	filesystem bar custom {
+		...
+	}
+}
+
+foo.example.com {
+	fs foo
+	file_server
+}
+
+foo.example.com {
+	fs bar
+	file_server
 }
 ```
 

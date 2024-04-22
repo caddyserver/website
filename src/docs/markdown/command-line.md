@@ -190,9 +190,12 @@ Prints the environment as seen by caddy, then exits. Can be useful when debuggin
 	[--listen &lt;addr&gt;]
 	[-d, --domain &lt;example.com&gt;]
 	[-b, --browse]
+	[--reveal-symlinks]
 	[-t, --templates]
 	[--access-log]
-	[-v, --debug]</code></pre>
+	[-v, --debug]
+	[--no-compress]
+	[-p, --precompressed]</code></pre>
 
 Spins up a simple but production-ready static file server.
 
@@ -204,11 +207,17 @@ Spins up a simple but production-ready static file server.
 
 `--browse` will enable directory listings if a directory without an index file is requested.
 
+`--reveal-symlinks` will show the target of symbolic links in directory listings, when `--browse` is enabled.
+
 `--templates` will enable template rendering.
 
 `--access-log` enables the request/access log.
 
 `--debug` enables verbose logging.
+
+`--no-compress` disables compression. By default, Zstandard and Gzip compression are enabled.
+
+`--precompressed` specifies encoding formats to search for precompressed sidecar files. Can be repeated for multiple formats. See the [file_server directive](/docs/caddyfile/directives/file_server#precompressed) for more information.
 
 This command disables the admin API, making it easier to run multiple instances on a local development machine.
 
@@ -232,13 +241,6 @@ Formats or prettifies a Caddyfile, then exits. The result is printed to stdout u
 `--overwrite` causes the result to be written to the input file instead of being printed to the terminal. If the input is not a regular file, this flag has no effect.
 
 `--diff` causes the output to be compared against the input, and lines will be prefixed with `-` and `+` where they differ. Note that unchanges lines are prefixed with two spaces for alignment, and that this is not a valid patch format; it's just meant as a visual tool.
-
-
-<aside class="advice">
-
-The `caddy fmt` command [does not support](https://github.com/caddyserver/caddy/issues/5930#issuecomment-1797709061) [heredocs](/docs/caddyfile/concepts#heredocs).
-
-</aside>
 
 
 ### `caddy hash-password`

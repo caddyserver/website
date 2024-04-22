@@ -22,4 +22,7 @@ rewrite /docs/json/* /docs/json/index.html
 rewrite /docs/modules/* /docs/modules/index.html
 rewrite /docs/* /docs/index.html
 
+redir /docs/caddyfile/directives/basicauth /docs/caddyfile/directives/basic_auth 308
+redir /docs/caddyfile/directives/skip_log /docs/caddyfile/directives/log_skip 308
+
 reverse_proxy /api/* localhost:4444

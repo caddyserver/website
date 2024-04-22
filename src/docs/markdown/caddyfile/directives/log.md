@@ -289,12 +289,17 @@ format filter {
 	fields {
 		<field> <filter> ...
 	}
+	<field> <filter> ...
 }
 ```
 
 Nested fields can be referenced by representing a layer of nesting with `>`. In other words, for an object like `{"a":{"b":0}}`, the inner field can be referenced as `a>b`.
 
 The following fields are fundamental to the log and cannot be filtered because they are added by the underlying logging library as special cases: `ts`, `level`, `logger`, and `msg`.
+
+Specifying `wrap` is optional; if omitted, a default is chosen depending on whether the current output module is [`stderr`](#stderr) or [`stdout`](#stdout), and is an interactive terminal, in which case [`console`](#console) is chosen, otherwise [`json`](#json) is chosen.
+
+As a shortcut, the `fields` block can be omitted and the filters can be specified directly within the `filter` block.
 
 These are the available filters:
 
@@ -337,7 +342,7 @@ Most commonly, the fields to filter would be:
 - `request>headers>X-Forwarded-For` if behind a reverse proxy
 
 ```caddy-d
-<field> ip_mask {
+<field> ip_mask [<ipv4> [<ipv6>]] {
 	ipv4 <cidr>
 	ipv6 <cidr>
 }
@@ -458,10 +463,7 @@ Delete the `User-Agent` request header from the logs:
 example.com {
 	log {
 		format filter {
-			wrap console
-			fields {
-				request>headers>User-Agent delete
-			}
+			request>headers>User-Agent delete
 		}
 	}
 }
@@ -474,12 +476,9 @@ Redact multiple sensitive cookies. (Note that some sensitive headers are logged 
 example.com {
 	log {
 		format filter {
-			wrap console
-			fields {
-				request>headers>Cookie cookie {
-					replace session REDACTED
-					delete secret
-				}
+			request>headers>Cookie cookie {
+				replace session REDACTED
+				delete secret
 			}
 		}
 	}
@@ -495,13 +494,8 @@ Note that as of Caddy v2.7, both `remote_ip` and `client_ip` are logged, where `
 example.com {
 	log {
 		format filter {
-			wrap console
-			fields {
-				request>remote_ip ip_mask {
-					ipv4 16
-					ipv6 32
-				}
-			}
+			request>remote_ip ip_mask 16 32
+			request>client_ip ip_mask 16 32
 		}
 	}
 }
