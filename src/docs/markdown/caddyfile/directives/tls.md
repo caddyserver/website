@@ -173,7 +173,7 @@ These are the standard trust pool providers that can be used in the `trust_pool`
 The `inline` module parses the trusted root certificates as listed in the Caddyfile directly in base64 DER-encoded format. The `trust_der` directive may be repeated multiple times.
 
 ```caddy-d
-... inline {
+trust_pool inline {
 	trust_der      <base64_der>
 }
 ```
