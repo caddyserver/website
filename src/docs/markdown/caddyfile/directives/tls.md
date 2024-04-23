@@ -41,8 +41,7 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 	reuse_private_keys
 	client_auth {
 		mode                   [request|require|verify_if_given|require_and_verify]
-		trusted_ca_cert        <base64_der>
-		trusted_ca_cert_file   <filename>
+		trust_pool             <module>
 		trusted_leaf_cert      <base64_der>
 		trusted_leaf_cert_file <filename>
 		verifier 			   <module>
@@ -143,9 +142,9 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
 
     Default: `require_and_verify` if any `trusted_ca_cert` or `trusted_leaf_cert` are provided; otherwise, `require`.
 	
-  - **trusted_ca_cert** <span id="trusted_ca_cert"/> is a base64 DER-encoded CA certificate against which to validate client certificates.
-
-  - **trusted_ca_cert_file** <span id="trusted_ca_cert_file"/> is a path to a PEM CA certificate file against which to validate client certificates.
+  - **trust_pool** <span id="trust_pool"/> configures the source of certificate authorities (CA) providing certificates against which to validate client certificates.
+	
+	The certificate authority used providing the pool of trusted certificates and the configuration within the segment depends on the configured source of trust pool module. The standard modules available in Caddy are listed [below](#trust-pool-providers). The full list of modules, including 3rd-party, is listed under the [`trust_pool`](https://caddyserver.com/docs/json/apps/http/servers/tls_connection_policies/client_authentication/#trust_pool) key in the JSON documentation. Support for Caddyfile in 3rd-party module is not guaranteed and depends on the module author.
 
   - **trusted_leaf_cert** <span id="trusted_leaf_cert"/> is a base64 DER-encoded client leaf certificate to accept.
 
@@ -165,6 +164,127 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
 
 - **insecure_secrets_log** <span id="insecure_secrets_log"/> enables logging of TLS secrets to a file. This is also known as `SSLKEYLOGFILE`. Uses NSS key log format, which can then be parsed by Wireshark or other tools. ⚠️ **Security Warning:** This is insecure as it allows other programs or tools to decrypt TLS connections, and therefore completely compromises security. However, this capability can be useful for debugging and troubleshooting.
 
+### Trust Pool Providers
+
+These are the standard trust pool providers that can be used in the `trust_pool` subdirective:
+
+#### inline
+
+The `inline` module parses the trusted root certificates as listed in the Caddyfile directly in base64 DER-encoded format. The `trust_der` directive may be repeated multiple times.
+
+```caddy-d
+... inline {
+	trust_der      <base64_der>
+}
+```
+
+- **trust_der** <span id="trust_der"/> is a base64 DER-encoded CA certificate against which to validate client certificates.
+
+#### file
+
+The `file` module reads the trusted root certificates from PEM files from disk. The `pem_file` directive can accept multiple file paths on the same line and may be repeated multiple times.
+
+```caddy-d
+... file [<pem_file>...] {
+	pem_file <pem_file>...
+}
+```
+
+- **pem_file** <span id="pem_file"/> is a path to a PEM CA certificate file against which to validate client certificates.
+
+#### pki_root
+
+The `pki_root` module obtains the _root_ and trusts certificates from the certificate authority defined in the [PKI app](https://caddyserver.com/docs/caddyfile/options#pki-options). The `authority` directive can accept multiple authorities at the same time and may be repeated multiple times.
+
+```caddy-d
+... pki_root [<ca_name>...] {
+	authority <ca_name>...
+}
+```
+
+- **authority** <span id="authority"/> is the name of the certificate authority configured in the PKI app.
+
+#### pki_intermediate
+
+The `pki_intermediate` module obtains the _intermediate_ and trusts certificates from the certificate authority defined in the [PKI app](https://caddyserver.com/docs/caddyfile/options#pki-options). The `authority` directive can accept multiple authorities at the same time and may be repeated multiple times.
+
+```caddy-d
+... pki_intermediate [<ca_name>...] {
+	authority <ca_name>...
+}
+```
+
+- **authority** <span id="authority"/> is the name of the certificate authority configured in the PKI app.
+
+#### storage
+
+The `storage` module extracts the trusted certificates root from Caddy [storage](https://caddyserver.com/docs/caddyfile/options#storage). The `authority` directive can accept multiple authorities at the same time and may be repeated multiple times.
+
+```caddy-d
+... storage [<storage_keys>...] {
+	storage <storage_module>
+	keys    <storage_keys>...
+}
+```
+
+- **storage** <span id="storage"/> is an optional storage module to use. If not specified, the default storage module will be used. If specified, it may be specified only once.
+
+- **keys** <span id="keys"/> is the list of storage keys at which the PEM files of the certificates are stored. The directive accepts multiple values on the same line and may be specified multiple times.
+
+#### http
+
+The `http` module obtains the trusted certificates from HTTP endpoints. The `endpoints` directive can accept multiple endpoints at the same time and may be repeated multiple times.
+
+```caddy-d
+... http [<endpoints...>] {
+	endpoints   <endpoints...>
+	tls         <tls_config>
+}
+```
+
+- **endpoints** <span id="endpoints"/> is the list of HTTP endpoints from which to obtain certificates. The directive accepts multiple values on the same line and may be specified multiple times.
+
+- **tls** <span id="tls"/> is an optional TLS configuration to use when connecting to the HTTP endpoint. The segment parsing is defined in the [following section](#tls-1).
+
+##### TLS
+
+```caddy-d
+... {
+	ca                    <ca_module>
+	insecure_skip_verify
+	handshake_timeout     <duration>
+	server_name           <name>
+	renegotiation         <never|once|freely>
+}
+```
+
+- **ca** <span id="ca"/> is an optional directive to define the provider of trust pool. The configuration follows the same behavior of [`trust_pool`](#trust_pool). If specified, it may be specified only once.
+
+- **insecure_skip_verify** <span id="insecure_skip_verify"/> turns off TLS handshake verification, making the connection insecure and vulnerable to man-in-the-middle attacks. _Do not use in production._ The verification is done against either the certificate authorities trusted by the system or as determined by the [`ca`](#ca) directive.
+
+- **handshake_timeout** <span id="handshake_timeout"/> is the maximum [duration](/docs/conventions#durations) to wait for the TLS handshake to complete. Default: No timeout..
+
+- **server_name** <span id="server_name"/> sets the server name used when verifying the certificate received in the TLS handshake. By default, this will use the upstream address' host part.
+
+- **renegotiation** <span id="renegotiation"/> sets the TLS renegotiation level. TLS renegotiation is the act of performing subsequent handshakes after the first. The level may be one of:
+  - `never` (the default) disables renegotiation.
+  - `once` allows a remote server to request renegotiation once per connection.
+  - `freely` allows a remote server to repeatedly request renegotiation.
+
+#### lazy
+
+The `lazy` module defers the generation of the certificate pool from the guest module to demand-time rather than at provisionig time. The gain of the lazy load adds a risk of failure to load the certificates at demand time because the validation that's typically done at provisioning is deferred. Eager validation is a configuration option.
+
+```caddy-d
+... lazy {
+	backend           <ca_module>
+	eager_validation
+}
+```
+
+- **backend** <span id="backend"/> configures the deferred [trust pool provider](#trust-pool-providers). The configuration follows the same behavior of [`trust_pool`](#trust_pool).
+
+- **eager_validation** <span id="eager_validation"/> turns on eager validation of the trust pool provider by trying to obtain the trust certifiate during the validation phase at configuration load-time. The eager loading is used only for error-checking. The result is discarded and will be loaded again on-demand at runtime.
 
 ### Issuers
 
