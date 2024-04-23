@@ -144,7 +144,7 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
 	
   - **trust_pool** <span id="trust_pool"/> configures the source of certificate authorities (CA) providing certificates against which to validate client certificates.
 	
-	The certificate authority used providing the pool of trusted certificates and the configuration within the segment depends on the configured source of trust pool module. The standard modules available in Caddy are listed [below](#trust-pool-providers). The full list of modules, including 3rd-party, is listed under the [`trust_pool`](https://caddyserver.com/docs/json/apps/http/servers/tls_connection_policies/client_authentication/#trust_pool) key in the JSON documentation. Support for Caddyfile in 3rd-party module is not guaranteed and depends on the module author.
+	The certificate authority used providing the pool of trusted certificates and the configuration within the segment depends on the configured source of trust pool module. The standard modules available in Caddy are [listed below](#trust-pool-providers). The full list of modules, including 3rd-party, is listed in the [`trust_pool` JSON documentation](/docs/json/apps/http/servers/tls_connection_policies/client_authentication/#trust_pool).
 
   - **trusted_leaf_cert** <span id="trusted_leaf_cert"/> is a base64 DER-encoded client leaf certificate to accept.
 
@@ -194,7 +194,7 @@ The `file` module reads the trusted root certificates from PEM files from disk. 
 
 #### pki_root
 
-The `pki_root` module obtains the _root_ and trusts certificates from the certificate authority defined in the [PKI app](https://caddyserver.com/docs/caddyfile/options#pki-options). The `authority` directive can accept multiple authorities at the same time and may be repeated multiple times.
+The `pki_root` module obtains the _root_ and trusts certificates from the certificate authority defined in the [PKI app](/docs/caddyfile/options#pki-options). The `authority` directive can accept multiple authorities at the same time and may be repeated multiple times.
 
 ```caddy-d
 ... pki_root [<ca_name>...] {
