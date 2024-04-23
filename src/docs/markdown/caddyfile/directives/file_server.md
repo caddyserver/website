@@ -45,7 +45,7 @@ file_server [<matcher>] [browse] {
 
 - **fs** <span id="fs"/> specifies an alternate (perhaps virtual) file system to use. Any Caddy module in the `caddy.fs` namespace can be used here. Any root path/prefix will still apply to alternate file system modules. By default, the local disk is used.
 
-	xcaddy v0.4.0 introduces the [`--embed` flag](https://github.com/caddyserver/xcaddy#custom-builds) to embed a filesystem tree into the custom Caddy build and registers an `fs` module named `embedded`, which allows your static site to be distributed as a Caddy executable.
+	[`xcaddy`](/docs/build#xcaddy) v0.4.0 introduces the [`--embed` flag](https://github.com/caddyserver/xcaddy#custom-builds) to embed a filesystem tree into the custom Caddy build, and registers an `fs` module named `embedded` which allows your static site to be distributed as a Caddy executable.
 
 - **root** <span id="root"/> sets the path to the site root. It's similar to the [`root`](root) directive except it applies to this file server instance only and overrides any other site root that may have been defined. Default: `{http.vars.root}` or the current working directory. Note: This subdirective only changes the root for this handler. For other directives (like [`try_files`](try_files) or [`templates`](templates)) to know the same site root, use the [`root`](root) directive instead.
 
