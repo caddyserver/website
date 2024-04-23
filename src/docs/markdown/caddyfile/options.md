@@ -853,7 +853,7 @@ Here's a complete example, trusting an example IPv4 range and an IPv6 range:
 
 ##### `trusted_proxies_strict`
 
-When [`trusted_proxies`](#trusted-proxies) is enabled, the [`client_ip_headers`](#client-ip-headers) are parsed from left-to-right by default. The first untrusted IP address found becomes the real client address. Since v2.8, you can opt-in to right-to-left parsing of these headers with `trusted_proxies_strict`. By default, this option is disabled for backwards compatibility.
+When [`trusted_proxies`](#trusted-proxies) is enabled, the IPs in the headers (configured by [`client_ip_headers`](#client-ip-headers)) are parsed from left-to-right by default. The first untrusted IP address found becomes the real client address. Since v2.8, you can opt-in to right-to-left parsing of these headers with `trusted_proxies_strict`. By default, this option is disabled for backwards compatibility.
 
 Upstream proxies such as HAProxy, CloudFlare, AWS ALB, CloudFront, etc. will append each new connecting remote address to the right of `X-Forwarded-For`. It is recommended to enable `trusted_proxies_strict` when working with these, as the left-most IP address may be spoofed by the client.
 
