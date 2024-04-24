@@ -19,7 +19,7 @@ root [<matcher>] <path>
 
 - **&lt;path&gt;** is the path to use for the site root.
 
-Prior to v2.8.0, that the `<path>` argument could be confused by the parser for a [matcher token](/docs/caddyfile/matchers#syntax) if it began with `/`, so it was necessary to specify a wildcard matcher token (`*`).
+Prior to v2.8.0, the `<path>` argument could be confused by the parser for a [matcher token](/docs/caddyfile/matchers#syntax) if it began with `/`, so it was necessary to specify a wildcard matcher token (`*`).
 
 
 ## Examples
