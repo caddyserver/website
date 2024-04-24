@@ -206,7 +206,7 @@ The `pki_root` module obtains the _root_ and trusts certificates from the certif
 
 #### pki_intermediate
 
-The `pki_intermediate` module obtains the _intermediate_ and trusts certificates from the certificate authority defined in the [PKI app](https://caddyserver.com/docs/caddyfile/options#pki-options). The `authority` directive can accept multiple authorities at the same time and may be repeated multiple times.
+The `pki_intermediate` module obtains the _intermediate_ and trusts certificates from the certificate authority defined in the [PKI app](/docs/caddyfile/options#pki-options). The `authority` directive can accept multiple authorities at the same time and may be repeated multiple times.
 
 ```caddy-d
 ... pki_intermediate [<ca_name>...] {
@@ -218,7 +218,7 @@ The `pki_intermediate` module obtains the _intermediate_ and trusts certificates
 
 #### storage
 
-The `storage` module extracts the trusted certificates root from Caddy [storage](https://caddyserver.com/docs/caddyfile/options#storage). The `authority` directive can accept multiple authorities at the same time and may be repeated multiple times.
+The `storage` module extracts the trusted certificates root from Caddy [storage](/docs/caddyfile/options#storage). The `authority` directive can accept multiple authorities at the same time and may be repeated multiple times.
 
 ```caddy-d
 ... storage [<storage_keys>...] {
