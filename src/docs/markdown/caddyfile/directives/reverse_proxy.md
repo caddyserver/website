@@ -511,7 +511,7 @@ transport http {
 	tls_insecure_skip_verify
 	tls_curves <curves...>
 	tls_timeout <duration>
-	tls_trusted_ca_certs <pem_files...>
+	tls_trust_pool <module>
 	tls_server_name <server_name>
 	tls_renegotiation <level>
 	tls_except_ports <ports...>
@@ -557,7 +557,7 @@ transport http {
 
 - **tls_timeout** <span id="tls_timeout"/> is the maximum [duration](/docs/conventions#durations) to wait for the TLS handshake to complete. Default: No timeout.
 
-- **tls_trusted_ca_certs** <span id="tls_trusted_ca_certs"/> is a list of PEM files that specify CA public keys to trust when connecting to the backend.
+- **tls_trust_pool** <span id="tls_trust_pool"/> configures the source of trusted certificate authorities similar to the [`trust_pool` sub-directive](/docs/caddyfile/directives/tls#trust_pool) described on the `tls` directive documentation. The list of trust pool sources available in standard Caddy installation is available [here](/docs/caddyfile/directives/tls#trust-pool-providers).
 
 - **tls_server_name** <span id="tls_server_name"/> sets the server name used when verifying the certificate received in the TLS handshake. By default, this will use the upstream address' host part.
 
