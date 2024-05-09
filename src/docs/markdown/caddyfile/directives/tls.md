@@ -271,21 +271,6 @@ The `http` module obtains the trusted certificates from HTTP endpoints. The `end
   - `once` allows a remote server to request renegotiation once per connection.
   - `freely` allows a remote server to repeatedly request renegotiation.
 
-#### lazy
-
-The `lazy` module defers the generation of the certificate pool from the guest module to demand-time rather than at provisionig time. The gain of the lazy load adds a risk of failure to load the certificates at demand time because the validation that's typically done at provisioning is deferred. Eager validation is a configuration option.
-
-```caddy-d
-... lazy {
-	backend           <ca_module>
-	eager_validation
-}
-```
-
-- **backend** <span id="backend"/> configures the deferred [trust pool provider](#trust-pool-providers). The configuration follows the same behavior of [`trust_pool`](#trust_pool).
-
-- **eager_validation** <span id="eager_validation"/> turns on eager validation of the trust pool provider by trying to obtain the trust certifiate during the validation phase at configuration load-time. The eager loading is used only for error-checking. The result is discarded and will be loaded again on-demand at runtime.
-
 ### Issuers
 
 These issuers come standard with the `tls` directive:
