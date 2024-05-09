@@ -118,6 +118,7 @@ Possible options are (click on each option to jump to its documentation):
 			write       <duration>
 			idle        <duration>
 		}
+		keepalive_interval <duration>
 		trusted_proxies <module> ...
 		client_ip_headers <headers...>
 		metrics
@@ -821,6 +822,20 @@ Also included is the [`proxy_protocol`](/docs/json/apps/http/servers/listener_wr
 	}
 }
 ```
+
+
+##### `keepalive_interval`
+
+The interval at which TCP keepalive packets are sent to keep the connection alive at the TCP layer when no other data is being transmitted. Defaults to `15s`.
+
+```caddy
+{
+	servers {
+		keepalive_interval 30s
+	}
+}
+```
+
 
 
 ##### `trusted_proxies`
