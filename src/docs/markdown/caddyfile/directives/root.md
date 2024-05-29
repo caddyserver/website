@@ -19,7 +19,7 @@ root [<matcher>] <path>
 
 - **&lt;path&gt;** is the path to use for the site root.
 
-Note that the `<path>` argument could be confused by the parser for a [matcher token](/docs/caddyfile/matchers#syntax) if it begins with `/`. To disambiguate, specify a wildcard matcher token (`*`). See examples below.
+Prior to v2.8.0, the `<path>` argument could be confused by the parser for a [matcher token](/docs/caddyfile/matchers#syntax) if it began with `/`, so it was necessary to specify a wildcard matcher token (`*`).
 
 
 ## Examples
@@ -40,14 +40,12 @@ root * /home/bob/public_html
 
 <aside class="tip">
 
-Note that a [wildcard matcher](/docs/caddyfile/matchers#wildcard-matchers) is required here because the first argument is ambiguous with a [path matcher](/docs/caddyfile/matchers#path-matchers).
+Note that prior to v2.8.0, a [wildcard matcher](/docs/caddyfile/matchers#wildcard-matchers) was required here because the first argument is ambiguous with a [path matcher](/docs/caddyfile/matchers#path-matchers), i.e. `root * /srv`, but it can now be simplified to `root /srv`.
 
 </aside>
 
 
 Set the site root to `public_html` (relative to current working directory) for all requests:
-
-(No matcher token is required here because our site root is a relative path, so it does not start with a forward slash and thus is not ambiguous.)
 
 ```caddy-d
 root public_html

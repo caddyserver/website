@@ -126,7 +126,7 @@ localhost {
 
 Here, `lb_policy` is a subdirective to [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy) (it sets the load balancing policy to use between backends).
 
-**Unless otherwise documented, directives cannot be used within other directive blocks.** For example, [`basicauth`](/docs/caddyfile/directives/basicauth) cannot be used within [`file_server`](/docs/caddyfile/directives/file_server) because the file server does not know how to do authentication; but you can use directives within [`route`](/docs/caddyfile/directives/route), [`handle`](/docs/caddyfile/directives/handle), and [`handle_path`](/docs/caddyfile/directives/handle_path) blocks because they are specifically designed to group directives together.
+**Unless otherwise documented, directives cannot be used within other directive blocks.** For example, [`basic_auth`](/docs/caddyfile/directives/basic_auth) cannot be used within [`file_server`](/docs/caddyfile/directives/file_server) because the file server does not know how to do authentication; but you can use directives within [`route`](/docs/caddyfile/directives/route), [`handle`](/docs/caddyfile/directives/handle), and [`handle_path`](/docs/caddyfile/directives/handle_path) blocks because they are specifically designed to group directives together.
 
 Note that when the HTTP Caddyfile is adapted, HTTP handler directives are sorted according to a specific default [directive order](/docs/caddyfile/directives#directive-order) unless in a [`route`](/docs/caddyfile/directives/route) block, so the order of appearance of the directives does not matter except in `route` blocks.
 
@@ -186,12 +186,6 @@ The opening heredoc marker must start with `<<`, followed by any text (uppercase
 The closing marker can be indented, which causes every line of text to have that much indentation stripped (inspired by [PHP](https://www.php.net/manual/en/language.types.string.php#language.types.string.syntax.heredoc)) which is nice for readability inside [blocks](#blocks) while giving great control of the whitespace in the token text. The trailing newline is also stripped, but can be retained by adding an extra blank line before the closing marker.
 
 Additional tokens may follow the closing marker as arguments to the directive (such as in the example above, the status code `200`).
-
-<aside class="advice">
-
-The [`caddy fmt`](/docs/command-line#caddy-fmt) command [does not support](https://github.com/caddyserver/caddy/issues/5930#issuecomment-1797709061) heredocs.
-
-</aside>
 
 
 ## Global options
@@ -333,8 +327,8 @@ You can use any [Caddy placeholders](/docs/conventions#placeholders) in the Cadd
 | `{cookie.*}`    | `{http.request.cookie.*}`         |
 | `{client_ip}`   | `{http.vars.client_ip}`           |
 | `{dir}`         | `{http.request.uri.path.dir}`     |
-| `{err.*}`       | `{http.error.*}` |
-| `{file_match.*}` | `{http.matchers.file.*}` |
+| `{err.*}`       | `{http.error.*}`                  |
+| `{file_match.*}` | `{http.matchers.file.*}`         |
 | `{file.base}`   | `{http.request.uri.path.file.base}` |
 | `{file.ext}`    | `{http.request.uri.path.file.ext}`  |
 | `{file}`        | `{http.request.uri.path.file}`    |
@@ -348,11 +342,11 @@ You can use any [Caddy placeholders](/docs/conventions#placeholders) in the Cadd
 | `{port}`        | `{http.request.port}`             |
 | `{query.*}`     | `{http.request.uri.query.*}`      |
 | `{query}`       | `{http.request.uri.query}`        |
-| `{re.*.*}`      | `{http.regexp.*.*}` |
+| `{re.*}`        | `{http.regexp.*}`                 |
 | `{remote_host}` | `{http.request.remote.host}`      |
 | `{remote_port}` | `{http.request.remote.port}`      |
 | `{remote}`      | `{http.request.remote}`           |
-| `{rp.*}`        | `{http.reverse_proxy.*}` |
+| `{rp.*}`        | `{http.reverse_proxy.*}`          |
 | `{scheme}`      | `{http.request.scheme}`           |
 | `{tls_cipher}`  | `{http.request.tls.cipher_suite}` |
 | `{tls_client_certificate_der_base64}` | `{http.request.tls.client.certificate_der_base64}` |

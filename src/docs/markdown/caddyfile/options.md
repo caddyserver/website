@@ -118,6 +118,7 @@ Possible options are (click on each option to jump to its documentation):
 			write       <duration>
 			idle        <duration>
 		}
+		keepalive_interval <duration>
 		trusted_proxies <module> ...
 		client_ip_headers <headers...>
 		metrics
@@ -126,6 +127,11 @@ Possible options are (click on each option to jump to its documentation):
 		log_credentials
 		protocols [h1|h2|h2c|h3]
 		strict_sni_host [on|insecure_off]
+	}
+
+	# File Systems
+	filesystem <name> <module> {
+		<options...>
 	}
 
 	# PKI Options
@@ -557,7 +563,7 @@ The ask endpoint should return _as fast as possible_, in a few milliseconds, ide
 
 </aside>
 
-- **interval** and **burst** allows `<n>` certificate operations within `<duration>` interval.
+- **interval** and **burst** allows `<n>` certificate operations within `<duration>` interval. These are deprecated and will be removed in a future version, due to not working as intended.
 
 ```caddy
 {
@@ -818,11 +824,25 @@ Also included is the [`proxy_protocol`](/docs/json/apps/http/servers/listener_wr
 ```
 
 
+##### `keepalive_interval`
+
+The interval at which TCP keepalive packets are sent to keep the connection alive at the TCP layer when no other data is being transmitted. Defaults to `15s`.
+
+```caddy
+{
+	servers {
+		keepalive_interval 30s
+	}
+}
+```
+
+
+
 ##### `trusted_proxies`
 
 Allows configuring IP ranges (CIDRs) of proxy servers from which requests should be trusted. By default, no proxies are trusted.
 
-Enabling this causes trusted requests to have the _real_ client IP parsed from HTTP headers (by default, `X-Forwarded-For`; see [`client_ip_headers`](#client-ip-headers) to configure other headers). If trusted, the client IP is added to [access logs](/docs/caddyfile/directives/log), is available as a `{client_ip}` [placeholder](/docs/caddyfile/concepts#placeholders), and allows the use of the [`client_ip` matcher](/docs/caddyfile/matchers#client-ip). If the request is not from a trusted proxy, then the client IP is set to the remote IP address of the direct incoming connection.
+Enabling this causes trusted requests to have the _real_ client IP parsed from HTTP headers (by default, `X-Forwarded-For`; see [`client_ip_headers`](#client-ip-headers) to configure other headers). If trusted, the client IP is added to [access logs](/docs/caddyfile/directives/log), is available as a `{client_ip}` [placeholder](/docs/caddyfile/concepts#placeholders), and allows the use of the [`client_ip` matcher](/docs/caddyfile/matchers#client-ip). If the request is not from a trusted proxy, then the client IP is set to the remote IP address of the direct incoming connection. By default, the IPs in headers are parsed left-to-right. See [`trusted_proxies_strict`](#trusted-proxies-strict) to alter this behaviour.
 
 Some matchers or handlers may use the trust status of the request to make decisions. For example, if trusted, the [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy#defaults) handler will proxy and augment the sensitive `X-Forwarded-*` request headers.
 
@@ -850,6 +870,27 @@ Here's a complete example, trusting an example IPv4 range and an IPv6 range:
 	}
 }
 ```
+
+##### `trusted_proxies_strict`
+
+When [`trusted_proxies`](#trusted-proxies) is enabled, the IPs in the headers (configured by [`client_ip_headers`](#client-ip-headers)) are parsed from left-to-right by default. The first untrusted IP address found becomes the real client address. Since v2.8, you can opt-in to right-to-left parsing of these headers with `trusted_proxies_strict`. By default, this option is disabled for backwards compatibility.
+
+Upstream proxies such as HAProxy, CloudFlare, AWS ALB, CloudFront, etc. will append each new connecting remote address to the right of `X-Forwarded-For`. It is recommended to enable `trusted_proxies_strict` when working with these, as the left-most IP address may be spoofed by the client.
+
+```caddy
+{
+	servers {
+		trusted_proxies static private_ranges
+		trusted_proxies_strict
+	}
+}
+```
+
+<aside class="tip">
+
+Specifically in the case of AWS ALB, you will certainly want to enable this option. [Per their documentation](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/x-forwarded-headers.html#w227aac13c27b9c15) you can only identify the real client IP by setting XFF mode to `append`. This IP will be appended to the right of `X-Forwarded-For` and can only be safely extracted via `trusted_proxies_strict`.
+
+</aside>
 
 
 ##### `client_ip_headers`
@@ -966,6 +1007,44 @@ This option will automatically be turned on if [client authentication](/docs/cad
 	servers {
 		strict_sni_host on
 	}
+}
+```
+
+
+
+## File Systems
+
+The `filesystem` global option allows declaring one or more file systems that can be used for file I/O.
+
+This could let you connect to a remote filesystem running in the cloud, or a database with a file-like interface, or even to read from files embedded within the Caddy binary.
+
+File systems are declared with a name to identify them. This means you can connect to more than one file system of the same type, if you need to.
+
+By default, Caddy doesn't have any file system modules, so you'll need to build Caddy with a plugin for the file system you want to use.
+
+#### Example
+
+Using an imaginary `custom` file system module, you could declare two file systems:
+
+```caddy
+{
+	filesystem foo custom {
+		...
+	}
+
+	filesystem bar custom {
+		...
+	}
+}
+
+foo.example.com {
+	fs foo
+	file_server
+}
+
+foo.example.com {
+	fs bar
+	file_server
 }
 ```
 

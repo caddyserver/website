@@ -33,7 +33,9 @@ file_server [<matcher>] [browse] {
 	root          <path>
 	hide          <files...>
 	index         <filenames...>
-	browse        [<template_file>]
+	browse        [<template_file>] {
+		reveal_symlinks
+	}
 	precompressed <formats...>
 	status        <status>
 	disable_canonical_uris
@@ -42,6 +44,8 @@ file_server [<matcher>] [browse] {
 ```
 
 - **fs** <span id="fs"/> specifies an alternate (perhaps virtual) file system to use. Any Caddy module in the `caddy.fs` namespace can be used here. Any root path/prefix will still apply to alternate file system modules. By default, the local disk is used.
+
+	[`xcaddy`](/docs/build#xcaddy) v0.4.0 introduces the [`--embed` flag](https://github.com/caddyserver/xcaddy#custom-builds) to embed a filesystem tree into the custom Caddy build, and registers an `fs` module named `embedded` which allows your static site to be distributed as a Caddy executable.
 
 - **root** <span id="root"/> sets the path to the site root. It's similar to the [`root`](root) directive except it applies to this file server instance only and overrides any other site root that may have been defined. Default: `{http.vars.root}` or the current working directory. Note: This subdirective only changes the root for this handler. For other directives (like [`try_files`](try_files) or [`templates`](templates)) to know the same site root, use the [`root`](root) directive instead.
 
@@ -52,6 +56,8 @@ file_server [<matcher>] [browse] {
 - **browse** <span id="browse"/> enables file listings for requests to directories that do not have an index file.
 
   - **<template_file>** <span id="template_file"/> is an optional custom template file to use for directory listings. Defaults to the template that can be extracted using the command `caddy file-server export-template`, which will print the defaut template to stdout. The embedded template can also be found [here in the source code ![external link](/old/resources/images/external-link.svg)](https://github.com/caddyserver/caddy/blob/master/modules/caddyhttp/fileserver/browse.html). Browse templates can use actions from [the standard templates module](/docs/modules/http.handlers.templates#docs) as well.
+
+  - **reveal_symlinks** <span id="reveal_symlinks"/> enables revealing the targets of symbolic links in directory listings. By default, the symlink targets are hidden, and only the link file itself is shown.
 
 - **precompressed** <span id="precompressed"/> is the list of encoding formats to search for precompressed sidecar files. Arguments are an ordered list of encoding formats to search for precompressed [sidecar files](https://en.wikipedia.org/wiki/Sidecar_file). Supported formats are `gzip` (`.gz`), `zstd` (`.zst`) and `br` (`.br`).
 

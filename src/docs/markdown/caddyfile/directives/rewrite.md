@@ -23,6 +23,8 @@ rewrite [<matcher>] <to>
 
 - **&lt;to&gt;** is the URI to rewrite the request to. Only the components of the URI (path or query string) that are specified in the rewrite will be operated on. The URI path is any substring that comes before `?`. If `?` is omitted, then the whole token is considered to be the path.
 
+Prior to v2.8.0, the `<to>` argument could be confused by the parser for a [matcher token](/docs/caddyfile/matchers#syntax) if it began with `/`, so it was necessary to specify a wildcard matcher token (`*`).
+
 
 ## Similar directives
 
@@ -43,6 +45,12 @@ example.com {
 	rewrite * /index.html
 }
 ```
+
+<aside class="tip">
+
+Note that prior to v2.8.0, a [wildcard matcher](/docs/caddyfile/matchers#wildcard-matchers) was required here because the first argument is ambiguous with a [path matcher](/docs/caddyfile/matchers#path-matchers), i.e. `rewrite * /foo`, but it can now be simplified to `rewrite /foo`.
+
+</aside>
 
 Prefixing all requests with `/api`, preserving the rest of the URI, then reverse proxying to an app:
 

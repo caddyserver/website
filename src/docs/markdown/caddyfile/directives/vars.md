@@ -8,6 +8,9 @@ Sets one or more variables to a particular value, to be used later in the reques
 
 The primary way to access variables is with placeholders, which have the form `{vars.variable_name}`, or with the [`vars`](/docs/caddyfile/matchers#vars) and [`vars_regexp`](/docs/caddyfile/matchers#vars_regexp) request matchers.
 
+As a special case, it's possible to override the variable named `http.auth.user.id`, which is stored in the replacer, to update the `user_id` field in access logs.
+
+
 ## Syntax
 
 ```caddy-d

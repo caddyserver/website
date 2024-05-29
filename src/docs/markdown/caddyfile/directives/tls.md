@@ -38,12 +38,13 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 	resolvers <dns_servers...>
 	eab       <key_id> <mac_key>
 	on_demand
+	reuse_private_keys
 	client_auth {
 		mode                   [request|require|verify_if_given|require_and_verify]
-		trusted_ca_cert        <base64_der>
-		trusted_ca_cert_file   <filename>
+		trust_pool             <module>
 		trusted_leaf_cert      <base64_der>
 		trusted_leaf_cert_file <filename>
+		verifier 			   <module>
 	}
 	issuer          <issuer_name>  [<params...>]
 	get_certificate <manager_name> [<params...>]
@@ -127,6 +128,8 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
 
 - **on_demand** <span id="on_demand"/> enables [On-Demand TLS](/docs/automatic-https#on-demand-tls) for the hostnames given in the site block's address(es). **Security warning:** Doing so in production is insecure unless you also configure the [`on_demand_tls` global option](/docs/caddyfile/options#on-demand-tls) to mitigate abuse.
 
+- **reuse_private_keys** <span id="reuse_private_keys"/> enables reuse of private keys when renewing certificates. By default, a new key is created for every new certificate to mitigate pinning and reduce the scope of key compromise. Key pinning is against industry best practices. This option is not recommended unless you have a specific reason to use it; this may be subject to removal in a future version.
+
 - **client_auth** <span id="client_auth"/> enables and configures TLS client authentication:
   - **mode** <span id="mode"/> is the mode for authenticating the client. Allowed values are:
 
@@ -139,15 +142,17 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
 
     Default: `require_and_verify` if any `trusted_ca_cert` or `trusted_leaf_cert` are provided; otherwise, `require`.
 	
-  - **trusted_ca_cert** <span id="trusted_ca_cert"/> is a base64 DER-encoded CA certificate against which to validate client certificates.
-
-  - **trusted_ca_cert_file** <span id="trusted_ca_cert_file"/> is a path to a PEM CA certificate file against which to validate client certificates.
+  - **trust_pool** <span id="trust_pool"/> configures the source of certificate authorities (CA) providing certificates against which to validate client certificates.
+	
+	The certificate authority used providing the pool of trusted certificates and the configuration within the segment depends on the configured source of trust pool module. The standard modules available in Caddy are [listed below](#trust-pool-providers). The full list of modules, including 3rd-party, is listed in the [`trust_pool` JSON documentation](/docs/json/apps/http/servers/tls_connection_policies/client_authentication/#trust_pool).
 
   - **trusted_leaf_cert** <span id="trusted_leaf_cert"/> is a base64 DER-encoded client leaf certificate to accept.
 
   - **trusted_leaf_cert_file** <span id="trusted_leaf_cert_file"/> is a path to a PEM CA certificate file against which to validate client certificates.
 
     Multiple `trusted_*` directives may be used to specify multiple CA or leaf certificates. Client certificates which are not listed as one of the leaf certificates or signed by any of the specified CAs will be rejected according to the **mode**.
+
+  - **verifier** <span id="verifier"/> enables the use of a custom client certificate verifier module. These can perform custom client authentication checks, such as ensuring the certificate is not revoked.
 
 - **issuer** <span id="issuer"/> configures a custom certificate issuer, or a source from which to obtain certificates.
 
@@ -159,6 +164,112 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
 
 - **insecure_secrets_log** <span id="insecure_secrets_log"/> enables logging of TLS secrets to a file. This is also known as `SSLKEYLOGFILE`. Uses NSS key log format, which can then be parsed by Wireshark or other tools. ⚠️ **Security Warning:** This is insecure as it allows other programs or tools to decrypt TLS connections, and therefore completely compromises security. However, this capability can be useful for debugging and troubleshooting.
 
+### Trust Pool Providers
+
+These are the standard trust pool providers that can be used in the `trust_pool` subdirective:
+
+#### inline
+
+The `inline` module parses the trusted root certificates as listed in the Caddyfile directly in base64 DER-encoded format. The `trust_der` directive may be repeated multiple times.
+
+```caddy-d
+trust_pool inline {
+	trust_der      <base64_der>
+}
+```
+
+- **trust_der** <span id="trust_der"/> is a base64 DER-encoded CA certificate against which to validate client certificates.
+
+#### file
+
+The `file` module reads the trusted root certificates from PEM files from disk. The `pem_file` directive can accept multiple file paths on the same line and may be repeated multiple times.
+
+```caddy-d
+... file [<pem_file>...] {
+	pem_file <pem_file>...
+}
+```
+
+- **pem_file** <span id="pem_file"/> is a path to a PEM CA certificate file against which to validate client certificates.
+
+#### pki_root
+
+The `pki_root` module obtains the _root_ and trusts certificates from the certificate authority defined in the [PKI app](/docs/caddyfile/options#pki-options). The `authority` directive can accept multiple authorities at the same time and may be repeated multiple times.
+
+```caddy-d
+... pki_root [<ca_name>...] {
+	authority <ca_name>...
+}
+```
+
+- **authority** <span id="authority"/> is the name of the certificate authority configured in the PKI app.
+
+#### pki_intermediate
+
+The `pki_intermediate` module obtains the _intermediate_ and trusts certificates from the certificate authority defined in the [PKI app](/docs/caddyfile/options#pki-options). The `authority` directive can accept multiple authorities at the same time and may be repeated multiple times.
+
+```caddy-d
+... pki_intermediate [<ca_name>...] {
+	authority <ca_name>...
+}
+```
+
+- **authority** <span id="authority"/> is the name of the certificate authority configured in the PKI app.
+
+#### storage
+
+The `storage` module extracts the trusted certificates root from Caddy [storage](/docs/caddyfile/options#storage). The `authority` directive can accept multiple authorities at the same time and may be repeated multiple times.
+
+```caddy-d
+... storage [<storage_keys>...] {
+	storage <storage_module>
+	keys    <storage_keys>...
+}
+```
+
+- **storage** <span id="storage"/> is an optional storage module to use. If not specified, the default storage module will be used. If specified, it may be specified only once.
+
+- **keys** <span id="keys"/> is the list of storage keys at which the PEM files of the certificates are stored. The directive accepts multiple values on the same line and may be specified multiple times.
+
+#### http
+
+The `http` module obtains the trusted certificates from HTTP endpoints. The `endpoints` directive can accept multiple endpoints at the same time and may be repeated multiple times.
+
+```caddy-d
+... http [<endpoints...>] {
+	endpoints   <endpoints...>
+	tls         <tls_config>
+}
+```
+
+- **endpoints** <span id="endpoints"/> is the list of HTTP endpoints from which to obtain certificates. The directive accepts multiple values on the same line and may be specified multiple times.
+
+- **tls** <span id="tls"/> is an optional TLS configuration to use when connecting to the HTTP endpoint. The segment parsing is defined in the [following section](#tls-1).
+
+##### TLS
+
+```caddy-d
+... {
+	ca                    <ca_module>
+	insecure_skip_verify
+	handshake_timeout     <duration>
+	server_name           <name>
+	renegotiation         <never|once|freely>
+}
+```
+
+- **ca** <span id="ca"/> is an optional directive to define the provider of trust pool. The configuration follows the same behavior of [`trust_pool`](#trust_pool). If specified, it may be specified only once.
+
+- **insecure_skip_verify** <span id="insecure_skip_verify"/> turns off TLS handshake verification, making the connection insecure and vulnerable to man-in-the-middle attacks. _Do not use in production._ The verification is done against either the certificate authorities trusted by the system or as determined by the [`ca`](#ca) directive.
+
+- **handshake_timeout** <span id="handshake_timeout"/> is the maximum [duration](/docs/conventions#durations) to wait for the TLS handshake to complete. Default: No timeout..
+
+- **server_name** <span id="server_name"/> sets the server name used when verifying the certificate received in the TLS handshake. By default, this will use the upstream address' host part.
+
+- **renegotiation** <span id="renegotiation"/> sets the TLS renegotiation level. TLS renegotiation is the act of performing subsequent handshakes after the first. The level may be one of:
+  - `never` (the default) disables renegotiation.
+  - `once` allows a remote server to request renegotiation once per connection.
+  - `freely` allows a remote server to repeatedly request renegotiation.
 
 ### Issuers
 

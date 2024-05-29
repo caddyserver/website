@@ -1,8 +1,8 @@
 ---
-title: basicauth (Caddyfile directive)
+title: basic_auth (Caddyfile directive)
 ---
 
-# basicauth
+# basic_auth
 
 Enables HTTP Basic Authentication, which can be used to protect directories and files with a username and hashed password.
 
@@ -14,12 +14,14 @@ Caddy configuration does not accept plaintext passwords; you MUST hash them befo
 
 After a successful authentication, the `{http.auth.user.id}` placeholder will be available, which contains the authenticated username.
 
+Prior to v2.8.0, this directive was named `basicauth`, but was renamed for consistency with other directives.
+
 
 ## Syntax
 
 ```caddy-d
-basicauth [<matcher>] [<hash_algorithm> [<realm>]] {
-	<username> <hashed_password> [<salt_base64>]
+basic_auth [<matcher>] [<hash_algorithm> [<realm>]] {
+	<username> <hashed_password>
 	...
 }
 ```
@@ -32,8 +34,6 @@ basicauth [<matcher>] [<hash_algorithm> [<realm>]] {
 
 - **&lt;hashed_password&gt;** is the password hash.
 
-- **&lt;salt_base64&gt;** is the base-64 encoding of the password salt, if an external salt is required. This was only needed for the `scrypt` algorithm which is now deprecated. Subject to removal.
-
 
 ## Examples
 
@@ -41,7 +41,7 @@ Require authentication for all requests to `example.com`:
 
 ```caddy
 example.com {
-	basicauth {
+	basic_auth {
 		# Username "Bob", password "hiccup"
 		Bob $2a$14$Zkx19XLiW6VYouLHR5NmfOFU0z2GTNmpkT/5qqR7hx4IjWJPDhjvG
 	}
@@ -55,7 +55,7 @@ Protect files in `/secret/` so only `Bob` can access them (and anyone can see ot
 example.com {
 	root * /srv
 
-	basicauth /secret/* {
+	basic_auth /secret/* {
 		# Username "Bob", password "hiccup"
 		Bob $2a$14$Zkx19XLiW6VYouLHR5NmfOFU0z2GTNmpkT/5qqR7hx4IjWJPDhjvG
 	}
