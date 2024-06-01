@@ -47,7 +47,6 @@ example.com {
 
 	handle {
 		reverse_proxy node1:80 node2:80 node3:80 {
-			header_up Host {upstream_hostport}
 			lb_policy random_choose 2 
         }
 		log_append upstream-host "{http.reverse_proxy.upstream.host}"
