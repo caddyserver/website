@@ -6,7 +6,7 @@ title: vars (Caddyfile directive)
 
 Sets one or more variables to a particular value, to be used later in the request handling chain.
 
-The primary way to access variables is with placeholders, which have the form `{vars.variable_name}`, or with the [`vars`](/docs/caddyfile/matchers#vars) and [`vars_regexp`](/docs/caddyfile/matchers#vars_regexp) request matchers.
+The primary way to access variables is with placeholders, which have the form `{vars.variable_name}`, or with the [`vars`](/docs/caddyfile/matchers#vars) and [`vars_regexp`](/docs/caddyfile/matchers#vars_regexp) request matchers. You may use variables with the [`templates`](templates) directive using the `placeholder` function, for example: `{{placeholder "http.vars.variable_name"}}`
 
 As a special case, it's possible to override the variable named `http.auth.user.id`, which is stored in the replacer, to update the `user_id` field in access logs.
 
