@@ -72,6 +72,7 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 	health_timeout  <duration>
 	health_status   <status>
 	health_body     <regexp>
+	health_follow_redirects
 	health_headers {
 		<field> [<values...>]
 	}
@@ -323,6 +324,8 @@ Active health checks perform health checking in the background on a timer. To en
 - **health_status** <span id="health_status"/> is the HTTP status code to expect from a healthy backend. Can be a 3-digit status code, or a status code class ending in `xx`. For example: `200` (which is the default), or `2xx`.
 
 - **health_body** <span id="health_body"/> is a substring or regular expression to match on the response body of an active health check. If the backend does not return a matching body, it will be marked as down.
+
+- **health_follow_redirects** <span id="health_follow_redirects"/> will cause the health check to follow redirects provided by upstream. Without this setting, a redirect will cause the check to fail.
 
 - **health_headers** <span id="health_headers"/> allows specifying headers to set on the active health check requests. This is useful if you need to change the `Host` header, or if you need to provide some authentication to your backend as part of your health checks.
 
