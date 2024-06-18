@@ -413,6 +413,29 @@ b.example.com {
 }
 ```
 
+⚠️ <i>Experimental</i> <span style='white-space: pre;'> | </span> <span>v2.9.x+</span>
+
+You can also pass an optional block to an imported snippet, and use them as follows.
+
+```caddy
+(snippet) {
+	{block}
+	respond "OK"
+}
+
+a.example.com {
+	import snippet {
+		header +foo bar
+	}
+}
+
+b.example.com {
+	import snippet {
+		header +bar foo
+	}
+}
+```
+
 **[Read the `import` directive page](/docs/caddyfile/directives/import) to learn more.**
 
 
