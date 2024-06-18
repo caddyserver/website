@@ -120,9 +120,9 @@ Import a snippet that serves any set of directives, but with a pre-loaded middle
 
 ```caddy
 (instrumented-route) {
-    header {
-      Alt-Svc `h3="0.0.0.0:443"; ma=2592000`
-    }
+	header {
+	  Alt-Svc `h3="0.0.0.0:443"; ma=2592000`
+	}
 	tracing {
 		span args[0]
 	}
