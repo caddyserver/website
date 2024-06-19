@@ -11,7 +11,7 @@ This directive is a special case: it is evaluated before the structure is parsed
 ## Syntax
 
 ```caddy-d
-import <pattern> [<args...>]
+import <pattern> [<args...>] [{block}]
 ```
 
 - **&lt;pattern&gt;** is the filename, glob pattern, or name of [snippet](/docs/caddyfile/concepts#snippets) to include. Its contents will replace this line as if that file's contents appeared here to begin with.
@@ -33,6 +33,11 @@ import <pattern> [<args...>]
   For the forms that insert many tokens, the placeholder **must** be a [token](/docs/caddyfile/concepts#tokens-and-quotes) on its own, it cannot be part of another token. In other words, it must have spaces around it, and cannot be in quotes.
 
   Note that prior to v2.7.0, the syntax was `{args.N}` but this form was deprecated in favor of the more flexible syntax above.
+
+⚠️ <i>Experimental</i> <span style='white-space: pre;'> | </span> <span>v2.9.x+</span>
+- **{block...}** is an optional block to pass to the imported tokens. This placeholder is a special case, and is evaluated recursively at Caddyfile-parse-time, not at runtime. They can be used in two forms:
+  - `{block}` where the content of provided block will be substituted for the placeholder.
+  - `{block.key}` where `key` is the first token of a parameter within the provided block
 
 
 ## Examples
@@ -83,5 +88,50 @@ Import a snippet which creates a proxy with a prefix rewrite rule as the first a
 
 example.com {
 	import proxy-rewrite /api 10.0.0.1 10.0.0.2 10.0.0.3
+}
+```
+
+
+⚠️ <i>Experimental</i> <span style='white-space: pre;'> | </span> <span>v2.9.x+</span>
+
+Import a snippet which provides extendable options for a reverse proxy
+
+```caddy
+(extendable-proxy) {
+	reverse_proxy {
+		to {block.proxy_target}
+		{block.proxy_options}
+	}
+}
+
+example.com {
+	import extendable-proxy {
+	  proxy_target 10.0.0.1
+	  proxy_options {
+		transport http {
+			tls
+		}
+	  }
+	}
+}
+```
+
+Import a snippet that serves any set of directives, but with a pre-loaded middleware.
+
+```caddy
+(instrumented-route) {
+	header {
+	  Alt-Svc `h3="0.0.0.0:443"; ma=2592000`
+	}
+	tracing {
+		span args[0]
+	}
+	{block}
+}
+
+example.com {
+	import instrumented-route example-com {
+		respond "OK"
+	}
 }
 ```
