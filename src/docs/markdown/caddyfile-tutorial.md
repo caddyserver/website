@@ -139,11 +139,6 @@ templates
 file_server browse
 ```
 
-<aside class="tip">
-	Browsers don't support Zstandard encodings yet. Hopefully soon!
-</aside>
-
-
 <aside class="complete">Compression</aside>
 
 That's the basic process for getting a semi-advanced, production-ready site up and running!
