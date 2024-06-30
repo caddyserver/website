@@ -129,8 +129,16 @@ A file. By default, log files are rotated ("rolled") to prevent disk space exhau
 
 Log rolling is provided by [lumberjack <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/natefinch/lumberjack)
 
+<aside class="tip">
+
+**A note about reloading log file options:** A server restart is required to apply configuration changes to a given output file.
+The changes will not be applied at server reload time, unless you add a new log filename.
+
+</aside>
+
 ```caddy-d
 output file <filename> {
+	mode          <mode>
 	roll_disabled
 	roll_size     <size>
 	roll_uncompressed
@@ -141,6 +149,10 @@ output file <filename> {
 ```
 
 - **&lt;filename&gt;** is the path to the log file.
+
+- **mode** is the file mode octal value as specified with the unix `chmod` command. For example `0600` would set the mode to `rw-,---,---`, while `0640` would set the mode to `rw-,r--,---`.
+
+  Default: `0600`
 
 - **roll_disabled** disables log rolling. This can lead to disk space depletion, so only use this if your log files are maintained some other way.
 
