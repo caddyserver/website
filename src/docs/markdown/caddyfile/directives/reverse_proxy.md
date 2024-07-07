@@ -139,6 +139,7 @@ Static upstream addresses can take the form of a URL that contains only scheme a
 
 - `localhost:4000`
 - `127.0.0.1:4000`
+- `[::1]:4000`
 - `http://localhost:4000`
 - `https://example.com`
 - `h2c://127.0.0.1`
@@ -146,6 +147,7 @@ Static upstream addresses can take the form of a URL that contains only scheme a
 - `unix//var/php.sock`
 - `unix+h2c//var/grpc.sock`
 - `localhost:8001-8006`
+- `[fe80::ea9f:80ff:fe46:cbfd%eth0]:443`
 
 By default, connections are made to the upstream over plaintext HTTP. When using the URL form, a scheme can be used to set some [`transport`](#transports) defaults as a shorthand.
 - Using `https://` as the scheme will use the [`http` transport](#the-http-transport) with [`tls`](#tls) enabled.
@@ -157,6 +159,8 @@ By default, connections are made to the upstream over plaintext HTTP. When using
 - Using `http://` as the scheme is identical to having omitted the scheme, since HTTP is already the default. This syntax is included for symmetry with the other scheme shortcuts.
 
 Schemes cannot be mixed, since they modify the common transport configuration (a TLS-enabled transport cannot carry both HTTPS and plaintext HTTP). Any explicit transport configuration will not be overwritten, and omitting schemes or using other ports will not assume a particular transport.
+
+When using IPv6 with a zone (e.g. link-local addresses with a specific network interface), a scheme **cannot** be used as a shortcut because the `%` will result in a URL-parse error; configure the transport explicitly instead.
 
 When using the [network address](/docs/conventions#network-addresses) form, the network type is specified as a prefix to the upstream address. This cannot be combined with a URL scheme. As a special case, `unix+h2c/` is supported as a shortcut for the `unix/` network plus the same effects as the `h2c://` scheme. Port ranges are supported as a shortcut, which expands to multiple upstreams with the same host.
 

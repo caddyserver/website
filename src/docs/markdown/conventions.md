@@ -38,10 +38,13 @@ The address part may be any of these forms:
 - `host`
 - `host:port`
 - `:port`
+- `[ipv6%zone]:port`
 - `/path/to/unix/socket`
 - `/path/to/unix/socket|0200`
 
 The host may be any hostname, resolvable domain name, or IP address.
+
+In the case of IPv6 addresses, the address must be enclosed in square brackets `[]`. The zone identifier (starting with `%`) is optional (often used for link-local addresses).
 
 The port may be a single value (`:8080`) or an inclusive range (`:8080-8085`). A port range will be multiplied into singular addresses. Not all config fields accept port ranges. The special port `:0` means any available port.
 
@@ -59,6 +62,8 @@ localhost:8080-8085
 tcp/localhost:8080
 tcp/localhost:8080-8085
 udp/localhost:9005
+[::1]:8080
+tcp6/[fe80::1%eth0]:8080
 unix//path/to/socket
 unix//path/to/socket|0200
 ```
