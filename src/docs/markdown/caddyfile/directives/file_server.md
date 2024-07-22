@@ -40,6 +40,7 @@ file_server [<matcher>] [browse] {
 	status        <status>
 	disable_canonical_uris
 	pass_thru
+	sort          <options...>
 }
 ```
 
@@ -68,6 +69,12 @@ file_server [<matcher>] [browse] {
 - **disable_canonical_uris** <span id="disable_canonical_uris"/> disables the default behaviour of redirecting (to add a trailing slash if the request path is a directory, or remove the trailing slash if the request path is a file). Note that by default, canonicalization will not happen if the last element of the request's path (the filename) underwent an internal rewrite, to avoid clobbering an explicit rewrite with implicit behaviour.
 
 - **pass_thru** <span id="pass_thru"/> enables pass-thru mode, which continues to the next HTTP handler in the route if the requested file is not found, instead of triggering a `404` error (invoking [`handle_errors`](handle_errors) routes). Practically, this is only useful inside of a [`route`](route) block with other handler directives following `file_server`, because this directive is effectively [ordered last](/docs/caddyfile/directives#directive-order).
+
+- **sort** <span id="sort"/> specifies how to sort directory listings. The `options` can be `sortBy` and `order` separated by spaces.
+
+  - **sortBy** can be one of `name`, `size`, `time`. Default: `name`
+
+  - **order** can be one of `asc` or `desc`. Default: `asc`
 
 ## Examples
 
