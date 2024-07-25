@@ -82,9 +82,9 @@ Since `srv1` used `{env.HOST}`, a normal placeholder, it was parsed as its own r
 Some users may immediately notice that this means it is impossible to use the `{$ENV}` syntax in a JSON config. The solution to this is to process such placeholders at Provision time, which is covered below.
 
 
-## How to use Placeholders in your Plugin
+## How to use placeholders in your plugin
 
-#### Parse the raw Placeholder value in your unmarshaler
+#### Parse the raw placeholder value in your unmarshaler
 
 Placeholders should be parsed as their raw values when parsing the Cazddyfile, just like any other string value.
 
@@ -98,7 +98,7 @@ func (g *Gizmo) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 }
 ```
 
-#### Resolve the Placeholder during Match or Serve
+#### Resolve the placeholder during Match or Serve
 
 In order to now correctly read our `g.Name` placeholder, in a plugin matcher or middleware, we must extract the replacer from the context, and use that replacer on our saved placeholder string.
 
@@ -113,7 +113,7 @@ func (g *Gizmo) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp
 }
 ```
 
-#### Alternatively, resolve the Placeholder during Provision
+#### Alternatively, resolve the placeholder during Provision
 
 If you only use global placeholders, like `env`, then you may initialize a global replacer at provision time, and use it to replace such values. This also allows users of config file formats other than Caddyfile to use environmental variables.
 
