@@ -10,13 +10,11 @@ This means that if you wish for your plugin to support placeholders, you must ex
 
 If you are not yet familiar with placeholders, start by reading [here](/docs/conventions#placeholders)!
 
-## Placeholder Parsing Rules & Gotchas
+## Placeholder Internals
 
-If you wish to use placeholders in your Caddy plugin, you must accept placeholders strings, in format `{foo}` as valid configuration values, and parse them at runtime
+Internally, placeholders are simply a string in format `{foo.bar}` used as valid configuration values, which is later parsed at runtime.
 
-Placeholders-like strings which start with a dollar sign (`{$foo}`), are evaulated at Caddyfile parse time, and do not need to be dealt with by your plugin.
-
-This is because these are not placeholders, but Caddyfile-specific [environmental variable substitution](/docs/caddyfile/concepts/#environmental-variables), they just happen to share the `{}` syntax.
+Placeholders-like strings which start with a dollar sign (`{$FOO}`), are evaulated at Caddyfile parse time, and do not need to be dealt with by your plugin. This is because these are not placeholders, but Caddyfile-specific [environmental variable substitution](/docs/caddyfile/concepts/#environmental-variables), they just happen to share the `{}` syntax.
 
 It is therefore important to understand that `{env.HOST}` is inherently different from something like `{$HOST}`
 
@@ -77,17 +75,18 @@ When you adapt this Caddyfile with `HOST=example caddy adapt` you will get
 
 Importantly, look at the `"body"` field in both `srv0` and `srv1`.
 
-Since `srv0` used `{$ENV}`, the special environmental variable placeholder with `$`, as it is parsed during Caddyfile parse time.
+Since `srv0` used `{$ENV}`, the special environmental variable replacement with `$` became `example`, as it is parsed during Caddyfile parse time.
 
-Since `srv1` used `{env.HOST}`, a standard placeholder, it was parsed as a normal string value for "body" field of the respond directive's config.
+Since `srv1` used `{env.HOST}`, a normal placeholder, it was parsed as its own raw string value, `{env.HOST}`
 
-This means that down the line, the handler plugins will receive both `example` and `{env.Host}` respectively in their configurations.
+This means that down the line, the handler the plugins within `srv0` and `srv1` will receive the raw values `example` and `{env.Host}` respectively in their configurations.
+
 
 ## How to Placeholders in your Plugin
 
 #### Parse the raw Placeholder in your unmarshaler
 
-Placeholders should be parsed as their raw values when parsing caddyfiles, just like any other string value
+Placeholders should be parsed as their raw values when parsing the Cazddyfile, just like any other string value
 
 ```go
 func (g *Gizmo) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
