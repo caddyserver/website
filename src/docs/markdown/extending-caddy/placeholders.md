@@ -4,9 +4,9 @@ title: "Placeholder Support"
 
 # Placeholders
 
-In Caddy, placeholders are a feature of the individual plugins. They are not parsed at config time, but instead preserved, and replaced at runtime.
+In Caddy, placeholders are processed by each individual plugin themselves. They are not parsed at config time, but instead preserved and processed at runtime.
 
-This means that if you wish for your plugin to support placeholders, you must explicitly add support for it.
+This means that if you wish for your plugin to support placeholders, you must explicitly add support for them.
 
 If you are not yet familiar with placeholders, start by reading [here](/docs/conventions#placeholders)!
 
@@ -75,18 +75,18 @@ When you adapt this Caddyfile with `HOST=example caddy adapt` you will get
 
 Importantly, look at the `"body"` field in both `srv0` and `srv1`.
 
-Since `srv0` used `{$ENV}`, the special environmental variable replacement with `$` became `example`, as it is parsed during Caddyfile parse time.
+Since `srv0` used `{$HOST}`, the special environmental variable replacement with `$`, the value became `example`, as it was processed during Caddyfile parse time.
 
 Since `srv1` used `{env.HOST}`, a normal placeholder, it was parsed as its own raw string value, `{env.HOST}`
 
-This means that down the line, the handler the plugins within `srv0` and `srv1` will receive the raw values `example` and `{env.Host}` respectively in their configurations.
+Some users may immediately notice that this means it is impossible to use the `{$ENV}` syntax in a JSON config. The solution to this is to process such placeholders at Provision time, which is covered below.
 
 
-## How to Placeholders in your Plugin
+## How to use Placeholders in your Plugin
 
-#### Parse the raw Placeholder in your unmarshaler
+#### Parse the raw Placeholder value in your unmarshaler
 
-Placeholders should be parsed as their raw values when parsing the Cazddyfile, just like any other string value
+Placeholders should be parsed as their raw values when parsing the Cazddyfile, just like any other string value.
 
 ```go
 func (g *Gizmo) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
@@ -115,7 +115,7 @@ func (g *Gizmo) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp
 
 #### Alternatively, resolve the Placeholder during Provision
 
-If you only use global placeholders, like `env`, then you may initialize a global replacer at provision time, and use it to replace such values.
+If you only use global placeholders, like `env`, then you may initialize a global replacer at provision time, and use it to replace such values. This also allows users of config file formats other than Caddyfile to use environmental variables.
 
 ```go
 func (g *Gizmo) Provision(ctx caddy.Context) error {
