@@ -21,7 +21,7 @@ This is because these are not placeholders, but Caddyfile-specific [environmenta
 It is therefore important to understand that `{env.HOST}` is inherently different from something like `{$HOST}`
 
 As an example, see the following caddyfile:
-```
+```caddyfile
 :8080 {
   respond {$HOST} 200
 }
@@ -32,7 +32,7 @@ As an example, see the following caddyfile:
 ```
 
 When you adapt this Caddyfile with `HOST=example caddy adapt` you will get
-```
+```json
 {
   "apps": {
     "http": {
@@ -83,9 +83,9 @@ Since `srv1` used `{env.HOST}`, a standard placeholder, it was parsed as a norma
 
 This means that down the line, the handler plugins will receive both `example` and `{env.Host}` respectively in their configurations.
 
-## Using Placeholders in your Plugin
+## How to Placeholders in your Plugin
 
-#### How to parse Placeholders in your Unmarshaler
+#### Parse the raw Placeholder in your unmarshaler
 
 Placeholders should be parsed as their raw values when parsing caddyfiles, just like any other string value
 
@@ -99,7 +99,7 @@ func (g *Gizmo) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 }
 ```
 
-#### How to resolve Placeholders during Serve or Match
+#### Resolve the Placeholder during Match or Serve
 
 In order to now correctly read our `g.Name` placeholder, in a plugin matcher or middleware, we must extract the replacer from the context, and use that replacer on our saved placeholder string.
 
@@ -114,7 +114,7 @@ func (g *Gizmo) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp
 }
 ```
 
-#### How to resolve Placeholders at Provision time
+#### Alternatively, resolve the Placeholder during Provision
 
 If you only use global placeholders, like `env`, then you may initialize a global replacer at provision time, and use it to replace such values.
 
