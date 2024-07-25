@@ -100,7 +100,9 @@ func (g *Gizmo) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 
 #### Resolve the placeholder during Match or Serve
 
-In order to now correctly read our `g.Name` placeholder, in a plugin matcher or middleware, we must extract the replacer from the context, and use that replacer on our saved placeholder string.
+In order to now correctly read our `g.Name` placeholder in a plugin matcher or middleware, we must extract the replacer from the context and use that replacer on our saved placeholder string.
+
+This gives us a string with all valid replacements done, which we can then use in whichever way we want. In the example, we write those bytes to output
 
 ```go
 func (g *Gizmo) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
