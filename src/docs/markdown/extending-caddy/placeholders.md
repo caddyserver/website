@@ -8,11 +8,15 @@ In Caddy, placeholders are a feature of the individual plugins. They are not par
 
 This means that if you wish for your plugin to support placeholders, you must explicitly add support for it.
 
+If you are not yet familiar with placeholders, start by reading [here](/docs/conventions#placeholders)!
+
 ## Placeholder Parsing Rules & Gotchas
 
-If you wish to use placeholders in your Caddy plugin, you must accept placeholders strings, informat `{foo}` as valid configuration values, and parse them at runtime
+If you wish to use placeholders in your Caddy plugin, you must accept placeholders strings, in format `{foo}` as valid configuration values, and parse them at runtime
 
-However, Placeholders-like strings which do start with a dollar sign (`{$foo}`), are evaulated at Caddyfile parse time, and do not need to be dealt with by your plugin. These are technically not placeholders, but config-time env-var substitution, they just happen to share the `{}` syntax.
+Placeholders-like strings which start with a dollar sign (`{$foo}`), are evaulated at Caddyfile parse time, and do not need to be dealt with by your plugin.
+
+This is because these are not placeholders, but Caddyfile-specific [environmental variable substitution](/docs/caddyfile/concepts/#environmental-variables), they just happen to share the `{}` syntax.
 
 It is therefore important to understand that `{env.HOST}` is inherently different from something like `{$HOST}`
 
