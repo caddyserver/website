@@ -20,4 +20,13 @@ Your first time, you may be prompted for a password. This is so Caddy can serve 
 
 You can then load [https://localhost](https://localhost) (or whatever address you configured) in your browser.
 
+### Docker
+
+You can run rootless with docker with
+```
+docker stop caddy-website || true && docker rm caddy-website || true
+docker run --name caddy-website -it -p 8443:443 -v ./:/wd caddy sh -c "cd /wd && caddy run"
+```
+
+This will allow you to connect to https://localhost:8443
 
