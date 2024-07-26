@@ -218,7 +218,12 @@ A typical SPA config usually looks something like this:
 example.com {
 	root * /srv
 	encode gzip
-	try_files {path} /index.html
+	route {
+		try_files {path} /index.html
+		header /index.html {
+			Cache-Control "public,max-age=0,must-revalidate"
+		}
+	}
 	file_server
 }
 ```
