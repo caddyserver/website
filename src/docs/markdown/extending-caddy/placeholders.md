@@ -86,7 +86,9 @@ Some users may immediately notice that this means it is impossible to use the `{
 
 #### Parse the raw placeholder value in your unmarshaler
 
-Placeholders should be parsed as their raw values when parsing the Cazddyfile, just like any other string value.
+Placeholders are not evaluated at Caddyfile parse time, and should be preserved for later use. They are used as their raw string values.
+
+In other words, parsing a placeholder is no different from parsing any other string.
 
 ```go
 func (g *Gizmo) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
@@ -98,7 +100,7 @@ func (g *Gizmo) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 }
 ```
 
-#### Resolve the placeholder during Match or Serve
+#### Evaluate the placeholder during Match or Serve
 
 In order to now correctly read our `g.Name` placeholder in a plugin matcher or middleware, we must extract the replacer from the context and use that replacer on our saved placeholder string.
 
