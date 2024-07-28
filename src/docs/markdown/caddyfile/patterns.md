@@ -220,9 +220,7 @@ example.com {
 	encode gzip
 	route {
 		try_files {path} /index.html
-		header /index.html {
-			Cache-Control "public,max-age=0,must-revalidate"
-		}
+		header /index.html Cache-Control "public, max-age=0, must-revalidate"
 	}
 	file_server
 }
