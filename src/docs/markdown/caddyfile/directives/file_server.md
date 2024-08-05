@@ -70,11 +70,8 @@ file_server [<matcher>] [browse] {
 
 - **pass_thru** <span id="pass_thru"/> enables pass-thru mode, which continues to the next HTTP handler in the route if the requested file is not found, instead of triggering a `404` error (invoking [`handle_errors`](handle_errors) routes). Practically, this is only useful inside of a [`route`](route) block with other handler directives following `file_server`, because this directive is effectively [ordered last](/docs/caddyfile/directives#directive-order).
 
-- **sort** <span id="sort"/> specifies how to sort directory listings. The `options` can be `sortBy` and `order` separated by spaces.
+- **sort** <span id="sort"/> specifies how to sort directory listings. The options are sortBy (`name`, `namedirfirst`, `size`, `time`) and order (`asc` or `desc`) separated by spaces. The first option must be `sortBy`, and the second option must be `order` (if exists). For example, `sort name desc` will sort by name in descending order.
 
-  - **sortBy** can be one of `name`, `size`, `time`. Default: `name`
-
-  - **order** can be one of `asc` or `desc`. Default: `asc`
 
 ## Examples
 
