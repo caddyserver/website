@@ -62,7 +62,7 @@ header [<matcher>] [[+|-|?|>]<field> [<value>|<find>] [<replace>]] {
 
 For multiple header manipulations, you can open a block and specify one manipulation per line in the same way.
 
-When using the `?` prefix to set a default header value, it is recommended to separate this into its own `header` directive. [Under the hood](/docs/modules/http.handlers.headers#response/require), using `?` configures a response matcher which applies to the directive's entire handler, which only applies the header operations if the field is not yet set. For example, in the same directive, you have these two manipulations: `-Hidden` and `?Foo default`, then the `Hidden` header is _only_ removed if `Foo` is empty, which is typically not the intended effect.
+When using the `?` prefix to set a default header value, it is automatically separated into its own `header` handler, if it was in a `header` block with multiple header operations. [Under the hood](/docs/modules/http.handlers.headers#response/require), using `?` configures a response matcher which applies to the directive's entire handler, which only applies the header operations (like `defer`), but only if the field is not yet set.
 
 
 ## Examples
