@@ -529,6 +529,7 @@ transport http {
 	versions <versions...>
 	compression off
 	max_conns_per_host <count>
+	forward_proxy_url <url>
 }
 ```
 
@@ -592,6 +593,11 @@ transport http {
 - **compression** <span id="compression"/> can be used to disable compression to the backend by setting it to `off`.
 
 - **max_conns_per_host** <span id="max_conns_per_host"/> optionally limits the total number of connections per host, including connections in the dialing, active, and idle states. Default: No limit.
+
+- **forward_proxy_url** <span id="forward_proxy_url"/> is a parameter that specifies the URL of a server that the HTTP transport will use to proxy requests to the upstream server. This parameter takes precedence over environment variables like HTTP_PROXY. When a value is provided for this parameter, requests will flow through the reverse proxy in the following order:
+  a. User Agent -> Reverse Proxy
+  b. Reverse Proxy -> Forward Proxy (specified by `forward_proxy_url`)
+  c. Forward Proxy -> Upstream Server
 
 
 
