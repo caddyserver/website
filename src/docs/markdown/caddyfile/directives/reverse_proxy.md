@@ -863,7 +863,7 @@ example.com {
 		health_uri /health
         health_upstream 127.0.0.1:53336
         health_headers {
-          Full-Upstream {http.reverse_proxy.active.target_upstream}
+        	Full-Upstream {http.reverse_proxy.active.target_upstream}
         }
 	}
 }
