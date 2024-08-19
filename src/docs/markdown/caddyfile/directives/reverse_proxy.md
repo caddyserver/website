@@ -861,10 +861,10 @@ Using [active health checks](#active-health-checks) and `health_upstream` can be
 example.com {
 	reverse_proxy node1:80 node2:80 node3:80 {
 		health_uri /health
-        health_upstream 127.0.0.1:53336
-        health_headers {
-        	Full-Upstream {http.reverse_proxy.active.target_upstream}
-        }
+		health_upstream 127.0.0.1:53336
+		health_headers {
+			Full-Upstream {http.reverse_proxy.active.target_upstream}
+		}
 	}
 }
 ```
