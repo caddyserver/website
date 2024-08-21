@@ -90,7 +90,7 @@ You should not process placeholders when ummarshaling your Caddyfile. Instead, u
 ### Examples
 
 
-In this example, we are using a newly constructed replacer to process placeholders. It has access to placeholders such as `{env.HOST}`, but NOT `{http.request.uri}`
+In this example, we are using a newly constructed replacer to process placeholders. It only has has access to global placeholders such as `{env.HOST}`.
 
 ```go
 func (g *Gizmo) Provision(ctx caddy.Context) error {
@@ -100,7 +100,7 @@ func (g *Gizmo) Provision(ctx caddy.Context) error {
 }
 ```
 
-Here, we extract a replacer out of the `context.Context` inside the `*http.Request`. This replacer has access to http placeholers, such as `{http.request.uri}`
+Here, we extract a replacer out of the `context.Context` inside the `*http.Request`. This replacer has access to both global placeholders, but also http placeholders, such as `{http.request.uri}`
 
 ```go
 func (g *Gizmo) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
