@@ -12,7 +12,7 @@ If you are not yet familiar with placeholders, start by reading [here](/docs/con
 
 ## Placeholder Internals
 
-Internally, placeholders are simply a string in format `{foo.bar}` used as valid configuration values, which is later parsed at runtime.
+Placeholders are a string in the format `{foo.bar}` used as dynamic configuration values, which is later evaluated at runtime.
 
 Placeholders-like strings which start with a dollar sign (`{$FOO}`), are evaulated at Caddyfile parse time, and do not need to be dealt with by your plugin. This is because these are not placeholders, but Caddyfile-specific [environmental variable substitution](/docs/caddyfile/concepts#environment-variables), they just happen to share the `{}` syntax.
 
