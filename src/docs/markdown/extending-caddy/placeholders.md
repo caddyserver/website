@@ -18,7 +18,7 @@ Placeholders-like strings which start with a dollar sign (`{$FOO}`), are evaulat
 
 It is therefore important to understand that `{env.HOST}` is inherently different from something like `{$HOST}`.
 
-As an example, see the following caddyfile:
+As an example, see the following Caddyfile:
 ```caddyfile
 :8080 {
   respond {$HOST} 200
