@@ -100,7 +100,7 @@ func (g *Gizmo) Provision(ctx caddy.Context) error {
 }
 ```
 
-Here, we extract a replacer out of the `context.Context` inside the `*http.Request`. This replacer not only has access global placeholders, but also http placeholders such as `{http.request.uri}`
+Here, we extract a replacer out of the `context.Context` inside the `*http.Request`. This replacer not only has access to global placeholders, but also http placeholders such as `{http.request.uri}`
 
 ```go
 func (g *Gizmo) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
