@@ -4,7 +4,7 @@ title: "Placeholder Support"
 
 # Placeholders
 
-In Caddy, placeholders are processed by each individual plugin themselves. They are not parsed at config time, but instead preserved and processed at runtime.
+In Caddy, placeholders are processed by each individual plugin as needed; they do not automatically work everywhere.
 
 This means that if you wish for your plugin to support placeholders, you must explicitly add support for them.
 
