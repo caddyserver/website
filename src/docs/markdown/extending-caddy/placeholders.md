@@ -16,7 +16,7 @@ Placeholders are a string in the format `{foo.bar}` used as dynamic configuratio
 
 Placeholders-like strings which start with a dollar sign (`{$FOO}`), are evaulated at Caddyfile parse time, and do not need to be dealt with by your plugin. This is because these are not placeholders, but Caddyfile-specific [environmental variable substitution](/docs/caddyfile/concepts#environment-variables), they just happen to share the `{}` syntax.
 
-It is therefore important to understand that `{env.HOST}` is inherently different from something like `{$HOST}`
+It is therefore important to understand that `{env.HOST}` is inherently different from something like `{$HOST}`.
 
 As an example, see the following caddyfile:
 ```caddyfile
