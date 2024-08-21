@@ -10,7 +10,7 @@ This means that if you wish for your plugin to support placeholders, you must ex
 
 If you are not yet familiar with placeholders, start by reading [here](/docs/conventions#placeholders)!
 
-## Placeholder Internals
+## Placeholders Overview
 
 Placeholders are a string in the format `{foo.bar}` used as dynamic configuration values, which is later evaluated at runtime.
 
@@ -82,44 +82,15 @@ Since `srv1` used `{env.HOST}`, a normal placeholder, it was parsed as its own r
 Some users may immediately notice that this means it is impossible to use the `{$ENV}` syntax in a JSON config. The solution to this is to process such placeholders at Provision time, which is covered below.
 
 
-## How to use placeholders in your plugin
+## Implementing placeholder support
 
-#### Parse the raw placeholder value in your unmarshaler
+You should not process placeholders when ummarshaling your Caddyfile. Instead, unmarshal the placeholders as strings in your configuration and evaluate them during either your module's execution or `Provision()` using a `caddy.Replacer`.
 
-Placeholders are not evaluated at Caddyfile parse time, and should be preserved for later use. They are used as their raw string values.
 
-In other words, parsing a placeholder is no different from parsing any other string.
+### Examples
 
-```go
-func (g *Gizmo) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
-	d.Next()
-	if !d.Args(&g.Name) {
-		// not enough args
-		return d.ArgErr()
-	}
-}
-```
 
-#### Evaluate the placeholder during Match or Serve
-
-In order to now correctly read our `g.Name` placeholder in a plugin matcher or middleware, we must extract the replacer from the context and use that replacer on our saved placeholder string.
-
-This gives us a string with all valid replacements done, which we can then use in whichever way we want. In the example, we write those bytes to output
-
-```go
-func (g *Gizmo) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
-	repl := r.Context().Value(caddy.ReplacerCtxKey).(*caddy.Replacer)
-	_, err := w.Write([]byte(repl.ReplaceAll(g.Name,"")))
-	if err != nil {
-		return err
-	}
-	return next.ServeHTTP(w, r)
-}
-```
-
-#### Alternatively, resolve the placeholder during Provision
-
-If you only use global placeholders, like `env`, then you may initialize a global replacer at provision time, and use it to replace such values. This also allows users of config file formats other than Caddyfile to use environmental variables.
+In this example, we are using a newly constructed replacer to process placeholders. It has access to placeholders such as `{env.HOST}`, but NOT `{http.request.uri}`
 
 ```go
 func (g *Gizmo) Provision(ctx caddy.Context) error {
@@ -127,11 +98,14 @@ func (g *Gizmo) Provision(ctx caddy.Context) error {
 	g.Name = repl.ReplaceAll(g.Name,"")
 	return nil
 }
+```
 
+Here, we extract a replacer out of the `context.Context` inside the `*http.Request`. This replacer has access to http placeholers, such as `{http.request.uri}`
 
+```go
 func (g *Gizmo) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
-	// in this case, you don't need to replace at serve-time anymore
-	_, err := w.Write([]byte(g.Name))
+	repl := r.Context().Value(caddy.ReplacerCtxKey).(*caddy.Replacer)
+	_, err := w.Write([]byte(repl.ReplaceAll(g.Name,"")))
 	if err != nil {
 		return err
 	}
