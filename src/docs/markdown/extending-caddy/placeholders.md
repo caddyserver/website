@@ -84,7 +84,7 @@ Some users may immediately notice that this means it is impossible to use the `{
 
 ## Implementing placeholder support
 
-You should not process placeholders when ummarshaling your Caddyfile. Instead, unmarshal the placeholders as strings in your configuration and evaluate them during either your module's execution or `Provision()` using a `caddy.Replacer`.
+You should not process placeholders when ummarshaling your Caddyfile. Instead, unmarshal the placeholders as strings in your configuration and evaluate them during either your module's execution (e.g. `ServeHTTP()` for HTTP handlers, `Match()` for matchers, etc.) or in the `Provision()` step, using a `caddy.Replacer`.
 
 
 ### Examples
