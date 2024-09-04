@@ -359,22 +359,21 @@ Obtains certificates using the ACME protocol. Note that `acme` is a default issu
 
 	- **any_common_name** <span id="any_common_name"/> is a list of one or more common names; Caddy will choose the first chain that has an issuer that matches with at least one of the specified common names.
 
+##### ZeroSSL
+
+Caddy will implicitly use [ZeroSSL's ACME endpoint](https://zerossl.com/documentation/acme/) (and generate EAB credentials) if you specify the the [`email` global option](/docs/caddyfile/options#email).
+
+To provide your own EAB credentials for ZeroSSL, specify the `dir` and `eab` options.
 
 #### zerossl
 
-Obtains certificates using the ACME protocol, specifically with ZeroSSL. Note that `zerossl` is a default issuer, so configuring it explicitly is usually unnecessary.
+Obtains certificates using the ZeroSSL API.
 
 ```caddy-d
-... zerossl [<api_key>] {
+... zerossl <api_key> {
 	...
 }
 ```
-
-The syntax for `zerossl` is exactly the same as for [`acme`](#acme), except that its name is `zerossl` and it can optionally take your ZeroSSL API key.
-
-Its functionality is also the same, except that it will use ZeroSSL's directory by default and it can automatically negotiate EAB credentials (whereas with the `acme` issuer, you have to manually provide EAB credentials and set the directory endpoint).
-
-When explicitly configuring `zerossl`, configuring an `email` is required so that your certificates can appear in your ZeroSSL dashboard.
 
 #### internal
 
