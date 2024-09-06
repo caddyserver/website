@@ -373,9 +373,17 @@ Obtains certificates using the [ZeroSSL API](https://zerossl.com/documentation/a
 
 ```caddy-d
 ... zerossl <api_key> {
-	...
+	validity_days       <days>
+	alt_http_port       <port>
+	dns                 <provider_name> [<options>]
+	propagation_delay   <duration>
+	propagation_timeout <duration>
+	resolvers           <dns_servers...>
+	dns_ttl             <duration>
 }
 ```
+
+Fields for the `zerossl` issuer module share the syntax of those in common with the [`acme` issuer module](#acme).
 
 #### internal
 
