@@ -21,11 +21,11 @@ It is therefore important to understand that `{env.HOST}` is inherently differen
 As an example, see the following Caddyfile:
 ```caddyfile
 :8080 {
-  respond {$HOST} 200
+	respond {$HOST} 200
 }
 
 :8081 {
-  respond {env.HOST} 200
+	respond {env.HOST} 200
 }
 ```
 
