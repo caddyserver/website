@@ -40,6 +40,7 @@ tls.client_auth | [`caddytls.ClientCertificateVerifier`](https://pkg.go.dev/gith
 tls.handshake_match | [`caddytls.ConnectionMatcher`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddytls?tab=doc#ConnectionMatcher) | TLS connection matcher
 tls.issuance | [`certmagic.Issuer`](https://pkg.go.dev/github.com/caddyserver/certmagic?tab=doc#Issuer) | TLS certificate issuer
 tls.get_certificate | [`certmagic.Manager`](https://pkg.go.dev/github.com/caddyserver/certmagic?tab=doc#Manager) | TLS certificate manager | <i>⚠️ Experimental</i>
+tls.permission | [`caddytls.OnDemandPermission`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddytls#OnDemandPermission) | Whether to obtain a cert for a domain | <i>⚠️ Experimental</i>
 tls.stek | [`caddytls.STEKProvider`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddytls?tab=doc#STEKProvider) | TLS session ticket key source
 
 Namespaces marked as "Experimental" are subject to change. (Please develop with them so we can finalize their interfaces!)
