@@ -59,7 +59,7 @@ To add custom fields to the log entries, use the [`log_append` directive](log_ap
   - [append](#append)
 - [Examples](#examples)
 
-Since Caddy v2.5, by default, headers with potentially sensitive information (`Cookie`, `Set-Cookie`, `Authorization` and `Proxy-Authorization`) will be logged with empty values. This behaviour can be disabled with the [`log_credentials`](/docs/caddyfile/options#log-credentials) global server option.
+By default, headers with potentially sensitive information (`Cookie`, `Set-Cookie`, `Authorization` and `Proxy-Authorization`) will be logged as `REDACTED` in access logs. This behaviour can be disabled with the [`log_credentials`](/docs/caddyfile/options#log-credentials) global server option.
 
 
 ## Syntax
@@ -67,29 +67,34 @@ Since Caddy v2.5, by default, headers with potentially sensitive information (`C
 ```caddy-d
 log [<logger_name>] {
 	hostnames <hostnames...>
+	no_hostname
 	output <writer_module> ...
 	format <encoder_module> ...
 	level  <level>
 }
 ```
 
-- **logger_name** is an optional override of the logger name for this site.
+- **logger_name** <span id="logger_name"/> is an optional override of the logger name for this site.
 
   By default, a logger name is generated automatically, e.g. `log0`, `log1`, and so on depending on the order of the sites in the Caddyfile. This is only useful if you wish to reliably refer to the output of this logger from another logger defined in global options. See [an example](#multiple-outputs) below.
 
-- **hostnames** is an optional override of the hostnames that this logger applies to.
+- **hostnames** <span id="hostnames"/> is an optional override of the hostnames that this logger applies to.
 
   By default, the logger applies to the hostnames of the site block it appears in, i.e. the site addresses. This is useful if you wish to define different loggers per subdomain in a [wildcard site block](/docs/caddyfile/patterns#wildcard-certificates). See [an example](#wildcard-logs) below.
 
-- **output** configures where to write the logs. See [`output` modules](#output-modules) below.
+- **no_hostname** <span id="no_hostname"/> prevents the logger from being associated with any of the site block's hostnames. By default, the logger is associated with the [site address](/docs/caddyfile/concepts#addresses) that the `log` directive appears in.
+
+  This is useful when you want to log requests to different files based on some condition, such as the request path or method, using the [`log_name` directive](/docs/caddyfile/directives/log_name).
+
+- **output** <span id="output"/> configures where to write the logs. See [`output` modules](#output-modules) below.
 
   Default: `stderr`.
 
-- **format** describes how to encode, or format, the logs. See [`format` modules](#format-modules) below.
+- **format** <span id="format"/> describes how to encode, or format, the logs. See [`format` modules](#format-modules) below.
 
   Default: `console` if `stderr` is detected to be a terminal, `json` otherwise.
 
-- **level** is the minimum entry level to log. Default: `INFO`.
+- **level** <span id="level"/> is the minimum entry level to log. Default: `INFO`.
 
   Note that access logs currently only emit `INFO` and `ERROR` level logs.
 
@@ -251,8 +256,9 @@ format <encoder_module> {
   Default: `seconds`.
   
   May be one of:
-  - `seconds` Floating-point number of seconds elapsed.
-  - `nano` Integer number of nanoseconds elapsed.
+  - `s`, `second` or `seconds` Floating-point number of seconds elapsed.
+  - `ms`, `milli` or `millis` Floating-point number of milliseconds elapsed.
+  - `ns`, `nano` or `nanos` Integer number of nanoseconds elapsed.
   - `string` Using Go's built-in string format, for example `1m32.05s` or `6.31ms`.
 
 - **level_format** The format for levels.

@@ -88,7 +88,7 @@ Placeholders are a similar idea to variables in other software. For example, [ng
 </aside>
 
 
-Placeholders are bounded on either side by curly braces `{ }` and contain the variable name inside, for example: `{foo.bar}`. Placeholder braces can be escaped, `\{like so\}`. Variable names are typically namespaced with dots to avoid collisions across modules.
+Placeholders are bounded on either side by curly braces `{ }` and contain the variable name inside, for example: `{foo.bar}`. The opening placeholder brace can be escaped `\{like-this}` to prevent replacement. Variable names are typically namespaced with dots to avoid collisions across modules.
 
 Which placeholders are available depends on the context. Not all placeholders are available in all parts of the config. For example, [the HTTP app sets placeholders](/docs/json/apps/http/#docs) that are only available in areas of the config related to handling HTTP requests.
 
@@ -96,7 +96,8 @@ The following placeholders are always available:
 
 Placeholder | Description
 ------------|-------------
-`{env.*}` | Environment variable (example: `{env.HOME}`)
+`{env.*}` | Environment variable; example: `{env.HOME}`
+`{file.*}` | Contents from a file; example: `{file./path/to/secret.txt}`
 `{system.hostname}` | The system's local hostname
 `{system.slash}` | The system's filepath separator
 `{system.os}` | The system's OS

@@ -55,10 +55,12 @@ Directive | Description
 **[handle_path](/docs/caddyfile/directives/handle_path)** | Like handle, but strips path prefix
 **[header](/docs/caddyfile/directives/header)** | Sets or removes response headers
 **[import](/docs/caddyfile/directives/import)** | Include snippets or files
+**[intercept](/docs/caddyfile/directives/intercept)** | Intercept responses written by other handlers
 **[invoke](/docs/caddyfile/directives/invoke)** | Invoke a named route
 **[log](/docs/caddyfile/directives/log)** | Enables access/request logging
 **[log_append](/docs/caddyfile/directives/log_append)** | Append a field to the access log
 **[log_skip](/docs/caddyfile/directives/log_skip)** | Skip access logging for matched requests
+**[log_name](/docs/caddyfile/directives/log_name)** | Override the logger name(s) to write to
 **[map](/docs/caddyfile/directives/map)** | Maps an input value to one or more outputs
 **[method](/docs/caddyfile/directives/method)** | Change the HTTP method internally
 **[metrics](/docs/caddyfile/directives/metrics)** | Configures the Prometheus metrics exposition endpoint
@@ -126,6 +128,7 @@ fs
 root
 log_append
 log_skip
+log_name
 
 header
 copy_response_headers # only in reverse_proxy's handle_response block
@@ -145,6 +148,7 @@ forward_auth
 request_header
 encode
 push
+intercept
 templates
 
 # special routing & dispatching directives

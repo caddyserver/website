@@ -347,6 +347,7 @@ You can use any [Caddy placeholders](/docs/conventions#placeholders) in the Cadd
 | `{remote_port}` | `{http.request.remote.port}`      |
 | `{remote}`      | `{http.request.remote}`           |
 | `{rp.*}`        | `{http.reverse_proxy.*}`          |
+| `{resp.*}`      | `{http.intercept.*}`              |
 | `{scheme}`      | `{http.request.scheme}`           |
 | `{tls_cipher}`  | `{http.request.tls.cipher_suite}` |
 | `{tls_client_certificate_der_base64}` | `{http.request.tls.client.certificate_der_base64}` |
