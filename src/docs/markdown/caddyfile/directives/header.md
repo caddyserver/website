@@ -56,13 +56,13 @@ header [<matcher>] [[+|-|?|>]<field> [<value>|<find>] [<replace>]] {
 
 - **&lt;find&gt;** is the substring or regular expression to search for.
 
-- **&lt;replace&gt;** is the replacement value; required if performing a search-and-replace.
+- **&lt;replace&gt;** is the replacement value; required if performing a search-and-replace. Use `$1` or `$2` and so on to reference capture groups from the search pattern. If the replacement value is `""`, then the matching text is removed from the value. See the [Go documentation](https://golang.org/pkg/regexp/#Regexp.Expand) for details.
 
 - **defer** will force the header operations to be deferred until the response is being written out to the client. This is automatically enabled if any of the header fields are being deleted with `-`, when setting a default value with `?`, or when having used the `>` prefix.
 
 For multiple header manipulations, you can open a block and specify one manipulation per line in the same way.
 
-When using the `?` prefix to set a default header value, it is automatically separated into its own `header` handler, if it was in a `header` block with multiple header operations. [Under the hood](/docs/modules/http.handlers.headers#response/require), using `?` configures a response matcher which applies to the directive's entire handler, which only applies the header operations (like `defer`), but only if the field is not yet set.
+When using the `?` prefix to set a default header value, it is automatically separated into its own `header` handler, if it was in a `header` block with multiple header operations. [Under the hood](/docs/modules/http.handlers.headers#response/require), using `?` configures a [response matcher](/docs/caddyfile/response-matchers) which applies to the directive's entire handler, which only applies the header operations (like `defer`), but only if the field is not yet set.
 
 
 ## Examples

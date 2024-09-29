@@ -24,6 +24,8 @@ Most often, the `file_server` directive is paired with the [`root`](root) direct
 
 When errors occur (e.g. file not found `404`, permission denied `403`), the error routes will be invoked. Use the [`handle_errors`](handle_errors) directive to define error routes, and display custom error pages.
 
+When using `browse`, the default output is produced by the the HTML template. Clients may request the directory listing as either JSON or plaintext, by using the `Accept: application/json` or `Accept: text/plain` headers respectively. The JSON output can be useful for scripting, and the plaintext output can be useful for human terminal usage.
+
 
 ## Syntax
 

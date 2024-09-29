@@ -11,13 +11,18 @@ window.$(function() {
 			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
 			let url = '#' + item.innerText.replace(/_/g, "-");
 			window.$(item).addClass('nd').removeClass('k')
-			window.$(item).html(`<a href="#response-matcher" style="color: inherit;" title="Response matcher">${text}</a>`);
+			window.$(item).html(`<a href="/docs/caddyfile/response-matchers" style="color: inherit;" title="Response matcher">${text}</a>`);
 		});
 
 	// Fix matcher placeholder
-	window.$('pre.chroma .k:contains("handle_response")').first().nextAll().slice(0, 3)
+	window.$('pre.chroma .nd:contains("@name")').first()
+		.html('<a href="/docs/caddyfile/response-matchers" style="color: inherit;" title="Response matcher">@name</a>')
+	window.$('pre.chroma .k:contains("replace_status")').first().next().slice(0, 3)
 		.wrapAll('<span class="nd">').parent()
-		.html('<a href="#response-matcher" style="color: inherit;" title="Response matcher">[&lt;matcher&gt;]</a>')
+		.html('<a href="/docs/caddyfile/response-matchers" style="color: inherit;" title="Response matcher">[&lt;matcher&gt;]</a>')
+	window.$('pre.chroma .k:contains("handle_response")').first().next().slice(0, 3)
+		.wrapAll('<span class="nd">').parent()
+		.html('<a href="/docs/caddyfile/response-matchers" style="color: inherit;" title="Response matcher">[&lt;matcher&gt;]</a>')
 
 	// We'll add links to all the subdirectives if a matching anchor tag is found on the page.
 	addLinksToSubdirectives();
@@ -69,6 +74,8 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 	health_uri      <uri>
 	health_port     <port>
 	health_interval <interval>
+	health_passes   <num>
+	health_fails	<num>
 	health_timeout  <duration>
 	health_status   <status>
 	health_body     <regexp>
@@ -126,14 +133,14 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 
 
 
-### Upstreams
+## Upstreams
 
 - **&lt;upstreams...&gt;** is a list of upstreams (backends) to which to proxy.
 - **to** <span id="to"/> is an alternate way to specify the list of upstreams, one (or more) per line.
 - **dynamic** <span id="dynamic"/> configures a _dynamic upstreams_ module. This allows getting the list of upstreams dynamically for every request. See [dynamic upstreams](#dynamic-upstreams) below for a description of standard dynamic upstream modules. Dynamic upstreams are retrieved at every proxy loop iteration (i.e. potentially multiple times per request if load balancing retries are enabled) and will be preferred over static upstreams. If an error occurs, the proxy will fall back to using any statically-configured upstreams.
 
 
-#### Upstream addresses
+### Upstream addresses
 
 Static upstream addresses can take the form of a URL that contains only scheme and host/port, or a conventional [Caddy network address](/docs/conventions#network-addresses). Valid examples:
 
@@ -169,12 +176,12 @@ Upstream addresses **cannot** contain paths or query strings, as that would impl
 If the address is not a URL (i.e. does not have a scheme), then [placeholders](/docs/caddyfile/concepts#placeholders) can be used, but this makes the upstream _dynamically static_, meaning that potentially many different backends act as a single, static upstream in terms of health checks and load balancing. We recommend using a [dynamic upstreams](#dynamic-upstreams) module instead, if possible. When using placeholders, a port **must** be included (either by the placeholder replacement, or as a static suffix to the address).
 
 
-#### Dynamic upstreams
+### Dynamic upstreams
 
 Caddy's reverse proxy comes standard with some dynamic upstream modules. Note that using dynamic upstreams has implications for load balancing and health checks, depending on specific policy configuration: active health checks do not run for dynamic upstreams; and load balancing and passive health checks are best served if the list of upstreams is relatively stable and consistent (especially with round-robin). Ideally, dynamic upstream modules only return healthy, usable backends.
 
 
-##### SRV
+#### SRV
 
 Retrieves upstreams from SRV DNS records.
 
@@ -201,7 +208,7 @@ Retrieves upstreams from SRV DNS records.
 
 
 
-##### A/AAAA
+#### A/AAAA
 
 Retrieves upstreams from A/AAAA DNS records.
 
@@ -226,7 +233,7 @@ Retrieves upstreams from A/AAAA DNS records.
 - **versions** is the list of IP versions to resolve for. Default: `ipv4 ipv6` which correspond to both A and AAAA records respectively.
 
 
-##### Multi
+#### Multi
 
 Append the results of multiple dynamic upstream modules. Useful if you want redundant sources of upstreams, for example: a primary cluster of SRVs backed up by a secondary cluster of SRVs.
 
@@ -241,7 +248,7 @@ Append the results of multiple dynamic upstream modules. Useful if you want redu
 
 
 
-### Load balancing
+## Load balancing
 
 Load balancing is typically used to split traffic between multiple upstreams. By enabling retries, it can also be used with one or more upstreams, to hold requests until a healthy upstream can be selected (e.g. to wait and mitigate errors while rebooting or redeploying an upstream).
 
@@ -313,7 +320,7 @@ This is enabled by default, with the `random` policy. Retries are disabled by de
 
 
 
-#### Active health checks
+### Active health checks
 
 Active health checks perform health checking in the background on a timer. To enable this, `health_uri` or `health_port` are required.
 
@@ -323,19 +330,23 @@ Active health checks perform health checking in the background on a timer. To en
 
 - **health_interval** <span id="health_interval"/> is a [duration value](/docs/conventions#durations) that defines how often to perform active health checks. Default: `30s`.
 
+- **health_passes** <span id="health_passes"/> is the number of consecutive health checks required before marking the backend as healthy again. Default: `1`.
+
+- **health_fails** <span id="health_fails"/> is the number of consecutive health checks required before marking the backend as unhealthy. Default: `1`.
+
 - **health_timeout** <span id="health_timeout"/> is a [duration value](/docs/conventions#durations) that defines how long to wait for a reply before marking the backend as down. Default: `5s`.
 
 - **health_status** <span id="health_status"/> is the HTTP status code to expect from a healthy backend. Can be a 3-digit status code, or a status code class ending in `xx`. For example: `200` (which is the default), or `2xx`.
 
 - **health_body** <span id="health_body"/> is a substring or regular expression to match on the response body of an active health check. If the backend does not return a matching body, it will be marked as down.
 
-- **health_follow_redirects** <span id="health_follow_redirects"/> will cause the health check to follow redirects provided by upstream. Without this setting, a redirect will cause the check to fail.
+- **health_follow_redirects** <span id="health_follow_redirects"/> will cause the health check to follow redirects provided by upstream. By default, a redirect response would cause the health check to count as a fail.
 
 - **health_headers** <span id="health_headers"/> allows specifying headers to set on the active health check requests. This is useful if you need to change the `Host` header, or if you need to provide some authentication to your backend as part of your health checks.
 
 
 
-#### Passive health checks
+### Passive health checks
 
 Passive health checks happen inline with actual proxied requests. To enable this, `fail_duration` is required.
 
@@ -352,7 +363,7 @@ Passive health checks happen inline with actual proxied requests. To enable this
   This should be a reasonably large number; configuring this means that the proxy will have a limit of `unhealthy_request_count × upstreams_count` total simultaneous requests, and any requests after that point will result in an error due to no upstreams being available.
 
 
-### Events
+## Events
 
 When an upstream transitions from being healthy to unhealthy or vice-versa, [an event](/docs/caddyfile/options#event-options) is emitted. These events can be used to trigger other actions, such as sending a notification or logging a message. The events are as follows:
 
@@ -363,7 +374,7 @@ In both cases, the `host` is included as metadata in the event to identify the u
 
 
 
-### Streaming
+## Streaming
 
 By default, the proxy partially buffers the response for wire efficiency.
 
@@ -390,7 +401,7 @@ By default, WebSocket connections are forcibly closed (with a Close control mess
 
 
 
-### Headers
+## Headers
 
 The proxy can **manipulate headers** between itself and the backend:
 
@@ -438,7 +449,7 @@ header_up Some-Header "^prefix-([A-Za-z0-9]*)$" "replaced-$1-suffix"
 The regular expression language used is RE2, included in Go. See the [RE2 syntax reference](https://github.com/google/re2/wiki/Syntax) and the [Go regexp syntax overview](https://pkg.go.dev/regexp/syntax). The replacement string is [expanded](https://pkg.go.dev/regexp#Regexp.Expand), allowing use of captured values, for example `$1` being the first capture group.
 
 
-#### Defaults
+### Defaults
 
 By default, Caddy passes thru incoming headers&mdash;including `Host`&mdash;to the backend without modifications, with three exceptions:
 
@@ -461,7 +472,7 @@ If you're using Cloudflare in front of Caddy, be aware that you may be vulnerabl
 Additionally, when using the [`http` transport](#the-http-transport), the `Accept-Encoding: gzip` header will be set, if it is missing in the request from the client. This allows the upstream to serve compressed content if it can. This behavior can be disabled with [`compression off`](#compression) on the transport.
 
 
-#### HTTPS
+### HTTPS
 
 Since (most) headers retain their original value when being proxied, it is often necessary to override the `Host` header with the configured upstream address when proxying to HTTPS, such that the `Host` header matches the TLS ServerName value:
 
@@ -475,7 +486,7 @@ The `X-Forwarded-Host` header is still passed [by default](#defaults), so the up
 
 
 
-### Rewrites
+## Rewrites
 
 By default, Caddy performs the upstream request with the same HTTP method and URI as the incoming request, unless a rewrite was performed in the middleware chain before it reaches `reverse_proxy`.
 
@@ -493,14 +504,14 @@ For example, the request could be sent to an authentication gateway to decide wh
 
 
 
-### Transports
+## Transports
 
 Caddy's proxy **transport** is pluggable:
 
 - **transport** <span id="transport"/> defines how to communicate with the backend. Default is `http`.
 
 
-#### The `http` transport
+### The `http` transport
 
 ```caddy-d
 transport http {
@@ -588,20 +599,26 @@ transport http {
 
 - **keepalive_idle_conns_per_host** <span id="keepalive_idle_conns_per_host"/> if non-zero, controls the maximum idle (keep-alive) connections to keep per-host. Default: `32`.
 
-- **versions** <span id="versions"/> allows customizing which versions of HTTP to support. As a special case, "h2c" is a valid value which will enable cleartext HTTP/2 connections to the upstream (however, this is a non-standard feature that does not use Go's default HTTP transport, so it is exclusive of other features; subject to change or removal). Default: `1.1 2`, or if scheme is `h2c://`, `h2c 2`
+- **versions** <span id="versions"/> allows customizing which versions of HTTP to support.
+  
+  Valid options are: `1.1`, `2`, `h2c`, `3`. 
+
+  Default: `1.1 2`, or if the [upstream's scheme](#upstream-addresses) is `h2c://`, then the default is `h2c 2`.
+
+  `h2c` enables cleartext HTTP/2 connections to the upstream. This is a non-standard feature that does not use Go's default HTTP transport, so it is exclusive of other features.
+
+  `3` enables HTTP/3 connections to the upstream. ⚠️ This is an experimental feature and is subject to change.
 
 - **compression** <span id="compression"/> can be used to disable compression to the backend by setting it to `off`.
 
 - **max_conns_per_host** <span id="max_conns_per_host"/> optionally limits the total number of connections per host, including connections in the dialing, active, and idle states. Default: No limit.
 
-- **forward_proxy_url** <span id="forward_proxy_url"/> is a parameter that specifies the URL of a server that the HTTP transport will use to proxy requests to the upstream server. This parameter takes precedence over environment variables like HTTP_PROXY. When a value is provided for this parameter, requests will flow through the reverse proxy in the following order:
-  a. User Agent -> Reverse Proxy
-  b. Reverse Proxy -> Forward Proxy (specified by `forward_proxy_url`)
-  c. Forward Proxy -> Upstream Server
+- **forward_proxy_url** <span id="forward_proxy_url"/> specifies the URL of a server that the HTTP transport will use to proxy requests to the upstream server. By default, Caddy respects proxy configured via environment variables as per the [Go stdlib](https://pkg.go.dev/golang.org/x/net/http/httpproxy#FromEnvironment) like `HTTP_PROXY`. When a value is provided for this parameter, requests will flow through the reverse proxy in the following order:
+  - Client (users) 🡒 `reverse_proxy` 🡒 `forward_proxy_url` 🡒 upstream
 
 
 
-#### The `fastcgi` transport
+### The `fastcgi` transport
 
 ```caddy-d
 transport fastcgi {
@@ -640,45 +657,31 @@ If you're trying to serve a modern PHP application, you may be looking for the [
 
 
 
-### Intercepting responses
+## Intercepting responses
 
-The reverse proxy can be configured to intercept responses from the backend. To facilitate this, response matchers can be defined (similar to the syntax for request matchers) and the first matching `handle_response` route will be invoked.
+The reverse proxy can be configured to intercept responses from the backend. To facilitate this, [response matchers](/docs/caddyfile/response-matchers) can be defined (similar to the syntax for request matchers) and the first matching `handle_response` route will be invoked.
 
 When a response handler is invoked, the response from the backend is not written to the client, and the configured `handle_response` route will be executed instead, and it is up to that route to write a response. If the route does _not_ write a response, then request handling will continue with any handlers that are [ordered after](/docs/caddyfile/directives#directive-order) this `reverse_proxy`.
 
-- **@name** is the name of a [response matcher](#response-matcher). As long as each response matcher has a unique name, multiple matchers can be defined. A response can be matched on the status code and presence or value of a response header.
+- **@name** is the name of a [response matcher](/docs/caddyfile/response-matchers). As long as each response matcher has a unique name, multiple matchers can be defined. A response can be matched on the status code and presence or value of a response header.
+
 - **replace_status** <span id="replace_status"/> simply changes the status code of response when matched by the given matcher.
+
 - **handle_response** <span id="handle_response"/> defines the route to execute when matched by the given matcher (or, if a matcher is omitted, all responses). The first matching block will be applied. Inside a `handle_response` block, any other [directives](/docs/caddyfile/directives) can be used.
 
 Additionally, inside `handle_response`, two special handler directives may be used:
 
 - **copy_response** <span id="copy_response"/> copies the response body received from the backend back to the client. Optionally allows changing the status code of the response while doing so. This directive is [ordered before `respond`](/docs/caddyfile/directives#directive-order).
+
 - **copy_response_headers** <span id="copy_response_headers"/> copies the response headers from the backend to the client, optionally including _OR_ excluding a list of headers fields (cannot specify both `include` and `exclude`). This directive is [ordered after `header`](/docs/caddyfile/directives#directive-order).
 
 Three placeholders will be made available within the `handle_response` routes:
 
 - `{rp.status_code}` The status code from the backend's response.
+
 - `{rp.status_text}` The status text from the backend's response.
+
 - `{rp.header.*}` The headers from the backend's response.
-
-
-#### Response matcher
-
-**Response matchers** can be used to filter (or classify) responses by specific criteria.
-
-##### status
-
-```caddy-d
-status <code...>
-```
-
-By HTTP status code.
-
-- **&lt;code...&gt;** is a list of HTTP status codes. Special cases are strings like `2xx` and `3xx`, which match against all status codes in the range of `200`-`299` and `300`-`399`, respectively.
-
-##### header
-
-See the [`header`](/docs/caddyfile/matchers#header) request matcher for the supported syntax.
 
 
 

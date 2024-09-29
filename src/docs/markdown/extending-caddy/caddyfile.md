@@ -15,7 +15,7 @@ An unmarshaler's job is simply to set up your module's type, e.g. by populating 
 ```go
 // UnmarshalCaddyfile implements caddyfile.Unmarshaler. Syntax:
 //
-//     gizmo <name> [<option>]
+// gizmo <name> [<option>]
 //
 func (g *Gizmo) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 	d.Next() // consume directive name
@@ -57,9 +57,9 @@ To accept more configuration than can fit on a single line, you may wish to allo
 for nesting := d.Nesting(); d.NextBlock(nesting); {
 	switch d.Val() {
 		case "sub_directive_1":
-			// ...
+		// ...
 		case "sub_directive_2":
-			// ...
+		// ...
 	}
 }
 ```
@@ -101,20 +101,25 @@ func parseCaddyfileHandler(h httpcaddyfile.Helper) (caddyhttp.MiddlewareHandler,
 
 See the [`httpcaddyfile` package godoc](https://pkg.go.dev/github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile?tab=doc) for more information about how to use the `httpcaddyfile.Helper` type.
 
-
 ### Handler order
 
 All directives which return HTTP middleware/handler values need to be evaluated in the correct order. For example, a handler that sets the root directory of the site has to come before a handler that accesses the root directory, so that it will know what the directory path is.
 
 The HTTP Caddyfile [has a hard-coded ordering for the standard directives](/docs/caddyfile/directives#directive-order). This ensures that users do not need to know the implementation details of the most common functions of their web server, and makes it easier for them to write correct configurations. A single, hard-coded list also prevents nondeterminism given the extensible nature of the Caddyfile.
 
-**When you register a new handler directive, it must be added to that list before it can be used (outside of a `route` block).** This is done in configuration using one of two methods:
+**When you register a new handler directive, it must be added to that list before it can be used (outside of a `route` block).** This is done using one of three methods:
 
-- The [`order` global option](/docs/caddyfile/options) modifies the standard order for that configuration only. For example: `order mydir before respond` will insert a new directive `mydir` to be evaluated before the `respond` handler. Then the directive can be used normally.
-- Or, use the directive in a [`route` block](/docs/caddyfile/directives/route). Because directives in a route block are not reordered, the directives used in a route block do not need to appear in the list.
+- (Recommended) The plugin author can call [`httpcaddyfile.RegisterDirectiveOrder`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile#RegisterDirectiveOrder) in `init()` after registering the directive, to insert the directive into the order relative to another [standard directive](/docs/caddyfile/directives#directive-order). Doing so, users can use the directive directly in their sites without extra setup. For example, to insert your directive `gizmo` to be evaluated after the `header` handler:
 
-Please document for your users where in the list is the right place for your directive to be ordered so that they can use it properly.
+	```go
+	httpcaddyfile.RegisterDirectiveOrder("gizmo", httpcaddyfile.After, "header")
+	```
 
+- Users may add the [`order` global option](/docs/caddyfile/options) to modify the standard order for their Caddyfile. For example: `order gizmo before respond` will insert a new directive `gizmo` to be evaluated before the `respond` handler. Then the directive can be used normally.
+
+- Users can place the directive in a [`route` block](/docs/caddyfile/directives/route). Because directives in a route block are not reordered, the directives used in a route block do not need to appear in the list.
+
+If you choose one of the latter two options, please document a recommendation for your users for where in the list is the right place for your directive to be ordered, so that they can use it properly.
 
 ### Classes
 
@@ -128,7 +133,6 @@ error_route | `*caddyhttp.Subroute` | HTTP error handling route
 tls.connection_policy | `*caddytls.ConnectionPolicy` | TLS connection policy
 tls.cert_issuer | `certmagic.Issuer` | TLS certificate issuer
 tls.cert_loader | `caddytls.CertificateLoader` | TLS certificate loader
-
 
 ## Server Types
 

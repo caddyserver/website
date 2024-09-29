@@ -6,6 +6,12 @@ title: encode (Caddyfile directive)
 window.$(function() {
 	// We'll add links to all the subdirectives if a matching anchor tag is found on the page.
 	addLinksToSubdirectives();
+
+	// Response matchers
+	window.$('pre.chroma .k:contains("status")')
+		.html('<a href="/docs/caddyfile/response-matchers#status" style="color: inherit;" title="Response matcher">status</a>')
+	window.$('pre.chroma .k:contains("header")')
+		.html('<a href="/docs/caddyfile/response-matchers#header" style="color: inherit;" title="Response matcher">header</a>')
 });
 </script>
 
@@ -23,9 +29,6 @@ encode [<matcher>] <formats...> {
 	
 	minimum_length <length>
 
-	# response matcher single line syntax
-	match [header <field> [<value>]] | [status <code...>]
-	# or response matcher block for multiple conditions
 	match {
 		status <code...>
 		header <field> [<value>]
@@ -41,7 +44,7 @@ encode [<matcher>] <formats...> {
 
 - **minimum_length** <span id="minimum_length"/> the minimum number of bytes a response should have to be encoded (default: 512).
 
-- **match** <span id="match"/> is a [response matcher](#response-matcher). Only matching responses are encoded. The default looks like this:
+- **match** <span id="match"/> is a [response matcher](/docs/caddyfile/response-matchers). Only matching responses are encoded. The default looks like this:
 
   ```caddy-d
   match {
@@ -80,27 +83,6 @@ encode [<matcher>] <formats...> {
   	header Content-Type text/*
   }
   ```
-
-
-## Response matcher
-
-**Response matchers** can be used to filter (or classify) responses by specific criteria.
-
-
-### status
-
-```caddy-d
-status <code...>
-```
-
-By HTTP status code.
-
-- **&lt;code...&gt;** is a list of HTTP status codes. Special cases are `2xx`, `3xx`, ... which match against all status codes in the range of 200-299, 300-399, ... respectively
-
-
-### header
-
-See the [header](/docs/caddyfile/matchers#header) request matcher for the supported syntax.
 
 
 ## Examples

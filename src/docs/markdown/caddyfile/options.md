@@ -92,13 +92,15 @@ Possible options are (click on each option to jump to its documentation):
 	}
 	acme_dns <provider> ...
 	on_demand_tls {
-		ask      <endpoint>
-		interval <duration>
-		burst    <n>
+		ask        <endpoint>
+		permission <module>
+		interval   <duration>
+		burst      <n>
 	}
 	key_type ed25519|p256|p384|rsa2048|rsa4096
 	cert_issuer <name> ...
 	renew_interval <duration>
+	cert_lifetime  <duration>
 	ocsp_interval  <duration>
 	ocsp_stapling off
 	preferred_chains [smallest] {
@@ -122,6 +124,7 @@ Possible options are (click on each option to jump to its documentation):
 		trusted_proxies <module> ...
 		client_ip_headers <headers...>
 		metrics
+		trace
 		max_header_size <size>
 		enable_full_duplex
 		log_credentials
@@ -563,7 +566,9 @@ The ask endpoint should return _as fast as possible_, in a few milliseconds, ide
 
 </aside>
 
-- **interval** and **burst** allows `<n>` certificate operations within `<duration>` interval. These are deprecated and will be removed in a future version, due to not working as intended.
+- **permission** allows custom modules to be used to determine whether a certificate should be issued for a particular name. The module must implement the [`caddytls.OnDemandPermission` interface](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddytls#OnDemandPermission). An `http` permission module is included, which is what the `ask` option uses, and remains as a shortcut for backwards compatibility.
+
+- **interval** and **burst** allows `<n>` certificate operations within `<duration>` interval. ⚠️ These are deprecated and will be removed in a future version, due to not working as intended.
 
 ```caddy
 {
@@ -619,6 +624,22 @@ Default: `10m`
 ```caddy
 {
 	renew_interval 30m
+}
+```
+
+
+##### `cert_lifetime`
+The validity period to ask the CA to issue a certificate for. 
+
+This value is used to compute the `notAfter` field of the ACME order; therefore the system must have a reasonably synchronized clock. NOTE: Not all CAs support this. Check with your CA's ACME documentation to see if this is allowed and what values may be used. 
+
+Default: `0` (CA chooses lifetime, usually 90 days)
+
+⚠️ This is an experimental feature. Subject to change or removal.
+
+```caddy
+{
+	cert_lifetime 30d
 }
 ```
 
@@ -920,6 +941,23 @@ Enables Prometheus metrics collection; necessary before scraping metrics. Note t
 ```
 
 
+##### `trace`
+
+Log each individual handler that is invoked. Requires that the log emit at `DEBUG` level ( You may do so with the [`debug` global option](#debug)).
+
+NOTE: This may log the configuration of your HTTP handler modules; do not enable this in insecure contexts when there is sensitive data in the configuration.
+
+⚠️ This is an experimental feature. Subject to change or removal.
+
+```caddy
+{
+	servers {
+		trace
+	}
+}
+```
+
+
 ##### `max_header_size`
 
 The maximum size to parse from a client's HTTP request headers. If the limit is exceeded, the server will respond with HTTP status `431 Request Header Fields Too Large`. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). By default, the limit is `1MB`.
@@ -956,7 +994,7 @@ Test thoroughly with your HTTP clients, as some older clients may not support fu
 
 ##### `log_credentials`
 
-Since Caddy v2.5, by default, headers with potentially sensitive information (`Cookie`, `Set-Cookie`, `Authorization` and `Proxy-Authorization`) will be logged with empty values in access logs (see the [`log` directive](/docs/caddyfile/directives/log)).
+By default, access logs (enabled with the [`log` directive](/docs/caddyfile/directives/log)) with headers that contain potentially sensitive information (`Cookie`, `Set-Cookie`, `Authorization` and `Proxy-Authorization`) will be logged as `REDACTED`.
 
 If you wish to _not_ have these headers redacted, you may enable the `log_credentials` option.
 
