@@ -42,8 +42,6 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 	client_auth {
 		mode                   [request|require|verify_if_given|require_and_verify]
 		trust_pool             <module>
-		trusted_leaf_cert      <base64_der>
-		trusted_leaf_cert_file <filename>
 		verifier 			   <module>
 	}
 	issuer          <issuer_name>  [<params...>]
@@ -140,15 +138,11 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
     | verify_if_given | Ask clients for a certificate; allow even if there isn't one, but verify it if there is |
     | require_and_verify | Require clients to present a valid certificate that is verified |
 
-    Default: `require_and_verify` if any `trusted_ca_cert` or `trusted_leaf_cert` are provided; otherwise, `require`.
+    Default: `require_and_verify` if `trust_pool` module is provided; otherwise, `require`.
 	
   - **trust_pool** <span id="trust_pool"/> configures the source of certificate authorities (CA) providing certificates against which to validate client certificates.
 	
 	The certificate authority used providing the pool of trusted certificates and the configuration within the segment depends on the configured source of trust pool module. The standard modules available in Caddy are [listed below](#trust-pool-providers). The full list of modules, including 3rd-party, is listed in the [`trust_pool` JSON documentation](/docs/json/apps/http/servers/tls_connection_policies/client_authentication/#trust_pool).
-
-  - **trusted_leaf_cert** <span id="trusted_leaf_cert"/> is a base64 DER-encoded client leaf certificate to accept.
-
-  - **trusted_leaf_cert_file** <span id="trusted_leaf_cert_file"/> is a path to a PEM CA certificate file against which to validate client certificates.
 
     Multiple `trusted_*` directives may be used to specify multiple CA or leaf certificates. Client certificates which are not listed as one of the leaf certificates or signed by any of the specified CAs will be rejected according to the **mode**.
 
