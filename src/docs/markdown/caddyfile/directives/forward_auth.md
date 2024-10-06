@@ -120,7 +120,7 @@ auth.example.com {
 # Serve your app
 app1.example.com {
 	forward_auth authelia:9091 {
-		uri /api/verify?rd=https://auth.example.com
+		uri /api/authz/forward-auth
 		copy_headers Remote-User Remote-Groups Remote-Name Remote-Email
 	}
 
