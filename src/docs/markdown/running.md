@@ -14,7 +14,7 @@ While Caddy can be run directly with its [command line interface](/docs/command-
   - [Local HTTPS](#local-https-with-systemd)
   - [Overrides](#overrides)
 	- [Environment variables](#environment-variables)
-	- [Run and reload override](#run-and-reload-override)
+	- [`run` and `reload` override](#run-and-reload-override)
 	- [Restart on crash](#restart-on-crash)
   - [SELinux Considerations](#selinux-considerations)
 - [Windows service](#windows-service)
@@ -161,7 +161,7 @@ Then your `/etc/caddy/.env` file may look like this (do not use `"` quotes aroun
 CF_API_TOKEN=super-secret-cloudflare-tokenvalue
 ```
 
-#### Run and reload override
+#### `run` and `reload` override
 
 If you need to change the config file from the default of the Caddyfile, to instead using a JSON file (note that `Exec*` directives [must be reset with empty strings](https://www.freedesktop.org/software/systemd/man/systemd.service.html#ExecStart=) before setting a new value):
 ```systemd
