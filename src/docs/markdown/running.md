@@ -13,6 +13,9 @@ While Caddy can be run directly with its [command line interface](/docs/command-
   - [Using the Service](#using-the-service)
   - [Local HTTPS](#local-https-with-systemd)
   - [Overrides](#overrides)
+	- [Environment variables](#environment-variables)
+	- [Run and reload override](#run-and-reload-override)
+	- [Restart on crash](#restart-on-crash)
   - [SELinux Considerations](#selinux-considerations)
 - [Windows service](#windows-service)
   - [sc.exe](#scexe)
@@ -138,7 +141,9 @@ The best way to override aspects of the service files is with this command:
 
 This will open a blank file with your default terminal text editor in which you can override or add directives to the unit definition. This is called a "drop-in" file.
 
-For example, if you need to define environment variables for use in your config, you may do so like this:
+#### Environment variables
+
+If you need to define environment variables for use in your config, you may do so like this:
 ```systemd
 [Service]
 Environment="CF_API_TOKEN=super-secret-cloudflare-tokenvalue"
@@ -156,7 +161,9 @@ Then your `/etc/caddy/.env` file may look like this (do not use `"` quotes aroun
 CF_API_TOKEN=super-secret-cloudflare-tokenvalue
 ```
 
-Or, for example if you need to change the config file from the default of the Caddyfile, to instead using a JSON file (note that `Exec*` directives [must be reset with empty strings](https://www.freedesktop.org/software/systemd/man/systemd.service.html#ExecStart=) before setting a new value):
+#### Run and reload override
+
+If you need to change the config file from the default of the Caddyfile, to instead using a JSON file (note that `Exec*` directives [must be reset with empty strings](https://www.freedesktop.org/software/systemd/man/systemd.service.html#ExecStart=) before setting a new value):
 ```systemd
 [Service]
 ExecStart=
@@ -165,7 +172,9 @@ ExecReload=
 ExecReload=/usr/bin/caddy reload --config /etc/caddy/caddy.json
 ```
 
-Or, for example, if you'd like caddy to restart itself after 5s if it ever crashes unexpectedly:
+#### Restart on crash
+
+If you'd like caddy to restart itself after 5s if it ever crashes unexpectedly:
 ```systemd
 [Service]
 # Automatically restart caddy if it crashes except if the exit code was 1
@@ -176,6 +185,8 @@ RestartSec=5s
 
 Then, save the file and exit the text editor, and restart the service for it to take effect:
 <pre><code class="cmd bash">sudo systemctl restart caddy</code></pre>
+
+
 
 ### SELinux Considerations
 
