@@ -150,6 +150,12 @@ Similarly, if you prefer to maintain a separate file to maintain the environment
 EnvironmentFile=/etc/caddy/.env
 ```
 
+Then your `/etc/caddy/.env` file may look like this (do not use `"` quotes around the values):
+
+```env
+CF_API_TOKEN=super-secret-cloudflare-tokenvalue
+```
+
 Or, for example if you need to change the config file from the default of the Caddyfile, to instead using a JSON file (note that `Exec*` directives [must be reset with empty strings](https://www.freedesktop.org/software/systemd/man/systemd.service.html#ExecStart=) before setting a new value):
 ```systemd
 [Service]
