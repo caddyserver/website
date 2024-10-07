@@ -94,8 +94,6 @@ Possible options are (click on each option to jump to its documentation):
 	on_demand_tls {
 		ask        <endpoint>
 		permission <module>
-		interval   <duration>
-		burst      <n>
 	}
 	key_type ed25519|p256|p384|rsa2048|rsa4096
 	cert_issuer <name> ...
@@ -568,7 +566,7 @@ The ask endpoint should return _as fast as possible_, in a few milliseconds, ide
 
 - **permission** allows custom modules to be used to determine whether a certificate should be issued for a particular name. The module must implement the [`caddytls.OnDemandPermission` interface](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddytls#OnDemandPermission). An `http` permission module is included, which is what the `ask` option uses, and remains as a shortcut for backwards compatibility.
 
-- **interval** and **burst** allows `<n>` certificate operations within `<duration>` interval. ⚠️ These are deprecated and will be removed in a future version, due to not working as intended.
+- ⚠️ **interval** and **burst** rate limiting options were available, but are NOT recommended. Remove them from your config if you still have them.
 
 ```caddy
 {
