@@ -57,7 +57,7 @@ Possible options are (click on each option to jump to its documentation):
 	http_port    <port>
 	https_port   <port>
 	default_bind <hosts...> {
-		protocols <protocol> ...
+		protocols <protocols...>
 	}
 	order <dir1> first|last|[before|after <dir2>]
 	storage <module_name> {
