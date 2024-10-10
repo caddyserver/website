@@ -451,7 +451,7 @@ The regular expression language used is RE2, included in Go. See the [RE2 syntax
 
 ### Defaults
 
-By default, Caddy passes thru incoming headers&mdash;including `Host`&mdash;to the backend without modifications, with three exceptions:
+By default, Caddy passes through incoming headers&mdash;including `Host`&mdash;to the backend without modifications, with three exceptions:
 
 - It sets or augments the [`X-Forwarded-For`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For) header field.
 - It sets the [`X-Forwarded-Proto`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Proto) header field.
