@@ -32,6 +32,7 @@ The network can be any of the following; ones suffixed with `4` or `6` are IPv4 
 - UDP: `udp`, `udp4`, `udp6`
 - IP: `ip`, `ip4`, `ip6`
 - Unix: `unix`, `unixgram`, `unixpacket`
+- File descriptors: `fd`, `fdgram`
 
 The address part may be any of these forms:
 
@@ -42,7 +43,7 @@ The address part may be any of these forms:
 - `/path/to/unix/socket`
 - `/path/to/unix/socket|0200`
 
-The host may be any hostname, resolvable domain name, or IP address.
+The host may be any hostname, resolvable domain name, IP address, or file descriptor number.
 
 In the case of IPv6 addresses, the address must be enclosed in square brackets `[]`. The zone identifier (starting with `%`) is optional (often used for link-local addresses).
 
