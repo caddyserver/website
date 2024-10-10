@@ -220,7 +220,7 @@ To disable HTTP/3 unless otherwise specified:
 }
 ```
 
-to create default listeners from file descriptors given by [environment placeholders](/docs/conventions#placeholders):
+To create default listeners from file descriptors given by [environment variable placeholders](/docs/conventions#placeholders):
 
 ```caddy
 {
