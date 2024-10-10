@@ -829,11 +829,11 @@ Also included is the [`proxy_protocol`](/docs/json/apps/http/servers/listener_wr
 - **deny** is a list of CIDR ranges of trusted sources to reject PROXY headers from.
 
 - **fallback_policy** is the action to take if the PROXY header comes from an address that not in either list of allow/deny. The default fallback policy is `IGNORE`. Accepted values of `fallback_policy` are:
-	- IGNORE: address from PROXY header, but accept connection
-	- USE: address from PROXY header
-	- REJECT: connection when PROXY header is sent
-	- REQUIRE: connection to send PROXY header, reject if not present
-	- SKIP: accepts a connection without requiring the PROXY header.
+	- `IGNORE`: address from PROXY header, but accept connection
+	- `USE`: address from PROXY header
+	- `REJECT`: connection when PROXY header is sent
+	- `REQUIRE`: connection to send PROXY header, reject if not present
+	- `SKIP`: accepts a connection without requiring the PROXY header.
 
 
 
