@@ -10,7 +10,9 @@ When enabled, it will propagate an existing trace context or initialize a new on
 
 It uses [gRPC](https://github.com/grpc/) as an exporter protocol and  W3C [tracecontext](https://www.w3.org/TR/trace-context/) and [baggage](https://www.w3.org/TR/baggage/) as propagators.
 
-The trace ID is added to [access logs](/docs/caddyfile/directives/log) as the standard `traceID` field.
+The trace ID is added to [access logs](/docs/caddyfile/directives/log) as the standard `traceID` field. Additionally, the `{http.vars.trace_id}` placeholder is made available, for example to add the ID to a (`request_header`)[request_header] to pass it to your app.
+
+
 
 ## Syntax
 
@@ -23,6 +25,8 @@ tracing {
 - **&lt;span_name&gt;** is a span name. Please see span [naming guidelines](https://github.com/open-telemetry/opentelemetry-specification/blob/v1.7.0/specification/trace/api.md).
 
   [Placeholders](/docs/caddyfile/concepts#placeholders) may be used in span names; keep in mind that tracing happens as early as possible, so only request placeholders may be used, and not response placeholders.
+
+
 
 ## Configuration
 
@@ -41,6 +45,8 @@ export OTEL_EXPORTER_OTLP_HEADERS="myAuthHeader=myToken,anotherHeader=value"
 export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://my-otlp-endpoint:55680
 ```
 
+
+
 ## Examples
 
 Here is a **Caddyfile** example:
@@ -51,6 +57,7 @@ example.com {
 		tracing {
 			span api
 		}
+		request_header X-Trace-Id {http.vars.trace_id}
 		reverse_proxy localhost:8081
 	}
 
