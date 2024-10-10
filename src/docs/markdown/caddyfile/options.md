@@ -194,7 +194,7 @@ Default: `443`
 
 
 ##### `default_bind`
-The default bind address(es) and the HTTP protocol(s) to serve with them for all sites, if the [`bind` directive](/docs/caddyfile/directives/bind) is not used in the site. Default: empty, which binds to all interfaces, and serves the default protocols (h1+h2+h3) on them.
+The default bind address(es) and the HTTP protocol(s) to serve with them for all sites, if the [`bind` directive](/docs/caddyfile/directives/bind) is not used in the site. If multiple `default_bind` directives are present, each will be applied to servers with no `bind` directive sequentially. Default: empty, which binds to all interfaces, and serves the default protocols (h1+h2+h3) on them.
 
 <aside class="tip">
 
@@ -210,12 +210,25 @@ For example, to bind to `10.0.0.1` when no other address(es) are specified:
 }
 ```
 
-or to disable HTTP/3 unless otherwise specified:
+to disable HTTP/3 unless otherwise specified:
 
 ```caddy
 {
 	default_bind {
 		protocols h1 h2
+	}
+}
+```
+
+to create listeners from file descriptors given by [environment placeholders](/docs/conventions#placeholders):
+
+```caddy
+{
+	default_bind fd/{env.CADDY_HTTPS_FD} {
+		protocols h1 h2
+	}
+	default_bind fdgram/{env.CADDY_HTTP3_FD} {
+		protocols h3
 	}
 }
 ```
