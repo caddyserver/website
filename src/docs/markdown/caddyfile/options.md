@@ -802,6 +802,8 @@ The included [`http_redirect`](/docs/json/apps/http/servers/listener_wrappers/ht
 }
 ```
 
+###### `proxy_protocol`
+
 Also included is the [`proxy_protocol`](/docs/json/apps/http/servers/listener_wrappers/proxy_protocol/) listener wrapper (prior to v2.7.0 it was only available via a plugin), which enables [PROXY protocol](https://github.com/haproxy/haproxy/blob/master/doc/proxy-protocol.txt) parsing (popularized by HAProxy). This must be used _before_ the `tls` listener wrapper since it parses plaintext data at the start of the connection:
 
 ```caddy
@@ -811,12 +813,28 @@ Also included is the [`proxy_protocol`](/docs/json/apps/http/servers/listener_wr
 			proxy_protocol {
 				timeout 2s
 				allow 192.168.86.1/24 192.168.86.1/24
+				deny 10.0.0.0/8
+				fallback_policy reject
 			}
 			tls
 		}
 	}
 }
 ```
+
+- **timeout** specifies the maximum duration to wait for the PROXY header. Defaults to `5s`.
+
+- **allow** is a list of CIDR ranges of trusted sources to receive PROXY headers. Unix sockets are trusted by default and not part of this option.
+
+- **deny** is a list of CIDR ranges of trusted sources to reject PROXY headers from.
+
+- **fallback_policy** is the action to take if the PROXY header comes from an address that not in either list of allow/deny. The default fallback policy is `IGNORE`. Accepted values of `fallback_policy` are:
+	- IGNORE: address from PROXY header, but accept connection
+	- USE: address from PROXY header
+	- REJECT: connection when PROXY header is sent
+	- REQUIRE: connection to send PROXY header, reject if not present
+	- SKIP: accepts a connection without requiring the PROXY header.
+
 
 
 ##### `timeouts`
