@@ -194,7 +194,7 @@ Default: `443`
 
 
 ##### `default_bind`
-The default bind address(es) and the HTTP protocol(s) to be serve with them for all sites, if the [`bind` directive](/docs/caddyfile/directives/bind) is not used in the site. Default: empty, which binds to all interfaces, and serves the default protocols (h1+h2+h3) on them.
+The default bind address(es) and the HTTP protocol(s) to serve with them for all sites, if the [`bind` directive](/docs/caddyfile/directives/bind) is not used in the site. Default: empty, which binds to all interfaces, and serves the default protocols (h1+h2+h3) on them.
 
 <aside class="tip">
 
