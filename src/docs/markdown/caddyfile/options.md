@@ -210,7 +210,7 @@ For example, to bind to `10.0.0.1` when no other address(es) are specified:
 }
 ```
 
-to disable HTTP/3 unless otherwise specified:
+To disable HTTP/3 unless otherwise specified:
 
 ```caddy
 {
