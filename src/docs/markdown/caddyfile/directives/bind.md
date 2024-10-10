@@ -80,7 +80,7 @@ example.com {
 }
 ```
 
-To bind to inherited descriptors specified with [environment placeholders](/docs/conventions#placeholders):
+To bind to inherited file descriptors specified with [environment placeholders](/docs/conventions#placeholders):
 
 ```caddy
 http://example.com {
