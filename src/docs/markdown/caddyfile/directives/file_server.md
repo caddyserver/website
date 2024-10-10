@@ -42,6 +42,7 @@ file_server [<matcher>] [browse] {
 	status        <status>
 	disable_canonical_uris
 	pass_thru
+	sort          <sort_field> [<direction>]
 }
 ```
 
@@ -61,6 +62,8 @@ file_server [<matcher>] [browse] {
 
   - **reveal_symlinks** <span id="reveal_symlinks"/> enables revealing the targets of symbolic links in directory listings. By default, the symlink targets are hidden, and only the link file itself is shown.
 
+  - **sort** <span id="sort"/> changes the default sort for directory listings. The first parameter is the field/column to sort by: `name`, `namedirfirst`, `size`, or `time`. The second argument is an optional direction: `asc` or `desc`. For example, `sort name desc` will sort by name in descending order.
+
 - **precompressed** <span id="precompressed"/> is the list of encoding formats to search for precompressed sidecar files. Arguments are an ordered list of encoding formats to search for precompressed [sidecar files](https://en.wikipedia.org/wiki/Sidecar_file). Supported formats are `gzip` (`.gz`), `zstd` (`.zst`) and `br` (`.br`).
 
   All file lookups will look for the existence of the uncompressed file first. Once found Caddy will look for sidecar files with the file extension of each enabled format. If a precompressed sidecar file is found, Caddy will respond with the precompressed file, with the `Content-Encoding` response header set appropriately. Otherwise, Caddy will respond with the uncompressed file as normal. If the [`encode` directive](encode) is enabled, then it may compress the response on-the-fly if not precompressed.
@@ -70,6 +73,7 @@ file_server [<matcher>] [browse] {
 - **disable_canonical_uris** <span id="disable_canonical_uris"/> disables the default behaviour of redirecting (to add a trailing slash if the request path is a directory, or remove the trailing slash if the request path is a file). Note that by default, canonicalization will not happen if the last element of the request's path (the filename) underwent an internal rewrite, to avoid clobbering an explicit rewrite with implicit behaviour.
 
 - **pass_thru** <span id="pass_thru"/> enables pass-thru mode, which continues to the next HTTP handler in the route if the requested file is not found, instead of triggering a `404` error (invoking [`handle_errors`](handle_errors) routes). Practically, this is only useful inside of a [`route`](route) block with other handler directives following `file_server`, because this directive is effectively [ordered last](/docs/caddyfile/directives#directive-order).
+
 
 ## Examples
 
