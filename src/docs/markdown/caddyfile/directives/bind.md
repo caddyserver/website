@@ -16,10 +16,13 @@ Note that binding sites inconsistently may result in unintended consequences. Fo
 ## Syntax
 
 ```caddy-d
-bind <hosts...>
+bind <hosts...> {
+	protocols <protocol> ...
+}
 ```
 
 - **&lt;hosts...&gt;** is the list of host interfaces to bind which to bind the listener. 
+- **&lt;protocols...&gt;** is an optional override of the HTTP protocols to enable for the listener. 
 
 
 ## Examples
@@ -61,6 +64,39 @@ To change the file permission to be writable by all users ([defaults](/docs/conv
 ```caddy
 example.com {
 	bind unix//run/caddy|0222
+}
+```
+
+To bind to a Unix domain socket at `/run/caddy/stream.sock` that serves h1 and h2, and another at `/run/caddy/dgram.sock` that serves h3:
+
+```caddy
+example.com {
+	bind unix//run/caddy/stream.sock {
+		protocols h1 h2
+	}
+	bind unixgram//run/caddy/dgram.sock {
+		protocols h3
+	}
+}
+```
+
+To bind to inherited descriptors specified with [environment placeholders](/docs/conventions#placeholders):
+
+```caddy
+http://example.com {
+	bind fd/{env.CADDY_HTTP_FD} {
+		protocols h1
+	}
+	redir https://example.com{uri} permanent
+}
+
+https://example.com {
+	bind fd/{env.CADDY_HTTPS_FD} {
+		protocols h1 h2
+	}
+	bind fdgram/{env.CADDY_HTTP3_FD} {
+		protocols h3
+	}
 }
 ```
 
