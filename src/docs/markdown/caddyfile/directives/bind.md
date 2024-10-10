@@ -17,12 +17,12 @@ Note that binding sites inconsistently may result in unintended consequences. Fo
 
 ```caddy-d
 bind <hosts...> {
-	protocols <protocol> ...
+	protocols <protocols...>
 }
 ```
 
 - **&lt;hosts...&gt;** is the list of host interfaces to bind which to bind the listener. 
-- **&lt;protocol&gt;** is an optional override of the HTTP protocols to enable for the listener, see the [server options](/docs/caddyfile/options#protocols) for its accepted values and their meanings.
+- **&lt;protocols...&gt;** is an optional override of the HTTP protocols to enable for the listener, see the [server options](/docs/caddyfile/options#protocols) for its accepted values and their meanings.
 
 
 ## Examples
