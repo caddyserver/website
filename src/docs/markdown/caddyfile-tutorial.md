@@ -204,9 +204,9 @@ You can then define as many different sites as you want, as long as each address
 
 ## Matchers
 
-We may want to apply some directives only to certain requests. For example, let's suppose we want to have both a file server and a reverse proxy, but we obviously can't do both on every request! Either the file server will write a static file, or the reverse proxy will proxy the request to a backend.
+We may want to apply some directives only to certain requests. For example, let's suppose we want to have both a file server and a reverse proxy, but we obviously can't do both on every request! Either the file server will write a response with a static file, or the reverse proxy will pass the request to a backend and write back its response.
 
-This config will not work like we want:
+This config will not work like we want (`reverse_proxy` will take precendence due to the [directive order](/docs/caddyfile/directives#directive-order)):
 
 ```caddy
 localhost
@@ -220,15 +220,15 @@ In practice, we may want to use the reverse proxy only for API requests, i.e. re
 ```caddy
 localhost
 
-file_server
 reverse_proxy /api/* 127.0.0.1:9005
+file_server
 ```
 
 There; now the reverse proxy will be prioritized for all requests starting with `/api/`.
 
-The `/api/*` token we just added is called a **matcher token**. You can tell it's a matcher token because it starts with a forward slash `/` and it appears right after the directive (but you can always look it up in the [directive's docs](/docs/caddyfile/directives) to be sure).
+The `/api/*` part we just added is called a **matcher token**. You can tell it's a matcher token because it starts with a forward slash `/` and it appears right after the directive (but you can always look it up in the [directive's docs](/docs/caddyfile/directives) to be sure).
 
-Matchers are really powerful. You can name matchers and use them like `@name` to match on more than just the request path! Take a moment to [learn more about matchers](/docs/caddyfile/matchers) before continuing!
+Matchers are really powerful. You can declare named matchers and use them like `@name` to match on more than just the request path! Take a moment to [learn more about matchers](/docs/caddyfile/matchers) before continuing!
 
 <aside class="complete">Matchers</aside>
 
