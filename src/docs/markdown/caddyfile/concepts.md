@@ -254,7 +254,7 @@ Wildcards (`*`) may be used, but only to represent precisely one label of the ho
 
 To catch all hosts, omit the host portion of the address, for example, simply `https://`. This is useful when using [On-Demand TLS](/docs/automatic-https#on-demand-tls), when you don't know the domains ahead of time.
 
-If multiple sites share the same definition, you can list all of them together, either with spaces or commas. The following three examples are equivalent:
+If multiple sites share the same definition, you can list all of them together, separated with spaces and commas (at least one space is necessary). The following three examples are equivalent:
 
 ```caddy
 # Comma separated site addresses
