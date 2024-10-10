@@ -47,6 +47,8 @@ The host may be any hostname, resolvable domain name, IP address, or file descri
 
 In the case of IPv6 addresses, the address must be enclosed in square brackets `[]`. The zone identifier (starting with `%`) is optional (often used for link-local addresses).
 
+In the case of file descriptors, the host must be an unsigned [integer literal](https://go.dev/ref/spec#Integer_literals).
+
 The port may be a single value (`:8080`) or an inclusive range (`:8080-8085`). A port range will be multiplied into singular addresses. Not all config fields accept port ranges. The special port `:0` means any available port.
 
 A unix socket path is only acceptable when using a `unix*` network type. The forward slash that separates the network and address is not considered part of the path.
