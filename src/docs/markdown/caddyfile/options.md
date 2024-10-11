@@ -795,7 +795,7 @@ The `tls` listener wrapper is a no-op listener wrapper that marks where the TLS 
 
 The [`http_redirect`](/docs/json/apps/http/servers/listener_wrappers/http_redirect/) provides HTTP->HTTPS redirects for connections that come on the TLS port as an HTTP request, by detecting using the first few bytes that it's not a TLS handshake, but instead an HTTP request. This is most useful when serving HTTPS on a non-standard port (other than `443`), since browsers will try HTTP unless the scheme is specified. It must be placed _before_ the `tls` listener wrapper. Here's an example:
 
-```
+```caddy
 {
 	servers {
 		listener_wrappers {
