@@ -220,14 +220,14 @@ To disable HTTP/3 unless otherwise specified:
 }
 ```
 
-To create default listeners from file descriptors given by [environment variable placeholders](/docs/conventions#placeholders):
+To create default listeners from file descriptors `3` and `4`:
 
 ```caddy
 {
-	default_bind fd/{env.CADDY_HTTPS_FD} {
+	default_bind fd/3 {
 		protocols h1 h2
 	}
-	default_bind fdgram/{env.CADDY_HTTP3_FD} {
+	default_bind fdgram/4 {
 		protocols h3
 	}
 }
