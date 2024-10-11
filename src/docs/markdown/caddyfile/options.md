@@ -802,9 +802,17 @@ The included [`http_redirect`](/docs/json/apps/http/servers/listener_wrappers/ht
 }
 ```
 
+###### `tls`
+
+The `tls` listener wrapper is a no-op listener wrapper that marks where the TLS listener should be in a chain of listener wrappers. It should only be used if another listener wrapper must be placed in front of the TLS handshake.
+
+###### `http_redirect`
+
+The [`http_redirect`](/docs/json/apps/http/servers/listener_wrappers/http_redirect/) provides HTTP->HTTPS redirects for connections that come on the TLS port as an HTTP request, by detecting using the first few bytes that it's not a TLS handshake, but instead an HTTP request. This is most useful when serving HTTPS on a non-standard port (other than `443`), since browsers will try HTTP unless the scheme is specified. It must be placed _before_ the `tls` listener wrapper.
+
 ###### `proxy_protocol`
 
-Also included is the [`proxy_protocol`](/docs/json/apps/http/servers/listener_wrappers/proxy_protocol/) listener wrapper (prior to v2.7.0 it was only available via a plugin), which enables [PROXY protocol](https://github.com/haproxy/haproxy/blob/master/doc/proxy-protocol.txt) parsing (popularized by HAProxy). This must be used _before_ the `tls` listener wrapper since it parses plaintext data at the start of the connection:
+The [`proxy_protocol`](/docs/json/apps/http/servers/listener_wrappers/proxy_protocol/) listener wrapper (prior to v2.7.0 it was only available via a plugin) enables [PROXY protocol](https://github.com/haproxy/haproxy/blob/master/doc/proxy-protocol.txt) parsing (popularized by HAProxy). This must be used _before_ the `tls` listener wrapper since it parses plaintext data at the start of the connection:
 
 ```caddy
 {
