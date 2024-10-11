@@ -38,7 +38,7 @@ example.com {
 }
 ```
 
-Display in the logs, which reverse proxy upstream was effectively used (either `node1:80`, `node2:80` or `node3:80`) and
+Display in the logs, which reverse proxy upstream was effectively used (either `node1`, `node2` or `node3`) and
 the time spent proxying to the upstream in milliseconds as well as how long it took the proxy upstream to write the response header:
 
 ```caddy
