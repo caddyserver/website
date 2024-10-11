@@ -787,21 +787,6 @@ http:// {
 
 Allows configuring [listener wrappers](/docs/json/apps/http/servers/listener_wrappers/), which can modify the behaviour of the socket listener. They are applied in the given order.
 
-There is a special no-op [`tls`](/docs/json/apps/http/servers/listener_wrappers/tls/) listener wrapper provided as a standard module which marks where TLS should be handled in the chain of listener wrappers. It should only be used if another listener wrapper must be placed in front of the TLS handshake. This _does not_ enable TLS for a server; e.g. if this is used on your `:80` HTTP server, it will still act as a no-op.
-
-The included [`http_redirect`](/docs/json/apps/http/servers/listener_wrappers/http_redirect/) listener wrapper can look at the first few bytes of an incoming request to determine if it's likely HTTP (instead of TLS), and trigger an HTTP-to-HTTPS redirect on the same port but using the `https://` scheme. This is most useful when serving HTTPS on a non-standard port (other than `443`), since browsers will try HTTP unless the scheme is specified. Don't use this on an HTTP server. It must be placed _before_ the `tls` listener wrapper. For example:
-
-```caddy
-{
-	servers {
-		listener_wrappers {
-			http_redirect
-			tls
-		}
-	}
-}
-```
-
 ###### `tls`
 
 The `tls` listener wrapper is a no-op listener wrapper that marks where the TLS listener should be in a chain of listener wrappers. It should only be used if another listener wrapper must be placed in front of the TLS handshake.
