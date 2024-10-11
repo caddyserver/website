@@ -72,6 +72,7 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 
 	# active health checking
 	health_uri      <uri>
+	health_upstream <ip:port>
 	health_port     <port>
 	health_interval <interval>
 	health_passes   <num>
@@ -326,7 +327,9 @@ Active health checks perform health checking in the background on a timer. To en
 
 - **health_uri** <span id="health_uri"/> is the URI path (and optional query) for active health checks.
 
-- **health_port** <span id="health_port"/> is the port to use for active health checks, if different from the upstream's port.
+- **health_upstream** <span id="health_upstream"/> is the ip:port to use for active health checks, if different from the upstream. This should be used in tandem with `health_header` and `{http.reverse_proxy.active.target_upstream}`.
+
+- **health_port** <span id="health_port"/> is the port to use for active health checks, if different from the upstream's port. Ignored if `health_upstream` is used.
 
 - **health_interval** <span id="health_interval"/> is a [duration value](/docs/conventions#durations) that defines how often to perform active health checks. Default: `30s`.
 
@@ -861,3 +864,16 @@ example.com {
 ```
 
 
+Using [active health checks](#active-health-checks) and `health_upstream` can be helpful when creating an intermediate service to do a more thorough health check. `{http.reverse_proxy.active.target_upstream}` can then be used as a header to provide the original upstream to the health check service.
+
+```caddy
+example.com {
+	reverse_proxy node1:80 node2:80 node3:80 {
+		health_uri /health
+		health_upstream 127.0.0.1:53336
+		health_headers {
+			Full-Upstream {http.reverse_proxy.active.target_upstream}
+		}
+	}
+}
+```
