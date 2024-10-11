@@ -793,7 +793,18 @@ The `tls` listener wrapper is a no-op listener wrapper that marks where the TLS 
 
 ###### `http_redirect`
 
-The [`http_redirect`](/docs/json/apps/http/servers/listener_wrappers/http_redirect/) provides HTTP->HTTPS redirects for connections that come on the TLS port as an HTTP request, by detecting using the first few bytes that it's not a TLS handshake, but instead an HTTP request. This is most useful when serving HTTPS on a non-standard port (other than `443`), since browsers will try HTTP unless the scheme is specified. It must be placed _before_ the `tls` listener wrapper.
+The [`http_redirect`](/docs/json/apps/http/servers/listener_wrappers/http_redirect/) provides HTTP->HTTPS redirects for connections that come on the TLS port as an HTTP request, by detecting using the first few bytes that it's not a TLS handshake, but instead an HTTP request. This is most useful when serving HTTPS on a non-standard port (other than `443`), since browsers will try HTTP unless the scheme is specified. It must be placed _before_ the `tls` listener wrapper. Here's an example:
+
+```
+{
+	servers {
+		listener_wrappers {
+			http_redirect
+			tls
+		}
+	}
+}
+```
 
 ###### `proxy_protocol`
 
@@ -804,10 +815,10 @@ The [`proxy_protocol`](/docs/json/apps/http/servers/listener_wrappers/proxy_prot
 	servers {
 		listener_wrappers {
 			proxy_protocol {
-				timeout 2s
-				allow 192.168.86.1/24 192.168.86.1/24
-				deny 10.0.0.0/8
-				fallback_policy reject
+				timeout <duration>
+				allow <cidr>
+				deny <cidr>
+				fallback_policy <policy>
 			}
 			tls
 		}
@@ -821,12 +832,12 @@ The [`proxy_protocol`](/docs/json/apps/http/servers/listener_wrappers/proxy_prot
 
 - **deny** is a list of CIDR ranges of trusted sources to reject PROXY headers from.
 
-- **fallback_policy** is the action to take if the PROXY header comes from an address that not in either list of allow/deny. The default fallback policy is `IGNORE`. Accepted values of `fallback_policy` are:
-	- `IGNORE`: address from PROXY header, but accept connection
-	- `USE`: address from PROXY header
-	- `REJECT`: connection when PROXY header is sent
-	- `REQUIRE`: connection to send PROXY header, reject if not present
-	- `SKIP`: accepts a connection without requiring the PROXY header.
+- **fallback_policy** is the action to take if the PROXY header comes from an address that not in either list of allow/deny. The default fallback policy is `ignore`. Accepted values of `fallback_policy` are:
+	- `ignore`: address from PROXY header, but accept connection
+	- `use`: address from PROXY header
+	- `reject`: connection when PROXY header is sent
+	- `require`: connection to send PROXY header, reject if not present
+	- `skip`: accepts a connection without requiring the PROXY header.
 
 
 
