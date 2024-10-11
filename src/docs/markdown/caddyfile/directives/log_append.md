@@ -48,7 +48,7 @@ example.com {
 	handle {
 		reverse_proxy node1:80 node2:80 node3:80 {
 			lb_policy random_choose 2 
-        }
+		}
 		log_append upstream-host "{http.reverse_proxy.upstream.host}"
 		log_append upstream-duration-ms "{http.reverse_proxy.upstream.duration_ms}"
 		log_append upstream-latency-ms "{http.reverse_proxy.upstream.latency_ms}"
