@@ -813,8 +813,8 @@ The [`proxy_protocol`](/docs/json/apps/http/servers/listener_wrappers/proxy_prot
 ```caddy-d
 proxy_protocol {
 	timeout <duration>
-	allow <cidr>
-	deny <cidr>
+	allow <cidrs...>
+	deny <cidrs...>
 	fallback_policy <policy>
 }
 ```
