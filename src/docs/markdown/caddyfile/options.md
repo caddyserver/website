@@ -810,19 +810,12 @@ The [`http_redirect`](/docs/json/apps/http/servers/listener_wrappers/http_redire
 
 The [`proxy_protocol`](/docs/json/apps/http/servers/listener_wrappers/proxy_protocol/) listener wrapper (prior to v2.7.0 it was only available via a plugin) enables [PROXY protocol](https://github.com/haproxy/haproxy/blob/master/doc/proxy-protocol.txt) parsing (popularized by HAProxy). This must be used _before_ the `tls` listener wrapper since it parses plaintext data at the start of the connection:
 
-```caddy
-{
-	servers {
-		listener_wrappers {
-			proxy_protocol {
-				timeout <duration>
-				allow <cidr>
-				deny <cidr>
-				fallback_policy <policy>
-			}
-			tls
-		}
-	}
+```caddy-d
+proxy_protocol {
+	timeout <duration>
+	allow <cidr>
+	deny <cidr>
+	fallback_policy <policy>
 }
 ```
 
@@ -839,6 +832,24 @@ The [`proxy_protocol`](/docs/json/apps/http/servers/listener_wrappers/proxy_prot
 	- `require`: connection to send PROXY header, reject if not present
 	- `skip`: accepts a connection without requiring the PROXY header.
 
+
+For example, for an HTTPS server (needing the `tls` listener wrapper) that accepts PROXY headers from a specific range of IP addresses, and rejects PROXY headers from a different range, with a timeout of 2 seconds:
+
+```caddy
+{
+	servers {
+		listener_wrappers {
+			proxy_protocol {
+				timeout 2s
+				allow 192.168.86.1/24 192.168.86.1/24
+				deny 10.0.0.0/8
+				fallback_policy reject
+			}
+			tls
+		}
+	}
+}
+```
 
 
 ##### `timeouts`
