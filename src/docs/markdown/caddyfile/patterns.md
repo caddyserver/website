@@ -218,10 +218,7 @@ A typical SPA config usually looks something like this:
 example.com {
 	root * /srv
 	encode gzip
-	route {
-		try_files {path} /index.html
-		header /index.html Cache-Control "public, max-age=0, must-revalidate"
-	}
+	try_files {path} /index.html
 	file_server
 }
 ```
@@ -241,6 +238,15 @@ example.com {
 		try_files {path} /index.html
 		file_server
 	}
+}
+```
+
+If your `index.html` is static, you may want to consider adding a `Cache-Control` header to instruct clients to cache it. Since the `try_files` rewrite is used to serve it from other paths, you can wrap the `try_files` with a `route` so that the `header` handler runs after the rewrite (it normally would run before due to the [directive order](/docs/caddyfile/directives#directive-order)):
+
+```caddy-d
+route {
+	try_files {path} /index.html
+	header /index.html Cache-Control "public, max-age=0, must-revalidate"
 }
 ```
 
