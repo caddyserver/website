@@ -787,9 +787,13 @@ http:// {
 
 Allows configuring [listener wrappers](/docs/json/apps/http/servers/listener_wrappers/), which can modify the behaviour of the socket listener. They are applied in the given order.
 
-There is a special no-op [`tls`](/docs/json/apps/http/servers/listener_wrappers/tls/) listener wrapper provided as a standard module which marks where TLS should be handled in the chain of listener wrappers. It should only be used if another listener wrapper must be placed in front of the TLS handshake. This _does not_ enable TLS for a server; e.g. if this is used on your `:80` HTTP server, it will still act as a no-op.
+###### `tls`
 
-The included [`http_redirect`](/docs/json/apps/http/servers/listener_wrappers/http_redirect/) listener wrapper can look at the first few bytes of an incoming request to determine if it's likely HTTP (instead of TLS), and trigger an HTTP-to-HTTPS redirect on the same port but using the `https://` scheme. This is most useful when serving HTTPS on a non-standard port (other than `443`), since browsers will try HTTP unless the scheme is specified. Don't use this on an HTTP server. It must be placed _before_ the `tls` listener wrapper. For example:
+The `tls` listener wrapper is a no-op listener wrapper that marks where the TLS listener should be in a chain of listener wrappers. It should only be used if another listener wrapper must be placed in front of the TLS handshake.
+
+###### `http_redirect`
+
+The [`http_redirect`](/docs/json/apps/http/servers/listener_wrappers/http_redirect/) provides HTTP->HTTPS redirects for connections that come on the TLS port as an HTTP request, by detecting using the first few bytes that it's not a TLS handshake, but instead an HTTP request. This is most useful when serving HTTPS on a non-standard port (other than `443`), since browsers will try HTTP unless the scheme is specified. It must be placed _before_ the `tls` listener wrapper. Here's an example:
 
 ```caddy
 {
@@ -802,7 +806,34 @@ The included [`http_redirect`](/docs/json/apps/http/servers/listener_wrappers/ht
 }
 ```
 
-Also included is the [`proxy_protocol`](/docs/json/apps/http/servers/listener_wrappers/proxy_protocol/) listener wrapper (prior to v2.7.0 it was only available via a plugin), which enables [PROXY protocol](https://github.com/haproxy/haproxy/blob/master/doc/proxy-protocol.txt) parsing (popularized by HAProxy). This must be used _before_ the `tls` listener wrapper since it parses plaintext data at the start of the connection:
+###### `proxy_protocol`
+
+The [`proxy_protocol`](/docs/json/apps/http/servers/listener_wrappers/proxy_protocol/) listener wrapper (prior to v2.7.0 it was only available via a plugin) enables [PROXY protocol](https://github.com/haproxy/haproxy/blob/master/doc/proxy-protocol.txt) parsing (popularized by HAProxy). This must be used _before_ the `tls` listener wrapper since it parses plaintext data at the start of the connection:
+
+```caddy-d
+proxy_protocol {
+	timeout <duration>
+	allow <cidr>
+	deny <cidr>
+	fallback_policy <policy>
+}
+```
+
+- **timeout** specifies the maximum duration to wait for the PROXY header. Defaults to `5s`.
+
+- **allow** is a list of CIDR ranges of trusted sources to receive PROXY headers. Unix sockets are trusted by default and not part of this option.
+
+- **deny** is a list of CIDR ranges of trusted sources to reject PROXY headers from.
+
+- **fallback_policy** is the action to take if the PROXY header comes from an address that not in either list of allow/deny. The default fallback policy is `ignore`. Accepted values of `fallback_policy` are:
+	- `ignore`: address from PROXY header, but accept connection
+	- `use`: address from PROXY header
+	- `reject`: connection when PROXY header is sent
+	- `require`: connection to send PROXY header, reject if not present
+	- `skip`: accepts a connection without requiring the PROXY header.
+
+
+For example, for an HTTPS server (needing the `tls` listener wrapper) that accepts PROXY headers from a specific range of IP addresses, and rejects PROXY headers from a different range, with a timeout of 2 seconds:
 
 ```caddy
 {
@@ -811,6 +842,8 @@ Also included is the [`proxy_protocol`](/docs/json/apps/http/servers/listener_wr
 			proxy_protocol {
 				timeout 2s
 				allow 192.168.86.1/24 192.168.86.1/24
+				deny 10.0.0.0/8
+				fallback_policy reject
 			}
 			tls
 		}
