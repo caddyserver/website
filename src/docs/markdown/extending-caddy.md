@@ -15,7 +15,7 @@ Caddy is easy to extend because of its modular architecture. Most kinds of Caddy
 
 ## Quick Start
 
-A Caddy module is any named type that registers itself as a Caddy module when its package is imported. Crucially, a module always implements the [caddy.Module](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#Module) interface, which provides its name and a constructor function.
+A Caddy module is any named type that registers itself as a Caddy module when its package is imported. Crucially, a module always implements the [`caddy.Module`](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#Module) interface, which provides its name and a constructor function.
 
 In a new Go module, paste the following template into a Go file and customize your package name, type name, and Caddy module ID:
 
@@ -108,7 +108,7 @@ The name within a namespace is significant and highly visible to users, but is n
 
 ## App Modules
 
-Apps are modules with an empty namespace, and which conventionally become their own top-level namespace. App modules implement the [caddy.App](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#App) interface.
+Apps are modules with an empty namespace, and which conventionally become their own top-level namespace. App modules implement the [`caddy.App`](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#App) interface.
 
 These modules appear in the [`"apps"`](/docs/json/#apps) property of the top-level of Caddy's config:
 
@@ -149,10 +149,10 @@ A module's life begins when it is loaded by a host module. The following happens
 
 1. [`New()`](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#ModuleInfo.New) is called to get an instance of the module's value.
 2. The module's configuration is unmarshaled into that instance.
-3. If the module is a [caddy.Provisioner](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#Provisioner), the `Provision()` method is called.
-4. If the module is a [caddy.Validator](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#Validator), the `Validate()` method is called.
+3. If the module is a [`caddy.Provisioner`](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#Provisioner), the `Provision()` method is called.
+4. If the module is a [`caddy.Validator`](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#Validator), the `Validate()` method is called.
 5. At this point, the host module is given the loaded guest module as an `interface{}` value, so the host module will usually type-assert the guest module into a more useful type. Check the documentation for the host module to know what is required of a guest module in its namespace, e.g. what methods need to be implemented.
-6. When a module is no longer needed, and if it is a [caddy.CleanerUpper](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#CleanerUpper), the `Cleanup()` method is called.
+6. When a module is no longer needed, and if it is a [`caddy.CleanerUpper`](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#CleanerUpper), the `Cleanup()` method is called.
 
 Note that multiple loaded instances of your module may overlap at a given time! During config changes, new modules are started before the old ones are stopped. Be sure to use global state carefully. Use the [`caddy.UsagePool`](https://pkg.go.dev/github.com/caddyserver/caddy/v2#UsagePool) type to help manage global state across module loads. If your module listens on a socket, use `caddy.Listen*()` to get a socket that supports overlapping usage.
 
@@ -160,7 +160,7 @@ Note that multiple loaded instances of your module may overlap at a given time! 
 
 A module's configuration will be unmarshaled into its value automatically. This means, for example, that struct fields will be filled out for you.
 
-However, if your module requires additional provisioning steps, you can implement the (optional) [caddy.Provisioner](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#Provisioner) interface:
+However, if your module requires additional provisioning steps, you can implement the (optional) [`caddy.Provisioner`](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#Provisioner) interface:
 
 ```go
 // Provision sets up the module.
