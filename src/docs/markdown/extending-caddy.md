@@ -154,7 +154,7 @@ A module's life begins when it is loaded by a host module. The following happens
 5. At this point, the host module is given the loaded guest module as an `interface{}` value, so the host module will usually type-assert the guest module into a more useful type. Check the documentation for the host module to know what is required of a guest module in its namespace, e.g. what methods need to be implemented.
 6. When a module is no longer needed, and if it is a [caddy.CleanerUpper](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#CleanerUpper), the `Cleanup()` method is called.
 
-Note that multiple loaded instances of your module may overlap at a given time! During config changes, new modules are started before the old ones are stopped. Be sure to use global state carefully. Use the [caddy.UsagePool](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#UsagePool) type to help manage global state across module loads. If your module listens on a socket, use `caddy.Listen*()` to get a socket that supports overlapping usage.
+Note that multiple loaded instances of your module may overlap at a given time! During config changes, new modules are started before the old ones are stopped. Be sure to use global state carefully. Use the [`caddy.UsagePool`](https://pkg.go.dev/github.com/caddyserver/caddy/v2#UsagePool) type to help manage global state across module loads. If your module listens on a socket, use `caddy.Listen*()` to get a socket that supports overlapping usage.
 
 ### Provisioning
 
