@@ -718,7 +718,11 @@ table {
 	font-size: 16px;
 }
 
-article > table {
+article > .table-wrapper {
+	overflow-x: scroll;
+}
+
+article table {
 	margin: 25px auto;
 }
 
