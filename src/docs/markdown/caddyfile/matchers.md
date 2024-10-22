@@ -874,6 +874,12 @@ Match an output of the [`map` directive](/docs/caddyfile/directives/map) named `
 vars {magic_number} 3 5
 ```
 
+Match an arbitrary placeholder's value, i.e. the authenticated user's ID, either `Bob` or `Alice`:
+
+```caddy-d
+vars {http.auth.user.id} Bob Alice
+```
+
 
 
 ---

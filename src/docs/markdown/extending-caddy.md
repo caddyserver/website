@@ -138,7 +138,7 @@ type Gizmo struct {
 }
 ```
 
-Using struct tags in this way will ensure that config properties are consisently named across all of Caddy.
+Using the `omitempty` option in the struct tag will omit the field from the JSON output if it is the zero value for its type. This is useful to keep the JSON config clean and concise when marshaled (e.g. adapting from Caddyfile to JSON).
 
 When a module is initialized, it will already have its configuration filled out. It is also possible to perform additional [provisioning](#provisioning) and [validation](#validating) steps after a module is initialized.
 
@@ -158,7 +158,7 @@ Note that multiple loaded instances of your module may overlap at a given time! 
 
 ### Provisioning
 
-A module's configuration will be unmarshaled into its value automatically. This means, for example, that struct fields will be filled out for you.
+A module's configuration will be unmarshaled into its value automatically (when loading the JSON config). This means, for example, that struct fields will be filled out for you.
 
 However, if your module requires additional provisioning steps, you can implement the (optional) [`caddy.Provisioner`](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc#Provisioner) interface:
 
@@ -170,7 +170,9 @@ func (g *Gizmo) Provision(ctx caddy.Context) error {
 }
 ```
 
-This is typically where host modules will load their guest/child modules, but it can be used for pretty much anything. Module provisioning is done in an arbitrary order.
+This is where you should set default values for fields that were not provided by the user (fields that are not their zero value). If a field is required, you may return an error if it is not set. For numeric fields where the zero value has meaning (e.g. some timeout duration), you may want to support `-1` to mean "off" rather than `0`, so you may set a default value if the user did not configure it.
+
+This is also typically where host modules will load their guest/child modules.
 
 A module may access other apps by calling `ctx.App()`, but modules must not have circular dependencies. In other words, a module loaded by the `http` app cannot depend on the `tls` app if a module loaded by the `tls` app depends on the `http` app. (Very similar to rules forbidding import cycles in Go.)
 

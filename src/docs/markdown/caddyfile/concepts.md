@@ -320,46 +320,55 @@ Matcher tokens can be omitted entirely to match all requests; for example, `*` d
 
 ## Placeholders
 
-You can use any [Caddy placeholders](/docs/conventions#placeholders) in the Caddyfile, but for convenience you can also use some equivalent shorthand ones:
+[Placeholders](/docs/conventions#placeholders) are a simple way to inject dynamic values into your static configuration. They can be used as arguments to directives and subdirectives.
 
-| Shorthand       | Replaces                          |
-|-----------------|-----------------------------------|
-| `{cookie.*}`    | `{http.request.cookie.*}`         |
-| `{client_ip}`   | `{http.vars.client_ip}`           |
-| `{dir}`         | `{http.request.uri.path.dir}`     |
-| `{err.*}`       | `{http.error.*}`                  |
-| `{file_match.*}` | `{http.matchers.file.*}`         |
-| `{file.base}`   | `{http.request.uri.path.file.base}` |
-| `{file.ext}`    | `{http.request.uri.path.file.ext}`  |
-| `{file}`        | `{http.request.uri.path.file}`    |
-| `{header.*}`    | `{http.request.header.*}`         |
-| `{host}`        | `{http.request.host}`             |
-| `{hostport}`    | `{http.request.hostport}`         |
-| `{labels.*}`    | `{http.request.host.labels.*}`    |
-| `{method}`      | `{http.request.method}`           |
-| `{path.*}`      | `{http.request.uri.path.*}`       |
-| `{path}`        | `{http.request.uri.path}`         |
-| `{port}`        | `{http.request.port}`             |
-| `{query.*}`     | `{http.request.uri.query.*}`      |
-| `{query}`       | `{http.request.uri.query}`        |
-| `{re.*}`        | `{http.regexp.*}`                 |
-| `{remote_host}` | `{http.request.remote.host}`      |
-| `{remote_port}` | `{http.request.remote.port}`      |
-| `{remote}`      | `{http.request.remote}`           |
-| `{rp.*}`        | `{http.reverse_proxy.*}`          |
-| `{resp.*}`      | `{http.intercept.*}`              |
-| `{scheme}`      | `{http.request.scheme}`           |
-| `{tls_cipher}`  | `{http.request.tls.cipher_suite}` |
+Placeholders are bounded on either side by curly braces `{ }` and contain the identifier inside, for example: `{foo.bar}`. The opening placeholder brace can be escaped `\{like.this}` to prevent replacement. Placeholder identifiers are typically namespaced with dots to avoid collisions across modules.
+
+Which placeholders are available depends on the context. Not all placeholders are available in all parts of the config. For example, [the HTTP app sets placeholders](/docs/json/apps/http/#docs) that are only available in areas of the config related to handling HTTP requests (i.e. in HTTP handler [directives](#directives) and [matchers](#matchers), but _not_ in [`tls` configuration](/docs/caddyfile/directives/tls)). Some directives or matchers may set their own placeholders too which can be used by anything that follows them. Some placeholders [are globally available](/docs/conventions#placeholders).
+
+You can use any placeholders in the Caddyfile, but for convenience you can also use some of these equivalent shorthands which are expanded when the Caddyfile is parsed:
+
+| Shorthand        | Replaces                            |
+|------------------|-------------------------------------|
+| `{cookie.*}`     | `{http.request.cookie.*}`           |
+| `{client_ip}`    | `{http.vars.client_ip}`             |
+| `{dir}`          | `{http.request.uri.path.dir}`       |
+| `{err.*}`        | `{http.error.*}`                    |
+| `{file_match.*}` | `{http.matchers.file.*}`            |
+| `{file.base}`    | `{http.request.uri.path.file.base}` |
+| `{file.ext}`     | `{http.request.uri.path.file.ext}`  |
+| `{file}`         | `{http.request.uri.path.file}`      |
+| `{header.*}`     | `{http.request.header.*}`           |
+| `{host}`         | `{http.request.host}`               |
+| `{hostport}`     | `{http.request.hostport}`           |
+| `{labels.*}`     | `{http.request.host.labels.*}`      |
+| `{method}`       | `{http.request.method}`             |
+| `{path.*}`       | `{http.request.uri.path.*}`         |
+| `{path}`         | `{http.request.uri.path}`           |
+| `{port}`         | `{http.request.port}`               |
+| `{query.*}`      | `{http.request.uri.query.*}`        |
+| `{query}`        | `{http.request.uri.query}`          |
+| `{re.*}`         | `{http.regexp.*}`                   |
+| `{remote_host}`  | `{http.request.remote.host}`        |
+| `{remote_port}`  | `{http.request.remote.port}`        |
+| `{remote}`       | `{http.request.remote}`             |
+| `{rp.*}`         | `{http.reverse_proxy.*}`            |
+| `{resp.*}`       | `{http.intercept.*}`                |
+| `{scheme}`       | `{http.request.scheme}`             |
+| `{tls_cipher}`   | `{http.request.tls.cipher_suite}`   |
 | `{tls_client_certificate_der_base64}` | `{http.request.tls.client.certificate_der_base64}` |
 | `{tls_client_certificate_pem}`        | `{http.request.tls.client.certificate_pem}` |
 | `{tls_client_fingerprint}`            | `{http.request.tls.client.fingerprint}`     |
 | `{tls_client_issuer}`                 | `{http.request.tls.client.issuer}`          |
 | `{tls_client_serial}`                 | `{http.request.tls.client.serial}`          |
 | `{tls_client_subject}`                | `{http.request.tls.client.subject}`         |
-| `{tls_version}` | `{http.request.tls.version}`      |
+| `{tls_version}`       | `{http.request.tls.version}`             |
 | `{upstream_hostport}` | `{http.reverse_proxy.upstream.hostport}` |
-| `{uri}`         | `{http.request.uri}`              |
-| `{vars.*}`      | `{http.vars.*}` |
+| `{uri}`               | `{http.request.uri}`                     |
+| `{vars.*}`            | `{http.vars.*}`                          |
+
+Not all config fields support placeholders, but most do where you would expect it. Support for placeholders needs to have been explicitly added to those fields. Plugin authors can [read this article](/docs/extending-caddy/placeholders) to learn how to add support for placeholders in their own modules.
+
 
 
 

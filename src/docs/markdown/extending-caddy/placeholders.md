@@ -8,18 +8,18 @@ In Caddy, placeholders are processed by each individual plugin as needed; they d
 
 This means that if you wish for your plugin to support placeholders, you must explicitly add support for them.
 
-If you are not yet familiar with placeholders, start by reading [here](/docs/conventions#placeholders)!
+If you are not yet familiar with placeholders, start by [reading here](/docs/conventions#placeholders)!
 
 ## Placeholders Overview
 
-Placeholders are a string in the format `{foo.bar}` used as dynamic configuration values, which is later evaluated at runtime.
+[Placeholders](/docs/conventions#placeholders) are a string in the format `{foo.bar}` used as dynamic configuration values, which is later evaluated at runtime.
 
-Placeholders-like strings which start with a dollar sign (`{$FOO}`), are evaulated at Caddyfile parse time, and do not need to be dealt with by your plugin. This is because these are not placeholders, but Caddyfile-specific [environmental variable substitution](/docs/caddyfile/concepts#environment-variables), they just happen to share the `{}` syntax.
+Caddyfile [environment variables substitutions](/docs/caddyfile/concepts#environment-variables) which start with a dollar sign like `{$FOO}` are evaluated at Caddyfile-parse time, and do not need to be handled by your plugin. These are _not_ placeholders, despite sharing the same `{ }` syntax.
 
-It is therefore important to understand that `{env.HOST}` is inherently different from something like `{$HOST}`.
+It is therefore important to understand that `{env.HOST}` (a [global placeholder](/docs/conventions#placeholders)) is inherently different from `{$HOST}` (a Caddyfile env-var substitution).
 
 As an example, see the following Caddyfile:
-```caddyfile
+```caddy
 :8080 {
 	respond {$HOST} 200
 }
@@ -29,16 +29,15 @@ As an example, see the following Caddyfile:
 }
 ```
 
-When you adapt this Caddyfile with `HOST=example caddy adapt` you will get
+When you adapt this Caddyfile to JSON with `HOST=example caddy adapt` you will get:
+
 ```json
 {
   "apps": {
     "http": {
       "servers": {
         "srv0": {
-          "listen": [
-            ":8080"
-          ],
+          "listen": [":8080"],
           "routes": [
             {
               "handle": [
@@ -52,9 +51,7 @@ When you adapt this Caddyfile with `HOST=example caddy adapt` you will get
           ]
         },
         "srv1": {
-          "listen": [
-            ":8081"
-          ],
+          "listen": [":8081"],
           "routes": [
             {
               "handle": [
@@ -73,23 +70,23 @@ When you adapt this Caddyfile with `HOST=example caddy adapt` you will get
 }
 ```
 
-Importantly, look at the `"body"` field in both `srv0` and `srv1`.
+In particular, look at the `"body"` field in both `srv0` and `srv1`.
 
-Since `srv0` used `{$HOST}`, the special environmental variable replacement with `$`, the value became `example`, as it was processed during Caddyfile parse time.
+Since `srv0` used `{$HOST}` (Caddyfile env-var substitution), the value became `example`, as it was processed during Caddyfile parse time when producing the JSON config.
 
-Since `srv1` used `{env.HOST}`, a normal placeholder, it was parsed as its own raw string value, `{env.HOST}`
+Since `srv1` used `{env.HOST}` (a global placeholder), it remains untouched when adapting to JSON.
 
-Some users may immediately notice that this means it is impossible to use the `{$ENV}` syntax in a JSON config. The solution to this is to process such placeholders at Provision time, which is covered below.
+This does mean that users writing JSON config (not using Caddyfile) cannot use the `{$ENV}` syntax. For that reason, it's important that plugin authors implement support for replacing placeholders when the config is provisioned. This is explained below.
 
 
 ## Implementing placeholder support
 
-You should not process placeholders when ummarshaling your Caddyfile. Instead, unmarshal the placeholders as strings in your configuration and evaluate them during either your module's execution (e.g. `ServeHTTP()` for HTTP handlers, `Match()` for matchers, etc.) or in the `Provision()` step, using a `caddy.Replacer`.
+You should not process placeholders in [`UnmarshalCaddyfile()`](/docs/extending-caddy/caddyfile). Instead, placeholders should be replaced later, either in the [`Provision()`](/docs/extending-caddy#provisioning) step, or during your module's execution (e.g. `ServeHTTP()` for HTTP handlers, `Match()` for matchers, etc.), using a `caddy.Replacer`.
 
 
 ### Examples
 
-In this example, we are using a newly constructed replacer to process placeholders. It has access to [global placeholders](/docs/conventions#placeholders) such as `{env.HOST}`, but NOT request placeholder such as `{http.request.uri}`
+Here, we are using a newly constructed replacer to process placeholders. It has access to [global placeholders](/docs/conventions#placeholders) such as `{env.HOST}`, but _not_ HTTP placeholders such as `{http.request.uri}` because provisoning happens when the config is loaded, and not during a request.
 
 ```go
 func (g *Gizmo) Provision(ctx caddy.Context) error {
@@ -99,7 +96,7 @@ func (g *Gizmo) Provision(ctx caddy.Context) error {
 }
 ```
 
-Here, we extract a replacer out of the `context.Context` inside the `*http.Request`. This replacer not only has access to global placeholders, but also request placeholders such as `{http.request.uri}`.
+Here, we fetch the replacer from the request context `r.Context()` during `ServeHTTP`. This replacer has access to both global placeholders _and_ per-request HTTP placeholders such as `{http.request.uri}`.
 
 ```go
 func (g *Gizmo) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {

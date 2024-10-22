@@ -79,20 +79,20 @@ Caddy network addresses are not URLs. URLs couple the lower and higher layers of
 
 ## Placeholders
 
-Caddy's configuration supports the use of _placeholders_ (variables). Using placeholders is a simple way to inject dynamic values into a static configuration.
+Caddy's configuration supports the use of _placeholders_. Using placeholders is a simple way to inject dynamic values into a static configuration.
 
 <aside class="tip">
 
-Placeholders are a similar idea to variables in other software. For example, [nginx has variables <img src="/old/resources/images/external-link.svg" class="external-link">](https://nginx.org/en/docs/varindex.html) like `$uri` and `$document_root`.
+Placeholders are a similar idea to variables in other software. For example, [nginx has variables <img src="/old/resources/images/external-link.svg" class="external-link">](https://nginx.org/en/docs/varindex.html) like `$uri` and `$document_root`, whereas Caddy's equivalent would be [`{http.request.uri}`](/docs/json/apps/http/#docs) and [`{http.vars.root}`](/docs/caddyfile/directives/root).
 
 </aside>
 
 
-Placeholders are bounded on either side by curly braces `{ }` and contain the variable name inside, for example: `{foo.bar}`. The opening placeholder brace can be escaped `\{like-this}` to prevent replacement. Variable names are typically namespaced with dots to avoid collisions across modules.
+Placeholders are bounded on either side by curly braces `{ }` and contain the identifier inside, for example: `{foo.bar}`. The opening placeholder brace can be escaped `\{like.this}` to prevent replacement. Placeholder identifiers are typically namespaced with dots to avoid collisions across modules.
 
 Which placeholders are available depends on the context. Not all placeholders are available in all parts of the config. For example, [the HTTP app sets placeholders](/docs/json/apps/http/#docs) that are only available in areas of the config related to handling HTTP requests.
 
-The following placeholders are always available:
+The following placeholders are always available (global):
 
 Placeholder | Description
 ------------|-------------
@@ -110,7 +110,7 @@ Placeholder | Description
 `{time.now.common_log}` | The current time in Common Log Format
 `{time.now.year}` | The current year in YYYY format
 
-Not all config fields support placeholders, but most do where you would expect it.
+Not all config fields support placeholders, but most do where you would expect it. Support for placeholders needs to have been explicitly added to those fields. Plugin authors can [read this article](/docs/extending-caddy/placeholders) to learn how to add support for placeholders in their own modules.
 
 
 
