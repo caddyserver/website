@@ -589,10 +589,11 @@ table {
 
 article > .table-wrapper {
 	overflow-x: scroll;
+	margin: 25px 0 0 0;
 }
 
 article table {
-	margin: 25px auto;
+	margin: 0 auto 25px auto;
 }
 
 th, td {
