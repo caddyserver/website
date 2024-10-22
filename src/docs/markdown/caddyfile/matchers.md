@@ -460,7 +460,7 @@ Like [`header`](#header), but supports regular expressions.
 
 The regular expression language used is RE2, included in Go. See the [RE2 syntax reference](https://github.com/google/re2/wiki/Syntax) and the [Go regexp syntax overview](https://pkg.go.dev/regexp/syntax).
 
-As of v2.8.0, if `name` is _not_ provided, the name will be taken from the named matcher's name. For example a named matcher `@foo` will cause this matcher to be named `foo`. The main advantage of specifying a name is if more than one regexp matcher is used in the same named matcher.
+As of v2.8.0, if `name` is _not_ provided, the name will be taken from the named matcher's name. For example a named matcher `@foo` will cause this matcher to be named `foo`. The main advantage of specifying a name is if more than one regexp matcher (e.g. `header_regexp` and [`path_regexp`](#path-regexp), or multiple different header fields) is used in the same named matcher.
 
 Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) in directives after matching:
 - `{re.<name>.<capture_group>}` where:
@@ -471,7 +471,7 @@ Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeh
 
 Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on. So `{re.foo.1}` or `{re.1}` will both hold the value of the first capture group.
 
-Only one regular expression is supported per header field. Multiple different fields will be AND'ed.
+Only one regular expression is supported per header field, since regexp patterns cannot be merged; if you need more, consider using an [`expression` matcher](#expression). Matches against multiple different header fields will be AND'ed.
 
 #### Example:
 
@@ -705,7 +705,7 @@ Like [`path`](#path), but supports regular expressions. Runs against the URI-dec
 
 The regular expression language used is RE2, included in Go. See the [RE2 syntax reference](https://github.com/google/re2/wiki/Syntax) and the [Go regexp syntax overview](https://pkg.go.dev/regexp/syntax).
 
-As of v2.8.0, if `name` is _not_ provided, the name will be taken from the named matcher's name. For example a named matcher `@foo` will cause this matcher to be named `foo`. The main advantage of specifying a name is if more than one regexp matcher is used in the same named matcher.
+As of v2.8.0, if `name` is _not_ provided, the name will be taken from the named matcher's name. For example a named matcher `@foo` will cause this matcher to be named `foo`. The main advantage of specifying a name is if more than one regexp matcher (e.g. `path_regexp` and [`header_regexp`](#header-regexp)) is used in the same named matcher.
 
 Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) in directives after matching:
 - `{re.<name>.<capture_group>}` where:
@@ -716,7 +716,7 @@ Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeh
 
 Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on. So `{re.foo.1}` or `{re.1}` will both hold the value of the first capture group.
 
-There can only be one `path_regexp` pattern per named matcher.
+There can only be one `path_regexp` pattern per named matcher, since this matcher cannot be merged with itself; if you need more, consider using an [`expression` matcher](#expression).
 
 #### Example:
 
@@ -893,7 +893,7 @@ Like [`vars`](#vars), but supports regular expressions.
 
 The regular expression language used is RE2, included in Go. See the [RE2 syntax reference](https://github.com/google/re2/wiki/Syntax) and the [Go regexp syntax overview](https://pkg.go.dev/regexp/syntax).
 
-As of v2.8.0, if `name` is _not_ provided, the name will be taken from the named matcher's name. For example a named matcher `@foo` will cause this matcher to be named `foo`. The main advantage of specifying a name is if more than one regexp matcher is used in the same named matcher.
+As of v2.8.0, if `name` is _not_ provided, the name will be taken from the named matcher's name. For example a named matcher `@foo` will cause this matcher to be named `foo`. The main advantage of specifying a name is if more than one regexp matcher (e.g. `vars_regexp` and [`header_regexp`](#header-regexp)) is used in the same named matcher.
 
 Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) in directives after matching:
 - `{re.<name>.<capture_group>}` where:
@@ -904,7 +904,7 @@ Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeh
 
 Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on. So `{re.foo.1}` or `{re.1}` will both hold the value of the first capture group.
 
-There can only be one `vars_regexp` matcher per named matcher.
+Only one regular expression is supported per variable name, since regexp patterns cannot be merged; if you need more, consider using an [`expression` matcher](#expression). Matches against multiple different variables will be AND'ed.
 
 #### Example:
 
