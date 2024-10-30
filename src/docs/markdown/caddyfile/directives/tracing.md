@@ -10,7 +10,7 @@ When enabled, it will propagate an existing trace context or initialize a new on
 
 It uses [gRPC](https://github.com/grpc/) as an exporter protocol and  W3C [tracecontext](https://www.w3.org/TR/trace-context/) and [baggage](https://www.w3.org/TR/baggage/) as propagators.
 
-The trace ID is added to [access logs](/docs/caddyfile/directives/log) as the standard `traceID` field. Additionally, the `{http.vars.trace_id}` placeholder is made available, for example to add the ID to a (`request_header`)[request_header] to pass it to your app.
+The trace ID and span ID are added to [access logs](/docs/caddyfile/directives/log) as the standard `traceID` and `spanID` fields. Additionally, the `{http.vars.trace_id}` and `{http.vars.span_id}` placeholders are available; for example, you can use them in a [`request_header`](request_header) to pass the IDs to your app.
 
 
 
