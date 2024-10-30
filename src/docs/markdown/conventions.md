@@ -32,6 +32,7 @@ The network can be any of the following; ones suffixed with `4` or `6` are IPv4 
 - UDP: `udp`, `udp4`, `udp6`
 - IP: `ip`, `ip4`, `ip6`
 - Unix: `unix`, `unixgram`, `unixpacket`
+- File descriptors: `fd`, `fdgram`
 
 The address part may be any of these forms:
 
@@ -42,9 +43,11 @@ The address part may be any of these forms:
 - `/path/to/unix/socket`
 - `/path/to/unix/socket|0200`
 
-The host may be any hostname, resolvable domain name, or IP address.
+The host may be any hostname, resolvable domain name, IP address, or file descriptor number.
 
 In the case of IPv6 addresses, the address must be enclosed in square brackets `[]`. The zone identifier (starting with `%`) is optional (often used for link-local addresses).
+
+In the case of file descriptors, the host must be an unsigned [integer literal](https://go.dev/ref/spec#Integer_literals).
 
 The port may be a single value (`:8080`) or an inclusive range (`:8080-8085`). A port range will be multiplied into singular addresses. Not all config fields accept port ranges. The special port `:0` means any available port.
 
