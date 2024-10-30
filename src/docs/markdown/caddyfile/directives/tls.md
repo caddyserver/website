@@ -356,19 +356,32 @@ Obtains certificates using the ACME protocol. Note that `acme` is a default issu
 
 #### zerossl
 
-Obtains certificates using the ACME protocol, specifically with ZeroSSL. Note that `zerossl` is a default issuer, so configuring it explicitly is usually unnecessary.
+Obtains certificates using [ZeroSSL's proprietary certificate issuance API](https://zerossl.com/documentation/api/). An API key is required and payment may also be required depending on your plan. Note that this issue is distinct from [ZeroSSL's ACME endpoint](https://zerossl.com/documentation/acme/). To use ZeroSSL's ACME endpoint, use the `acme` issuer described above configured with ZeroSSL's ACME directory endpoint.
 
 ```caddy-d
-... zerossl [<api_key>] {
-	...
+... zerossl <api_key> {
+	validity_days <days>
+	alt_http_port <port>
+	dns <provider_name> ...
+	propagation_delay <duration>
+	propagation_timeout <duration>
+	resolvers <list...>
+	dns_ttl <duration>
 }
 ```
 
-The syntax for `zerossl` is exactly the same as for [`acme`](#acme), except that its name is `zerossl` and it can optionally take your ZeroSSL API key.
+- **validity_days** <span id="validity_days"/> defines the certificate lifetime. Only certain values are accepted; see [ZeroSSL's docs](https://zerossl.com/documentation/api/create-certificate/) for details.
+<!--   
+  Default: `https://acme-v02.api.letsencrypt.org/directory`
+ -->
+- **alt_http_port** <span id="zerossl_alt_http_port"/> is the port to use for completing ZeroSSL's HTTP validation, if not port 80.
+- **dns** <span id="zerossl_dns"/> enables CNAME validation method using the named DNS provider with the given configuration for automatic record provisioning. The DNS provider plugin must be installed from the [`caddy-dns` <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/caddy-dns) repositories. Each provider plugin may have their own syntax following their name; refer to their docs for details. Maintaining support for each DNS provider is a community effort.
+- **propagation_delay** <span id="zerossl_propagation_delay"/> is how long to wait before checking for CNAME record propagation.
+- **propagation_timeout** <span id="zerossl_propagation_timeout"/> is how long to wait for CNAME record propagation before giving up.
+- **resolvers** <span id="zerossl_resolvers"/> defines custom DNS resolvers to use when checking for CNAME record propagation.
+- **dns_ttl** <span id="zerossl_dns_ttl"/> configures the TTL for CNAME records created as part of the validation process.
 
-Its functionality is also the same, except that it will use ZeroSSL's directory by default and it can automatically negotiate EAB credentials (whereas with the `acme` issuer, you have to manually provide EAB credentials and set the directory endpoint).
 
-When explicitly configuring `zerossl`, configuring an `email` is required so that your certificates can appear in your ZeroSSL dashboard.
 
 #### internal
 
