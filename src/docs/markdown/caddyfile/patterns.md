@@ -241,7 +241,7 @@ example.com {
 }
 ```
 
-If your `index.html` is static, you may want to consider adding a `Cache-Control` header to instruct clients to cache it. Since the `try_files` rewrite is used to serve it from other paths, you can wrap the `try_files` with a `route` so that the `header` handler runs after the rewrite (it normally would run before due to the [directive order](/docs/caddyfile/directives#directive-order)):
+If your `index.html` contains references to your JS/CSS assets with hashed filenames, you may want to consider adding a `Cache-Control` header to instruct clients to _not_ cache it (so that if the assets change, browsers fetch the new ones). Since the `try_files` rewrite is used to serve your `index.html` from any path that doesn't match another file on disk, you can wrap the `try_files` with a `route` so that the `header` handler runs _after_ the rewrite (it normally would run before due to the [directive order](/docs/caddyfile/directives#directive-order)):
 
 ```caddy-d
 route {
