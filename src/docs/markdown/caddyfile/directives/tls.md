@@ -514,7 +514,6 @@ Enable TLS Client Authentication and require clients to present a valid certific
 example.com {
 	tls {
 		client_auth {
-			mode       require_and_verify
 			trust_pool file ../caddy.ca.cer ../root.ca.cer
 		}
 	}
