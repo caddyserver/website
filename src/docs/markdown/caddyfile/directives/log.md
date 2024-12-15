@@ -96,6 +96,8 @@ log [<logger_name>] {
 
 - **level** <span id="level"/> is the minimum entry level to log. Default: `INFO`.
 
+  Possible levels: `DEBUG`, `INFO`, `WARN`, `ERROR`, `PANIC`, and `FATAL`
+  
   Note that access logs currently only emit `INFO` and `ERROR` level logs.
 
 
