@@ -508,15 +508,13 @@ https:// {
 }
 ```
 
-Enable TLS Client Authentication and require clients to present a valid certificate that is verified against all the provided CA's via `trusted_ca_cert_file`
+Enable TLS Client Authentication and require clients to present a valid certificate that is verified against all the provided CA's via the [`trust_pool`](#trust_pool) `file` provider:
 
 ```caddy
 example.com {
 	tls {
 		client_auth {
-			mode                 require_and_verify
-			trusted_ca_cert_file ../caddy.ca.cer
-			trusted_ca_cert_file ../root.ca.cer
+			trust_pool file ../caddy.ca.cer ../root.ca.cer
 		}
 	}
 }
