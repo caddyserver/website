@@ -136,6 +136,7 @@ Log rolling is provided by [lumberjack <img src="/old/resources/images/external-
 
 ```caddy-d
 output file <filename> {
+	mode          <mode>
 	roll_disabled
 	roll_size     <size>
 	roll_uncompressed
@@ -146,6 +147,10 @@ output file <filename> {
 ```
 
 - **&lt;filename&gt;** is the path to the log file.
+
+- **mode** is the Unix file mode/permissions to use for the log file. The mode consists of between 1 and 4 octal digits (same as the numeric format accepted by the Unix [chmod <img src="/old/resources/images/external-link.svg" class="external-link">](https://en.wikipedia.org/wiki/Chmod) command, except that an all-zero mode is interpreted as the default mode `600`). For example, `644` provides read/write access to the log file's owner, but only read access to the group owner and other users; `600` provides read/write access to the log file's owner, and no access to anyone else.
+
+  Default: `600`
 
 - **roll_disabled** disables log rolling. This can lead to disk space depletion, so only use this if your log files are maintained some other way.
 
@@ -166,7 +171,6 @@ output file <filename> {
   Default: `10`
 
 - **roll_keep_for** is how long to keep rolled files as a [duration string](/docs/conventions#durations). The current implementation supports day resolution; fractional values are rounded up to the next whole day. For example, `36h` (1.5 days) is rounded up to `48h` (2 days). Default: `2160h` (90 days)
-
 
 #### net
 
