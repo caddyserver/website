@@ -57,7 +57,7 @@ file_server [<matcher>] [browse] {
 
 - **browse** <span id="browse"/> enables file listings for requests to directories that do not have an index file.
 
-  - **<template_file>** <span id="template_file"/> is an optional custom template file to use for directory listings. Defaults to the template that can be extracted using the command `caddy file-server export-template`, which will print the defaut template to stdout. The embedded template can also be found [here in the source code ![external link](/old/resources/images/external-link.svg)](https://github.com/caddyserver/caddy/blob/master/modules/caddyhttp/fileserver/browse.html). Browse templates can use actions from [the standard templates module](/docs/modules/http.handlers.templates#docs) as well.
+  - **<template_file>** <span id="template_file"/> is an optional custom template file to use for directory listings. Defaults to the template that can be extracted using the command `caddy file-server export-template`, which will print the default template to stdout. The embedded template can also be found [here in the source code ![external link](/old/resources/images/external-link.svg)](https://github.com/caddyserver/caddy/blob/master/modules/caddyhttp/fileserver/browse.html). Browse templates can use actions from [the standard templates module](/docs/modules/http.handlers.templates#docs) as well.
 
   - **reveal_symlinks** <span id="reveal_symlinks"/> enables revealing the targets of symbolic links in directory listings. By default, the symlink targets are hidden, and only the link file itself is shown.
 

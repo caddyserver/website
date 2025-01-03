@@ -310,11 +310,11 @@ This is enabled by default, with the `random` policy. Retries are disabled by de
 
 - **lb_try_duration** <span id="lb_try_duration"/> is a [duration value](/docs/conventions#durations) that defines how long to try selecting available backends for each request if the next available host is down. By default, retries are disabled (zero duration).
 
-  Clients will wait for up to this long while the load balancer tries to find an available upstream host. A reasonable starting point might be `5s` since the HTTP transport's default dial timeout is `3s`, so that should allow for at least one retry if the first selected upstream cannot be reached; but feel free to experiment to find the right balance for your usecase.
+  Clients will wait for up to this long while the load balancer tries to find an available upstream host. A reasonable starting point might be `5s` since the HTTP transport's default dial timeout is `3s`, so that should allow for at least one retry if the first selected upstream cannot be reached; but feel free to experiment to find the right balance for your use case.
 
 - **lb_try_interval** <span id="lb_try_interval"/> is a [duration value](/docs/conventions#durations) that defines how long to wait between selecting the next host from the pool. Default is `250ms`. Only relevant when a request to an upstream host fails. Be aware that setting this to `0` with a non-zero `lb_try_duration` can cause the CPU to spin if all backends are down and latency is very low.
 
-- **lb_retry_match** <span id="lb_retry_match"/> restricts with which requests retries are allowed. A request must match this condition in order to be retried if the connection to the upstream succeded but the subsequent round-trip failed. If the connection to the upstream failed, a retry is always allowed. By default, only `GET` requests are retried.
+- **lb_retry_match** <span id="lb_retry_match"/> restricts with which requests retries are allowed. A request must match this condition in order to be retried if the connection to the upstream succeeded but the subsequent round-trip failed. If the connection to the upstream failed, a retry is always allowed. By default, only `GET` requests are retried.
 
   The syntax for this option is the same as for [named request matchers](/docs/caddyfile/matchers#named-matchers), but without the `@name`. If you only need a single matcher, you may configure it on the same line. For multiple matchers, a block is necessary.
 
@@ -350,7 +350,7 @@ Active health checks perform health checking in the background on a timer. To en
 
 Passive health checks happen inline with actual proxied requests. To enable this, `fail_duration` is required.
 
-- **fail_duration** <span id="fail_duration"/>  is a [duration value](/docs/conventions#durations) that defines how long to remember a failed request. A duration > `0` enables passive health checking; the default is `0` (off). A reasonable starting point might be `30s` to balance error rates with responsiveness when bringing an unhealthy upstream back online; but feel free to experiment to find the right balance for your usecase.
+- **fail_duration** <span id="fail_duration"/>  is a [duration value](/docs/conventions#durations) that defines how long to remember a failed request. A duration > `0` enables passive health checking; the default is `0` (off). A reasonable starting point might be `30s` to balance error rates with responsiveness when bringing an unhealthy upstream back online; but feel free to experiment to find the right balance for your use case.
 
 - **max_fails** <span id="max_fails"/> is the maximum number of failed requests within `fail_duration` that are needed before considering a backend to be down; must be >= `1`; default is `1`.
 

@@ -40,7 +40,7 @@ push [<matcher>] [<resource>] {
 }
 ```
 
-- **&lt;resource&gt;** is the target URI path to push. If used within the block, may optionally be preceeded by the method (GET or POST; GET is default).
+- **&lt;resource&gt;** is the target URI path to push. If used within the block, may optionally be preceded by the method (GET or POST; GET is default).
 - **&lt;headers&gt;** manipulates the headers of the push request using the same syntax as the [`header` directive](/docs/caddyfile/directives/header). Some headers are carried over by default and do not need to be explicitly configured (see above).
 
 

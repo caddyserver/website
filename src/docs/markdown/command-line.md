@@ -38,7 +38,7 @@ The `--flags` may have a single-letter shortcut like `-f`.
   A simple but production-ready file server
 
 - **[caddy file-server export-template](#caddy-file-server-export-template)**
-  Auxilary command for the file server to export the default file browser template
+  Auxiliary command for the file server to export the default file browser template
 
 - **[caddy fmt](#caddy-fmt)**
   Formats a Caddyfile

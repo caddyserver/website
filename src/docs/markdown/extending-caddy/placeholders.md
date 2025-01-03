@@ -86,7 +86,7 @@ You should not process placeholders in [`UnmarshalCaddyfile()`](/docs/extending-
 
 ### Examples
 
-Here, we are using a newly constructed replacer to process placeholders. It has access to [global placeholders](/docs/conventions#placeholders) such as `{env.HOST}`, but _not_ HTTP placeholders such as `{http.request.uri}` because provisoning happens when the config is loaded, and not during a request.
+Here, we are using a newly constructed replacer to process placeholders. It has access to [global placeholders](/docs/conventions#placeholders) such as `{env.HOST}`, but _not_ HTTP placeholders such as `{http.request.uri}` because provisioning happens when the config is loaded, and not during a request.
 
 ```go
 func (g *Gizmo) Provision(ctx caddy.Context) error {
