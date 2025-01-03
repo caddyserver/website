@@ -275,7 +275,7 @@ This is enabled by default, with the `random` policy. Retries are disabled by de
 
 	- `round_robin` iterates each upstream in turn
 
-	- `weighted_round_robin <weights...>` iterates each upstream in turn, respecting the weights provided. The amount of weight arguments should match the amount of upstreams configured. Weights should be non-zero positive integers. For example with two upstreams and weights `5 1`, the first upstream would be selected 5 times in a row before the second upstream is selected once, then the cycle repeats.
+	- `weighted_round_robin <weights...>` iterates each upstream in turn, respecting the weights provided. The amount of weight arguments should match the amount of upstreams configured. Weights should be non-negative integers. For example with two upstreams and weights `5 1`, the first upstream would be selected 5 times in a row before the second upstream is selected once, then the cycle repeats. If zero is used as a weight, this will disable selecting the upstream for new requests.
 
 	- `least_conn` choose upstream with fewest number of current requests; if more than one host has the least number of requests, then one of those hosts is chosen at random
 
