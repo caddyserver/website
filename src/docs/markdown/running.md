@@ -33,7 +33,7 @@ The recommended way to run Caddy on Linux distributions with systemd is with our
 
 ### Unit Files
 
-We provide two different systemd unit files that you can choose between, depending on your usecase:
+We provide two different systemd unit files that you can choose between, depending on your use case:
 
 - [**`caddy.service`**](https://github.com/caddyserver/dist/blob/master/init/caddy.service) if you configure Caddy with a [Caddyfile](/docs/caddyfile). If you prefer to use a different config adapter or a JSON config file, you may [override](#overrides) the `ExecStart` and `ExecReload` commands.
 

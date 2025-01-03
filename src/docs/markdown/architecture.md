@@ -33,7 +33,7 @@ The **[core library](https://pkg.go.dev/github.com/caddyserver/caddy/v2?tab=doc)
 
 <aside class="tip">
 
-Sometimes the terms *module*, *plugin*, and *extension* get used interchangably, and usually that's OK. Technically, all modules are plugins, but not all plugins are modules. Modules are specifically a kind of plugin that extends Caddy's [config structure](/docs/json/).
+Sometimes the terms *module*, *plugin*, and *extension* get used interchangeably, and usually that's OK. Technically, all modules are plugins, but not all plugins are modules. Modules are specifically a kind of plugin that extends Caddy's [config structure](/docs/json/).
 
 </aside>
 

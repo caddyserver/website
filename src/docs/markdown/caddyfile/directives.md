@@ -196,6 +196,6 @@ For ease of use, the Caddyfile adapter sorts directives according to the followi
 
   - A directive with no matcher (i.e. matching all requests) is sorted last.
 
-- The [`vars`](/docs/caddyfile/directives/vars) directive has its ordering by matcher reversed, because it involves setting values which can overwrite eachother, so the most specific matcher should be evaluated last.
+- The [`vars`](/docs/caddyfile/directives/vars) directive has its ordering by matcher reversed, because it involves setting values which can overwrite each other, so the most specific matcher should be evaluated last.
 
 - The contents of the [`route`](/docs/caddyfile/directives/route) directive ignores all the above rules, and preserves the order the directives appear within.

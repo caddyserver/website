@@ -206,7 +206,7 @@ You can then define as many different sites as you want, as long as each address
 
 We may want to apply some directives only to certain requests. For example, let's suppose we want to have both a file server and a reverse proxy, but we obviously can't do both on every request! Either the file server will write a response with a static file, or the reverse proxy will pass the request to a backend and write back its response.
 
-This config will not work like we want (`reverse_proxy` will take precendence due to the [directive order](/docs/caddyfile/directives#directive-order)):
+This config will not work like we want (`reverse_proxy` will take precedence due to the [directive order](/docs/caddyfile/directives#directive-order)):
 
 ```caddy
 localhost

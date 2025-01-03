@@ -35,7 +35,7 @@ An opinionated directive which proxies a clone of the request to an authenticati
   - [Authelia](#authelia)
   - [Tailscale](#tailscale)
 
-Caddy's [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy) is capable of performing "pre-check requests" to an external service, but this directive is tailored specifically for the authentication usecase. This directive is actually just a convenient way to use a longer, more common configuration (below).
+Caddy's [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy) is capable of performing "pre-check requests" to an external service, but this directive is tailored specifically for the authentication use case. This directive is actually just a convenient way to use a longer, more common configuration (below).
 
 This directive makes a `GET` request to the configured upstream with the `uri` rewritten:
 - If the upstream responds with a `2xx` status code, then access is granted and the header fields in `copy_headers` are copied to the original request, and handling continues.
