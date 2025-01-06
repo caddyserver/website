@@ -37,7 +37,7 @@ import <pattern> [<args...>] [{block}]
 ⚠️ <i>Experimental</i> <span style='white-space: pre;'> | </span> <span>v2.9.x+</span>
 - **{block...}** is an optional block to pass to the imported tokens. This placeholder is a special case, and is evaluated recursively at Caddyfile-parse-time, not at runtime. They can be used in two forms:
   - `{block}` where the content of provided block will be substituted for the placeholder.
-  - `{block.key}` where `key` is the first token of a parameter within the provided block
+  - `{blocks.key}` where `key` is the first token of a parameter within the provided block
 
 
 ## Examples
@@ -94,34 +94,62 @@ example.com {
 
 ⚠️ <i>Experimental</i> <span style='white-space: pre;'> | </span> <span>v2.9.x+</span>
 
-Import a snippet which provides extendable options for a reverse proxy
+Import a snippet which responds with a configurable "hello world" message and content-type:
+
+```caddy
+(hello-world) {
+	header {
+		Cache-Control max-age=3600
+		X-Foo bar
+		{blocks.content_type}
+	}
+	respond /hello-world 200 {
+		{blocks.body}
+	}
+}
+
+example.com {
+	import hello-world {
+		content_type {
+			Content-Type text/html
+		}
+		body {
+			body "<h1>hello world</h1>"
+		}
+	}
+}
+```
+
+Import a snippet which provides extendable options for a reverse proxy:
 
 ```caddy
 (extendable-proxy) {
 	reverse_proxy {
-		to {block.proxy_target}
+		{block.proxy_target}
 		{block.proxy_options}
 	}
 }
 
 example.com {
 	import extendable-proxy {
-	  proxy_target 10.0.0.1
-	  proxy_options {
-		transport http {
-			tls
+		proxy_target {
+			to 10.0.0.1
 		}
-	  }
+		proxy_options {
+			transport http {
+				tls
+			}
+		}
 	}
 }
 ```
 
-Import a snippet that serves any set of directives, but with a pre-loaded middleware.
+Import a snippet that serves any set of directives, but with a pre-loaded middleware:
 
 ```caddy
 (instrumented-route) {
 	header {
-	  Alt-Svc `h3="0.0.0.0:443"; ma=2592000`
+		Alt-Svc `h3="0.0.0.0:443"; ma=2592000`
 	}
 	tracing {
 		span args[0]
