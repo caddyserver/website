@@ -35,8 +35,8 @@ import <pattern> [<args...>] [{block}]
   Note that prior to v2.7.0, the syntax was `{args.N}` but this form was deprecated in favor of the more flexible syntax above.
 
 ⚠️ <i>Experimental</i> <span style='white-space: pre;'> | </span> <span>v2.9.x+</span>
-- **{block...}** is an optional block to pass to the imported tokens. This placeholder is a special case, and is evaluated recursively at Caddyfile-parse-time, not at runtime. They can be used in two forms:
-  - `{block}` where the content of provided block will be substituted for the placeholder.
+- **{block}** is an optional block to pass to the imported tokens. This placeholder is a special case, and is evaluated recursively at Caddyfile-parse-time, not at runtime. They can be used in two forms:
+  - `{block}` where the content of the whole provided block will be substituted for the placeholder
   - `{blocks.key}` where `key` is the first token of a parameter within the provided block
 
 
@@ -125,8 +125,8 @@ Import a snippet which provides extendable options for a reverse proxy:
 ```caddy
 (extendable-proxy) {
 	reverse_proxy {
-		{block.proxy_target}
-		{block.proxy_options}
+		{blocks.proxy_target}
+		{blocks.proxy_options}
 	}
 }
 
