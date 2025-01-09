@@ -64,7 +64,7 @@ file_server [<matcher>] [browse] {
 
   - **sort** <span id="sort"/> changes the default sort for directory listings. The first parameter is the field/column to sort by: `name`, `namedirfirst`, `size`, or `time`. The second argument is an optional direction: `asc` or `desc`. For example, `sort name desc` will sort by name in descending order.
 
-- **precompressed** <span id="precompressed"/> is the list of encoding formats to search for precompressed sidecar files. Arguments are an ordered list of encoding formats to search for precompressed [sidecar files](https://en.wikipedia.org/wiki/Sidecar_file). Supported formats are `gzip` (`.gz`), `zstd` (`.zst`) and `br` (`.br`). If formats are ommited, they default to `br zstd gzip` (in that order).
+- **precompressed** <span id="precompressed"/> is the list of encoding formats to search for precompressed sidecar files. Arguments are an ordered list of encoding formats to search for precompressed [sidecar files](https://en.wikipedia.org/wiki/Sidecar_file). Supported formats are `gzip` (`.gz`), `zstd` (`.zst`) and `br` (`.br`). If formats are omitted, they default to `br zstd gzip` (in that order).
 
   All file lookups will look for the existence of the uncompressed file first. Once found Caddy will look for sidecar files with the file extension of each enabled format. If a precompressed sidecar file is found, Caddy will respond with the precompressed file, with the `Content-Encoding` response header set appropriately. Otherwise, Caddy will respond with the uncompressed file as normal. If the [`encode` directive](encode) is enabled, then it may compress the response on-the-fly if not precompressed.
 
