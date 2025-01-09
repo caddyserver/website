@@ -66,7 +66,7 @@ With a PHP FastCGI service running, something like this works for most modern PH
 ```caddy
 example.com {
 	root * /srv/public
-	encode gzip
+	encode
 	php_fastcgi localhost:9000
 	file_server
 }
@@ -217,7 +217,7 @@ A typical SPA config usually looks something like this:
 ```caddy
 example.com {
 	root * /srv
-	encode gzip
+	encode
 	try_files {path} /index.html
 	file_server
 }
@@ -227,7 +227,7 @@ If your SPA is coupled with an API or other server-side-only endpoints, you will
 
 ```caddy
 example.com {
-	encode gzip
+	encode
 
 	handle /api/* {
 		reverse_proxy backend:8000
