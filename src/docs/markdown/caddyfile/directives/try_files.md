@@ -11,7 +11,7 @@ Rewrites the request URI path to the first of the listed files which exists in t
 
 ```caddy-d
 try_files <files...> {
-	policy first_exist|smallest_size|largest_size|most_recently_modified
+	policy first_exist|first_exist_fallback|smallest_size|largest_size|most_recently_modified
 }
 ```
 

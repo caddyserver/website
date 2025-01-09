@@ -300,7 +300,7 @@ respond @api "Hello, API!"
 file {
 	root       <path>
 	try_files  <files...>
-	try_policy first_exist|smallest_size|largest_size|most_recently_modified
+	try_policy first_exist|first_exist_fallback|smallest_size|largest_size|most_recently_modified
 	split_path <delims...>
 }
 file <files...>
@@ -308,7 +308,7 @@ file <files...>
 expression `file({
 	'root': '<path>',
 	'try_files': ['<files...>'],
-	'try_policy': 'first_exist|smallest_size|largest_size|most_recently_modified',
+	'try_policy': 'first_exist|first_exist_fallback|smallest_size|largest_size|most_recently_modified',
 	'split_path': ['<delims...>']
 })`
 expression file('<files...>')
@@ -329,6 +329,8 @@ By files.
 - `try_policy` specifies how to choose a file. Default is `first_exist`.
 
 	- `first_exist` checks for file existence. The first file that exists is selected.
+
+	- `first_exist_fallback` is similar to `first_exist`, but assumes that the last element in the list always exists to prevent a disk access.
 
 	- `smallest_size` chooses the file with the smallest size.
 
