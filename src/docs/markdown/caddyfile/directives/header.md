@@ -38,14 +38,7 @@ header [<matcher>] [[+|-|?|>]<field> [<value>|<find>] [<replace>]] {
 
 	[defer]
 
-	# a match condition
-	match [status <code...> | header <field> <value>]
-
-	# or a match block
-	match {
-		status <code...>
-		header <field> [<value>]
-	}
+	match <inline_response_matcher>
 }
 ```
 

@@ -18,10 +18,6 @@ window.$(function() {
 	window.$('pre.chroma .nd:contains("@name")').first().slice(0, 3)
 		.wrapAll('<span class="nd">').parent()
 		.html('<a href="/docs/caddyfile/response-matchers" style="color: inherit;">@name</a>')
-	window.$('pre.chroma .k:contains("replace_status")').first().next()
-		.html('<a href="/docs/caddyfile/response-matchers" style="color: inherit;" title="Response matcher">[&lt;matcher&gt;]</a>')
-	window.$('pre.chroma .k:contains("handle_response")').first().next()
-		.html('<a href="/docs/caddyfile/response-matchers" style="color: inherit;" title="Response matcher">[&lt;matcher&gt;]</a>')
 	window.$('pre.chroma .k')
 		.filter((i, el) => el.innerText === 'status')
 		.html('<a href="/docs/caddyfile/response-matchers#status" style="color: inherit;">status</a>')
@@ -49,19 +45,19 @@ intercept [<matcher>] {
 		header <field> [<value>]
 	}
 
-	replace_status [<matcher>] <code>
+	replace_status [<response_matcher>] <code>
 
-	handle_response [<matcher>] {
+	handle_response [<response_matcher>] {
 		<directives...>
 	}
 }
 ```
 
-- **@name** is the name of a [response matcher](/docs/caddyfile/response-matchers). As long as each response matcher has a unique name, multiple matchers can be defined. A response can be matched on the status code and presence or value of a response header.
+- **@name** is a named [response matcher](/docs/caddyfile/response-matchers) block. As long as each response matcher has a unique name, multiple matchers can be defined. A response can be matched on the status code and presence or value of a response header.
 
 - **replace_status** <span id="replace_status"/> simply changes the status code of response when matched by the given matcher.
 
-- **handle_response** <span id="handle_response"/> defines the route to execute when matched by the given matcher (or, if a matcher is omitted, all responses). The first matching block will be applied. Inside a `handle_response` block, any other [directives](/docs/caddyfile/directives) can be used.
+- **handle_response** <span id="handle_response"/> defines the route to execute when the original response is matched by the given response matcher. If a matcher is omitted, all responses are intercepted. When multiple `handle_response` blocks are defined, the first matching block will be applied. Inside the block, all other [directives](/docs/caddyfile/directives) can be used.
 
 Within `handle_response` routes, the following placeholders are available to pull information from the original response:
 
