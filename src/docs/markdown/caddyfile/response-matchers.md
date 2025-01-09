@@ -35,7 +35,7 @@ These typically only appear as config inside of certain other directives, to mak
 
 ## Syntax
 
-If a directive accepts response matchers, the usage is represented as either [<response_matcher>] or [<inline_response_matcher>] in the syntax documentation.
+If a directive accepts response matchers, the usage is represented as either `[<response_matcher>]` or `[<inline_response_matcher>]` in the syntax documentation.
 
 - The **<response_matcher>** token can be the name of a previously declared named response matcher. For example: `@name`.
 - The **<inline_response_matcher>** token can be the response criteria itself, without requiring prior declaration. For example: `status 200`.
