@@ -134,7 +134,7 @@ It's good practice to compress responses with a quick and modern compression alg
 ```caddy
 localhost
 
-encode zstd gzip
+encode
 templates
 file_server browse
 ```
@@ -156,7 +156,7 @@ Our Caddyfile so far:
 ```caddy
 localhost
 
-encode zstd gzip
+encode
 templates
 file_server browse
 ```
@@ -165,7 +165,7 @@ is equivalent to this one:
 
 ```caddy
 localhost {
-	encode zstd gzip
+	encode
 	templates
 	file_server browse
 }

@@ -22,7 +22,7 @@ Encodes responses using the configured encoding(s). A typical use for encoding i
 ## Syntax
 
 ```caddy-d
-encode [<matcher>] <formats...> {
+encode [<matcher>] [<formats...>] {
 	# encoding formats
 	gzip [<level>]
 	zstd [<level>]
@@ -36,7 +36,7 @@ encode [<matcher>] <formats...> {
 }
 ```
 
-- **&lt;formats...&gt;** is the list of encoding formats to enable. If multiple encodings are enabled, the encoding is chosen based the request's Accept-Encoding header; if the client has no strong preference (q-factor), then the first supported encoding is used.
+- **&lt;formats...&gt;** is the list of encoding formats to enable. If multiple encodings are enabled, the encoding is chosen based the request's Accept-Encoding header; if the client has no strong preference (q-factor), then the first supported encoding is used. If omitted, `zstd` (preferred) and `gzip` are enabled by default.
 
 - **gzip** <span id="gzip"/> enables Gzip compression, optionally at a specified level.
 
@@ -99,12 +99,18 @@ Enable Zstandard and Gzip compression (with Zstandard implicitly preferred, sinc
 encode zstd gzip
 ```
 
+As this is the default value, the previous configuration is strictly equivalent to:
+
+```caddy-d
+encode
+```
+
 And in a full site, compressing static files served by [`file_server`](file_server):
 
 ```caddy
 example.com {
 	root * /srv
-	encode zstd gzip
+	encode
 	file_server
 }
 ```
