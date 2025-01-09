@@ -44,7 +44,7 @@ header [<matcher>] [[+|-|?|>]<field> [<value>|<find>] [<replace>]] {
 	# or a match block
 	match {
 		status <code...>
-		header <field> <value>
+		header <field> [<value>]
 	}
 }
 ```

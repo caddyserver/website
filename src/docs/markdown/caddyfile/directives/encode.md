@@ -31,7 +31,7 @@ encode [<matcher>] <formats...> {
 
 	match {
 		status <code...>
-		header <field> <value>
+		header <field> [<value>]
 	}
 }
 ```
