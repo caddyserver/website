@@ -175,7 +175,7 @@ reverse_proxy upstream:443
 To override the cache expiration that a proxy upstream had set for paths starting with `/no-cache`; enabling `defer` is necessary to ensure the header is set _after_ the proxy writes its headers:
 
 ```caddy-d
-header /no-cache* >Cache-Control nocache
+header /no-cache* >Cache-Control no-cache
 reverse_proxy upstream:443
 ```
 
