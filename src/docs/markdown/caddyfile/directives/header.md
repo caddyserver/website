@@ -59,7 +59,7 @@ header [<matcher>] [[+|-|?|>]<field> [<value>|<find>] [<replace>]] {
 
   Prefix with `?` to set a default value for the field. The field is only written if it doesn't yet exist.
 
-  Prefix with `>` to replace the contents of an existing header value using a regular expression. Implies `defer`, see below.
+  Prefix with `>` to set the field, and enable `defer`, as a shortcut.
 
 - **&lt;value&gt;** is the header field value, when adding or setting a field.
 
@@ -70,7 +70,7 @@ header [<matcher>] [[+|-|?|>]<field> [<value>|<find>] [<replace>]] {
 - **defer** defers the execution of header operations until the response is being sent to the client. This option is automatically enabled under the following conditions:
 	- When any header fields are deleted using `-`.
 	- When setting a default value with `?`.
-	- When using the `>` prefix to replace within the header value.
+	- When using the `>` prefix on a set or replace operation.
 	- When one or more `match` conditions are present.
 
 - **match** <span id="match"/> is an inline [response matcher](/docs/caddyfile/response-matchers). Header operations are applied only to responses that satisfy the specified conditions.
@@ -162,7 +162,7 @@ Prevent overly-permissive CORS headers by replacing wildcard values with a speci
 header >Access-Control-Allow-Origin "\*" "allowed-partner.com"
 reverse_proxy upstream:443
 ```
-**Note**: In replacement operations (prefixed with `>`), the `<find>` value is interpreted as a regular expression. To match the `*` character, it must be escaped with a backslash as shown in the above example.
+**Note**: In replacement operations, the `<find>` value is interpreted as a regular expression. To match the `*` character, it must be escaped with a backslash as shown in the above example.
 
 Alternatively, you may use a [response matcher](/docs/caddyfile/response-matchers) to match a header value verbatim:
 ```caddy-d
