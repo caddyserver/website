@@ -150,6 +150,19 @@ header {
 reverse_proxy upstream:443
 ```
 
+Mark light mode responses as separately cacheable from dark mode responses if the upstream server supports client hints:
+```caddy-d
+header {
+	Cache-Control "max-age=3600"
+	Vary "Sec-CH-Prefers-Color-Scheme"
+	match {
+		header Accept-CH "*Sec-CH-Prefers-Color-Scheme*"
+		header Critical-CH "Sec-CH-Prefers-Color-Scheme"
+	}
+}
+reverse_proxy upstream:443
+```
+
 Prevent overly-permissive CORS headers by replacing wildcard values with a specific domain:
 ```caddy-d
 header >Access-Control-Allow-Origin "\*" "allowed-partner.com"
