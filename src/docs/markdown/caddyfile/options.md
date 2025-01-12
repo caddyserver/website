@@ -76,6 +76,7 @@ Possible options are (click on each option to jump to its documentation):
 	}
 	grace_period   <duration>
 	shutdown_delay <duration>
+	metrics
 
 	# TLS Options
 	auto_https off|disable_redirects|ignore_loaded_certs|disable_certs
@@ -121,7 +122,6 @@ Possible options are (click on each option to jump to its documentation):
 		keepalive_interval <duration>
 		trusted_proxies <module> ...
 		client_ip_headers <headers...>
-		metrics
 		trace
 		max_header_size <size>
 		enable_full_duplex
@@ -965,9 +965,7 @@ Enables Prometheus metrics collection; necessary before scraping metrics. Note t
 
 ```caddy
 {
-	servers {
-		metrics
-	}
+	metrics
 }
 ```
 
