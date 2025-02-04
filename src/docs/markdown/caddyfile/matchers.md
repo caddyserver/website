@@ -146,7 +146,7 @@ Then you can use the matcher like so, by specifying it as the first argument to 
 directive @name
 ```
 
-For example, this proxies websocket requests to `localhost:6001`, and other requests to `localhost:8080`. It matches requests that have a header field named `Connection` _containing_ `Upgrade`, **and** another field named `Upgrade` with exactly `websocket`:
+For example, this proxies HTTP/1.1 websocket requests to `localhost:6001`, and other requests to `localhost:8080`. It matches requests that have a header field named `Connection` _containing_ `Upgrade`, **and** another field named `Upgrade` with exactly `websocket`:
 
 ```caddy
 example.com {
@@ -441,10 +441,10 @@ Match requests that do not have the `Foo` header field at all:
 @not_foo header !Foo
 ```
 
-Using an [CEL expression](#expression), match WebSocket requests by checking for the `Connection` header containing `Upgrade` and the `Upgrade` header equalling `websocket`:
+Using an [CEL expression](#expression), match WebSocket requests by checking for the `Connection` header containing `Upgrade` and the `Upgrade` header equalling `websocket` (HTTP/2 has the `:protocol` header for this):
 
 ```caddy-d
-@websockets `header({'Connection':'*Upgrade*','Upgrade':'websocket'})`
+@websockets `header({'Connection':'*Upgrade*','Upgrade':'websocket'}) || header({':protocol': 'websocket'})`
 ```
 
 
