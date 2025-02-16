@@ -4,7 +4,6 @@
 {
 	# Enable FrankenPHP
 	frankenphp
-	order php_server before file_server
 }
 
 example.com {
