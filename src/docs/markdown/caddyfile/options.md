@@ -329,7 +329,7 @@ The name can be passed to indicate a specific logger for which to customize the 
 
 Multiple loggers with different names can be configured by using the `log` multiple times. 
 
-The differs from the [`log` directive](/docs/caddyfile/directives/log), which only configures HTTP request logging (also known as access logs). The `log` global option shares its configuration structure with the directive (except for `include` and `exclude`), and complete documentation can be found on the directive's page.
+This differs from the [`log` directive](/docs/caddyfile/directives/log), which only configures HTTP request logging (also known as access logs). The `log` global option shares its configuration structure with the directive (except for `include` and `exclude`), and complete documentation can be found on the directive's page.
 
 - **output** configures where to write the logs.
 
