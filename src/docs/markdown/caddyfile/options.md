@@ -969,6 +969,15 @@ Enables Prometheus metrics collection; necessary before scraping metrics. Note t
 }
 ```
 
+You can add or remove the per_host option to separate metrics for each host rather than for the entire caddy server.
+
+```caddy
+{
+	metrics {
+        per_host
+    }
+}
+```
 
 ##### `trace`
 
