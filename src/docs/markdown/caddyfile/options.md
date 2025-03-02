@@ -971,7 +971,7 @@ Enables Prometheus metrics collection; necessary before scraping metrics. Note t
 }
 ```
 
-You can add or remove the per_host option to separate metrics for each host rather than for the entire caddy server.
+You can add the `per_host` option to label metrics with the host name of the metric.
 
 ```caddy
 {
