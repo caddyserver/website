@@ -17,9 +17,7 @@ If using a Caddyfile, enable metrics [in global options](/docs/caddyfile/options
 
 ```caddy
 {
-    servers {
-        metrics
-    }
+	metrics
 }
 ```
 
@@ -29,11 +27,9 @@ To add per host metrics you can insert the per_host option. Host specific metric
 
 ```caddy
 {
-    servers {
-        metrics {
-            per_host
-        }
-    }
+	metrics {
+		per_host
+	}
 }
 ```
 
