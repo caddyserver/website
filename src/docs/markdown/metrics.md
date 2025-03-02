@@ -23,7 +23,7 @@ If using a Caddyfile, enable metrics [in global options](/docs/caddyfile/options
 
 If using JSON, add `"metrics": {}` to your [`apps > http > servers` configuration](/docs/json/apps/http/servers/).
 
-To add per host metrics you can insert the per_host option. Host specific metrics will now have a Host tag.
+To add per-host metrics you can insert the `per_host` option. Host specific metrics will now have a Host tag.
 
 ```caddy
 {
