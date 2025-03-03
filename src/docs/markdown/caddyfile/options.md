@@ -76,7 +76,9 @@ Possible options are (click on each option to jump to its documentation):
 	}
 	grace_period   <duration>
 	shutdown_delay <duration>
-	metrics
+	metrics {
+		per_host
+	}
 
 	# TLS Options
 	auto_https off|disable_redirects|ignore_loaded_certs|disable_certs
@@ -969,6 +971,15 @@ Enables Prometheus metrics collection; necessary before scraping metrics. Note t
 }
 ```
 
+You can add the `per_host` option to label metrics with the host name of the metric.
+
+```caddy
+{
+	metrics {
+		per_host
+	}
+}
+```
 
 ##### `trace`
 
