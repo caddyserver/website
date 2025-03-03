@@ -976,8 +976,8 @@ You can add the `per_host` option to label metrics with the host name of the met
 ```caddy
 {
 	metrics {
-        per_host
-    }
+		per_host
+	}
 }
 ```
 
