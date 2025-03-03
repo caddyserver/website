@@ -293,7 +293,7 @@ services:
       - "443:443"
       - "443:443/udp"
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./conf:/etc/caddy
       - ./site:/srv
       - caddy_data:/data
       - caddy_config:/config
@@ -309,11 +309,11 @@ What this does:
 
 - Uses the `unless-stopped` restart policy to make sure the Caddy container is restarted automatically when your machine is rebooted.
 - Binds to ports `80` and `443` for HTTP and HTTPS respectively, plus `443/udp` for HTTP/3.
-- Bind mounts the `Caddyfile` file which is your Caddy configuration.
+- Bind mounts the `conf` directory which contains your Caddyfile configuration.
 - Bind mounts the `site` directory to serve your site's static files from `/srv`.
 - Named volumes for `/data` and `/config` to [persist important information](/docs/conventions#file-locations).
 
-Then, create a file named `Caddyfile` beside the `compose.yml`, and write your [Caddyfile](/docs/caddyfile/concepts) config.
+Then, create a file named `Caddyfile` as the only file in the `conf` directory, and write your [Caddyfile](/docs/caddyfile/concepts) config.
 
 If you have static files to serve, you may place them in a `site/` directory beside the configs, then set the [`root`](/docs/caddyfile/directives/root) using `root * /srv`. If you don't, then you may remove the `/srv` volume mount.
 
