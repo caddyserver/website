@@ -686,6 +686,7 @@ Three placeholders will be made available within the `handle_response` routes:
 
 - `{rp.header.*}` The headers from the backend's response.
 
+While the reverse proxy response handler can copy the new response received from the proxy back to the client, it cannot pass on that new response to a subsequent reverse proxy. Every use of `reverse_proxy` receives the body from the original request (or as modified with a different module).
 
 
 
