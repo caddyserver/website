@@ -285,7 +285,7 @@ Obtains certificates using the ACME protocol. Note that `acme` is a default issu
 	alt_tlsalpn_port <port>
 	eab <key_id> <mac_key>
 	trusted_roots <pem_files...>
-	dns <provider_name> [<options>]
+	dns [<provider_name> [<options>]]
 	propagation_timeout <duration>
 	propagation_delay   <duration>
 	dns_ttl             <duration>
@@ -322,7 +322,7 @@ Obtains certificates using the ACME protocol. Note that `acme` is a default issu
 
 - **trusted_roots** <span id="trusted_roots"/> is one or more root certificates (as PEM filenames) to trust when connecting to the ACME CA server.
 
-- **dns** <span id="dns"/> configures the DNS challenge.
+- **dns** <span id="dns"/> configures the DNS challenge. A provider must be configured here, unless the [`dns` global option](/docs/caddyfile/options#dns) specifies a globally-applicable DNS provider module.
 
 - **propagation_timeout** <span id="propagation_timeout"/> is a [duration value](/docs/conventions#durations) that sets the maximum time to wait for the DNS TXT records to appear when using the DNS challenge. Set to `-1` to disable propagation checks. Default 2 minutes.
 

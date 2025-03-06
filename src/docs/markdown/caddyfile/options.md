@@ -94,6 +94,10 @@ Possible options are (click on each option to jump to its documentation):
 		mac_key <mac_key>
 	}
 	acme_dns <provider> ...
+	dns <provider> ...
+	ech <public_names...> {
+		dns <provider> ...
+	}
 	on_demand_tls {
 		ask        <endpoint>
 		permission <module>
@@ -549,6 +553,49 @@ The tokens following the name of the provider set up the provider the same as if
 	acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
 }
 ```
+
+
+##### `dns`
+Configures a default DNS provider to use when none other is specified locally in a relevant context. For example, if the ACME DNS challenge is enabled but does not have a DNS provider configured, this global default will be used. It is also applied for publishing Encrypted ClientHello (ECH) configs.
+
+Your Caddy binary must be compiled with the specified DNS provider module for this to work.
+
+Example, using credentials from an environment variable:
+
+```caddy
+{
+	dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+}
+```
+
+(Requires Caddy 2.10 beta 1 or newer.)
+
+
+##### `ech`
+Enables Encrypted ClientHello (ECH) by using the specified public domain name(s) as the plaintext server name (SNI) in TLS handshakes. Given the right conditions, ECH can help protect the domain names of your sites on the wire during connections. Caddy will generate and publish one ECH config for each public name specified. Publication is how compatible clients (such as properly-configured modern browsers) know to use ECH to access your sites.
+
+In order to work properly, the ECH config(s) must be published in a way that clients expect. Most browsers (with DNS-over-HTTPS or DNS-over-TLS enabled) expect ECH configs to be published to HTTPS-type DNS records. Caddy does this kind of publication automatically, but you have to specify a DNS provider either with the `dns` sub-option, or globally with the [`dns` global option](#dns), and your Caddy binary must be built with the specified DNS provider module. (Custom builds are available on our [download page](/download).)
+
+**Privacy notices:**
+
+- It is generally advisable to **maximize the size of your [_anonymity set_](https://www.ietf.org/archive/id/draft-ietf-tls-esni-23.html#name-introduction)**. As such, we typically recommend that most users configure _only one_ public domain name to protect all your sites.
+- **Your server should be authoritative for the public domain name(s) you specify** (i.e. they should point to your server) because Caddy will obtain a certificate for them. These certificates are vital to help spec-conforming clients connect reliably and safely with ECH in some cases. They are only used to faciliate a proper ECH handshake, not used for application data (your sites -- unless you define a site that is the same as your public domain name).
+- Every circumstance may be different. We recommend consulting experts to **review your threat model** if the stakes are high, as ECH is not a one-size-fits-all solution.
+
+Example using credentials from an environment variable for publication to nameservers parked at Cloudflare:
+
+```caddy
+{
+	dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+	ech ech.example.net
+}
+```
+
+This should cause compatible clients to load all your sites with `ech.example.net`, rather than the individual site names exposed in plaintext.
+
+Successful publication requires that your site's domains are parked at the configured DNS provider and the records can be modified with the given credentials / provider configuration.
+
+(Requires Caddy 2.10 beta 1 or newer.)
 
 
 ##### `on_demand_tls`
