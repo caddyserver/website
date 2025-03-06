@@ -24,7 +24,7 @@ Compatibility note: Due to its sensitive nature as a security protocol, delibera
 tls [internal|<email>] | [<cert_file> <key_file>] {
 	protocols <min> [<max>]
 	ciphers   <cipher_suites...>
-	curves    <curves...>
+	curves    <groups...>
 	alpn      <values...>
 	load      <paths...>
 	ca        <ca_dir_url>
@@ -82,7 +82,8 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
 	- `TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA`
 	- `TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA`
 
-- **curves** <span id="curves"/> specifies the list of EC curves to support. It is recommended to not change these. Supported values are:
+- **curves** <span id="curves"/> specifies the list of EC groups to support. It is recommended to not change the defaults. Supported values are:
+	- `x25519mlkem768` (PQC)
 	- `x25519`
 	- `secp256r1`
 	- `secp384r1`
