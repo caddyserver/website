@@ -247,7 +247,7 @@ section.dark .cols {
 
 
 .cols .col {
-	min-width: 350px;
+	min-width: 300px;
 	padding-left: 1em;
 	flex: 1;
 }
