@@ -29,10 +29,7 @@ encode [<matcher>] [<formats...>] {
 	
 	minimum_length <length>
 
-	match {
-		status <code...>
-		header <field> [<value>]
-	}
+	match <inline_response_matcher>
 }
 ```
 
