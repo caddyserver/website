@@ -588,8 +588,9 @@ table {
 }
 
 article > .table-wrapper {
-	overflow-x: scroll;
+	overflow-x: auto;
 	margin: 25px 0 0 0;
+	padding: 0;
 }
 
 article table {
