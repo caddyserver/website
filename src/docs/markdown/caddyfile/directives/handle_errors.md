@@ -83,6 +83,7 @@ Reverse proxy to a professional server that is highly qualified for handling HTT
 handle_errors {
 	rewrite * /{err.status_code}
 	reverse_proxy https://http.cat {
+		header_up -*
 		header_up Host {upstream_hostport}
 		replace_status {err.status_code}
 	}
