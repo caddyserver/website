@@ -336,7 +336,7 @@ For that reason, servers should keep supporting old ECH configs for a period of 
 
 However, that may not be enough. Some clients still won't get the updated keys for various reasons, and any time that happens, there is a risk of exposing the server name. So there needs to be another way to give clients the updated config _in band_ with the connection. That's what the _outer name_ is for.
 
-#### Outer name
+#### Public name
 
 The "outer" ClientHello is a normal ClientHello with two subtle differences that are only known to the origin server:
 
@@ -350,6 +350,8 @@ If a client tries to make an ECH connection but the server can't decrypt the inn
 In this manner, the true server name remains protected and out-of-sync clients remain able to connect, which are both vital elements of security.
 
 The outer name may be one of your site's domains, a subdomain, or any other domain name that points to your server. We recommend choosing exactly one generic name. For example, Cloudflare serves millions of sites behind `cloudflare-ech.com`. This is important for increasing the size of your anonymity set.
+
+Public names should not be empty; i.e. a public name must be configured for things to work. Caddy does not currently enforce this (and may later), but the ECH specification requires the public name to be at least 1 byte long. Some software will accept empty names, others won't. This can lead to confusing behaviors such as browsers using ECH but servers rejecting it as invalid; or browsers not using ECH (because it is invalid) even though the config is in the DNS record properly. It is the responsibility of the site owner to ensure proper ECH configuration and publication to ensure privacy.
 
 
 #### Anonymity set
