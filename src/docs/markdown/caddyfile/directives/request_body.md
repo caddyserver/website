@@ -17,7 +17,7 @@ request_body [<matcher>] {
 
 - **max_size** is the maximum size in bytes allowed for the request body. It accepts all size values supported by [go-humanize](https://pkg.go.dev/github.com/dustin/go-humanize#pkg-constants). Reads of more bytes will return an error with HTTP status `413`.
 
-⚠️ <i>Experimental</i> <span style='white-space: pre;'> | </span> <span>v2.10.x+</span>
+⚠️ <i>Experimental</i> <span style='white-space: pre;'> | </span> <span>v2.10.0+</span>
 - **set** allows setting the request body to specific content. The content can include placeholders to dynamically insert data.
 
 ## Examples
@@ -39,7 +39,7 @@ Set the request body with a JSON structure containing a SQL query:
 example.com {
 	handle /jazz {
 		request_body {
-			set `\{"statementText":"SELECT name, genre, debut_year FROM artists WHERE genre = 'Jazz'"\}`
+			set `\{"statementText":"SELECT name, genre, debut_year FROM artists WHERE genre = 'Jazz'"}`
 		}
 
 		reverse_proxy localhost:8080 {
@@ -47,6 +47,6 @@ example.com {
 			method POST
 			rewrite * /execute-sql
 		}
-    }
+	}
 }
 ```
