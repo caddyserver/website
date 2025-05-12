@@ -71,15 +71,17 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 	lb_retry_match  <request-matcher>
 
 	# active health checking
-	health_uri      <uri>
-	health_upstream <ip:port>
-	health_port     <port>
-	health_interval <interval>
-	health_passes   <num>
-	health_fails	<num>
-	health_timeout  <duration>
-	health_status   <status>
-	health_body     <regexp>
+	health_uri          <uri>
+	health_upstream     <ip:port>
+	health_port         <port>
+	health_interval     <interval>
+	health_passes       <num>
+	health_fails	    <num>
+	health_timeout      <duration>
+	health_method       <method>
+	health_status       <status>
+	health_request_body <body>
+	health_body         <regexp>
 	health_follow_redirects
 	health_headers {
 		<field> [<values...>]
@@ -339,7 +341,11 @@ Active health checks perform health checking in the background on a timer. To en
 
 - **health_timeout** <span id="health_timeout"/> is a [duration value](/docs/conventions#durations) that defines how long to wait for a reply before marking the backend as down. Default: `5s`.
 
+- **health_method** <span id="health_method"/> is the HTTP method to use for the active health check. Default: `GET`.
+
 - **health_status** <span id="health_status"/> is the HTTP status code to expect from a healthy backend. Can be a 3-digit status code, or a status code class ending in `xx`. For example: `200` (which is the default), or `2xx`.
+
+- **health_request_body** <span id="health_request_body"/> is a string representing the request body to send with the active health check.
 
 - **health_body** <span id="health_body"/> is a substring or regular expression to match on the response body of an active health check. If the backend does not return a matching body, it will be marked as down.
 
