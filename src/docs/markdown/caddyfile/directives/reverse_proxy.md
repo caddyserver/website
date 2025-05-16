@@ -493,6 +493,8 @@ reverse_proxy https://example.com {
 
 The `X-Forwarded-Host` header is still passed [by default](#defaults), so the upstream may still use that if it needs to know the original `Host` header value.
 
+The same applies when terminating TLS in caddy and proxying via HTTP, whether to a port or a unix socket. Indeed, caddy itself must receive the correct Host, when it is the target of `reverse_proxy`. In the unix socket case, the `upstream_hostport` will be the socket path, and the Host must be set explicitly.
+
 
 
 ## Rewrites
@@ -692,6 +694,7 @@ Three placeholders will be made available within the `handle_response` routes:
 
 - `{rp.header.*}` The headers from the backend's response.
 
+While the reverse proxy response handler can copy the new response received from the proxy back to the client, it cannot pass on that new response to a subsequent reverse proxy. Every use of `reverse_proxy` receives the body from the original request (or as modified with a different module).
 
 
 
