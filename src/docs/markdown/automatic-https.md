@@ -117,7 +117,7 @@ All hostnames (domain names) qualify for fully-managed certificates if they:
 
 In addition, hostnames qualify for publicly-trusted certificates if they:
 
-- are not localhost (including `.localhost`, `.local` and `.home.arpa` TLDs)
+- are not localhost (including `.localhost`, `.local`, `.internal` and `.home.arpa` TLDs)
 - are not an IP address
 - have only a single wildcard `*` as the left-most label
 
