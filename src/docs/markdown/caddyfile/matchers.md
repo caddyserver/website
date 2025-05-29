@@ -776,12 +776,13 @@ With a [CEL expression](#expression):
 
 ```caddy-d
 query <key>=<val>...
+query ""
 
 expression query({'<key>': '<val>'})
 expression query({'<key>': ['<vals...>']})
 ```
 
-By query string parameters. Should be a sequence of `key=value` pairs. Keys are matched exactly (case-sensitively) but also support `*` to match any value. Values can use placeholders.
+By query string parameters. Should be a sequence of `key=value` pairs, or an empty string "". Keys are matched exactly (case-sensitively) but also support `*` to match any value. Values can use placeholders.  Empty string matches http requests with no query parameters.
 
 There can be multiple `query` matchers per named matcher, and pairs with the same keys will be OR'ed together. Different keys will be AND'ed together. So, all keys in the matcher must have at least one matching value.
 
