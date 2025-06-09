@@ -130,9 +130,7 @@ reverse_proxy upstream:443
 Mark all successful responses to GET requests as cacheable for upto an hour:
 
 ```caddy-d
-@GET {
-	method GET
-}
+@GET method GET
 header @GET Cache-Control "max-age=3600" {
 	match status 2xx
 }

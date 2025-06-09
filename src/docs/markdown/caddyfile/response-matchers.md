@@ -57,16 +57,16 @@ If only one aspect of the response is relevant to the directive, you can put the
 ### Inline
 
 ```caddy-d
-{
+... {
 	status <code...>
 	header <field> [<value>]
 }
 ```
 ```caddy-d
-status <code...>
+... status <code...>
 ```
 ```caddy-d
-header <field> [<value>]
+... header <field> [<value>]
 ```
 
 ## Matchers
