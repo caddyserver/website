@@ -146,7 +146,7 @@ Then you can use the matcher like so, by specifying it as the first argument to 
 directive @name
 ```
 
-For example, this proxies websocket requests to `localhost:6001`, and other requests to `localhost:8080`. It matches requests that have a header field named `Connection` _containing_ `Upgrade`, **and** another field named `Upgrade` with exactly `websocket`:
+For example, this proxies HTTP/1.1 websocket requests to `localhost:6001`, and other requests to `localhost:8080`. It matches requests that have a header field named `Connection` _containing_ `Upgrade`, **and** another field named `Upgrade` with exactly `websocket`:
 
 ```caddy
 example.com {
@@ -300,7 +300,7 @@ respond @api "Hello, API!"
 file {
 	root       <path>
 	try_files  <files...>
-	try_policy first_exist|smallest_size|largest_size|most_recently_modified
+	try_policy first_exist|first_exist_fallback|smallest_size|largest_size|most_recently_modified
 	split_path <delims...>
 }
 file <files...>
@@ -308,7 +308,7 @@ file <files...>
 expression `file({
 	'root': '<path>',
 	'try_files': ['<files...>'],
-	'try_policy': 'first_exist|smallest_size|largest_size|most_recently_modified',
+	'try_policy': 'first_exist|first_exist_fallback|smallest_size|largest_size|most_recently_modified',
 	'split_path': ['<delims...>']
 })`
 expression file('<files...>')
@@ -329,6 +329,8 @@ By files.
 - `try_policy` specifies how to choose a file. Default is `first_exist`.
 
 	- `first_exist` checks for file existence. The first file that exists is selected.
+
+	- `first_exist_fallback` is similar to `first_exist`, but assumes that the last element in the list always exists to prevent a disk access.
 
 	- `smallest_size` chooses the file with the smallest size.
 
@@ -397,7 +399,7 @@ Some more examples using [CEL expressions](#expression). Keep in mind that place
 ### header
 
 ```caddy-d
-header <field> [<value>]
+header <field> [<value> ...]
 
 expression header({'<field>': '<value>'})
 ```
@@ -406,7 +408,7 @@ By request header fields.
 
 - `<field>` is the name of the HTTP header field to check.
 	- If prefixed with `!`, the field must not exist to match (omit value arg).
-- `<value>` is the value the field must have to match.
+- `<value>` is the value the field must have to match. One or more may be specified.
 	- If prefixed with `*`, it performs a fast suffix match (appears at the end).
 	- If suffixed with `*`, it performs a fast prefix match (appears at the start).
 	- If enclosed by `*`, it performs a fast substring match (appears anywhere).
@@ -439,10 +441,10 @@ Match requests that do not have the `Foo` header field at all:
 @not_foo header !Foo
 ```
 
-Using an [CEL expression](#expression), match WebSocket requests by checking for the `Connection` header containing `Upgrade` and the `Upgrade` header equalling `websocket`:
+Using an [CEL expression](#expression), match WebSocket requests by checking for the `Connection` header containing `Upgrade` and the `Upgrade` header equalling `websocket` (HTTP/2 has the `:protocol` header for this):
 
 ```caddy-d
-@websockets `header({'Connection':'*Upgrade*','Upgrade':'websocket'})`
+@websockets `header({'Connection':'*Upgrade*','Upgrade':'websocket'}) || header({':protocol': 'websocket'})`
 ```
 
 
@@ -460,7 +462,7 @@ Like [`header`](#header), but supports regular expressions.
 
 The regular expression language used is RE2, included in Go. See the [RE2 syntax reference](https://github.com/google/re2/wiki/Syntax) and the [Go regexp syntax overview](https://pkg.go.dev/regexp/syntax).
 
-As of v2.8.0, if `name` is _not_ provided, the name will be taken from the named matcher's name. For example a named matcher `@foo` will cause this matcher to be named `foo`. The main advantage of specifying a name is if more than one regexp matcher is used in the same named matcher.
+As of v2.8.0, if `name` is _not_ provided, the name will be taken from the named matcher's name. For example a named matcher `@foo` will cause this matcher to be named `foo`. The main advantage of specifying a name is if more than one regexp matcher (e.g. `header_regexp` and [`path_regexp`](#path-regexp), or multiple different header fields) is used in the same named matcher.
 
 Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) in directives after matching:
 - `{re.<name>.<capture_group>}` where:
@@ -471,7 +473,7 @@ Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeh
 
 Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on. So `{re.foo.1}` or `{re.1}` will both hold the value of the first capture group.
 
-Only one regular expression is supported per header field. Multiple different fields will be AND'ed.
+Only one regular expression is supported per header field, since regexp patterns cannot be merged; if you need more, consider using an [`expression` matcher](#expression). Matches against multiple different header fields will be AND'ed.
 
 #### Example:
 
@@ -705,7 +707,7 @@ Like [`path`](#path), but supports regular expressions. Runs against the URI-dec
 
 The regular expression language used is RE2, included in Go. See the [RE2 syntax reference](https://github.com/google/re2/wiki/Syntax) and the [Go regexp syntax overview](https://pkg.go.dev/regexp/syntax).
 
-As of v2.8.0, if `name` is _not_ provided, the name will be taken from the named matcher's name. For example a named matcher `@foo` will cause this matcher to be named `foo`. The main advantage of specifying a name is if more than one regexp matcher is used in the same named matcher.
+As of v2.8.0, if `name` is _not_ provided, the name will be taken from the named matcher's name. For example a named matcher `@foo` will cause this matcher to be named `foo`. The main advantage of specifying a name is if more than one regexp matcher (e.g. `path_regexp` and [`header_regexp`](#header-regexp)) is used in the same named matcher.
 
 Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) in directives after matching:
 - `{re.<name>.<capture_group>}` where:
@@ -716,7 +718,7 @@ Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeh
 
 Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on. So `{re.foo.1}` or `{re.1}` will both hold the value of the first capture group.
 
-There can only be one `path_regexp` pattern per named matcher.
+There can only be one `path_regexp` pattern per named matcher, since this matcher cannot be merged with itself; if you need more, consider using an [`expression` matcher](#expression).
 
 #### Example:
 
@@ -774,12 +776,13 @@ With a [CEL expression](#expression):
 
 ```caddy-d
 query <key>=<val>...
+query ""
 
 expression query({'<key>': '<val>'})
 expression query({'<key>': ['<vals...>']})
 ```
 
-By query string parameters. Should be a sequence of `key=value` pairs. Keys are matched exactly (case-sensitively) but also support `*` to match any value. Values can use placeholders.
+By query string parameters. Should be a sequence of `key=value` pairs, or an empty string "". Keys are matched exactly (case-sensitively) but also support `*` to match any value. Values can use placeholders.  Empty string matches http requests with no query parameters.
 
 There can be multiple `query` matchers per named matcher, and pairs with the same keys will be OR'ed together. Different keys will be AND'ed together. So, all keys in the matcher must have at least one matching value.
 
@@ -874,6 +877,12 @@ Match an output of the [`map` directive](/docs/caddyfile/directives/map) named `
 vars {magic_number} 3 5
 ```
 
+Match an arbitrary placeholder's value, i.e. the authenticated user's ID, either `Bob` or `Alice`:
+
+```caddy-d
+vars {http.auth.user.id} Bob Alice
+```
+
 
 
 ---
@@ -887,7 +896,7 @@ Like [`vars`](#vars), but supports regular expressions.
 
 The regular expression language used is RE2, included in Go. See the [RE2 syntax reference](https://github.com/google/re2/wiki/Syntax) and the [Go regexp syntax overview](https://pkg.go.dev/regexp/syntax).
 
-As of v2.8.0, if `name` is _not_ provided, the name will be taken from the named matcher's name. For example a named matcher `@foo` will cause this matcher to be named `foo`. The main advantage of specifying a name is if more than one regexp matcher is used in the same named matcher.
+As of v2.8.0, if `name` is _not_ provided, the name will be taken from the named matcher's name. For example a named matcher `@foo` will cause this matcher to be named `foo`. The main advantage of specifying a name is if more than one regexp matcher (e.g. `vars_regexp` and [`header_regexp`](#header-regexp)) is used in the same named matcher.
 
 Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) in directives after matching:
 - `{re.<name>.<capture_group>}` where:
@@ -898,7 +907,7 @@ Capture groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeh
 
 Capture group `0` is the full regexp match, `1` is the first capture group, `2` is the second capture group, and so on. So `{re.foo.1}` or `{re.1}` will both hold the value of the first capture group.
 
-There can only be one `vars_regexp` matcher per named matcher.
+Only one regular expression is supported per variable name, since regexp patterns cannot be merged; if you need more, consider using an [`expression` matcher](#expression). Matches against multiple different variables will be AND'ed.
 
 #### Example:
 

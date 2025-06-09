@@ -718,8 +718,13 @@ table {
 	font-size: 16px;
 }
 
-article > table {
-	margin: 25px auto;
+article > .table-wrapper {
+	overflow-x: scroll;
+	margin: 25px 0 0 0;
+}
+
+article table {
+	margin: 0 auto 25px auto;
 }
 
 th, td {

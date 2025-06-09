@@ -24,7 +24,7 @@ Compatibility note: Due to its sensitive nature as a security protocol, delibera
 tls [internal|<email>] | [<cert_file> <key_file>] {
 	protocols <min> [<max>]
 	ciphers   <cipher_suites...>
-	curves    <curves...>
+	curves    <groups...>
 	alpn      <values...>
 	load      <paths...>
 	ca        <ca_dir_url>
@@ -42,8 +42,6 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 	client_auth {
 		mode                   [request|require|verify_if_given|require_and_verify]
 		trust_pool             <module>
-		trusted_leaf_cert      <base64_der>
-		trusted_leaf_cert_file <filename>
 		verifier 			   <module>
 	}
 	issuer          <issuer_name>  [<params...>]
@@ -84,7 +82,8 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
 	- `TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA`
 	- `TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA`
 
-- **curves** <span id="curves"/> specifies the list of EC curves to support. It is recommended to not change these. Supported values are:
+- **curves** <span id="curves"/> specifies the list of EC groups to support. It is recommended to not change the defaults. Supported values are:
+	- `x25519mlkem768` (PQC)
 	- `x25519`
 	- `secp256r1`
 	- `secp384r1`
@@ -140,15 +139,11 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
     | verify_if_given | Ask clients for a certificate; allow even if there isn't one, but verify it if there is |
     | require_and_verify | Require clients to present a valid certificate that is verified |
 
-    Default: `require_and_verify` if any `trusted_ca_cert` or `trusted_leaf_cert` are provided; otherwise, `require`.
+    Default: `require_and_verify` if `trust_pool` module is provided; otherwise, `require`.
 	
   - **trust_pool** <span id="trust_pool"/> configures the source of certificate authorities (CA) providing certificates against which to validate client certificates.
 	
 	The certificate authority used providing the pool of trusted certificates and the configuration within the segment depends on the configured source of trust pool module. The standard modules available in Caddy are [listed below](#trust-pool-providers). The full list of modules, including 3rd-party, is listed in the [`trust_pool` JSON documentation](/docs/json/apps/http/servers/tls_connection_policies/client_authentication/#trust_pool).
-
-  - **trusted_leaf_cert** <span id="trusted_leaf_cert"/> is a base64 DER-encoded client leaf certificate to accept.
-
-  - **trusted_leaf_cert_file** <span id="trusted_leaf_cert_file"/> is a path to a PEM CA certificate file against which to validate client certificates.
 
     Multiple `trusted_*` directives may be used to specify multiple CA or leaf certificates. Client certificates which are not listed as one of the leaf certificates or signed by any of the specified CAs will be rejected according to the **mode**.
 
@@ -291,7 +286,7 @@ Obtains certificates using the ACME protocol. Note that `acme` is a default issu
 	alt_tlsalpn_port <port>
 	eab <key_id> <mac_key>
 	trusted_roots <pem_files...>
-	dns <provider_name> [<options>]
+	dns [<provider_name> [<options>]]
 	propagation_timeout <duration>
 	propagation_delay   <duration>
 	dns_ttl             <duration>
@@ -328,7 +323,7 @@ Obtains certificates using the ACME protocol. Note that `acme` is a default issu
 
 - **trusted_roots** <span id="trusted_roots"/> is one or more root certificates (as PEM filenames) to trust when connecting to the ACME CA server.
 
-- **dns** <span id="dns"/> configures the DNS challenge.
+- **dns** <span id="dns"/> configures the DNS challenge. A provider must be configured here, unless the [`dns` global option](/docs/caddyfile/options#dns) specifies a globally-applicable DNS provider module.
 
 - **propagation_timeout** <span id="propagation_timeout"/> is a [duration value](/docs/conventions#durations) that sets the maximum time to wait for the DNS TXT records to appear when using the DNS challenge. Set to `-1` to disable propagation checks. Default 2 minutes.
 
@@ -362,19 +357,32 @@ Obtains certificates using the ACME protocol. Note that `acme` is a default issu
 
 #### zerossl
 
-Obtains certificates using the ACME protocol, specifically with ZeroSSL. Note that `zerossl` is a default issuer, so configuring it explicitly is usually unnecessary.
+Obtains certificates using [ZeroSSL's proprietary certificate issuance API](https://zerossl.com/documentation/api/). An API key is required and payment may also be required depending on your plan. Note that this issue is distinct from [ZeroSSL's ACME endpoint](https://zerossl.com/documentation/acme/). To use ZeroSSL's ACME endpoint, use the `acme` issuer described above configured with ZeroSSL's ACME directory endpoint.
 
 ```caddy-d
-... zerossl [<api_key>] {
-	...
+... zerossl <api_key> {
+	validity_days <days>
+	alt_http_port <port>
+	dns <provider_name> ...
+	propagation_delay <duration>
+	propagation_timeout <duration>
+	resolvers <list...>
+	dns_ttl <duration>
 }
 ```
 
-The syntax for `zerossl` is exactly the same as for [`acme`](#acme), except that its name is `zerossl` and it can optionally take your ZeroSSL API key.
+- **validity_days** <span id="validity_days"/> defines the certificate lifetime. Only certain values are accepted; see [ZeroSSL's docs](https://zerossl.com/documentation/api/create-certificate/) for details.
+<!--   
+  Default: `https://acme-v02.api.letsencrypt.org/directory`
+ -->
+- **alt_http_port** <span id="zerossl_alt_http_port"/> is the port to use for completing ZeroSSL's HTTP validation, if not port 80.
+- **dns** <span id="zerossl_dns"/> enables CNAME validation method using the named DNS provider with the given configuration for automatic record provisioning. The DNS provider plugin must be installed from the [`caddy-dns` <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/caddy-dns) repositories. Each provider plugin may have their own syntax following their name; refer to their docs for details. Maintaining support for each DNS provider is a community effort.
+- **propagation_delay** <span id="zerossl_propagation_delay"/> is how long to wait before checking for CNAME record propagation.
+- **propagation_timeout** <span id="zerossl_propagation_timeout"/> is how long to wait for CNAME record propagation before giving up.
+- **resolvers** <span id="zerossl_resolvers"/> defines custom DNS resolvers to use when checking for CNAME record propagation.
+- **dns_ttl** <span id="zerossl_dns_ttl"/> configures the TTL for CNAME records created as part of the validation process.
 
-Its functionality is also the same, except that it will use ZeroSSL's directory by default and it can automatically negotiate EAB credentials (whereas with the `acme` issuer, you have to manually provide EAB credentials and set the directory endpoint).
 
-When explicitly configuring `zerossl`, configuring an `email` is required so that your certificates can appear in your ZeroSSL dashboard.
 
 #### internal
 
@@ -394,7 +402,7 @@ Obtains certificates from an internal certificate authority.
 
   Caddy will attempt to install the root CA certificate to the system trust store, but this may fail when Caddy is running as an unprivileged user, or when running in a Docker container. In that case, the root CA certificate will need to be manually installed, either by using the [`caddy trust`](/docs/command-line#caddy-trust) command, or by [copying out of the container](/docs/running#usage).
 
-- **lifetime** <span id="lifetime"/> is a [duration value](/docs/conventions#durations) that sets the validity period for interally issued leaf certificates. Default: `12h`. It is NOT recommended to change this, unless absolutely necessary. It must be shorter than the intermediate's lifetime.
+- **lifetime** <span id="lifetime"/> is a [duration value](/docs/conventions#durations) that sets the validity period for internally issued leaf certificates. Default: `12h`. It is NOT recommended to change this, unless absolutely necessary. It must be shorter than the intermediate's lifetime.
 
 - **sign_with_root** <span id="sign_with_root"/> forces the root to be the issuer instead of the intermediate. This is NOT recommended and should only be used when devices/clients do not properly validate certificate chains (very uncommon).
 
@@ -501,15 +509,13 @@ https:// {
 }
 ```
 
-Enable TLS Client Authentication and require clients to present a valid certificate that is verified against all the provided CA's via `trusted_ca_cert_file`
+Enable TLS Client Authentication and require clients to present a valid certificate that is verified against all the provided CA's via the [`trust_pool`](#trust_pool) `file` provider:
 
 ```caddy
 example.com {
 	tls {
 		client_auth {
-			mode                 require_and_verify
-			trusted_ca_cert_file ../caddy.ca.cer
-			trusted_ca_cert_file ../root.ca.cer
+			trust_pool file ../caddy.ca.cer ../root.ca.cer
 		}
 	}
 }

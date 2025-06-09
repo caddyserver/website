@@ -6,6 +6,12 @@ title: encode (Caddyfile directive)
 window.$(function() {
 	// We'll add links to all the subdirectives if a matching anchor tag is found on the page.
 	addLinksToSubdirectives();
+
+	// Response matchers
+	window.$('pre.chroma .k:contains("status")')
+		.html('<a href="/docs/caddyfile/response-matchers#status" style="color: inherit;" title="Response matcher">status</a>')
+	window.$('pre.chroma .k:contains("header")')
+		.html('<a href="/docs/caddyfile/response-matchers#header" style="color: inherit;" title="Response matcher">header</a>')
 });
 </script>
 
@@ -16,16 +22,13 @@ Encodes responses using the configured encoding(s). A typical use for encoding i
 ## Syntax
 
 ```caddy-d
-encode [<matcher>] <formats...> {
+encode [<matcher>] [<formats...>] {
 	# encoding formats
 	gzip [<level>]
-	zstd
+	zstd [<level>]
 	
 	minimum_length <length>
 
-	# response matcher single line syntax
-	match [header <field> [<value>]] | [status <code...>]
-	# or response matcher block for multiple conditions
 	match {
 		status <code...>
 		header <field> [<value>]
@@ -33,15 +36,15 @@ encode [<matcher>] <formats...> {
 }
 ```
 
-- **&lt;formats...&gt;** is the list of encoding formats to enable. If multiple encodings are enabled, the encoding is chosen based the request's Accept-Encoding header; if the client has no strong preference (q-factor), then the first supported encoding is used.
+- **&lt;formats...&gt;** is the list of encoding formats to enable. If multiple encodings are enabled, the encoding is chosen based the request's Accept-Encoding header; if the client has no strong preference (q-factor), then the first supported encoding is used. If omitted, `zstd` (preferred) and `gzip` are enabled by default.
 
-- **gzip** <span id="gzip"/> enables Gzip compression, optionally at the specified level.
+- **gzip** <span id="gzip"/> enables Gzip compression, optionally at a specified level.
 
-- **zstd** <span id="zstd"/> enables Zstandard compression.
+- **zstd** <span id="zstd"/> enables Zstandard compression, optionally at a specified level (possible values = default, fastest, better, best). The default compression level is roughly equivalent to the default Zstandard mode (level 3). 
 
 - **minimum_length** <span id="minimum_length"/> the minimum number of bytes a response should have to be encoded (default: 512).
 
-- **match** <span id="match"/> is a [response matcher](#response-matcher). Only matching responses are encoded. The default looks like this:
+- **match** <span id="match"/> is a [response matcher](/docs/caddyfile/response-matchers). Only matching responses are encoded. The default looks like this:
 
   ```caddy-d
   match {
@@ -82,27 +85,6 @@ encode [<matcher>] <formats...> {
   ```
 
 
-## Response matcher
-
-**Response matchers** can be used to filter (or classify) responses by specific criteria.
-
-
-### status
-
-```caddy-d
-status <code...>
-```
-
-By HTTP status code.
-
-- **&lt;code...&gt;** is a list of HTTP status codes. Special cases are `2xx`, `3xx`, ... which match against all status codes in the range of 200-299, 300-399, ... respectively
-
-
-### header
-
-See the [header](/docs/caddyfile/matchers#header) request matcher for the supported syntax.
-
-
 ## Examples
 
 Enable Gzip compression:
@@ -117,12 +99,18 @@ Enable Zstandard and Gzip compression (with Zstandard implicitly preferred, sinc
 encode zstd gzip
 ```
 
+As this is the default value, the previous configuration is strictly equivalent to:
+
+```caddy-d
+encode
+```
+
 And in a full site, compressing static files served by [`file_server`](file_server):
 
 ```caddy
 example.com {
 	root * /srv
-	encode zstd gzip
+	encode
 	file_server
 }
 ```

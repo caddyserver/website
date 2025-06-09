@@ -37,3 +37,21 @@ example.com {
 	}
 }
 ```
+
+Display in the logs, which reverse proxy upstream was effectively used (either `node1`, `node2` or `node3`) and
+the time spent proxying to the upstream in milliseconds as well as how long it took the proxy upstream to write the response header:
+
+```caddy
+example.com {
+	log
+
+	handle {
+		reverse_proxy node1:80 node2:80 node3:80 {
+			lb_policy random_choose 2 
+		}
+		log_append upstream_host {rp.upstream.host}
+		log_append upstream_duration_ms {rp.upstream.duration_ms}
+		log_append upstream_latency_ms {rp.upstream.latency_ms}
+	}
+}
+```

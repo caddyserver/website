@@ -142,3 +142,48 @@ h3 {
 		grid: auto / 1fr 2fr 1fr;
 	}
 }
+
+
+@media print {
+	body {
+		font-size: 14px;
+		background-color: white;
+	}
+
+	.diagonal,
+	.diagonal > * {
+		transform: none !important;
+	}
+
+	.topbar {
+		display: none;
+	}
+
+	.feature-list {
+		margin: 25px 0;
+	}
+
+	.feature-row {
+		padding: .5em;
+		gap: 1em;
+	}
+
+	.feature-row .benefits {
+		color: inherit;
+	}
+	
+	p + h3 {
+		margin-top: 2em;
+	}
+
+	section {
+		background: white !important;
+		color: inherit !important;
+		padding: 25px 0;
+	}
+
+	.diagonal {
+		padding: 25px 0;
+		margin: 25px 0;
+	}
+}

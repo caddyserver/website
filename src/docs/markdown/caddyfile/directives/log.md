@@ -59,7 +59,7 @@ To add custom fields to the log entries, use the [`log_append` directive](log_ap
   - [append](#append)
 - [Examples](#examples)
 
-Since Caddy v2.5, by default, headers with potentially sensitive information (`Cookie`, `Set-Cookie`, `Authorization` and `Proxy-Authorization`) will be logged with empty values. This behaviour can be disabled with the [`log_credentials`](/docs/caddyfile/options#log-credentials) global server option.
+By default, headers with potentially sensitive information (`Cookie`, `Set-Cookie`, `Authorization` and `Proxy-Authorization`) will be logged as `REDACTED` in access logs. This behaviour can be disabled with the [`log_credentials`](/docs/caddyfile/options#log-credentials) global server option.
 
 
 ## Syntax
@@ -67,29 +67,34 @@ Since Caddy v2.5, by default, headers with potentially sensitive information (`C
 ```caddy-d
 log [<logger_name>] {
 	hostnames <hostnames...>
+	no_hostname
 	output <writer_module> ...
 	format <encoder_module> ...
 	level  <level>
 }
 ```
 
-- **logger_name** is an optional override of the logger name for this site.
+- **logger_name** <span id="logger_name"/> is an optional override of the logger name for this site.
 
   By default, a logger name is generated automatically, e.g. `log0`, `log1`, and so on depending on the order of the sites in the Caddyfile. This is only useful if you wish to reliably refer to the output of this logger from another logger defined in global options. See [an example](#multiple-outputs) below.
 
-- **hostnames** is an optional override of the hostnames that this logger applies to.
+- **hostnames** <span id="hostnames"/> is an optional override of the hostnames that this logger applies to.
 
   By default, the logger applies to the hostnames of the site block it appears in, i.e. the site addresses. This is useful if you wish to define different loggers per subdomain in a [wildcard site block](/docs/caddyfile/patterns#wildcard-certificates). See [an example](#wildcard-logs) below.
 
-- **output** configures where to write the logs. See [`output` modules](#output-modules) below.
+- **no_hostname** <span id="no_hostname"/> prevents the logger from being associated with any of the site block's hostnames. By default, the logger is associated with the [site address](/docs/caddyfile/concepts#addresses) that the `log` directive appears in.
+
+  This is useful when you want to log requests to different files based on some condition, such as the request path or method, using the [`log_name` directive](/docs/caddyfile/directives/log_name).
+
+- **output** <span id="output"/> configures where to write the logs. See [`output` modules](#output-modules) below.
 
   Default: `stderr`.
 
-- **format** describes how to encode, or format, the logs. See [`format` modules](#format-modules) below.
+- **format** <span id="format"/> describes how to encode, or format, the logs. See [`format` modules](#format-modules) below.
 
   Default: `console` if `stderr` is detected to be a terminal, `json` otherwise.
 
-- **level** is the minimum entry level to log. Default: `INFO`.
+- **level** <span id="level"/> is the minimum entry level to log. Default: `INFO`.
 
   Note that access logs currently only emit `INFO` and `ERROR` level logs.
 
@@ -150,9 +155,7 @@ output file <filename> {
 
 - **&lt;filename&gt;** is the path to the log file.
 
-- **mode** is the file mode octal value as specified with the unix `chmod` command. For example `0600` would set the mode to `rw-,---,---`, while `0640` would set the mode to `rw-,r--,---`.
-
-  Default: `0600`
+- **mode** is the Unix file mode/permissions to use for the log file. The mode consists of between 1 and 4 octal digits (same as the numeric format accepted by the Unix [chmod <img src="/old/resources/images/external-link.svg" class="external-link">](https://en.wikipedia.org/wiki/Chmod) command, except that an all-zero mode is interpreted as the default mode `600`). For example: `0600` would set the mode to `rw-,---,---` (read/write access to the log file's owner, and no access to anyone else); `0640` would set the mode to `rw-,r--,---` (read/write access to file's owner, only read access to the group); `644` sets the mode to `rw-,r--,r--` provides read/write access to the log file's owner, but only read access to the group owner and other users.
 
 - **roll_disabled** disables log rolling. This can lead to disk space depletion, so only use this if your log files are maintained some other way.
 
@@ -173,7 +176,6 @@ output file <filename> {
   Default: `10`
 
 - **roll_keep_for** is how long to keep rolled files as a [duration string](/docs/conventions#durations). The current implementation supports day resolution; fractional values are rounded up to the next whole day. For example, `36h` (1.5 days) is rounded up to `48h` (2 days). Default: `2160h` (90 days)
-
 
 #### net
 
@@ -263,8 +265,9 @@ format <encoder_module> {
   Default: `seconds`.
   
   May be one of:
-  - `seconds` Floating-point number of seconds elapsed.
-  - `nano` Integer number of nanoseconds elapsed.
+  - `s`, `second` or `seconds` Floating-point number of seconds elapsed.
+  - `ms`, `milli` or `millis` Floating-point number of milliseconds elapsed.
+  - `ns`, `nano` or `nanos` Integer number of nanoseconds elapsed.
   - `string` Using Go's built-in string format, for example `1m32.05s` or `6.31ms`.
 
 - **level_format** The format for levels.

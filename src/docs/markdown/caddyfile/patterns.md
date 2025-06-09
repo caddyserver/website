@@ -66,7 +66,7 @@ With a PHP FastCGI service running, something like this works for most modern PH
 ```caddy
 example.com {
 	root * /srv/public
-	encode gzip
+	encode
 	php_fastcgi localhost:9000
 	file_server
 }
@@ -217,7 +217,7 @@ A typical SPA config usually looks something like this:
 ```caddy
 example.com {
 	root * /srv
-	encode gzip
+	encode
 	try_files {path} /index.html
 	file_server
 }
@@ -227,7 +227,7 @@ If your SPA is coupled with an API or other server-side-only endpoints, you will
 
 ```caddy
 example.com {
-	encode gzip
+	encode
 
 	handle /api/* {
 		reverse_proxy backend:8000
@@ -238,6 +238,15 @@ example.com {
 		try_files {path} /index.html
 		file_server
 	}
+}
+```
+
+If your `index.html` contains references to your JS/CSS assets with hashed filenames, you may want to consider adding a `Cache-Control` header to instruct clients to _not_ cache it (so that if the assets change, browsers fetch the new ones). Since the `try_files` rewrite is used to serve your `index.html` from any path that doesn't match another file on disk, you can wrap the `try_files` with a `route` so that the `header` handler runs _after_ the rewrite (it normally would run before due to the [directive order](/docs/caddyfile/directives#directive-order)):
+
+```caddy-d
+route {
+	try_files {path} /index.html
+	header /index.html Cache-Control "public, max-age=0, must-revalidate"
 }
 ```
 

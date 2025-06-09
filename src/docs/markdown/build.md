@@ -102,7 +102,7 @@ Make sure to replace `<version>` with the latest version of Caddy to start.
 
 Note the second `FROM` instruction — this produces a much smaller image by simply overlaying the newly-built binary on top of the regular `caddy` image.
 
-The builder uses `xcaddy` to Caddy with the provided modules, similar to the process [outlined above](#xcaddy).
+The builder uses `xcaddy` to build Caddy with the provided modules, similar to the process [outlined above](#xcaddy).
 
 To use Docker Compose, see our recommended [`compose.yml`](/docs/running#docker-compose) and usage instructions.
 

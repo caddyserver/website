@@ -17,19 +17,27 @@ If using a Caddyfile, enable metrics [in global options](/docs/caddyfile/options
 
 ```caddy
 {
-    servers {
-        metrics
-    }
+	metrics
 }
 ```
 
 If using JSON, add `"metrics": {}` to your [`apps > http > servers` configuration](/docs/json/apps/http/servers/).
 
+To add per-host metrics you can insert the `per_host` option. Host specific metrics will now have a Host tag.
+
+```caddy
+{
+	metrics {
+		per_host
+	}
+}
+```
+
 ## Prometheus
 
 [Prometheus](https://prometheus.io) is a monitoring platform that collects
 metrics from monitored targets by scraping metrics HTTP endpoints on these
-targets. As well as helping you to display metrics with a dashboarding tool like [Grafana](https://grafana.com/docs/grafana/latest/getting-started/what-is-grafana/), Prometheus is also used for [alerting](https://prometheus.io/docs/alerting/latest/overview/).
+targets. As well as helping you to display metrics with a dashboarding tool like [Grafana](https://grafana.com/docs/grafana/latest/introduction/), Prometheus is also used for [alerting](https://prometheus.io/docs/alerting/latest/overview/).
 
 Like Caddy, Prometheus is written in Go and distributed as a single binary. To
 install it, see the [Prometheus Installation docs](https://prometheus.io/docs/prometheus/latest/installation/),

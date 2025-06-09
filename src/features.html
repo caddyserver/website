@@ -537,7 +537,7 @@
 						<div class="feature-row">
 							<h4>Revocation handling</h4>
 							<div class="benefits">
-								Revoked certificates automatically get replaced. Because Caddy staples and refreshes OCSP responses, it can detect if your certificate has been revoked, and if so, it will replace i
+								Revoked certificates automatically get replaced. Because Caddy staples and refreshes OCSP responses, it can detect if your certificate has been revoked, and if so, it will replace it with a fresh certificate.
 							</div>
 						</div>
 						<div class="feature-row">
@@ -706,6 +706,16 @@
 								<li>Smallest</li>
 								<li>CommonName of root</li>
 								<li>CommonName of any</li>
+							</ul>
+						</div>
+						<div class="feature-row">
+							<h4>Renewal scheduling</h4>
+							<div class="benefits">
+								Caddy chooses conservative timeframes to renew certificates, and also takes guidance from the ACME CA if it provides ACME Renewal Information (ARI).
+							</div>
+							<ul class="detail">
+								<li>Internal</li>
+								<li>ARI</li>
 							</ul>
 						</div>
 					</div>
@@ -1505,9 +1515,9 @@
 								If your deployment pipeline compresses site resources, Caddy can automatically detect them and serve them in their "precompressed" encoding for higher efficiency and greater throughput.
 							</div>
 							<ul class="detail">
-								<li>Gzip</li>
 								<li>Brotli</li>
 								<li>Zstandard</li>
+								<li>Gzip</li>
 							</ul>
 						</div>
 						<div class="feature-row">

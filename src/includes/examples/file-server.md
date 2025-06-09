@@ -38,7 +38,7 @@ root * /var/www
 
 # Serve precompressed files if present
 file_server /downloads/* {
-	precompressed gzip zstd br
+	precompressed
 }
 
 # Compress everything else that would benefit

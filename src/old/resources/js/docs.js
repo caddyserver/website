@@ -55,6 +55,9 @@ $(function() {
 			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
 			$(item).html('<a href="/docs/caddyfile/matchers#syntax" style="color: inherit;" title="Matcher token">' + text + '</a>');
 		});
+
+	// Wrap all tables in a div so we can apply overflow-x: scroll
+	$('table').wrap('<div class="table-wrapper"></div>');
 });
 
 // addLinkaddLinksToSubdirectivessToAnchors finds all the ID anchors

@@ -386,5 +386,35 @@
 		"picture": "https://pbs.twimg.com/profile_images/675305310056259586/JFaKTdR9_400x400.jpg",
 		"quote": "I was quickly able to run the app on @Hetzner_Online! One thing I used to provision SSL was @caddyserver's #certmagic. Yes, It's magic ✨.",
 		"link": "https://twitter.com/paganotoni/status/1757042179535503784"
+	},
+	{
+		"username": "2RM60Z",
+		"picture": "https://styles.redditmedia.com/t5_n97t9/styles/profileIcon_snoo-nftv2_bmZ0X2VpcDE1NToxMzdfYzhkM2EzYTgzYmRlNWRhZDA2ZDQzNjY5NGUzZTIyYWMzZTY0ZDU3N180OTI5Nzcw_rare_4ab84a19-b119-4455-8cff-563873a71268-headshot.png?width=64&height=64&frame=1&auto=webp&crop=64:64,smart&s=28f2fdbbce5b1d946e43dd36cecf8d594dbcff2e",
+		"quote": "I switched [to Caddy] about a month ago. It really is so much more easy. Most of the things you mention are done by default and do not need any configuration whatsoever.",
+		"link": "https://www.reddit.com/r/selfhosted/comments/1aepuvr/comment/kk9vayt/"
+	},
+	{
+		"username": "that_czech_dude",
+		"quote": "Caddy is, IMHO, the future. It's got all batteries includes and when it's going to get k8s ingress parity with nginx, or anything similar to nginx-proxy-manager, it will be unstoppable. You can literally leave Caddy running for years and just update it with package manager and not worry about TLS certs anymore. That stability is not guaranteed with certbot, it's just yet another daemon service you need to take care of and it broke for me multiple times. Much love to mholt and his team.",
+		"link": "https://www.reddit.com/r/linuxadmin/comments/1aepv6g/comment/kkb46kz/"
+	},
+	{
+		"username": "prairievoice",
+		"picture": "https://styles.redditmedia.com/t5_uekn0/styles/profileIcon_6epo2g1awjhc1.jpg?width=64&height=64&frame=1&auto=webp&crop=64:64,smart&s=c6caa42b862fd43c6a9e2bc8105ba5ccd468bff0",
+		"quote": "I've been migrating everything to Caddy. Its absolutely fantastic.",
+		"link": "https://www.reddit.com/r/linuxadmin/comments/1aepv6g/comment/ko82ejk/"
+	},
+	{
+		"username": "-quakeguy-",
+		"picture": "https://styles.redditmedia.com/t5_j3yov/styles/profileIcon_snoo247a5811-9e53-46df-b68e-4c00e9e38eed-headshot.png?width=64&height=64&frame=1&auto=webp&crop=64:64,smart&s=f94656080d5924377a7bcabacf6adb5045dd24cd",
+		"quote": "I really love how the entirety of caddy config for a single site is usually a grand total of 2-3 lines and that's it. Theres a lot to be said about sane defaults that are always there, but out of the way of cluttering your config.",
+		"link": "https://www.reddit.com/r/linuxadmin/comments/1aepv6g/comment/kobjm4b/"
+	},
+	{
+		"name": "Max Kovalevskii",
+		"username": "@maxoidIO",
+		"picture": "https://pbs.twimg.com/profile_images/1743317837135884288/LGlh3GTp_400x400.jpg",
+		"quote": "Website is live! 🤯 I didn't expect it to be SO fast to up website with @caddyserver. Doing the same with apache/nginx before feels like a nightmare...",
+		"link": "https://twitter.com/maxoidIO/status/1768652388297252881"
 	}
 ]

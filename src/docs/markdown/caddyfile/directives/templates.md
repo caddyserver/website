@@ -54,6 +54,6 @@ To serve a simple static response using a template, make sure to set `Content-Ty
 example.com {
 	header Content-Type text/plain
 	templates
-	respond "Current year is: {{printf "{{"}}now | date "2006"{{printf "}}"}}"
+	respond `Current year is: {{printf "{{"}}now | date "2006"{{printf "}}"}}`
 }
 ```

@@ -76,6 +76,9 @@ Possible options are (click on each option to jump to its documentation):
 	}
 	grace_period   <duration>
 	shutdown_delay <duration>
+	metrics {
+		per_host
+	}
 
 	# TLS Options
 	auto_https off|disable_redirects|ignore_loaded_certs|disable_certs
@@ -91,14 +94,18 @@ Possible options are (click on each option to jump to its documentation):
 		mac_key <mac_key>
 	}
 	acme_dns <provider> ...
+	dns <provider> ...
+	ech <public_names...> {
+		dns <provider> ...
+	}
 	on_demand_tls {
-		ask      <endpoint>
-		interval <duration>
-		burst    <n>
+		ask        <endpoint>
+		permission <module>
 	}
 	key_type ed25519|p256|p384|rsa2048|rsa4096
 	cert_issuer <name> ...
 	renew_interval <duration>
+	cert_lifetime  <duration>
 	ocsp_interval  <duration>
 	ocsp_stapling off
 	preferred_chains [smallest] {
@@ -121,7 +128,7 @@ Possible options are (click on each option to jump to its documentation):
 		keepalive_interval <duration>
 		trusted_proxies <module> ...
 		client_ip_headers <headers...>
-		metrics
+		trace
 		max_header_size <size>
 		enable_full_duplex
 		log_credentials
@@ -328,7 +335,7 @@ The name can be passed to indicate a specific logger for which to customize the 
 
 Multiple loggers with different names can be configured by using the `log` multiple times. 
 
-The differs from the [`log` directive](/docs/caddyfile/directives/log), which only configures HTTP request logging (also known as access logs). The `log` global option shares its configuration structure with the directive (except for `include` and `exclude`), and complete documentation can be found on the directive's page.
+This differs from the [`log` directive](/docs/caddyfile/directives/log), which only configures HTTP request logging (also known as access logs). The `log` global option shares its configuration structure with the directive (except for `include` and `exclude`), and complete documentation can be found on the directive's page.
 
 - **output** configures where to write the logs.
 
@@ -548,6 +555,49 @@ The tokens following the name of the provider set up the provider the same as if
 ```
 
 
+##### `dns`
+Configures a default DNS provider to use when none other is specified locally in a relevant context. For example, if the ACME DNS challenge is enabled but does not have a DNS provider configured, this global default will be used. It is also applied for publishing Encrypted ClientHello (ECH) configs.
+
+Your Caddy binary must be compiled with the specified DNS provider module for this to work.
+
+Example, using credentials from an environment variable:
+
+```caddy
+{
+	dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+}
+```
+
+(Requires Caddy 2.10 beta 1 or newer.)
+
+
+##### `ech`
+Enables Encrypted ClientHello (ECH) by using the specified public domain name(s) as the plaintext server name (SNI) in TLS handshakes. Given the right conditions, ECH can help protect the domain names of your sites on the wire during connections. Caddy will generate and publish one ECH config for each public name specified. Publication is how compatible clients (such as properly-configured modern browsers) know to use ECH to access your sites.
+
+In order to work properly, the ECH config(s) must be published in a way that clients expect. Most browsers (with DNS-over-HTTPS or DNS-over-TLS enabled) expect ECH configs to be published to HTTPS-type DNS records. Caddy does this kind of publication automatically, but you have to specify a DNS provider either with the `dns` sub-option, or globally with the [`dns` global option](#dns), and your Caddy binary must be built with the specified DNS provider module. (Custom builds are available on our [download page](/download).)
+
+**Privacy notices:**
+
+- It is generally advisable to **maximize the size of your [_anonymity set_](https://www.ietf.org/archive/id/draft-ietf-tls-esni-23.html#name-introduction)**. As such, we typically recommend that most users configure _only one_ public domain name to protect all your sites.
+- **Your server should be authoritative for the public domain name(s) you specify** (i.e. they should point to your server) because Caddy will obtain a certificate for them. These certificates are vital to help spec-conforming clients connect reliably and safely with ECH in some cases. They are only used to faciliate a proper ECH handshake, not used for application data (your sites -- unless you define a site that is the same as your public domain name).
+- Every circumstance may be different. We recommend consulting experts to **review your threat model** if the stakes are high, as ECH is not a one-size-fits-all solution.
+
+Example using credentials from an environment variable for publication to nameservers parked at Cloudflare:
+
+```caddy
+{
+	dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+	ech ech.example.net
+}
+```
+
+This should cause compatible clients to load all your sites with `ech.example.net`, rather than the individual site names exposed in plaintext.
+
+Successful publication requires that your site's domains are parked at the configured DNS provider and the records can be modified with the given credentials / provider configuration.
+
+(Requires Caddy 2.10 beta 1 or newer.)
+
+
 ##### `on_demand_tls`
 Configures [On-Demand TLS](/docs/automatic-https#on-demand-tls) where it is enabled, but does not enable it (to enable it, use the [`on_demand` subdirective of the `tls` directive](/docs/caddyfile/directives/tls#syntax)). Required for use in production environments, to prevent abuse.
 
@@ -563,7 +613,9 @@ The ask endpoint should return _as fast as possible_, in a few milliseconds, ide
 
 </aside>
 
-- **interval** and **burst** allows `<n>` certificate operations within `<duration>` interval. These are deprecated and will be removed in a future version, due to not working as intended.
+- **permission** allows custom modules to be used to determine whether a certificate should be issued for a particular name. The module must implement the [`caddytls.OnDemandPermission` interface](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddytls#OnDemandPermission). An `http` permission module is included, which is what the `ask` option uses, and remains as a shortcut for backwards compatibility.
+
+- ⚠️ **interval** and **burst** rate limiting options were available, but are NOT recommended. Remove them from your config if you still have them.
 
 ```caddy
 {
@@ -619,6 +671,22 @@ Default: `10m`
 ```caddy
 {
 	renew_interval 30m
+}
+```
+
+
+##### `cert_lifetime`
+The validity period to ask the CA to issue a certificate for. 
+
+This value is used to compute the `notAfter` field of the ACME order; therefore the system must have a reasonably synchronized clock. NOTE: Not all CAs support this. Check with your CA's ACME documentation to see if this is allowed and what values may be used. 
+
+Default: `0` (CA chooses lifetime, usually 90 days)
+
+⚠️ This is an experimental feature. Subject to change or removal.
+
+```caddy
+{
+	cert_lifetime 30d
 }
 ```
 
@@ -768,9 +836,13 @@ http:// {
 
 Allows configuring [listener wrappers](/docs/json/apps/http/servers/listener_wrappers/), which can modify the behaviour of the socket listener. They are applied in the given order.
 
-There is a special no-op [`tls`](/docs/json/apps/http/servers/listener_wrappers/tls/) listener wrapper provided as a standard module which marks where TLS should be handled in the chain of listener wrappers. It should only be used if another listener wrapper must be placed in front of the TLS handshake. This _does not_ enable TLS for a server; e.g. if this is used on your `:80` HTTP server, it will still act as a no-op.
+###### `tls`
 
-The included [`http_redirect`](/docs/json/apps/http/servers/listener_wrappers/http_redirect/) listener wrapper can look at the first few bytes of an incoming request to determine if it's likely HTTP (instead of TLS), and trigger an HTTP-to-HTTPS redirect on the same port but using the `https://` scheme. This is most useful when serving HTTPS on a non-standard port (other than `443`), since browsers will try HTTP unless the scheme is specified. Don't use this on an HTTP server. It must be placed _before_ the `tls` listener wrapper. For example:
+The `tls` listener wrapper is a no-op listener wrapper that marks where the TLS listener should be in a chain of listener wrappers. It should only be used if another listener wrapper must be placed in front of the TLS handshake.
+
+###### `http_redirect`
+
+The [`http_redirect`](/docs/json/apps/http/servers/listener_wrappers/http_redirect/) provides HTTP->HTTPS redirects for connections that come on the TLS port as an HTTP request, by detecting using the first few bytes that it's not a TLS handshake, but instead an HTTP request. This is most useful when serving HTTPS on a non-standard port (other than `443`), since browsers will try HTTP unless the scheme is specified. It must be placed _before_ the `tls` listener wrapper. Here's an example:
 
 ```caddy
 {
@@ -783,7 +855,34 @@ The included [`http_redirect`](/docs/json/apps/http/servers/listener_wrappers/ht
 }
 ```
 
-Also included is the [`proxy_protocol`](/docs/json/apps/http/servers/listener_wrappers/proxy_protocol/) listener wrapper (prior to v2.7.0 it was only available via a plugin), which enables [PROXY protocol](https://github.com/haproxy/haproxy/blob/master/doc/proxy-protocol.txt) parsing (popularized by HAProxy). This must be used _before_ the `tls` listener wrapper since it parses plaintext data at the start of the connection:
+###### `proxy_protocol`
+
+The [`proxy_protocol`](/docs/json/apps/http/servers/listener_wrappers/proxy_protocol/) listener wrapper (prior to v2.7.0 it was only available via a plugin) enables [PROXY protocol](https://github.com/haproxy/haproxy/blob/master/doc/proxy-protocol.txt) parsing (popularized by HAProxy). This must be used _before_ the `tls` listener wrapper since it parses plaintext data at the start of the connection:
+
+```caddy-d
+proxy_protocol {
+	timeout <duration>
+	allow <cidrs...>
+	deny <cidrs...>
+	fallback_policy <policy>
+}
+```
+
+- **timeout** specifies the maximum duration to wait for the PROXY header. Defaults to `5s`.
+
+- **allow** is a list of CIDR ranges of trusted sources to receive PROXY headers. Unix sockets are trusted by default and not part of this option.
+
+- **deny** is a list of CIDR ranges of trusted sources to reject PROXY headers from.
+
+- **fallback_policy** is the action to take if the PROXY header comes from an address that not in either list of allow/deny. The default fallback policy is `ignore`. Accepted values of `fallback_policy` are:
+	- `ignore`: address from PROXY header, but accept connection
+	- `use`: address from PROXY header
+	- `reject`: connection when PROXY header is sent
+	- `require`: connection to send PROXY header, reject if not present
+	- `skip`: accepts a connection without requiring the PROXY header.
+
+
+For example, for an HTTPS server (needing the `tls` listener wrapper) that accepts PROXY headers from a specific range of IP addresses, and rejects PROXY headers from a different range, with a timeout of 2 seconds:
 
 ```caddy
 {
@@ -792,6 +891,8 @@ Also included is the [`proxy_protocol`](/docs/json/apps/http/servers/listener_wr
 			proxy_protocol {
 				timeout 2s
 				allow 192.168.86.1/24 192.168.86.1/24
+				deny 10.0.0.0/8
+				fallback_policy reject
 			}
 			tls
 		}
@@ -913,8 +1014,32 @@ Enables Prometheus metrics collection; necessary before scraping metrics. Note t
 
 ```caddy
 {
+	metrics
+}
+```
+
+You can add the `per_host` option to label metrics with the host name of the metric.
+
+```caddy
+{
+	metrics {
+		per_host
+	}
+}
+```
+
+##### `trace`
+
+Log each individual handler that is invoked. Requires that the log emit at `DEBUG` level ( You may do so with the [`debug` global option](#debug)).
+
+NOTE: This may log the configuration of your HTTP handler modules; do not enable this in insecure contexts when there is sensitive data in the configuration.
+
+⚠️ This is an experimental feature. Subject to change or removal.
+
+```caddy
+{
 	servers {
-		metrics
+		trace
 	}
 }
 ```
@@ -956,7 +1081,7 @@ Test thoroughly with your HTTP clients, as some older clients may not support fu
 
 ##### `log_credentials`
 
-Since Caddy v2.5, by default, headers with potentially sensitive information (`Cookie`, `Set-Cookie`, `Authorization` and `Proxy-Authorization`) will be logged with empty values in access logs (see the [`log` directive](/docs/caddyfile/directives/log)).
+By default, access logs (enabled with the [`log` directive](/docs/caddyfile/directives/log)) with headers that contain potentially sensitive information (`Cookie`, `Set-Cookie`, `Authorization` and `Proxy-Authorization`) will be logged as `REDACTED`.
 
 If you wish to _not_ have these headers redacted, you may enable the `log_credentials` option.
 

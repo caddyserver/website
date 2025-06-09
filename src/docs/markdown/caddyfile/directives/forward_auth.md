@@ -35,7 +35,7 @@ An opinionated directive which proxies a clone of the request to an authenticati
   - [Authelia](#authelia)
   - [Tailscale](#tailscale)
 
-Caddy's [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy) is capable of performing "pre-check requests" to an external service, but this directive is tailored specifically for the authentication usecase. This directive is actually just a convenient way to use a longer, more common configuration (below).
+Caddy's [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy) is capable of performing "pre-check requests" to an external service, but this directive is tailored specifically for the authentication use case. This directive is actually just a convenient way to use a longer, more common configuration (below).
 
 This directive makes a `GET` request to the configured upstream with the `uri` rewritten:
 - If the upstream responds with a `2xx` status code, then access is granted and the header fields in `copy_headers` are copied to the original request, and handling continues.
@@ -94,11 +94,9 @@ reverse_proxy <upstreams...> {
 	# On a successful response, copy response headers
 	@good status 2xx
 	handle_response @good {
-		request_header {
-			# for example, for each copy_headers field...
-			Remote-User {rp.header.Remote-User}
-			Remote-Email {rp.header.Remote-Email}
-		}
+		# for example, for each copy_headers field...
+		request_header Remote-User {rp.header.Remote-User}
+		request_header Remote-Email {rp.header.Remote-Email}
 	}
 }
 ```
@@ -120,7 +118,7 @@ auth.example.com {
 # Serve your app
 app1.example.com {
 	forward_auth authelia:9091 {
-		uri /api/verify?rd=https://auth.example.com
+		uri /api/authz/forward-auth
 		copy_headers Remote-User Remote-Groups Remote-Name Remote-Email
 	}
 

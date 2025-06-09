@@ -264,7 +264,7 @@ main nav li ul {
 
 
 article {
-	font-family: 'Albert Sans', system-ui; /* considered: Figtree, Asisstant, Red Hat Text, Be Vietnam Pro
+	font-family: 'Albert Sans', system-ui; /* considered: Figtree, Assistant, Red Hat Text, Be Vietnam Pro */
 	font-size: 20px;
 	word-wrap: break-word;
 
@@ -587,8 +587,14 @@ table {
 	font-size: 16px;
 }
 
-article > table {
-	margin: 25px auto;
+article > .table-wrapper {
+	overflow-x: auto;
+	margin: 25px 0 0 0;
+	padding: 0;
+}
+
+article table {
+	margin: 0 auto 25px auto;
 }
 
 th, td {
