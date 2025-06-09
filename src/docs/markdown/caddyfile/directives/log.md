@@ -134,6 +134,13 @@ A file. By default, log files are rotated ("rolled") to prevent disk space exhau
 
 Log rolling is provided by [lumberjack <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/natefinch/lumberjack)
 
+<aside class="tip">
+
+**A note about reloading log file options:** A server restart is required to apply configuration changes to a given output file.
+The changes will not be applied at server reload time, unless you add a new log filename.
+
+</aside>
+
 ```caddy-d
 output file <filename> {
 	mode          <mode>
@@ -148,9 +155,7 @@ output file <filename> {
 
 - **&lt;filename&gt;** is the path to the log file.
 
-- **mode** is the Unix file mode/permissions to use for the log file. The mode consists of between 1 and 4 octal digits (same as the numeric format accepted by the Unix [chmod <img src="/old/resources/images/external-link.svg" class="external-link">](https://en.wikipedia.org/wiki/Chmod) command, except that an all-zero mode is interpreted as the default mode `600`). For example, `644` provides read/write access to the log file's owner, but only read access to the group owner and other users; `600` provides read/write access to the log file's owner, and no access to anyone else.
-
-  Default: `600`
+- **mode** is the Unix file mode/permissions to use for the log file. The mode consists of between 1 and 4 octal digits (same as the numeric format accepted by the Unix [chmod <img src="/old/resources/images/external-link.svg" class="external-link">](https://en.wikipedia.org/wiki/Chmod) command, except that an all-zero mode is interpreted as the default mode `600`). For example: `0600` would set the mode to `rw-,---,---` (read/write access to the log file's owner, and no access to anyone else); `0640` would set the mode to `rw-,r--,---` (read/write access to file's owner, only read access to the group); `644` sets the mode to `rw-,r--,r--` provides read/write access to the log file's owner, but only read access to the group owner and other users.
 
 - **roll_disabled** disables log rolling. This can lead to disk space depletion, so only use this if your log files are maintained some other way.
 
