@@ -1028,6 +1028,8 @@ You can add the `per_host` option to label metrics with the host name of the met
 }
 ```
 
+Note that when you enable `per_host` metrics, Caddy will create `host` labels for _all_ requests that it receives, not just for host names that Caddy is configured to respond to. This means that an attacker can trivially add arbitrary and unlimited `host` labels to your metrics, simply by modifying the value of the `Host:` HTTP request header.
+
 ##### `trace`
 
 Log each individual handler that is invoked. Requires that the log emit at `DEBUG` level ( You may do so with the [`debug` global option](#debug)).
