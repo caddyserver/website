@@ -70,7 +70,7 @@ A full Caddyfile example, where `handle_path` and `handle` are mutually exclusiv
 
 	# Serve your static site
 	handle {
-		root * /srv
+		root * /var/www/html
 		file_server
 	}
 }
