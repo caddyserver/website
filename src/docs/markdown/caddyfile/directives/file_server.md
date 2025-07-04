@@ -37,12 +37,12 @@ file_server [<matcher>] [browse] {
 	index         <filenames...>
 	browse        [<template_file>] {
 		reveal_symlinks
+		sort <sort_field> [<direction>]
 	}
 	precompressed [<formats...>]
 	status        <status>
 	disable_canonical_uris
 	pass_thru
-	sort          <sort_field> [<direction>]
 }
 ```
 
