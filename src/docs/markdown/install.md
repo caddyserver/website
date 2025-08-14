@@ -87,17 +87,17 @@ If you wish to use the packaged support files (systemd services, bash completion
 
 This package comes with both of Caddy's [systemd service](/docs/running#linux-service) unit files, but does not enable them by default. Using the service is recommended. If you do, please read the [service usage instructions](/docs/running#using-the-service).
 
-Fedora or RHEL/CentOS 8 and later:
+Fedora:
 
-<pre><code class="cmd"><span class="bash">dnf install 'dnf-command(copr)'</span>
+<pre><code class="cmd"><span class="bash">dnf install dnf5-plugins</span>
 <span class="bash">dnf copr enable @caddy/caddy</span>
 <span class="bash">dnf install caddy</span></code></pre>
 
-RHEL/CentOS 7:
+CentOS/RHEL:
 
-<pre><code class="cmd"><span class="bash">yum install yum-plugin-copr</span>
-<span class="bash">yum copr enable @caddy/caddy</span>
-<span class="bash">yum install caddy</span></code></pre>
+<pre><code class="cmd"><span class="bash">dnf install dnf-plugins-core</span>
+<span class="bash">dnf copr enable @caddy/caddy</span>
+<span class="bash">dnf install caddy</span></code></pre>
 
 [**View the Caddy COPR**](https://copr.fedorainfracloud.org/coprs/g/caddy/caddy/)
 
