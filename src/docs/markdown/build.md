@@ -89,7 +89,9 @@ You can use the `:builder` image as a short-cut to building a new Caddy binary w
 ```Dockerfile
 FROM caddy:<version>-builder AS builder
 
-RUN xcaddy build \
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    xcaddy build \
     --with github.com/caddyserver/nginx-adapter \
     --with github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0
 
@@ -102,7 +104,7 @@ Make sure to replace `<version>` with the latest version of Caddy to start.
 
 Note the second `FROM` instruction — this produces a much smaller image by simply overlaying the newly-built binary on top of the regular `caddy` image.
 
-The builder uses `xcaddy` to build Caddy with the provided modules, similar to the process [outlined above](#xcaddy).
+The builder uses `xcaddy` to build Caddy with the provided modules, similar to the process [outlined above](#xcaddy). The `--mount=type=cache,target=/go/pkg/mod` and `--mount=type=cache,target=/root/.cache/go-build` options are used to cache the Go module dependencies and build artifacts, respectively, which speeds up subsequent builds. The flag is [a feature of Docker](https://docs.docker.com/build/cache/optimize/#use-cache-mounts), not of `xcaddy`.
 
 To use Docker Compose, see our recommended [`compose.yml`](/docs/running#docker-compose) and usage instructions.
 
