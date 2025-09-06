@@ -42,7 +42,7 @@ import <pattern> [<args...>] [{block}]
 
 ## Examples
 
-Import all files in an adjacent sites-enabled folder (except hidden files):
+Import all files in an adjacent sites-enabled folder. Starting with v2.6.3 (so any recent release), hidden files are automatically excluded. If you are using an older version, be aware of hidden lock files some editors create.:
 
 ```caddy-d
 import sites-enabled/*
