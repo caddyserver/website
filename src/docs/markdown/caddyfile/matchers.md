@@ -867,7 +867,7 @@ By the value of a variable in the request context, or the value of a placeholder
 
 The **&lt;variable&gt;** argument may be either a variable name or a placeholder in curly braces `{ }`. (Placeholders are not expanded in the first parameter.)
 
-This matcher is most useful when paired with the [`map` directive](/docs/caddyfile/directives/map) which sets outputs, or with plugins which set some information in the request context.
+This matcher is most useful when paired with the [`map` directive](/docs/caddyfile/directives/map) which sets outputs, with the [`vars` directive](/docs/caddyfile/directives/vars) within your routes, or with plugins which set some information in the request context.
 
 #### Example:
 
@@ -883,6 +883,20 @@ Match an arbitrary placeholder's value, i.e. the authenticated user's ID, either
 vars {http.auth.user.id} Bob Alice
 ```
 
+A complete example using the [`vars` directive](/docs/caddyfile/directives/vars) to set a variable, and then matching on it with the [`vars` matcher](#vars). Here we combine two request headers into one variable, and match on that variable:
+
+```caddy
+example.com {
+	vars combined_header "{header.Foo}_{header.Bar}"
+	@special vars {vars.combined_header} "123_456"
+	handle @special {
+		respond "You sent Foo=123 and Bar=456!"
+	}
+	handle {
+		respond "Foo and Bar were not special."
+	}
+}
+```
 
 
 ---
