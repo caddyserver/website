@@ -380,7 +380,7 @@ With ECH, it is now theoretically possible to keep subdomains secret/private fro
 
 Most sites do not need this, as, generally speaking, subdomains are public information. We advise against putting sensitive information in domain names. That said...
 
-To avoid leaking sensitive subdomains to Crtificate Transparency (CT) logs, use a wildcard certificate instead. In other words, instead of putting `sub.example.com` in your config, put `*.example.com`. (See [Wildcard certificates](#wildcard-certificates) for important information.)
+To avoid leaking sensitive subdomains to Certificate Transparency (CT) logs, use a wildcard certificate instead. In other words, instead of putting `sub.example.com` in your config, put `*.example.com`. (See [Wildcard certificates](#wildcard-certificates) for important information.)
 
 Then, enable ECH in Caddy. A wildcard certificate combined with ECH should properly hide subdomains, as long as every client that tries to connect to it uses ECH and has a strong implementation. (You are still at the mercy of clients to preserve privacy.)
 
