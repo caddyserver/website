@@ -551,7 +551,7 @@ transport http {
 	versions <versions...>
 	compression off
 	max_conns_per_host <count>
-	forward_proxy_url <url>
+	network_proxy <module>
 }
 ```
 
@@ -624,10 +624,9 @@ transport http {
 
 - **max_conns_per_host** <span id="max_conns_per_host"/> optionally limits the total number of connections per host, including connections in the dialing, active, and idle states. Default: No limit.
 
-- **forward_proxy_url** <span id="forward_proxy_url"/> specifies the URL of a server that the HTTP transport will use to proxy requests to the upstream server. By default, Caddy respects proxy configured via environment variables as per the [Go stdlib](https://pkg.go.dev/golang.org/x/net/http/httpproxy#FromEnvironment) like `HTTP_PROXY`. When a value is provided for this parameter, requests will flow through the reverse proxy in the following order:
-  - Client (users) 🡒 `reverse_proxy` 🡒 `forward_proxy_url` 🡒 upstream
-
-
+- **network_proxy** <span id="network_proxy"/> specifies the name of a network proxy module to use for requests to the upstream server. If not explicitly configured, Caddy respects proxy configured via environment variables as per the [Go stdlib](https://pkg.go.dev/golang.org/x/net/http/httpproxy#FromEnvironment), i.e. `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY`. When a value is provided for this parameter, requests will flow through the reverse proxy in the following order: Client (users) → `reverse_proxy` → `network_proxy` → upstream. Built-in modules are:
+	- `none`, which is used to ignore the environment settings of `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY`.
+	- `url <url>`, which is used to specify a single URL overriding the environment configuration.
 
 ### The `fastcgi` transport
 
