@@ -604,6 +604,8 @@ transport http {
 
 - **keepalive** <span id="keepalive"/> is either `off` or a [duration value](/docs/conventions#durations) that specifies how long to keep connections open (timeout). Default: `2m`.
 
+  ⚠️ Requests to HTTP/1.1 upstreams may fail due to "connection reset by peer" errors if the keepalive duration exceeds the upstream server's keepalive timeout. Idempotent requests will be retried by Go's HTTP transport, but Caddy will respond with status code 502 in other cases.
+
 - **keepalive_interval** <span id="keepalive_interval"/> is the [duration](/docs/conventions#durations) between liveness probes. Default: `30s`.
 
 - **keepalive_idle_conns** <span id="keepalive_idle_conns"/> defines the maximum number of connections to keep alive. Default: No limit.
