@@ -577,7 +577,7 @@ transport http {
 
 - **resolvers** <span id="resolvers"/> is a list of DNS resolvers to override system resolvers.
 
-- **tls** <span id="tls"/> uses HTTPS with the backend. This will be enabled automatically if you specify backends using the `https://` scheme or port `:443`, or if any of the below `tls_*` options are configured.
+- **tls** <span id="tls"/> uses HTTPS with the backend. This will be enabled automatically if you specify backends using the `https://` scheme, or if any of the below `tls_*` options are configured.
 
 - **tls_client_auth** <span id="tls_client_auth"/> enables TLS client authentication one of two ways: (1) by specifying a domain name for which Caddy should obtain a certificate and keep it renewed, or (2) by specifying a certificate and key file to present for TLS client authentication with the backend.
 
