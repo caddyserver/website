@@ -248,6 +248,7 @@ Formats or prettifies a Caddyfile, then exits. The result is printed to stdout u
 <pre><code class="cmd bash">caddy hash-password
 	[-p, --plaintext &lt;password&gt;]
 	[-a, --algorithm &lt;name&gt;]</code></pre>
+	[--bcrypt-cost &lt;cost&gt;]</code></pre>
 
 Convenient way to hash a plaintext password. The resulting hash is written to stdout as a format usable directly in your Caddy config.
 
@@ -255,7 +256,7 @@ Convenient way to hash a plaintext password. The resulting hash is written to st
 
 `--algorithm` may be `bcrypt` or any installed hash algorithm. Default is `bcrypt`.
 
-
+`--bcrypt-cost` is the hashing cost for bcrypt algorithm. Default is `14`.
 
 
 ### `caddy help`
