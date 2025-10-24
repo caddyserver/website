@@ -119,7 +119,7 @@ The `--flags` may have a single-letter shortcut like `-f`.
 
 Adapts a configuration to Caddy's native JSON config structure and writes the output to stdout, along with any warnings to stderr, then exits.
 
-`--config` is the path to the config file. If omitted, assumes `Caddyfile` in current directory if it exists; otherwise, this flag is required.
+`--config` is the path to the config file. If omitted, assumes `Caddyfile` in current directory if it exists; otherwise, this flag is required. If you wish to use stdin instead of a regular file, use - as the path.
 
 `--adapter` specifies the config adapter to use; default is `caddyfile`.
 
