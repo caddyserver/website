@@ -90,7 +90,7 @@ Placeholders are a similar idea to variables in other software. For example, [ng
 
 Placeholders are bounded on either side by curly braces `{ }` and contain the identifier inside, for example: `{foo.bar}`. The opening placeholder brace can be escaped `\{like.this}` to prevent replacement. Placeholder identifiers are typically namespaced with dots to avoid collisions across modules.
 
-Which placeholders are available depends on the context. Not all placeholders are available in all parts of the config. For example, [the HTTP app sets placeholders](/docs/json/apps/http/#docs) that are only available in areas of the config related to handling HTTP requests.
+Which placeholders are available depends on the context. Not all placeholders are available in all parts of the config. For example, [the HTTP app sets placeholders](/docs/json/apps/http/#docs) that are only available in areas of the config related to handling HTTP requests. When a request passes through the [reverse_proxy handler](/docs/json/apps/http/servers/routes/handle/reverse_proxy/#docs), the handler sets several proxy-specific placeholders. These placeholders may be referenced during proxying as well as afterwards, for example when setting response headers or enriching access logs.
 
 The following placeholders are always available (global):
 
