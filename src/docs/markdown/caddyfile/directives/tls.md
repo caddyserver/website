@@ -266,6 +266,42 @@ The `http` module obtains the trusted certificates from HTTP endpoints. The `end
   - `once` allows a remote server to request renegotiation once per connection.
   - `freely` allows a remote server to repeatedly request renegotiation.
 
+### Verifiers
+
+Client certificate verifier modules are executed after validating they are issued from a trusted certificate authority, if the `trust_pool` is configured. The one verifier, currently, shipped in standard Caddy is `leaf`.
+
+#### Leaf
+
+The `leaf` verifier checks if the client certificate is one of a defined set of permitted certificates. The certificate set is loaded using [loader](https://caddyserver.com/docs/modules/tls.client_auth.verifier.leaf#leaf_certs_loaders) modules.
+
+##### Loaders
+
+Standard Caddy distribution bundles 4 loaders, 3 of them are available in Caddyfile.
+
+###### File
+
+The `file` loader loads the set of certificates from specified PEM files.
+
+```caddy-d
+... file <pem_files...>
+```
+
+###### Folder
+
+The `folder` loader recursively traverses the named directories searching for PEM files to be loaded as accepted client certificates.
+
+```caddy-d
+... folder <folders...>
+```
+
+###### PEM
+
+The `pem` loader accepts certificates inlined in the Caddyfile in PEM format.
+
+```caddy-d
+... pem <pem_strings...>
+```
+
 ### Issuers
 
 These issuers come standard with the `tls` directive:
