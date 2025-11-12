@@ -46,5 +46,6 @@ tls.issuance | [`certmagic.Issuer`](https://pkg.go.dev/github.com/caddyserver/ce
 tls.leaf_cert_loader | [`caddytls.LeafCertificateLoader`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddytls#LeafCertificateLoader) | Loads trusted leaf certs
 tls.permission | [`caddytls.OnDemandPermission`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddytls#OnDemandPermission) | Whether to obtain a cert for a domain | <i>⚠️ Experimental</i>
 tls.stek | [`caddytls.STEKProvider`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddytls#STEKProvider) | TLS session ticket key source
+tls.context | [`caddytls.HandshakeContext`](https://pkg.go.dev/github.com/caddyserver/caddy/v2/modules/caddytls#HandshakeContext) | Intercept GetCertificate context | <i>⚠️ Experimental</i>
 
 Namespaces marked as "Experimental" are subject to change. (Please develop with them so we can finalize their interfaces!)
