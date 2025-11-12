@@ -352,9 +352,11 @@ You can use any placeholders in the Caddyfile, but for convenience you can also 
 | `{orig_?query}`  | `{http.request.orig_uri.prefixed_query}` |
 | `{path.*}`       | `{http.request.uri.path.*}`         |
 | `{path}`         | `{http.request.uri.path}`           |
+| `{%path}`        | `{http.request.uri.path_escaped}`   |
 | `{port}`         | `{http.request.port}`               |
 | `{query.*}`      | `{http.request.uri.query.*}`        |
 | `{query}`        | `{http.request.uri.query}`          |
+| `{%query}`       | `{http.request.uri.query_escaped}`  |
 | `{?query}`       | `{http.request.uri.prefixed_query}` |
 | `{re.*}`         | `{http.regexp.*}`                   |
 | `{remote_host}`  | `{http.request.remote.host}`        |
@@ -373,6 +375,7 @@ You can use any placeholders in the Caddyfile, but for convenience you can also 
 | `{tls_version}`       | `{http.request.tls.version}`             |
 | `{upstream_hostport}` | `{http.reverse_proxy.upstream.hostport}` |
 | `{uri}`               | `{http.request.uri}`                     |
+| `{%uri}`              | `{http.request.uri_escaped}`             |
 | `{vars.*}`            | `{http.vars.*}`                          |
 
 Not all config fields support placeholders, but most do where you would expect it. Support for placeholders needs to have been explicitly added to those fields. Plugin authors can [read this article](/docs/extending-caddy/placeholders) to learn how to add support for placeholders in their own modules.
