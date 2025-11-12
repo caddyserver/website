@@ -38,6 +38,7 @@ file_server [<matcher>] [browse] {
 	browse        [<template_file>] {
 		reveal_symlinks
 		sort <sort_field> [<direction>]
+		file_limit <number>
 	}
 	precompressed [<formats...>]
 	status        <status>
@@ -63,6 +64,8 @@ file_server [<matcher>] [browse] {
   - **reveal_symlinks** <span id="reveal_symlinks"/> enables revealing the targets of symbolic links in directory listings. By default, the symlink targets are hidden, and only the link file itself is shown.
 
   - **sort** <span id="sort"/> changes the default sort for directory listings. The first parameter is the field/column to sort by: `name`, `namedirfirst`, `size`, or `time`. The second argument is an optional direction: `asc` or `desc`. For example, `sort name desc` will sort by name in descending order.
+
+  - **file_limit** <span id="file_limit"/> sets a maximum number of files to show in directory listings. Default: `10000`. If the number of files exceeds this limit, only the first N files will be shown, where N is the specified limit.
 
 - **precompressed** <span id="precompressed"/> is the list of encoding formats to search for precompressed sidecar files. Arguments are an ordered list of encoding formats to search for precompressed [sidecar files](https://en.wikipedia.org/wiki/Sidecar_file). Supported formats are `gzip` (`.gz`), `zstd` (`.zst`) and `br` (`.br`). If formats are omitted, they default to `br zstd gzip` (in that order).
 

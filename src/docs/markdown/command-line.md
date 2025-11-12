@@ -194,6 +194,7 @@ Prints the environment as seen by caddy, then exits. Can be useful when debuggin
 	[-t, --templates]
 	[--access-log]
 	[-v, --debug]
+	[-f, --file-limit &lt;number&gt;]
 	[--no-compress]
 	[-p, --precompressed]</code></pre>
 
@@ -214,6 +215,8 @@ Spins up a simple but production-ready static file server.
 `--access-log` enables the request/access log.
 
 `--debug` enables verbose logging.
+
+`--file-limit` sets a maximum number of files to show in directory listings. Default: `10000`. If the number of files exceeds this limit, only the first N files will be shown, where N is the specified limit.
 
 `--no-compress` disables compression. By default, Zstandard and Gzip compression are enabled.
 
