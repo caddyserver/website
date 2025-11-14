@@ -396,5 +396,5 @@ function markdown(input) {
 	if (!input) {
 		return "";
 	}
-	return marked(input);
+	return marked.parse(input);
 }

@@ -138,7 +138,7 @@ The root's private key is uniquely generated using a cryptographically-secure ps
 
 Although Caddy can be configured to sign with the root directly (to support non-compliant clients), this is disabled by default, and the root key is only used to sign intermediates.
 
-The first time a root key is used, Caddy will try to install it into the system's local trust store(s). If it does not have permission to do so, it will prompt for a password. This behavior can be disabled in the configuration if it is not desired. If this fails due to being run as an unprivileged user, you may run [`caddy trust`](/docs/command-line#caddy-trust) to retry installation as a privileged user.
+The first time a root key is used, Caddy will try to install it into the system's local trust store(s). If it does not have permission to do so, it will prompt for a password. This behavior can be disabled with [`skip_install_trust` in a caddyfile](/docs/caddyfile/options#skip-install-trust) or [`"install_trust": false` in a json config](/docs/json/apps/pki/certificate_authorities/install_trust/). If this fails due to being run as an unprivileged user, you may run [`caddy trust`](/docs/command-line#caddy-trust) to retry installation as a privileged user.
 
 <aside class="tip">
 	It is safe to trust Caddy's root certificate on your own machine as long as your computer is not compromised and your unique root key is not leaked.

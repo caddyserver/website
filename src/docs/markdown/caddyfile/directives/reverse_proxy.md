@@ -577,7 +577,7 @@ transport http {
 
 - **resolvers** <span id="resolvers"/> is a list of DNS resolvers to override system resolvers.
 
-- **tls** <span id="tls"/> uses HTTPS with the backend. This will be enabled automatically if you specify backends using the `https://` scheme or port `:443`, or if any of the below `tls_*` options are configured.
+- **tls** <span id="tls"/> uses HTTPS with the backend. This will be enabled automatically if you specify backends using the `https://` scheme, or if any of the below `tls_*` options are configured.
 
 - **tls_client_auth** <span id="tls_client_auth"/> enables TLS client authentication one of two ways: (1) by specifying a domain name for which Caddy should obtain a certificate and keep it renewed, or (2) by specifying a certificate and key file to present for TLS client authentication with the backend.
 
@@ -603,6 +603,8 @@ transport http {
 - **tls_except_ports** <span id="tls_except_ports"/> when TLS is enabled, if the upstream target uses one of the given ports, TLS will be disabled for those connections. This may be useful when configuring dynamic upstreams, where some upstreams expect HTTP and others expect HTTPS requests.
 
 - **keepalive** <span id="keepalive"/> is either `off` or a [duration value](/docs/conventions#durations) that specifies how long to keep connections open (timeout). Default: `2m`.
+
+  ⚠️ Requests to HTTP/1.1 upstreams may fail due to "connection reset by peer" errors if the keepalive duration exceeds the upstream server's keepalive timeout. Idempotent requests will be retried by Go's HTTP transport, but Caddy will respond with status code 502 in other cases.
 
 - **keepalive_interval** <span id="keepalive_interval"/> is the [duration](/docs/conventions#durations) between liveness probes. Default: `30s`.
 

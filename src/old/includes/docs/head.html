@@ -8,6 +8,6 @@
 		{{$directives = append $directives ($file | trimSuffix ".md")}}
 	{{end}}
 	<script type="text/javascript">window.CaddyfileDirectives = {{$directives | toJson}};</script>
-	<script src="/old/resources/js/jquery-4.0.0-beta.min.js"></script>
+	<script src="/old/resources/js/jquery-4.0.0-rc.1.min.js"></script>
 	<script src="/old/resources/js/docs.js{{template "cacheBust"}}"></script>
 {{end}}
