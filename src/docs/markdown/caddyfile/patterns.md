@@ -177,6 +177,12 @@ Using a redirect, the client will have to re-issue the request, enforcing a sing
 
 ## Wildcard certificates
 
+For most issuers including Let's Encrypt, you must enable the [ACME DNS challenge](/docs/automatic-https#dns-challenge) to have Caddy automate wildcard certificates.
+
+With the DNS challenge enabled, as of Caddy 2.10, Caddy will prefer an applicable wildcard certificate that is already configured or managed before managing a separate certificate for a subdomain.
+
+
+
 If you need to serve multiple subdomains with the same wildcard certificate, the best way to handle them is with a Caddyfile like this, making use of the [`handle` directive](/docs/caddyfile/directives/handle) and [`host` matchers](/docs/caddyfile/matchers#host):
 
 ```caddy

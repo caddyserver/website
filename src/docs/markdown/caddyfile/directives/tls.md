@@ -438,6 +438,7 @@ get_certificate http <url>
   - `server_name`: SNI value
   - `signature_schemes`: comma-separated list of hex IDs of signature algorithms
   - `cipher_suites`: comma-separated list of hex IDS of cipher suites
+  - `local_ip`: IP address to which the client made the request
 
 
 

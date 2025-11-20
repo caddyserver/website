@@ -324,17 +324,11 @@ This is mainly important to know when troubleshooting connections.
 
 Like certificate keys, it is not good practice (and can be downright insecure) to use the same key for a long time. As such, ECH keys should be rotated on a regular basis. Unlike certificates, ECH configs don't strictly expire. But servers should rotate them nonetheless.
 
-<aside class="tip">
-
-(NOTE: Caddy 2.10 does not rotate keys because it is not possible to change keys on a running server with Go 1.24. However, it [should be possible by Go 1.25](https://github.com/golang/go/issues/71920), so at that point, Caddy will be updated to rotate keys.)
-
-</aside>
-
 Key rotation is tricky though, because clients need to know about the updated keys. If the server simply replaced old keys with new ones, all ECH handshakes would fail unless clients were immediately notified about the new keys. But simply publishing the updated keys isn't enough. The reality is, DNS records have TTLs, and resolvers cache responses, etc. It can take minutes, hours, or even days for clients to query the updated HTTPS records and start using the new ECH config.
 
-For that reason, servers should keep supporting old ECH configs for a period of time. Not doing so risks exposing server names in plaintext _at scale_.
+For that reason, servers should keep supporting old ECH configs for a period of time. Not doing so risks exposing server names in plaintext _at scale_. Caddy rotates keys every once in a while, and supports rotated keys for some time, until they are eventually dropped.
 
-However, that may not be enough. Some clients still won't get the updated keys for various reasons, and any time that happens, there is a risk of exposing the server name. So there needs to be another way to give clients the updated config _in band_ with the connection. That's what the _outer name_ is for.
+However, that may not be enough. Some clients still won't get the updated keys for various reasons, and any time that happens, there is a risk of exposing the server name. So there needs to be another way to give clients the updated config _in band_ with the connection. That's what the _outer name_ (or _public name_) is for.
 
 #### Public name
 
