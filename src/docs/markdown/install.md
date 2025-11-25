@@ -33,6 +33,7 @@ Our [official packages](https://github.com/caddyserver/dist) come only with the 
 - [Nix/Nixpkgs/NixOS](#nixnixpkgsnixos)
 - [Unikraft](#unikraft)
 - [OPNsense](#opnsense)
+- [Mise](#mise)
 
 
 ## Static binaries
@@ -236,3 +237,10 @@ _Note: This is a community-maintained installation method._
 
 [**View the FreeBSD caddy-custom makefile**](https://github.com/opnsense/ports/blob/master/www/caddy-custom/Makefile) and [**the os-caddy plugin source**](https://github.com/opnsense/plugins/tree/master/www/caddy)
 
+## Mise
+
+_Note: This is a community-maintained installation method._
+
+If you are using [mise](https://github.com/jdx/mise), the polyglot tool versions manager, you can use a command like this to install the last version:
+
+<pre><code class="cmd">mise use -g caddy@latest</code></pre>
