@@ -241,6 +241,6 @@ _Note: This is a community-maintained installation method._
 
 _Note: This is a community-maintained installation method._
 
-If you are an enthusiast user of [mise](https://github.com/jdx/mise), the polyglot tool versions manager, you can use a command like this to install the last version:
+If you are using [mise](https://github.com/jdx/mise), the polyglot tool versions manager, you can use a command like this to install the last version:
 
 <pre><code class="cmd">mise use -g caddy@latest</code></pre>
