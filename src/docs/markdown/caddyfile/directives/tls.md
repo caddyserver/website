@@ -296,6 +296,7 @@ Obtains certificates using the ACME protocol. Note that `acme` is a default issu
 		root_common_name <common_names...>
 		any_common_name  <common_names...>
 	}
+	profile <name>
 }
 ```
 
@@ -353,6 +354,8 @@ Obtains certificates using the ACME protocol. Note that `acme` is a default issu
 	- **root_common_name** <span id="root_common_name"/> is a list of one or more common names; Caddy will choose the first chain that has a root that matches with at least one of the specified common names.
 
 	- **any_common_name** <span id="any_common_name"/> is a list of one or more common names; Caddy will choose the first chain that has an issuer that matches with at least one of the specified common names.
+
+- **profile** is the name of the [ACME profile](https://datatracker.ietf.org/doc/draft-aaron-acme-profiles/) to apply when ordering certificates. If you specify one, all configured (implictly or otherwise) CAs must support this profile. Refer to your CA's documentation for available profiles; some CAs may not support profiles. EXPERIMENTAL: The ACME profile specification is still in draft state, so this feature/function is subject to change or removal.
 
 
 #### zerossl
