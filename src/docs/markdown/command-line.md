@@ -119,7 +119,7 @@ The `--flags` may have a single-letter shortcut like `-f`.
 
 Adapts a configuration to Caddy's native JSON config structure and writes the output to stdout, along with any warnings to stderr, then exits.
 
-`--config` is the path to the config file. If omitted, assumes `Caddyfile` in current directory if it exists; otherwise, this flag is required.
+`--config` is the path to the config file. If omitted, assumes `Caddyfile` in current directory if it exists; otherwise, this flag is required. If you wish to use stdin instead of a regular file, use - as the path.
 
 `--adapter` specifies the config adapter to use; default is `caddyfile`.
 
@@ -194,6 +194,7 @@ Prints the environment as seen by caddy, then exits. Can be useful when debuggin
 	[-t, --templates]
 	[--access-log]
 	[-v, --debug]
+	[-f, --file-limit &lt;number&gt;]
 	[--no-compress]
 	[-p, --precompressed]</code></pre>
 
@@ -214,6 +215,8 @@ Spins up a simple but production-ready static file server.
 `--access-log` enables the request/access log.
 
 `--debug` enables verbose logging.
+
+`--file-limit` sets a maximum number of files to show in directory listings. Default: `10000`. If the number of files exceeds this limit, only the first N files will be shown, where N is the specified limit.
 
 `--no-compress` disables compression. By default, Zstandard and Gzip compression are enabled.
 
@@ -248,6 +251,7 @@ Formats or prettifies a Caddyfile, then exits. The result is printed to stdout u
 <pre><code class="cmd bash">caddy hash-password
 	[-p, --plaintext &lt;password&gt;]
 	[-a, --algorithm &lt;name&gt;]</code></pre>
+	[--bcrypt-cost &lt;cost&gt;]</code></pre>
 
 Convenient way to hash a plaintext password. The resulting hash is written to stdout as a format usable directly in your Caddy config.
 
@@ -255,7 +259,7 @@ Convenient way to hash a plaintext password. The resulting hash is written to st
 
 `--algorithm` may be `bcrypt` or any installed hash algorithm. Default is `bcrypt`.
 
-
+`--bcrypt-cost` is the hashing cost for bcrypt algorithm. Default is `14`.
 
 
 ### `caddy help`
