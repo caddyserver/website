@@ -365,7 +365,7 @@ When DoH or DoT is used, DNS lookups all go through the DoH/DoT provider. Betwee
 
 Similarly, if we truly maximize the anonymity set at scale, all sites would be protected behind a single public name, like `cloudflare-ech.com`. This is good for privacy, but then the entire Internet is at the mercy of Cloudflare and that one domain name. Now, maximizing to that extent is not necessary or practical, but the theoretical implications remain valid.
 
-We recommend each organization or individual choose a single name for all their sites and use that, and in most cases that should offer sufficient privacy. However, please consult experts with your your individual threat models for your specific case.
+We recommend each organization or individual choose a single name for all their sites and use that, and in most cases that should offer sufficient privacy. However, please consult experts with your individual threat models for your specific case.
 
 
 #### Subdomain privacy
