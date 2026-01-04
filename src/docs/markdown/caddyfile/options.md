@@ -126,8 +126,12 @@ Possible options are (click on each option to jump to its documentation):
 			idle        <duration>
 		}
 		keepalive_interval <duration>
+		keepalive_idle     <duration>
+		keepalive_count	   <number>
+
 		trusted_proxies <module> ...
 		client_ip_headers <headers...>
+
 		trace
 		max_header_size <size>
 		enable_full_duplex
@@ -937,6 +941,31 @@ The interval at which TCP keepalive packets are sent to keep the connection aliv
 }
 ```
 
+
+##### `keepalive_idle`
+
+The duration a connection must be idle before TCP keepalive packets are sent when no other data is being transmitted. Defaults to `15s`.
+
+```caddy
+{
+	servers {
+		keepalive_idle 1m
+	}
+}
+```
+
+
+##### `keepalive_count`
+
+The maximum number of TCP keepalive packets to send before considering the connection dead. Defaults to `9`.
+
+```caddy
+{
+	servers {
+		keepalive_count 5
+	}
+}
+```
 
 
 ##### `trusted_proxies`

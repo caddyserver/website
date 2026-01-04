@@ -56,7 +56,7 @@ header [<matcher>] [[+|-|?|>]<field> [<value>|<find>] [<replace>]] {
 
 - **&lt;value&gt;** is the header field value, when adding or setting a field.
 
-- **&lt;find&gt;** is the substring or regular expression to search for.
+- **&lt;find&gt;** is the regular expression to search for. Placeholders may be used for a dynamic input into the search pattern. The regular expression language used is RE2, included in Go. See the [RE2 syntax reference](https://github.com/google/re2/wiki/Syntax) and the [Go regexp syntax overview](https://pkg.go.dev/regexp/syntax).
 
 - **&lt;replace&gt;** is the replacement value; required if performing a search-and-replace. Use `$1` or `$2` and so on to reference capture groups from the search pattern. If the replacement value is `""`, then the matching text is removed from the value. See the [Go documentation](https://golang.org/pkg/regexp/#Regexp.Expand) for details.
 
