@@ -18,13 +18,18 @@ The trace ID and span ID are added to [access logs](/docs/caddyfile/directives/l
 
 ```caddy-d
 tracing {
-	[span <span_name>]
+	span <span_name>
+	span_attributes {
+		<attr1> <value1>
+		<attr2> <value2>
+	}
 }
 ```
 
 - **&lt;span_name&gt;** is a span name. Please see span [naming guidelines](https://github.com/open-telemetry/opentelemetry-specification/blob/v1.7.0/specification/trace/api.md).
+- **&lt;span_attributes&gt;** are additional attributes attached to each recorded span. Many span attributes are set by default according to OTEL [Semantic conventions for HTTP spans](https://opentelemetry.io/docs/specs/semconv/http/http-spans/) like details about the request, response and client.
 
-  [Placeholders](/docs/caddyfile/concepts#placeholders) may be used in span names; keep in mind that tracing happens as early as possible, so only request placeholders may be used, and not response placeholders.
+  [Placeholders](/docs/caddyfile/concepts#placeholders) may be used in span names and attributes. Keep in mind that the span name is set before the request is forwarded, so only request placeholders may be used. All placeholders are available in span attributes.
 
 
 
@@ -64,6 +69,9 @@ example.com {
 	handle {
 		tracing {
 			span app
+			span_attributes {
+				user_id {http.request.cookie.user-id}
+			}
 		}
 		reverse_proxy localhost:8080
 	}
