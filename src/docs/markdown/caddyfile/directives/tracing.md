@@ -18,11 +18,11 @@ The trace ID and span ID are added to [access logs](/docs/caddyfile/directives/l
 
 ```caddy-d
 tracing {
-	[span <span_name>]
-	[span_attributes {
+	span <span_name>
+	span_attributes {
 		<attr1> <value1>
 		<attr2> <value2>
-	}]
+	}
 }
 ```
 
