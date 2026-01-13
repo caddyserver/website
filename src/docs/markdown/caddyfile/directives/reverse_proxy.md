@@ -551,7 +551,7 @@ transport http {
 	versions <versions...>
 	compression off
 	max_conns_per_host <count>
-	forward_proxy_url <url>
+	network_proxy <module>
 }
 ```
 
@@ -577,7 +577,7 @@ transport http {
 
 - **resolvers** <span id="resolvers"/> is a list of DNS resolvers to override system resolvers.
 
-- **tls** <span id="tls"/> uses HTTPS with the backend. This will be enabled automatically if you specify backends using the `https://` scheme or port `:443`, or if any of the below `tls_*` options are configured.
+- **tls** <span id="tls"/> uses HTTPS with the backend. This will be enabled automatically if you specify backends using the `https://` scheme, or if any of the below `tls_*` options are configured.
 
 - **tls_client_auth** <span id="tls_client_auth"/> enables TLS client authentication one of two ways: (1) by specifying a domain name for which Caddy should obtain a certificate and keep it renewed, or (2) by specifying a certificate and key file to present for TLS client authentication with the backend.
 
@@ -604,6 +604,8 @@ transport http {
 
 - **keepalive** <span id="keepalive"/> is either `off` or a [duration value](/docs/conventions#durations) that specifies how long to keep connections open (timeout). Default: `2m`.
 
+  ⚠️ Requests to HTTP/1.1 upstreams may fail due to "connection reset by peer" errors if the keepalive duration exceeds the upstream server's keepalive timeout. Idempotent requests will be retried by Go's HTTP transport, but Caddy will respond with status code 502 in other cases.
+
 - **keepalive_interval** <span id="keepalive_interval"/> is the [duration](/docs/conventions#durations) between liveness probes. Default: `30s`.
 
 - **keepalive_idle_conns** <span id="keepalive_idle_conns"/> defines the maximum number of connections to keep alive. Default: No limit.
@@ -624,10 +626,9 @@ transport http {
 
 - **max_conns_per_host** <span id="max_conns_per_host"/> optionally limits the total number of connections per host, including connections in the dialing, active, and idle states. Default: No limit.
 
-- **forward_proxy_url** <span id="forward_proxy_url"/> specifies the URL of a server that the HTTP transport will use to proxy requests to the upstream server. By default, Caddy respects proxy configured via environment variables as per the [Go stdlib](https://pkg.go.dev/golang.org/x/net/http/httpproxy#FromEnvironment) like `HTTP_PROXY`. When a value is provided for this parameter, requests will flow through the reverse proxy in the following order:
-  - Client (users) 🡒 `reverse_proxy` 🡒 `forward_proxy_url` 🡒 upstream
-
-
+- **network_proxy** <span id="network_proxy"/> specifies the name of a network proxy module to use for requests to the upstream server. If not explicitly configured, Caddy respects proxy configured via environment variables as per the [Go stdlib](https://pkg.go.dev/golang.org/x/net/http/httpproxy#FromEnvironment), i.e. `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY`. When a value is provided for this parameter, requests will flow through the reverse proxy in the following order: Client (users) → `reverse_proxy` → `network_proxy` → upstream. Built-in modules are:
+	- `none`, which is used to ignore the environment settings of `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY`.
+	- `url <url>`, which is used to specify a single URL overriding the environment configuration.
 
 ### The `fastcgi` transport
 

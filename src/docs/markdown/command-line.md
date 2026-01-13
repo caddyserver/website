@@ -119,7 +119,7 @@ The `--flags` may have a single-letter shortcut like `-f`.
 
 Adapts a configuration to Caddy's native JSON config structure and writes the output to stdout, along with any warnings to stderr, then exits.
 
-`--config` is the path to the config file. If omitted, assumes `Caddyfile` in current directory if it exists; otherwise, this flag is required.
+`--config` is the path to the config file. If omitted, assumes `Caddyfile` in current directory if it exists; otherwise, this flag is required. If you wish to use stdin instead of a regular file, use - as the path.
 
 `--adapter` specifies the config adapter to use; default is `caddyfile`.
 
@@ -194,6 +194,7 @@ Prints the environment as seen by caddy, then exits. Can be useful when debuggin
 	[-t, --templates]
 	[--access-log]
 	[-v, --debug]
+	[-f, --file-limit &lt;number&gt;]
 	[--no-compress]
 	[-p, --precompressed]</code></pre>
 
@@ -214,6 +215,8 @@ Spins up a simple but production-ready static file server.
 `--access-log` enables the request/access log.
 
 `--debug` enables verbose logging.
+
+`--file-limit` sets a maximum number of files to show in directory listings. Default: `10000`. If the number of files exceeds this limit, only the first N files will be shown, where N is the specified limit.
 
 `--no-compress` disables compression. By default, Zstandard and Gzip compression are enabled.
 
@@ -248,6 +251,7 @@ Formats or prettifies a Caddyfile, then exits. The result is printed to stdout u
 <pre><code class="cmd bash">caddy hash-password
 	[-p, --plaintext &lt;password&gt;]
 	[-a, --algorithm &lt;name&gt;]</code></pre>
+	[--bcrypt-cost &lt;cost&gt;]</code></pre>
 
 Convenient way to hash a plaintext password. The resulting hash is written to stdout as a format usable directly in your Caddy config.
 
@@ -258,7 +262,7 @@ Convenient way to hash a plaintext password. The resulting hash is written to st
 `--algorithm`
     Selects the hashing algorithm. Valid options are:
       * `argon2id` (recommended for modern security)
-      * `bcrypt`  (legacy, slower, configurable cost)
+      * `bcrypt`  (legacy, slower, configurable cost, default cost is `14`)
 
 bcrypt-specific parameters:
 
@@ -350,7 +354,7 @@ Because this command uses the API, the admin endpoint must not be disabled.
 
 `--adapter` specifies a config adapter to use, if any. This flag is not necessary if the `--config` filename starts with `Caddyfile` or ends with `.caddyfile` which assumes the `caddyfile` adapter. Otherwise, this flag is required if the provided config file is not in Caddy's native JSON format.
 
-`--address` needs to be used if the admin endpoint is not listening on the default address and if it is different from the address in the provided config file. Note that only TCP addresses are supported at this time.
+`--address` needs to be used if the admin endpoint is not listening on the default address and if it is different from the address in the provided config file.
 
 `--force` will cause a reload to happen even if the specified config is the same as what Caddy is already running. Can be useful to force Caddy to reprovision its modules, which can have side-effects, for example: reloading manually-loaded TLS certificates.
 

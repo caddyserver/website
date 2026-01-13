@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
 	// Algolia search
 	docsearch({
-		appId: "BH4D9OD16A",
-		apiKey: '14275a785f6ebd31d162f9d2d8fc0125',
+		appId: "VZI00J4D3U",
+		apiKey: '1ab8d12c0f99de6c4a04401c9f315c2e',
 		indexName: 'caddyserver',
 		container: '#search',
 	});
