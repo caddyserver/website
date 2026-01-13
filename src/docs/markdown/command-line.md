@@ -255,11 +255,40 @@ Formats or prettifies a Caddyfile, then exits. The result is printed to stdout u
 
 Convenient way to hash a plaintext password. The resulting hash is written to stdout as a format usable directly in your Caddy config.
 
-`--plaintext` is the plaintext form of the password. If omitted, interactive mode will be assumed and the user will be shown a prompt to enter the password manually.
+`--plaintext`
+    The password to hash. If omitted, it will be read from stdin.
+    If Caddy is attached to a controlling TTY, the input will not be echoed.
 
-`--algorithm` may be `bcrypt` or any installed hash algorithm. Default is `bcrypt`.
+`--algorithm`
+    Selects the hashing algorithm. Valid options are:
+      * `argon2id` (recommended for modern security)
+      * `bcrypt`  (legacy, slower, configurable cost, default cost is `14`)
 
-`--bcrypt-cost` is the hashing cost for bcrypt algorithm. Default is `14`.
+bcrypt-specific parameters:
+
+`--bcrypt-cost`
+    Sets the bcrypt hashing difficulty. Higher values increase security by
+    making the hash computation slower and more CPU-intensive.
+    Must be within the valid range [bcrypt.MinCost, bcrypt.MaxCost].
+    If omitted or invalid, the default cost is used.
+
+Argon2id-specific parameters:
+
+`--argon2id-time`
+    Number of iterations to perform. Increasing this makes
+    hashing slower and more resistant to brute-force attacks.
+
+`--argon2id-memory`
+    Amount of memory to use during hashing.
+    Larger values increase resistance to GPU/ASIC attacks.
+
+`--argon2id-threads`
+    Number of CPU threads to use. Increase for faster hashing
+    on multi-core systems.
+
+`--argon2id-keylen`
+    Length of the resulting hash in bytes. Longer keys increase
+    security but slightly increase storage size.
 
 
 ### `caddy help`
