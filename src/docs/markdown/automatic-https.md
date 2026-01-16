@@ -376,7 +376,9 @@ Most sites do not need this, as, generally speaking, subdomains are public infor
 
 To avoid leaking sensitive subdomains to Certificate Transparency (CT) logs, use a wildcard certificate instead. In other words, instead of putting `sub.example.com` in your config, put `*.example.com`. (See [Wildcard certificates](#wildcard-certificates) for important information.)
 
-Then, enable ECH in Caddy. A wildcard certificate combined with ECH should properly hide subdomains, as long as every client that tries to connect to it uses ECH and has a strong implementation. (You are still at the mercy of clients to preserve privacy.)
+Another source of leaks is DNSSEC, which most authoritative DNS servers use by default. Through a practice named "zone walking", subdomain enumeration is possible by looking at the NSEC records, which are used to provide authenticated denial of existence. For this, they point to the next available subdomain in alphabetical order, forming a linked list  of all records. Ensure your domain is using at the very least NSEC3 or ideally a wildcard CNAME record to mitigate against this.
+
+Then, enable ECH in Caddy. A wildcard certificate combined with ECH and a wildcard CNAME record should properly hide subdomains, as long as every client that tries to connect to it uses ECH and has a strong implementation. (You are still at the mercy of clients to preserve privacy.)
 
 
 ### Enabling ECH
