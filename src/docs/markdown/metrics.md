@@ -33,6 +33,17 @@ To add per-host metrics you can insert the `per_host` option. Host specific metr
 }
 ```
 
+This configuration will observe configured hosts. If an HTTPS server is configured, the host is observed, even if not explicitly configured, e.g. on-demand TLS setup. If HTTPS is disbaled, the only configured hosts are enabled due to potential infinite cardinality risk. To observe all hosts in HTTP setup, even unconfigured ones, use `observe_catchall_hosts` option.
+
+```caddy
+{
+	metrics {
+		per_host
+		observe_catchall_hosts
+	}
+}
+```
+
 ## Prometheus
 
 [Prometheus](https://prometheus.io) is a monitoring platform that collects
