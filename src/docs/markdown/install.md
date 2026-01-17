@@ -183,9 +183,9 @@ You may need to adjust the Windows firewall rules to allow non-localhost incomin
 
 _Note: This is a community-maintained installation method._
 
-<pre><code class="cmd bash">ansible-galaxy install nvjacobo.caddy</code></pre>
+<pre><code class="cmd bash">ansible-galaxy role install sebdanielsson.xcaddy</code></pre>
 
-[**View the Ansible role repository**](https://github.com/nvjacobo/caddy)
+[**View the Ansible role repository**](https://github.com/sebdanielsson/ansible-role-xcaddy)
 
 
 
