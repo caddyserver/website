@@ -1109,3 +1109,7 @@ blockquote {
 		border-color: #33659a;
 	}
 }
+
+tech-playground > .tech-playground-controls > * {
+	mrgin-left: 10px;
+}

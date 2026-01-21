@@ -4,6 +4,7 @@
 {{if not (fileExists $markdownFilePath)}}{{httpError 404}}{{end}}
 {{$markdownFile := (include $markdownFilePath | splitFrontMatter)}}
 {{$title := default $markdownFilename $markdownFile.Meta.title}}
+{{$headless := default false $markdownFile.Meta.headless}}
 <!DOCTYPE html>
 <html>
 	<head>
@@ -27,5 +28,8 @@
 			<div class="sidebar"></div>
 		</main>
 		{{include "/old/includes/footer.html"}}
+		{{if $headless}}
+		<script src="/resources/js/vendor/headless.min.js{{template "cacheBust"}}"></script>
+		{{end}}
 	</body>
 </html>

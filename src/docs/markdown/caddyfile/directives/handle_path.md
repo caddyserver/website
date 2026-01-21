@@ -1,5 +1,6 @@
 ---
 title: handle_path (Caddyfile directive)
+headless: true
 ---
 
 <script>
@@ -58,17 +59,25 @@ handle /prefix/* {
 
 A full Caddyfile example, where `handle_path` and `handle` are mutually exclusive; but, be aware of the [subfolder problem <img src="/old/resources/images/external-link.svg" class="external-link">](https://caddy.community/t/the-subfolder-problem-or-why-cant-i-reverse-proxy-my-app-into-a-subfolder/8575)
 
+<tech-playground playground="caddy" output-style="boxed" output-order="command.stdout,command.stderr" show-version-selector="false">
+
 ```caddy
-example.com {
+:80 {
 	# Serve your API, stripping the /api prefix
 	handle_path /api/* {
-		reverse_proxy localhost:9000
+		reverse_proxy echo.local
 	}
 
 	# Serve your static site
 	handle {
-		root * /srv
+		root * /var/www/html
 		file_server
 	}
 }
 ```
+
+```bash
+http get http://127.0.0.1/api/my-endpoint
+```
+
+</tech-playground>

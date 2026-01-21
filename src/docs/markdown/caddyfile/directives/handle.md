@@ -1,5 +1,6 @@
 ---
 title: handle (Caddyfile directive)
+headless: true
 ---
 
 # handle
@@ -87,3 +88,46 @@ example.com {
 	}
 }
 ```
+
+## Playground
+
+Experiment with the previous example to form a better understanding of nested `handle` blocks:
+
+<tech-playground playground="caddy" output-style="boxed" output-order="command.stdout,command.stderr" show-version-selector="false">
+
+```caddy
+:80 {
+	handle /foo* {
+		handle /foo/bar* {
+			# This block only matches paths under /foo/bar
+			reverse_proxy echo.local {
+				header_up Handle-Block "/foo/bar/*"
+			}
+		}
+
+		handle {
+			# This block matches everything else under /foo/
+			reverse_proxy echo.local {
+				header_up Handle-Block "remaining /foo*"
+			}
+		}
+	}
+
+	handle {
+		# This block matches everything else (acts as a fallback)
+		reverse_proxy echo.local {
+			header_up Handle-Block "everything remaining"
+		}
+	}
+}
+```
+
+```bash
+curl --silent http://127.0.0.1/foo/bar/baz | grep -E "request_path|Handle-Block"
+
+curl --silent http://127.0.0.1/foo/baz | grep -E "request_path|Handle-Block"
+
+curl --silent http://127.0.0.1/baz | grep -E "request_path|Handle-Block"
+```
+
+</tech-playground>
