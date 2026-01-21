@@ -88,7 +88,7 @@
 	Derived from http://ethanschoonover.com/solarized
 */
 .dark .chroma:not(.light) {
-	background: linear-gradient(to bottom, #24454f, transparent);
+	background: linear-gradient(to bottom, #0d313c, transparent);
 	color: #93a1a1;
 }
 .dark .chroma:not(.light) .c { color: #586e75 } /* Comment */

@@ -50,7 +50,7 @@
 	--dropdown-link-title-color: #f0f3f5;
 	--dropdown-link-color: #9ebeca;
 	--dropdown-link-hover-color: white;
-	--dropdown-link-hover-bg: rgb(30, 48, 63);
+	--dropdown-link-hover-bg: rgb(127 199 255 / 11%);
 	--dropdown-featured-bg: linear-gradient(to bottom, rgb(46, 58, 66), transparent);
 	--dropdown-featured-hover-bg: rgb(64, 82, 92);
 	--dropdown-shadow-color: black;
@@ -316,7 +316,8 @@ button.purple,
 
 button svg,
 .button svg {
-	margin-right: .5em;
+	margin-right: .25em;
+	margin-left: -.5em;
 }
 
 
@@ -397,7 +398,7 @@ button.primary .hover-splash,
 .dropdown .plainbox,
 .dropdown .linkbox {
 	display: flex;
-	gap: 4em;
+	gap: 1.5em;
 	padding: 1.5em;
 }
 
@@ -417,7 +418,6 @@ button.primary .hover-splash,
 
 .dropdown .linkbox {
 	background: var(--dropdown-linkbox);
-	gap: 3em;
 	--link-padding-x: 10px;
 }
 
@@ -431,7 +431,7 @@ button.primary .hover-splash,
 }
 
 .dropdown .col {
-	min-width: 150px;
+	min-width: 200px;
 }
 
 .dropdown .col a {
@@ -439,7 +439,7 @@ button.primary .hover-splash,
 	color: var(--dropdown-link-color);
 	text-decoration: none;
 	padding: 5px var(--link-padding-x);
-	border-radius: 1.5em;
+	border-radius: .5em;
 }
 
 
@@ -451,7 +451,7 @@ button.primary .hover-splash,
 .dropdown .flatlinks a,
 .dropdown .featured a {
 	transition: background-color 150ms;
-	font-size: 12px;
+	font-size: 14px;
 }
 
 .dropdown .flatlinks a {

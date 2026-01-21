@@ -12,6 +12,8 @@
 	--cmd-bg: #333;
 	--tip-color: #5c50bb;
 	--menu-toggle-bg: #e4f1f2;
+	--table-header-bg: #eaf1f5;
+	--table-border-color: #cad9e2;
 }
 
 .dark {
@@ -21,13 +23,15 @@
 	--button-color-hover: rgb(0, 194, 255);
 	--button-border-color-hover: rgb(0, 194, 255);
 	--nav-current-bg: linear-gradient(to right, #1a3c4d, transparent);
-	--nav-link-hover-shadow-color: rgba(255, 255, 255, 0.15);
+	--nav-link-hover-shadow-color: rgb(0 0 0 / 32%);
 	--nav-link-hover-before-bg: #32494f;
-	--nav-link-hover-bg: #18262f;
-	--autonav-bg: #34404d;
+	--nav-link-hover-bg: #e3fffe0d;
+	--autonav-bg: #1d2b32;
 	--cmd-bg: black;
 	--tip-color: #a6b2f7;
 	--menu-toggle-bg: #274d5c;
+	--table-header-bg: #1d2d38;
+	--table-border-color: #1a373d;
 }
 
 
@@ -37,20 +41,29 @@
 html,
 body {
 	min-height: 100%;
+
 }
 
 body {
-	background-image:
+	/* background-image:
 		radial-gradient(circle at 30% top, hsl(137.64deg, 100%, 92.42%) 0px, transparent min(15%, 500px)),
-		radial-gradient(circle at 70% top, hsl(201.2deg, 68%, 90.2%) 0px, transparent min(15%, 500px)); 
+		radial-gradient(circle at 70% top, hsl(201.2deg, 68%, 90.2%) 0px, transparent min(15%, 500px));  */
+	background-image:
+		radial-gradient(circle at 30% top, hsl(137.64deg 100% 75.21% / 19%) 0px, transparent min(15%, 700px)),
+		radial-gradient(circle at 70% top, hsl(201.2deg 100% 69.19% / 24%) 0px, transparent min(15%, 700px));
 	background-repeat: no-repeat;
 }
 
 
 .dark body {
+	/* background-image:
+		radial-gradient(at calc(50% - min(35vw, 700px)) -10%, hsla(130, 100%, 9%, 0.74) 0px, transparent min(25%, 600px)),
+		radial-gradient(at calc(50% + min(35vw, 700px)) -10%, hsla(201, 100%, 12%, 0.646) 0px, transparent min(25%, 600px)) */
 	background-image:
-		radial-gradient(at calc(50% - min(35vw, 700px)) -10%, hsl(129.5deg, 100%, 12.4%) 0px, transparent min(25%, 600px)),
-		radial-gradient(at calc(50% + min(35vw, 700px)) -10%, hsl(201deg, 100%, 19.33%) 0px, transparent min(25%, 600px))
+		radial-gradient(circle at calc(50% - min(35vw, 700px)) -50px, hsl(206.39deg 100% 40.77% / 16%) 0px, transparent min(25%, 800px)),
+		radial-gradient(circle at calc(50% + min(35vw, 700px)) -50px, hsl(142.09deg 100% 32.23% / 17%) 0px, transparent min(25%, 800px));
+
+	scrollbar-color: rgb(255 255 255 / .25) rgb(0 0 0 / .2);
 }
 
 .wrapper {
@@ -77,7 +90,7 @@ button:hover,
 }
 button.primary,
 .button.primary {
-	background: linear-gradient(135deg, #7ece98 25%, rgb(49, 155, 208) 80%);
+	background: linear-gradient(135deg, #3b9c5b 25%, rgb(45 137 183) 80%);
 	color: white;
 	border: none;
 }
@@ -123,6 +136,12 @@ main {
 	padding: 1em;
 	cursor: pointer;
 	display: none;
+}
+
+#pagenav {
+	position: sticky;
+	top: 10px;
+	align-self: flex-start; /* so the flex item isn't 100% height and thus doesn't stick */
 }
 
 #pagenav .heading {
@@ -323,7 +342,7 @@ article ul ol {
 
 article p,
 article li {
-	line-height: 1.75;
+	line-height: 1.6;
 }
 
 article li p,
@@ -593,7 +612,7 @@ article > table {
 }
 
 th, td {
-	border-bottom: 1px solid #ddd;
+	border-bottom: 1px solid var(--table-border-color);
 	padding: 10px;
 	line-height: 1.4em;
 	vertical-align: top;
@@ -602,7 +621,7 @@ th, td {
 
 th {
 	text-align: left;
-	background: #eee;
+	background: var(--table-header-bg);
 }
 
 td code {
@@ -670,8 +689,7 @@ td code {
 	box-shadow: 0 10px 40px rgb(0 0 0 / .2);
 	border-radius: 10px;
 	border-top-left-radius: 0;
-	min-width: 250px;
-	max-width: 350px;
+	min-width: 300px;
 	z-index: 999;
 	padding-top: .5em;
 	padding-bottom: .5em;

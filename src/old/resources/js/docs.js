@@ -19,7 +19,7 @@ $(function() {
 
 	// add anchor links, inspired by https://github.com/bryanbraun/anchorjs
 	$('article > h1[id], article > h2[id], article > h3[id], article > h4[id], article > h5[id], article > h6[id]').each(function() {
-		var $anchor = $('<a href="#'+this.id+'" class="anchor-link" title="Direct link">🔗</a>');
+		var $anchor = $('<a href="#'+this.id+'" class="anchor-link" title="Contextual link">🔗</a>');
 		$(this).append($anchor);
 	});
 
