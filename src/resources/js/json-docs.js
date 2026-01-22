@@ -1,15 +1,15 @@
 const jsonDocsPathPrefix = "/docs/json";
 
-var configPath = window.location.pathname;
+var configPath = window.location.pathname.slice(jsonDocsPathPrefix.length);
 var pathComponents = configPath.split('/');
 
 setPageTitle();
 
 if (window.location.pathname.startsWith(jsonDocsPathPrefix)) {
 	// load the docs for this path
-	fetch(`/api/docs/config${configPath}`)
+	fetch(`/api/docs/config/${configPath}`)
 		.then(response => response.json())
-		.then(function(data) {
+		.then(function(json) {
 			// wait until the DOM has finished loading before rendering the results
 			ready(function() {
 				beginRenderingInto($_('#json-docs-container'), '', json.result);
@@ -22,7 +22,7 @@ if (window.location.pathname.startsWith(jsonDocsPathPrefix)) {
 					var bcSiblingPath = pathComponents.slice(1, i).join('/');
 					
 					// enclosing with span is a hack so jQuery treats this as a HTML DOM object
-					$bc.innerHTML += `<span> &rsaquo; <a href="${jsonDocsPathPrefix}/${bcPath.substr(1)}/" class="breadcrumb has-popup" data-sibling-path="${bcSiblingPath}">${pathComponents[i]}</a></span>`;
+					$bc.innerHTML += `<span> &rsaquo; <a href="${jsonDocsPathPrefix}/${bcPath.slice(1)}/" class="breadcrumb has-popup" data-sibling-path="${bcSiblingPath}">${pathComponents[i]}</a></span>`;
 				}
 			
 				// re-trigger the URL fragment if any, to scroll to the archor
