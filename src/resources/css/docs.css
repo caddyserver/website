@@ -105,6 +105,7 @@ button.primary:hover,
 
 main {
 	margin-top: 50px;
+	margin-bottom: 100px;
 	font-family: Inter, system-ui;
 }
 
@@ -583,7 +584,7 @@ article aside.advice::before {
 }
 
 article aside.complete {
-	color: #6b6b6b;
+	color: #65a5b9;
 	border: 2px dotted #88db88;
 	text-align: center;
 	max-width: 500px;
@@ -788,6 +789,201 @@ img.external-link {
 	max-height: .9em;
 }
 
+
+
+
+/* JSON and module */
+
+.nonstandard-notice {
+	font-size: 14px;
+	max-width: 500px;
+	margin: 25px auto;
+	border: 1px solid #ecd200;
+	background: #fffddf;
+	border-radius: 5px;
+	padding: 10px;
+	color: #886c00;
+	line-height: 1.4em;
+	display: none;
+}
+
+.nonstandard {
+	color: rgb(214, 145, 16);
+}
+
+.standard-flag,
+.nonstandard-flag {
+	cursor: help;
+	font-size: 8px;
+	line-height: 1em;
+	padding: 4px 8px;
+	text-transform: uppercase;
+	font-weight: bold;
+	color: white;
+	border-radius: 4px;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+
+.standard-flag {
+	background-color: rgb(34, 163, 23);
+}
+
+.nonstandard-flag {
+	background-color: rgb(238, 167, 34);
+}
+
+.module-repo-differentiator {
+	font-size: 11px;
+	font-weight: bold;
+	color: #555;
+	line-height: 1em;
+}
+
+
+
+
+
+
+
+.json {
+	line-height: 1.5em;
+}
+.json .qu { color: #5c91bf; }
+.json .key { color: #1c83dc; font-weight: bold; }
+.json .str { color: #2f8598; }
+.json .num { color: #038a3f; }
+.json .bool { color: #9b5e14; }
+.json .key a:not([href]) { color: #222; }
+article .json a {
+	text-decoration: none;
+	font-weight: bold;
+}
+.json .has-popup { border-bottom: 1px dashed #222; }
+.json a[href].has-popup { border-bottom-color: #1c82dc; }
+.json .has-popup.module { border-bottom: none; }
+
+
+#hovercard {
+	max-width: 450px;
+	border-radius: 10px;
+	filter: drop-shadow(0 5px 5px rgba(0, 0, 0, .25));
+	position: absolute;
+	font-size: 16px;
+	transition: transform .25s ease-in-out, opacity .25s ease-in-out;
+	/* TODO: This would be nice, but it breaks the arrow-box... */
+	/* max-height: 50%;
+	overflow-y: auto; */
+}
+
+#hovercard:not(.popup) {
+	opacity: 0;
+	display: none;
+	transform: translateY(0);
+}
+
+.popup {
+	display: block;
+	opacity: 1;
+	transform: translateY(-10px);
+}
+
+.arrow-box {
+	position: relative;
+	background: white;
+}
+
+.arrow-box:after {
+	bottom: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-color: rgba(255, 255, 255, 0);
+	border-bottom-color: white;
+	border-width: 10px;
+	margin-left: -10px;
+}
+
+#hovercard p {
+	padding: 1em;
+	line-height: 1.4em;
+}
+
+#hovercard p+p {
+	padding-top: 0;
+}
+
+#hovercard li {
+	margin: .25em;
+}
+
+#hovercard pre > code {
+	border-radius: 0;
+}
+
+#hovercard li {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+#hovercard .nonstandard-flag {
+	float: right;
+}
+
+#hovercard .module-link {
+	display: block;
+	text-decoration: none;
+	font-size: 18px;
+	line-height: 1em;
+	font-weight: bold;
+	padding: .5em 1em;
+}
+
+#hovercard .module-link:hover {
+	background: #f5f5f5;
+}
+
+#hovercard .module-link:last-child {
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+#hovercard .module-link-description {
+	font-size: 14px;
+	color: #555;
+	margin-left: .5em;
+	font-weight: normal;
+}
+
+#hovercard-namespace-box,
+#hovercard-inline-link {
+	border: 0px solid #f0f6f7;
+}
+
+#hovercard-namespace-box {
+	border-bottom-width: 1px;
+}
+
+#hovercard-inline-link {
+	border-top-width: 1px;
+}
+
+#hovercard-inline-link a {
+	display: block;
+	padding: 8px 10px;
+	text-decoration: none;
+	font-size: 85%;
+	font-weight: bold;
+	text-align: center;
+}
+
+#hovercard-namespace {
+	font-weight: bold;
+}
 
 
 

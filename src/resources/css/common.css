@@ -190,6 +190,24 @@ header nav>ul {
 	color: var(--topbar-link-color-hover);
 }
 
+#zerossl-link {
+	display: block;
+	font-weight: bold;
+}
+
+#zerossl-logo {
+	height: 1.5em;
+	position: relative;
+	top: 4px;
+	margin-top: -4px;
+	padding-right: 2px;
+	box-sizing: initial;
+}
+
+.dark #zerossl-logo {
+	filter: invert(1) hue-rotate(180deg);
+}
+
 .navbar {
 	display: flex;
 	align-items: center;
@@ -243,10 +261,6 @@ header nav ul {
 .icon {
 	height: 1.4em;
 	vertical-align: middle;
-}
-
-.logo-link {
-	line-height: 0; /* avoid extra space along the bottom for some reason */
 }
 
 .logo {

@@ -3,11 +3,11 @@ ready(function() {
 	let currentPageLink = $_('main nav a[href="'+window.location.pathname+'"]');
 	if (window.location.pathname.startsWith("/docs/json/")) {
 		// as a special case, highlight the JSON structure link anywhere within it
-		currentPageLink = $_('main nav a[href="/docs/json/"]');
+		currentPageLink = $_('main nav a[href="/docs/json"]');
 	}
 	if (window.location.pathname.startsWith("/docs/modules/")) {
 		// as another special case, highlight the modules link anywhere within it
-		currentPageLink = $_('main nav a[href="/docs/modules/"]');
+		currentPageLink = $_('main nav a[href="/docs/modules"]');
 	}
 	currentPageLink?.classList?.add('current');
 

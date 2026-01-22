@@ -17,6 +17,9 @@
 
 		<script src="/resources/js/vendor/marked.min.js{{template "cacheBust"}}"></script>
 		<script src="/resources/js/docs.js{{template "cacheBust"}}"></script>
+		<script src="/resources/js/docs-api.js{{template "cacheBust"}}"></script>
+		<script src="/resources/js/json-docs.js{{template "cacheBust"}}"></script>
+		<script src="/resources/js/module-docs.js{{template "cacheBust"}}"></script>
 	</head>
 	<body>
 		{{include "/includes/header.html" ""}}
@@ -38,14 +41,70 @@
 					<div id="docs-menu-container">
 						<ul>
 							<li class="heading">Get Caddy</li>
+							<li><a href="/docs/install">Install</a></li>
+							<li><a href="/docs/build">Build from source</a></li>
+						</ul>
+						<ul>
+							<li class="heading">Tutorials</li>
+							<li><a href="/docs/getting-started">Getting Started</a></li>
 							<li>
-								<a href="/docs/install">Install</a>
+								<a href="/docs/quick-starts">Quick-starts</a>
 								<ul>
-									<li><a href="/docs/install/packages">OS packages</a></li>
-									<li><a href="/docs/install/downloads">Static binaries</a></li>
-									<li><a href="/docs/install/plugins">With plugins</a></li>
+									<li><a href="/docs/quick-starts/api">Using the API</a></li>
+									<li><a href="/docs/quick-starts/caddyfile">Using a Caddyfile</a></li>
+									<li><a href="/docs/quick-starts/static-files">Static files</a></li>
+									<li><a href="/docs/quick-starts/reverse-proxy">Reverse proxy</a></li>
+									<li><a href="/docs/quick-starts/https">HTTPS</a></li>
 								</ul>
 							</li>
+							<li><a href="/docs/api-tutorial">Caddy API</a></li>
+							<li><a href="/docs/caddyfile-tutorial">Caddyfile</a></li>
+						</ul>
+						<ul>
+							<li class="heading">Reference</li>
+							<li><a href="/docs/command-line">Command Line</a></li>
+							<li><a href="/docs/api">API</a></li>
+							<li>
+								<a href="/docs/caddyfile">Caddyfile</a>
+								<ul>
+									<li><a href="/docs/caddyfile/concepts">Concepts</a></li>
+									<li><a href="/docs/caddyfile/options">Global options</a></li>
+									<li><a href="/docs/caddyfile/directives">Directives</a></li>
+									<li><a href="/docs/caddyfile/matchers">Request matchers</a></li>
+									<li><a href="/docs/caddyfile/response-matchers">Response matchers</a></li>
+									<li><a href="/docs/caddyfile/patterns">Common patterns</a></li>
+								</ul>
+							</li>
+							<li><a href="/docs/modules">Modules</a></li>
+							<li><a href="/docs/json">JSON Config Structure</a></li>
+							<li><a href="/docs/automatic-https">Automatic HTTPS</a></li>
+						</ul>
+						<ul>
+							<li class="heading">Articles</li>
+							<li><a href="/docs/architecture">Caddy Architecture</a></li>
+							<li><a href="/docs/conventions">Conventions</a></li>
+							<li><a href="/docs/config-adapters">Config Adapters</a></li>
+							<li><a href="/docs/running">Keep Caddy Running</a></li>
+							<li><a href="/docs/logging">How Logging Works</a></li>
+							<li><a href="/docs/metrics">Monitoring Caddy</a></li>
+							<li><a href="/docs/profiling">Profiling Caddy</a></li>
+							<li><a href="/docs/signature-verification">Verifying Asset Signatures</a></li>
+					
+							<li class="heading">Developers</li>
+							<li>
+								<a href="/docs/extending-caddy">Extending Caddy</a>
+								<ul>
+									<li><a href="/docs/extending-caddy/caddyfile">Caddyfile Support</a></li>
+									<li><a href="/docs/extending-caddy/config-adapters">Config Adapters</a></li>
+									<li><a href="/docs/extending-caddy/placeholders">Placeholders</a></li>
+								</ul>
+							</li>
+							<li><a href="/docs/extending-caddy/namespaces">Module Namespaces</a></li>
+						</ul>
+
+						<!-- <ul>
+							<li class="heading">Get Caddy</li>
+							<li><a href="/docs/install">Install</a></li>
 							<li><a href="/docs/build">Build from source</a></li>
 						</ul>
 						
@@ -63,7 +122,7 @@
 							<li class="heading">Reference</li>
 							<li><a href="/docs/command-line">Command line</a></li>
 							<li><a href="/docs/api">API</a></li>
-							<li><a href="/docs/json/">JSON config</a></li>
+							<li><a href="/docs/json">JSON config</a></li>
 							<li>
 								<a href="/docs/caddyfile">Caddyfile</a>
 								<ul>
@@ -74,14 +133,12 @@
 									<li><a href="/docs/caddyfile/patterns">Common patterns</a></li>
 								</ul>
 							</li>
-							<!-- <li><a href="/docs/caddyfile">Caddyfile</a></li> -->
 							<li><a href="/docs/automatic-https">Automatic HTTPS</a></li>
 							<li><a href="/docs/automatic-https">Modules</a></li>
 						</ul>
 
 						<ul>
 							<li class="heading">Articles</li>
-							<!-- <li><a href="/docs/v2-upgrade">Upgrading to Caddy 2</a></li> -->
 							<li><a href="/docs/conventions">Conventions</a></li>
 							<li><a href="/docs/config-adapters">Config Adapters</a></li>
 							<li><a href="/docs/logging">How Logging Works</a></li>
@@ -97,7 +154,7 @@
 							<li><a href="/docs/contribute">Contribute</a></li>
 							<li><a href="/docs/extend">Write a module</a></li>
 						</ul>
-					</ul>
+					</ul> -->
 				</nav>
 
 				<article>
@@ -181,5 +238,7 @@
 				</nav>
 			</div>
 		</main>
+
+		{{include "/includes/footer.html"}}
 	</body>
 </html>

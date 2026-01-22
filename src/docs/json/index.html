@@ -2,17 +2,16 @@
 <html>
 	<head>
 		<title>JSON Config Structure - Caddy Documentation</title>
-		{{import "/old/includes/docs/head.html"}}
-		{{template "docs-head"}}
+		{{import "/includes/head.html"}}
+		{{template "head" .}}
 		<link rel="stylesheet" href="/old/resources/css/docs-json.css{{template "cacheBust"}}">
-		<script src="/old/resources/js/marked-0.8.0.min.js"></script>
-		<script src="/old/resources/js/docs-api.js{{template "cacheBust"}}"></script>
-		<script src="/old/resources/js/json-docs.js{{template "cacheBust"}}"></script>
+		<script src="/resources/js/docs-api.js{{template "cacheBust"}}"></script>
+		<script src="/resources/js/json-docs.js{{template "cacheBust"}}"></script>
 	</head>
 	<body>
-		{{include "/old/includes/docs/header.html"}}
+		{{include "/includes/header.html" ""}}
 		<main>
-			{{include "/old/includes/docs/nav.html"}}
+			{{include "/includes/docs/nav.html"}}
 			<div class="article-container">
 				<div class="paper" id="paper1"></div>
 				<div class="paper" id="paper2"></div>
@@ -21,16 +20,16 @@
 						<div class="breadcrumbs">
 							<!--Populated by JS-->
 						</div>
-						{{include "/old/includes/docs/renderbox.html"}}
-						{{include "/old/includes/docs/details.html"}}
+						{{include "/includes/docs/renderbox.html"}}
+						{{include "/includes/docs/details.html"}}
 					</article>
 				</div>
 			</div>
 			<div class="sidebar"></div>
 		</main>
 
-		{{include "/old/includes/docs/hovercard.html"}}
+		{{include "/includes/hovercard.html"}}
 
-		{{include "/old/includes/footer.html"}}
+		{{include "/includes/footer.html"}}
 	</body>
 </html>
