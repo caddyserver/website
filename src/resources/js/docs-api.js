@@ -165,28 +165,30 @@ ready(function() {
 });
 
 function beginRenderingInto($tpl, moduleID, module) {
-	$tpl.data('module-id', moduleID);
+	$tpl.dataset.moduleId = moduleID;
 	pageData[moduleID] = module;
 
 	// show notice if module is non-standard
 	if (module.repo) {
 		if (!isStandard(module.structure.type_name)) {
 			let { pkg, _ } = splitTypeName(module.structure.type_name);
-			$_('.nonstandard-project-link', $tpl).attr('href', module.repo).text(module.repo);
-			$_('.nonstandard-package-path', $tpl).text(pkg);
-			$_('.nonstandard-notice', $tpl).css('display', 'block').prepend(nonStandardFlag); // for some reason show() dosen't work
+			$_('.nonstandard-project-link', $tpl).href = module.repo;
+			$_('.nonstandard-project-link', $tpl).innerText = module.repo;
+			$_('.nonstandard-package-path', $tpl).innerText = pkg;
+			$_('.nonstandard-notice', $tpl).style.display = 'block';
+			$_('.nonstandard-notice', $tpl).innerHTML = nonStandardFlag + $_('.nonstandard-notice', $tpl).innerHTML;
 		}
 
-		var $repoName = $_('<span/>').text(stripScheme(module.repo));
-		$_('.module-repo-selector', $tpl).innerHTML = '<span class="module-repo-selector-arrow">&#9656;</span>';
-		$_('.module-repo-selector', $tpl).append($repoName);
+		$_('.module-repo-selector', $tpl).innerHTML = `
+			<span class="module-repo-selector-arrow">&#9656;</span>
+			<span>${stripScheme(module.repo)}</span>`;
 	}
 
 	// for most types, just render their docs; but for maps or arrays, fall through to underlying type for docs
 	let rawDocs = module.structure.doc ?? module.structure.elems;
 
 	$_('.top-doc', $tpl).innerHTML = markdown(replaceGoTypeNameWithCaddyModuleName(rawDocs, module, moduleID));
-	$_('.top-doc', $tpl).append(makeSubmoduleList(module, "", module.structure));
+	$_('.top-doc', $tpl).innerHTML += makeSubmoduleList(module, "", module.structure);
 
 	let $group = newGroup();
 	renderData($tpl, module, module.structure, 0, "", $group);
@@ -331,7 +333,7 @@ function appendToFieldDocs($tpl, module, cleanFieldPath, fieldDoc) {
 	if (canTraverse(module)) {
 		dt = `<a href="./${cleanFieldPath}/">${dt}</a>`;
 	}
-	$_('.field-list-contents', $tpl).append('<dt class="field-name" id="'+cleanFieldPath+'"><a href="#'+cleanFieldPath+'" class="inline-link">&#128279;</a>'+dt+'</dt> <dd>'+fieldDoc+'</dd>');
+	$_('.field-list-contents', $tpl).innerHTML += `<dt class="field-name" id="${cleanFieldPath}"><a href="#${cleanFieldPath}" class="inline-link">&#128279;</a>${dt}</dt> <dd>${fieldDoc}</dd>`;
 }
 
 function indent(nesting, $group) {

@@ -97,6 +97,22 @@ ready(function() {
 	});
 });
 
+
+// addLinkaddLinksToSubdirectivessToAnchors finds all the ID anchors
+// in the article, and turns any directive or subdirective span into
+// links that have an ID on the page. This is opt-in for each page,
+// because it's not necessary to run everywhere.
+function addLinksToSubdirectives() {
+	let anchors = $('article *[id]').map((i, el) => el.id).toArray();
+	$('pre.chroma .k')
+		.filter((k, item) => anchors.includes(item.innerText))
+		.map(function(k, item) {
+			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+			let url = '#' + item.innerText;
+			$(item).html('<a href="' + url + '" style="color: inherit;" title="' + text + '">' + text + '</a>');
+		});
+}
+
 // toggle left-nav when menu link is clicked
 on('click', '#docs-menu', e => {
 	const nav = $_('#docs-menu-container');
@@ -110,3 +126,45 @@ on('click', '#docs-menu', e => {
 function anchorID(text) {
 	return text.trim().toLowerCase().replace(/\s/g, '-').replace(/[^\w-]/g, '');
 }
+
+function truncate(str, maxLen) {
+	if (!str) return "";
+	str = str.trim();
+	let firstPeriod = str.match(/\.(\s|$)/); // first dot not in the middle of a word, or at end of string
+	let terminate = firstPeriod ? firstPeriod.index+1 : str.length;
+	str = str.substring(0, terminate);
+	if (str.length <= maxLen) {
+		return str;
+	}
+	return str+"...";
+}
+
+function moduleDocsPreview(mod, maxLen) {
+	if (!mod || !mod.docs) return "";
+	let short = truncate(mod.docs, maxLen);
+	if (short.indexOf(mod.name) === 0) {
+		short = short.substr(mod.name.length).trim();
+	}
+	return short;
+}
+
+const caddyImportPath = 'github.com/caddyserver/caddy/v2';
+
+function isStandard(packagePath) {
+	return packagePath.startsWith(caddyImportPath);
+}
+
+// splitTypeName splits a fully qualified type name into
+// its package path and type name components, for example:
+// "github.com/foo/bar.Type" => "github.com/foo/bar" and "Type".
+function splitTypeName(fqtn) {
+	let lastDotPos = fqtn.lastIndexOf('.');
+	let pkg = fqtn.substr(0, lastDotPos);
+	let typeName = fqtn.substr(lastDotPos+1);
+	return {pkg: pkg, typeName: typeName};
+}
+
+function stripScheme(url) {
+	return url.substring(url.indexOf("://")+3);
+}
+
