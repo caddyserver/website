@@ -269,6 +269,13 @@ h3 a {
 	color: var(--text-color-muted);
 	font-style: italic;
 }
+.testimonial-role a {
+	color: inherit;
+}
+.testimonial-role a:not([href]) {
+	text-decoration: none;
+	color: inherit;
+}
 
 
 

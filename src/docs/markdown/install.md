@@ -31,6 +31,8 @@ Our [official packages](https://github.com/caddyserver/dist) come only with the 
 - [Ansible](#ansible)
 - [Termux](#termux)
 - [Nix/Nixpkgs/NixOS](#nixnixpkgsnixos)
+- [Unikraft](#unikraft)
+- [OPNsense](#opnsense)
 
 
 ## Static binaries
@@ -61,6 +63,8 @@ After installing, please read the [service usage instructions](/docs/running#usi
 <pre><code class="cmd"><span class="bash">sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https curl</span>
 <span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg</span>
 <span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list</span>
+<span class="bash">chmod o+r /usr/share/keyrings/caddy-stable-archive-keyring.gpg</span>
+<span class="bash">chmod o+r /etc/apt/sources.list.d/caddy-stable.list</span>
 <span class="bash">sudo apt update</span>
 <span class="bash">sudo apt install caddy</span></code></pre>
 
@@ -69,6 +73,8 @@ After installing, please read the [service usage instructions](/docs/running#usi
 <pre><code class="cmd"><span class="bash">sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https curl</span>
 <span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/testing/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-testing-archive-keyring.gpg</span>
 <span class="bash">curl -1sLf 'https://dl.cloudsmith.io/public/caddy/testing/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-testing.list</span>
+<span class="bash">chmod o+r /usr/share/keyrings/caddy-testing-archive-keyring.gpg</span>
+<span class="bash">chmod o+r /etc/apt/sources.list.d/caddy-testing.list</span>
 <span class="bash">sudo apt update</span>
 <span class="bash">sudo apt install caddy</span></code></pre>
 
@@ -81,17 +87,17 @@ If you wish to use the packaged support files (systemd services, bash completion
 
 This package comes with both of Caddy's [systemd service](/docs/running#linux-service) unit files, but does not enable them by default. Using the service is recommended. If you do, please read the [service usage instructions](/docs/running#using-the-service).
 
-Fedora or RHEL/CentOS 8:
+Fedora:
 
-<pre><code class="cmd"><span class="bash">dnf install 'dnf-command(copr)'</span>
+<pre><code class="cmd"><span class="bash">dnf install dnf5-plugins</span>
 <span class="bash">dnf copr enable @caddy/caddy</span>
 <span class="bash">dnf install caddy</span></code></pre>
 
-RHEL/CentOS 7:
+CentOS/RHEL:
 
-<pre><code class="cmd"><span class="bash">yum install yum-plugin-copr</span>
-<span class="bash">yum copr enable @caddy/caddy</span>
-<span class="bash">yum install caddy</span></code></pre>
+<pre><code class="cmd"><span class="bash">dnf install dnf-plugins-core</span>
+<span class="bash">dnf copr enable @caddy/caddy</span>
+<span class="bash">dnf install caddy</span></code></pre>
 
 [**View the Caddy COPR**](https://copr.fedorainfracloud.org/coprs/g/caddy/caddy/)
 
@@ -201,3 +207,32 @@ _Note: This is a community-maintained installation method._
 - NixOS module: [`services.caddy`](https://search.nixos.org/options?channel=unstable&show=services.caddy.enable&query=services.caddy)
 
 [**View Caddy in the Nixpkgs search**](https://search.nixos.org/packages?channel=unstable&show=caddy&query=caddy) and [**the NixOS options search**](https://search.nixos.org/options?channel=unstable&show=services.caddy.enable&query=services.caddy)
+
+
+
+## Unikraft
+
+_Note: This is a community-maintained installation method._
+
+First install Unikraft's companion tool, [`kraft`](https://unikraft.org/docs/cli):
+
+<pre><code class="cmd">curl --proto '=https' --tlsv1.2 -sSf https://get.kraftkit.sh | sh</code></pre>
+
+Then run Caddy with Unikraft using:
+
+<pre><code class="cmd">kraft run --rm -p 2015:2015 --plat qemu --arch x86_64 -M 256M caddy:2.7</code></pre>
+
+To allow non-localhost incoming connections, you need to [connect the unikernel instance to a network](https://unikraft.org/docs/cli/running#connecting-a-unikernel-instance-to-a-network).
+
+[**View the Unikraft application catalog**](https://github.com/unikraft/catalog/tree/main/examples/caddy) and [**the KraftCloud platform examples (powered by Unikraft)**](https://github.com/kraftcloud/examples/tree/main/caddy).
+
+
+
+## OPNsense
+
+_Note: This is a community-maintained installation method._
+
+<pre><code class="cmd">pkg install os-caddy</code></pre>
+
+[**View the FreeBSD caddy-custom makefile**](https://github.com/opnsense/ports/blob/master/www/caddy-custom/Makefile) and [**the os-caddy plugin source**](https://github.com/opnsense/plugins/tree/master/www/caddy)
+

@@ -24,4 +24,7 @@ try_files {path}.html {path}
 }
 rewrite @notDirectDocsMarkdown /docs/index.html
 
+redir /docs/caddyfile/directives/basicauth /docs/caddyfile/directives/basic_auth 308
+redir /docs/caddyfile/directives/skip_log /docs/caddyfile/directives/log_skip 308
+
 reverse_proxy /api/* localhost:4444

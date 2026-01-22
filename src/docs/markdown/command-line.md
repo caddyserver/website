@@ -38,7 +38,7 @@ The `--flags` may have a single-letter shortcut like `-f`.
   A simple but production-ready file server
 
 - **[caddy file-server export-template](#caddy-file-server-export-template)**
-  Auxilary command for the file server to export the default file browser template
+  Auxiliary command for the file server to export the default file browser template
 
 - **[caddy fmt](#caddy-fmt)**
   Formats a Caddyfile
@@ -190,9 +190,12 @@ Prints the environment as seen by caddy, then exits. Can be useful when debuggin
 	[--listen &lt;addr&gt;]
 	[-d, --domain &lt;example.com&gt;]
 	[-b, --browse]
+	[--reveal-symlinks]
 	[-t, --templates]
 	[--access-log]
-	[-v, --debug]</code></pre>
+	[-v, --debug]
+	[--no-compress]
+	[-p, --precompressed]</code></pre>
 
 Spins up a simple but production-ready static file server.
 
@@ -204,11 +207,17 @@ Spins up a simple but production-ready static file server.
 
 `--browse` will enable directory listings if a directory without an index file is requested.
 
+`--reveal-symlinks` will show the target of symbolic links in directory listings, when `--browse` is enabled.
+
 `--templates` will enable template rendering.
 
 `--access-log` enables the request/access log.
 
 `--debug` enables verbose logging.
+
+`--no-compress` disables compression. By default, Zstandard and Gzip compression are enabled.
+
+`--precompressed` specifies encoding formats to search for precompressed sidecar files. Can be repeated for multiple formats. See the [file_server directive](/docs/caddyfile/directives/file_server#precompressed) for more information.
 
 This command disables the admin API, making it easier to run multiple instances on a local development machine.
 
@@ -234,29 +243,17 @@ Formats or prettifies a Caddyfile, then exits. The result is printed to stdout u
 `--diff` causes the output to be compared against the input, and lines will be prefixed with `-` and `+` where they differ. Note that unchanges lines are prefixed with two spaces for alignment, and that this is not a valid patch format; it's just meant as a visual tool.
 
 
-<aside class="advice">
-
-The `caddy fmt` command [does not support](https://github.com/caddyserver/caddy/issues/5930#issuecomment-1797709061) [heredocs](/docs/caddyfile/concepts#heredocs).
-
-</aside>
-
-
 ### `caddy hash-password`
 
 <pre><code class="cmd bash">caddy hash-password
 	[-p, --plaintext &lt;password&gt;]
-	[-a, --algorithm &lt;name&gt;]
-	[-s, --salt &lt;string&gt;]</code></pre>
+	[-a, --algorithm &lt;name&gt;]</code></pre>
 
 Convenient way to hash a plaintext password. The resulting hash is written to stdout as a format usable directly in your Caddy config.
 
 `--plaintext` is the plaintext form of the password. If omitted, interactive mode will be assumed and the user will be shown a prompt to enter the password manually.
 
 `--algorithm` may be `bcrypt` or any installed hash algorithm. Default is `bcrypt`.
-
-`--salt` is used only if the algorithm requires an external salt (like `scrypt`).
-
-Note that `scrypt` is deprecated. Please use `bcrypt` instead.
 
 
 
@@ -322,9 +319,9 @@ Because this command uses the API, the admin endpoint must not be disabled.
 
 `--config` is the config file to apply. If `-`, the config is read from stdin. If not specified, it will try a file called `Caddyfile` in the current working directory and, if it exists, it will adapt it using the `caddyfile` config adapter; otherwise, it is an error if there is no config file to load.
 
-`--adapter` specifies a config adapter to use, if any.
+`--adapter` specifies a config adapter to use, if any. This flag is not necessary if the `--config` filename starts with `Caddyfile` or ends with `.caddyfile` which assumes the `caddyfile` adapter. Otherwise, this flag is required if the provided config file is not in Caddy's native JSON format.
 
-`--address` needs to be used if the admin endpoint is not listening on the default address and if it is different from the address in the provided config file. Note that only TCP addresses are supported at this time.
+`--address` needs to be used if the admin endpoint is not listening on the default address and if it is different from the address in the provided config file.
 
 `--force` will cause a reload to happen even if the specified config is the same as what Caddy is already running. Can be useful to force Caddy to reprovision its modules, which can have side-effects, for example: reloading manually-loaded TLS certificates.
 
@@ -458,7 +455,7 @@ Runs Caddy and blocks indefinitely; i.e. "daemon" mode.
 
 `--config` specifies an initial config file to immediately load and use. If `-`, the config is read from stdin. If no config is specified, Caddy will run with a blank configuration and use default settings for the [admin API endpoints](/docs/api), which can be used to feed it new configuration. As a special case, if the current working directory has a file called "Caddyfile" and the `caddyfile` config adapter is plugged in (default), then that file will be loaded and used to configure Caddy, even without any command line flags.
 
-`--adapter` is the name of the config adapter to use when loading the initial config, if any. This flag is not necessary if the `--config` filename starts with "Caddyfile" which assumes the `caddyfile` adapter. Otherwise, this flag is required if the provided config file is not in Caddy's native JSON format. Any warnings will be printed to the log, but beware that any adaptation without errors will immediately be used, even if there are warnings. If you want to review the results of the adaptation first, use the [`caddy adapt`](#caddy-adapt) subcommand.
+`--adapter` is the name of the config adapter to use when loading the initial config, if any. This flag is not necessary if the `--config` filename starts with `Caddyfile` or ends with `.caddyfile` which assumes the `caddyfile` adapter. Otherwise, this flag is required if the provided config file is not in Caddy's native JSON format. Any warnings will be printed to the log, but beware that any adaptation without errors will immediately be used, even if there are warnings. If you want to review the results of the adaptation first, use the [`caddy adapt`](#caddy-adapt) subcommand.
 
 `--pidfile` writes the PID to the specified file.
 
@@ -471,7 +468,9 @@ Runs Caddy and blocks indefinitely; i.e. "daemon" mode.
 `--watch` will watch the config file and automatically reload it after it changes. ⚠️ This feature is intended for use only in local development environments!
 
 <aside class="advice">
-	Do not stop the server to change configuration while running in production! That will result in downtime. (This should be obvious but you'd be surprised how many complaints we get about it.) Use the <a href="#caddy-reload">caddy reload</a> command instead.
+
+Do not stop the server to change configuration while running in production! That will result in downtime. (This should be obvious but you'd be surprised how many complaints we get about it.) Use the [`caddy reload`](#caddy-reload) command instead.
+
 </aside>
 
 
@@ -655,7 +654,7 @@ Validates a configuration file, then exits. This command deserializes the config
 
 `--config` is the config file to validate. If `-`, the config is read from stdin. Default is the `Caddyfile` in the current directory, if any.
 
-`--adapter` is the name of the config adapter to use, if the config file is not in Caddy's native JSON format. If the config file starts with `Caddyfile`, the `caddyfile` adapter is used by default.
+`--adapter` is the name of the config adapter to use. This flag is not necessary if the `--config` filename starts with `Caddyfile` or ends with `.caddyfile` which assumes the `caddyfile` adapter. Otherwise, this flag is required if the provided config file is not in Caddy's native JSON format.
 
 `--envfile` loads environment variables from the specified file, in `KEY=VALUE` format. Comments starting with `#` are supported; keys may be prefixed with `export`; values may be double-quoted (double-quotes within can be escaped); multi-line values are supported.
 

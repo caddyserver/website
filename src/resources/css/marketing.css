@@ -247,7 +247,7 @@ section.dark .cols {
 
 
 .cols .col {
-	min-width: 350px;
+	min-width: 300px;
 	padding-left: 1em;
 	flex: 1;
 }
@@ -567,6 +567,7 @@ div.ap-wrapper:fullscreen div.ap-player {
 
 .sponsor-experience .experience-logo {
 	width: 150px;
+	margin: auto;
 }
 
 .sponsor-experience .experience-credit {
@@ -598,6 +599,10 @@ div.ap-wrapper:fullscreen div.ap-player {
 
 .sponsor-experience.stripe {
 	background: linear-gradient(to right, #635bff 30%, #d4b8ff);
+}
+
+.sponsor-experience.hopetv {
+	background: linear-gradient(to right, rgb(11, 77, 162) 30%, rgb(255, 212, 0));
 }
 
 

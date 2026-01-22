@@ -20,7 +20,7 @@ window.$(function() {
 
 # handle_path
 
-Works the same as the [`handle` directive](/docs/caddyfile/directives/handle), but implicitly uses [`uri strip_prefix`](/docs/caddyfile/directives/uri) to strip the matched path prefix.
+Works the same as the [`handle` directive](handle), but implicitly uses [`uri strip_prefix`](uri) to strip the matched path prefix.
 
 Handling a request matching a certain path (while stripping that path from the request URI) is a common enough use case that it has its own directive for convenience.
 
@@ -47,7 +47,7 @@ handle_path /prefix/* {
 }
 ```
 
-is effectively the same as this:
+👆 is effectively the same as this 👇, but the `handle_path` form 👆 is slightly more succinct
 
 ```caddy-d
 handle /prefix/* {
@@ -56,4 +56,19 @@ handle /prefix/* {
 }
 ```
 
-but the `handle_path` form is slightly more succinct.
+A full Caddyfile example, where `handle_path` and `handle` are mutually exclusive; but, be aware of the [subfolder problem <img src="/old/resources/images/external-link.svg" class="external-link">](https://caddy.community/t/the-subfolder-problem-or-why-cant-i-reverse-proxy-my-app-into-a-subfolder/8575)
+
+```caddy
+example.com {
+	# Serve your API, stripping the /api prefix
+	handle_path /api/* {
+		reverse_proxy localhost:9000
+	}
+
+	# Serve your static site
+	handle {
+		root * /srv
+		file_server
+	}
+}
+```

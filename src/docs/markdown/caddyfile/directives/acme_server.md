@@ -18,9 +18,19 @@ Using ACME server defaults, ACME clients should simply be configured to use `htt
 
 ```caddy-d
 acme_server [<matcher>] {
-	ca        <id>
-	lifetime  <duration>
-	resolvers <resolvers...>
+	ca         <id>
+	lifetime   <duration>
+	resolvers  <resolvers...>
+	challenges <challenges...>
+	allow_wildcard_names
+	allow {
+		domains <domains...>
+		ip_ranges <addresses...>
+	}
+	deny {
+		domains <domains...>
+		ip_ranges <addresses...>
+	}
 }
 ```
 
@@ -28,4 +38,52 @@ acme_server [<matcher>] {
 
 - **lifetime** (Default: `12h`) is a [duration](/docs/conventions#durations) which specifies the validity period for issued certificates. This value must be less than the lifetime of the [intermediate certificate](/docs/caddyfile/options#intermediate-lifetime) used for signing. It is not recommended to change this unless absolutely necessary.
 
-- **resolvers** are the addresses of DNS resolvers to use when looking up the TXT records for solving ACME DNS challenges. Accepts [network addresses](/docs/conventions#network-addresses) defaulting to UDP and port 53 unless specified. If the host is an IP address, it will be dialed directly to resolve the upstream server. If the hot is not an IP address, the addresses are resolved using the [name resolution convention](https://golang.org/pkg/net/#hdr-Name_Resolution) of the Go standard library. If multiple resolvers are specified, then one is chosen at random.
+- **resolvers** are the addresses of DNS resolvers to use when looking up the TXT records for solving ACME DNS challenges. Accepts [network addresses](/docs/conventions#network-addresses) defaulting to UDP and port 53 unless specified. If the host is an IP address, it will be dialed directly to resolve the upstream server. If the host is not an IP address, the addresses are resolved using the [name resolution convention](https://golang.org/pkg/net/#hdr-Name_Resolution) of the Go standard library. If multiple resolvers are specified, then one is chosen at random.
+
+- **challenges** sets the enabled challenge types. If not set or the directive is used without values, then all challenge types are enabled. Accepted values are: http-01, tls-alpn-01, dns-01.
+
+- **allow_wildcard_names** enables issuing of certificates with wildcard SAN (Subject Alternative Name)
+
+- **allow**, **deny** configure the operational policy of the `acme_server`. The policy evaluation follows the criteria described by Step-CA [here](https://smallstep.com/docs/step-ca/policies/#policy-evaluation).
+
+	- **domains** sets the subject domain names to be allowed or denied per the policy evaluation criteria.
+
+	- **ip_ranges** sets the subject IP ranges to be allowed or denied per the policy evaluation criteria.
+
+## Examples
+
+To serve an ACME server with ID `home` on the domain `acme.example.com`, with the CA customized via the [`pki` global option](/docs/caddyfile/options#pki-options), and issuing its own certificate using the `internal` issuer:
+
+```caddy
+{
+	pki {
+		ca home {
+			name "My Home CA"
+		}
+	}
+}
+
+acme.example.com {
+	tls {
+		issuer internal {
+			ca home
+		}
+	}
+	acme_server {
+		ca home
+	}
+}
+```
+
+If you have another Caddy server, it can use the above ACME server to issue its own certificates:
+
+```caddy
+{
+	acme_ca https://acme.example.com/acme/home/directory
+	acme_ca_root /path/to/home_ca_root.crt
+}
+
+example.com {
+	respond "Hello, world!"
+}
+```

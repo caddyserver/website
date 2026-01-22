@@ -118,7 +118,7 @@ We'll list some of the most common v1 directives here and describe how to conver
 
 ### basicauth
 
-HTTP Basic Authentication is still configured with the [`basicauth`](/docs/caddyfile/directives/basicauth) directive. However, Caddy 2 configuration does not accept plaintext passwords. You must hash them, which the [`caddy hash-password`](/docs/command-line#caddy-hash-password) can help with.
+HTTP Basic Authentication is still configured with the [`basic_auth`](/docs/caddyfile/directives/basic_auth) directive. However, Caddy 2 configuration does not accept plaintext passwords. You must hash them, which the [`caddy hash-password`](/docs/command-line#caddy-hash-password) can help with.
 
 - **v1:**
 ```
@@ -127,7 +127,7 @@ basicauth /secret/ Bob hiccup
 
 - **v2:**
 ```caddy-d
-basicauth /secret/* {
+basic_auth /secret/* {
 	Bob JDJhJDEwJEVCNmdaNEg2Ti5iejRMYkF3MFZhZ3VtV3E1SzBWZEZ5Q3VWc0tzOEJwZE9TaFlZdEVkZDhX
 }
 ```

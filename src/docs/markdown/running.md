@@ -13,6 +13,9 @@ While Caddy can be run directly with its [command line interface](/docs/command-
   - [Using the Service](#using-the-service)
   - [Local HTTPS](#local-https-with-systemd)
   - [Overrides](#overrides)
+	- [Environment variables](#environment-variables)
+	- [`run` and `reload` override](#run-and-reload-override)
+	- [Restart on crash](#restart-on-crash)
   - [SELinux Considerations](#selinux-considerations)
 - [Windows service](#windows-service)
   - [sc.exe](#scexe)
@@ -30,7 +33,7 @@ The recommended way to run Caddy on Linux distributions with systemd is with our
 
 ### Unit Files
 
-We provide two different systemd unit files that you can choose between, depending on your usecase:
+We provide two different systemd unit files that you can choose between, depending on your use case:
 
 - [**`caddy.service`**](https://github.com/caddyserver/dist/blob/master/init/caddy.service) if you configure Caddy with a [Caddyfile](/docs/caddyfile). If you prefer to use a different config adapter or a JSON config file, you may [override](#overrides) the `ExecStart` and `ExecReload` commands.
 
@@ -138,7 +141,9 @@ The best way to override aspects of the service files is with this command:
 
 This will open a blank file with your default terminal text editor in which you can override or add directives to the unit definition. This is called a "drop-in" file.
 
-For example, if you need to define environment variables for use in your config, you may do so like this:
+#### Environment variables
+
+If you need to define environment variables for use in your config, you may do so like this:
 ```systemd
 [Service]
 Environment="CF_API_TOKEN=super-secret-cloudflare-tokenvalue"
@@ -150,7 +155,15 @@ Similarly, if you prefer to maintain a separate file to maintain the environment
 EnvironmentFile=/etc/caddy/.env
 ```
 
-Or, for example if you need to change the config file from the default of the Caddyfile, to instead using a JSON file (note that `Exec*` directives [must be reset with empty strings](https://www.freedesktop.org/software/systemd/man/systemd.service.html#ExecStart=) before setting a new value):
+Then your `/etc/caddy/.env` file may look like this (do not use `"` quotes around the values):
+
+```env
+CF_API_TOKEN=super-secret-cloudflare-tokenvalue
+```
+
+#### `run` and `reload` override
+
+If you need to change the config file from the default of the Caddyfile, to instead using a JSON file (note that `Exec*` directives [must be reset with empty strings](https://www.freedesktop.org/software/systemd/man/systemd.service.html#ExecStart=) before setting a new value):
 ```systemd
 [Service]
 ExecStart=
@@ -159,7 +172,9 @@ ExecReload=
 ExecReload=/usr/bin/caddy reload --config /etc/caddy/caddy.json
 ```
 
-Or, for example, if you'd like caddy to restart itself after 5s if it ever crashes unexpectedly:
+#### Restart on crash
+
+If you'd like caddy to restart itself after 5s if it ever crashes unexpectedly:
 ```systemd
 [Service]
 # Automatically restart caddy if it crashes except if the exit code was 1
@@ -170,6 +185,8 @@ RestartSec=5s
 
 Then, save the file and exit the text editor, and restart the service for it to take effect:
 <pre><code class="cmd bash">sudo systemctl restart caddy</code></pre>
+
+
 
 ### SELinux Considerations
 
@@ -241,7 +258,7 @@ Add a `caddy-service.xml` in the same directory:
 You can now install the service using:
 <pre><code class="cmd bash">caddy-service install</code></pre>
 
-You might want to start the Windows Services Console to see if the service is runnnig correctly:
+You might want to start the Windows Services Console to see if the service is running correctly:
 <pre><code class="cmd bash">services.msc</code></pre>
 
 Be aware that Windows services cannot be reloaded, so you have to tell caddy directly to reload:
@@ -276,7 +293,7 @@ services:
       - "443:443"
       - "443:443/udp"
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./conf:/etc/caddy
       - ./site:/srv
       - caddy_data:/data
       - caddy_config:/config
@@ -292,11 +309,11 @@ What this does:
 
 - Uses the `unless-stopped` restart policy to make sure the Caddy container is restarted automatically when your machine is rebooted.
 - Binds to ports `80` and `443` for HTTP and HTTPS respectively, plus `443/udp` for HTTP/3.
-- Bind mounts the `Caddyfile` file which is your Caddy configuration.
+- Bind mounts the `conf` directory which contains your Caddyfile configuration.
 - Bind mounts the `site` directory to serve your site's static files from `/srv`.
 - Named volumes for `/data` and `/config` to [persist important information](/docs/conventions#file-locations).
 
-Then, create a file named `Caddyfile` beside the `compose.yml`, and write your [Caddyfile](/docs/caddyfile/concepts) config.
+Then, create a file named `Caddyfile` as the only file in the `conf` directory, and write your [Caddyfile](/docs/caddyfile/concepts) config.
 
 If you have static files to serve, you may place them in a `site/` directory beside the configs, then set the [`root`](/docs/caddyfile/directives/root) using `root * /srv`. If you don't, then you may remove the `/srv` volume mount.
 

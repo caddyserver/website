@@ -24,6 +24,8 @@ Most often, the `file_server` directive is paired with the [`root`](root) direct
 
 When errors occur (e.g. file not found `404`, permission denied `403`), the error routes will be invoked. Use the [`handle_errors`](handle_errors) directive to define error routes, and display custom error pages.
 
+When using `browse`, the default output is produced by the the HTML template. Clients may request the directory listing as either JSON or plaintext, by using the `Accept: application/json` or `Accept: text/plain` headers respectively. The JSON output can be useful for scripting, and the plaintext output can be useful for human terminal usage.
+
 
 ## Syntax
 
@@ -33,8 +35,11 @@ file_server [<matcher>] [browse] {
 	root          <path>
 	hide          <files...>
 	index         <filenames...>
-	browse        [<template_file>]
-	precompressed <formats...>
+	browse        [<template_file>] {
+		reveal_symlinks
+		sort <sort_field> [<direction>]
+	}
+	precompressed [<formats...>]
 	status        <status>
 	disable_canonical_uris
 	pass_thru
@@ -42,6 +47,8 @@ file_server [<matcher>] [browse] {
 ```
 
 - **fs** <span id="fs"/> specifies an alternate (perhaps virtual) file system to use. Any Caddy module in the `caddy.fs` namespace can be used here. Any root path/prefix will still apply to alternate file system modules. By default, the local disk is used.
+
+	[`xcaddy`](/docs/build#xcaddy) v0.4.0 introduces the [`--embed` flag](https://github.com/caddyserver/xcaddy#custom-builds) to embed a filesystem tree into the custom Caddy build, and registers an `fs` module named `embedded` which allows your static site to be distributed as a Caddy executable.
 
 - **root** <span id="root"/> sets the path to the site root. It's similar to the [`root`](root) directive except it applies to this file server instance only and overrides any other site root that may have been defined. Default: `{http.vars.root}` or the current working directory. Note: This subdirective only changes the root for this handler. For other directives (like [`try_files`](try_files) or [`templates`](templates)) to know the same site root, use the [`root`](root) directive instead.
 
@@ -51,9 +58,13 @@ file_server [<matcher>] [browse] {
 
 - **browse** <span id="browse"/> enables file listings for requests to directories that do not have an index file.
 
-  - **<template_file>** <span id="template_file"/> is an optional custom template file to use for directory listings. Defaults to the template that can be extracted using the command `caddy file-server export-template`, which will print the defaut template to stdout. The embedded template can also be found [here in the source code ![external link](/old/resources/images/external-link.svg)](https://github.com/caddyserver/caddy/blob/master/modules/caddyhttp/fileserver/browse.html). Browse templates can use actions from [the standard templates module](/docs/modules/http.handlers.templates#docs) as well.
+  - **<template_file>** <span id="template_file"/> is an optional custom template file to use for directory listings. Defaults to the template that can be extracted using the command `caddy file-server export-template`, which will print the default template to stdout. The embedded template can also be found [here in the source code ![external link](/old/resources/images/external-link.svg)](https://github.com/caddyserver/caddy/blob/master/modules/caddyhttp/fileserver/browse.html). Browse templates can use actions from [the standard templates module](/docs/modules/http.handlers.templates#docs) as well.
 
-- **precompressed** <span id="precompressed"/> is the list of encoding formats to search for precompressed sidecar files. Arguments are an ordered list of encoding formats to search for precompressed [sidecar files](https://en.wikipedia.org/wiki/Sidecar_file). Supported formats are `gzip` (`.gz`), `zstd` (`.zst`) and `br` (`.br`).
+  - **reveal_symlinks** <span id="reveal_symlinks"/> enables revealing the targets of symbolic links in directory listings. By default, the symlink targets are hidden, and only the link file itself is shown.
+
+  - **sort** <span id="sort"/> changes the default sort for directory listings. The first parameter is the field/column to sort by: `name`, `namedirfirst`, `size`, or `time`. The second argument is an optional direction: `asc` or `desc`. For example, `sort name desc` will sort by name in descending order.
+
+- **precompressed** <span id="precompressed"/> is the list of encoding formats to search for precompressed sidecar files. Arguments are an ordered list of encoding formats to search for precompressed [sidecar files](https://en.wikipedia.org/wiki/Sidecar_file). Supported formats are `gzip` (`.gz`), `zstd` (`.zst`) and `br` (`.br`). If formats are omitted, they default to `br zstd gzip` (in that order).
 
   All file lookups will look for the existence of the uncompressed file first. Once found Caddy will look for sidecar files with the file extension of each enabled format. If a precompressed sidecar file is found, Caddy will respond with the precompressed file, with the `Content-Encoding` response header set appropriately. Otherwise, Caddy will respond with the uncompressed file as normal. If the [`encode` directive](encode) is enabled, then it may compress the response on-the-fly if not precompressed.
 
@@ -62,6 +73,7 @@ file_server [<matcher>] [browse] {
 - **disable_canonical_uris** <span id="disable_canonical_uris"/> disables the default behaviour of redirecting (to add a trailing slash if the request path is a directory, or remove the trailing slash if the request path is a file). Note that by default, canonicalization will not happen if the last element of the request's path (the filename) underwent an internal rewrite, to avoid clobbering an explicit rewrite with implicit behaviour.
 
 - **pass_thru** <span id="pass_thru"/> enables pass-thru mode, which continues to the next HTTP handler in the route if the requested file is not found, instead of triggering a `404` error (invoking [`handle_errors`](handle_errors) routes). Practically, this is only useful inside of a [`route`](route) block with other handler directives following `file_server`, because this directive is effectively [ordered last](/docs/caddyfile/directives#directive-order).
+
 
 ## Examples
 
@@ -85,9 +97,11 @@ file_server /static/*
 
 The `file_server` directive is usually paired with the [`root` directive](root) to set the root path from which to serve files:
 
-```caddy-d
-root * /home/user/public_html
-file_server
+```caddy
+example.com {
+	root * /srv
+	file_server
+}
 ```
 
 <aside class="tip">
@@ -105,10 +119,10 @@ file_server {
 }
 ```
 
-If supported by the client (`Accept-Encoding` header) checks the existence of precompressed files along side the requested file. So if `/path/to/file` is requested, it checks for `/path/to/file.zst`, `/path/to/file.br` and `/path/to/file.gz` in that order and serves the first available file with corresponding Content-Encoding:
+If supported by the client (`Accept-Encoding` header) checks the existence of precompressed files along side the requested file. So if `/path/to/file` is requested, it checks for `/path/to/file.br`, `/path/to/file.zst` and `/path/to/file.gz` in that order and serves the first available file with corresponding `Content-Encoding`:
 
 ```caddy-d
 file_server {
-	precompressed zstd br gzip
+	precompressed
 }
 ```

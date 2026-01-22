@@ -64,7 +64,7 @@
 .chroma .mh { color: #008076 } /* Literal.Number.Hex */
 .chroma .mi { color: #008076 } /* Literal.Number.Integer */
 .chroma .mo { color: #008076 } /* Literal.Number.Oct */
-.chroma .sb { color: #93a1a1 } /* Literal.String.Backtick */
+.chroma .sb { color: #008076 } /* Literal.String.Backtick */
 .chroma .sc { color: #008076 } /* Literal.String.Char */
 .chroma .sd { color: #586e75 } /* Literal.String.Doc */
 .chroma .s2 { color: #008076 } /* Literal.String.Double */
@@ -143,7 +143,7 @@
 .dark .chroma:not(.light) .mh { color: #09a598 } /* Literal.Number.Hex */
 .dark .chroma:not(.light) .mi { color: #09a598 } /* Literal.Number.Integer */
 .dark .chroma:not(.light) .mo { color: #09a598 } /* Literal.Number.Oct */
-.dark .chroma:not(.light) .sb { color: #586e75 } /* Literal.String.Backtick */
+.dark .chroma:not(.light) .sb { color: #09a598 } /* Literal.String.Backtick */
 .dark .chroma:not(.light) .sc { color: #09a598 } /* Literal.String.Char */
 .dark .chroma:not(.light) .sd { color: #93a1a1 } /* Literal.String.Doc */
 .dark .chroma:not(.light) .s2 { color: #09a598 } /* Literal.String.Double */

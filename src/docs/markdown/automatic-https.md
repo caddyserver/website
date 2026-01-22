@@ -30,6 +30,7 @@ Here's a 28-second video showing how it works:
 - [Errors](#errors)
 - [Storage](#storage)
 - [Wildcard certificates](#wildcard-certificates)
+- [Encrypted ClientHello (ECH)](#encrypted-clienthello-ech)
 
 
 
@@ -75,8 +76,8 @@ Because HTTPS utilizes a shared, public infrastructure, you as the server admin 
 Caddy implicitly activates automatic HTTPS when it knows a domain name (i.e. hostname) or IP address it is serving. There are various ways to tell Caddy your domain/IP, depending on how you run or configure Caddy:
 
 - A [site address](/docs/caddyfile/concepts#addresses) in the [Caddyfile](/docs/caddyfile)
-- A [host matcher](/docs/json/apps/http/servers/routes/match/host/) in a [JSON route](/docs/modules/http#servers/routes)
-- Command line flags like [--domain](/docs/command-line#caddy-file-server) or [--from](/docs/command-line#caddy-reverse-proxy)
+- A [host matcher](/docs/json/apps/http/servers/routes/match/host/) at the top-level in the [JSON routes](/docs/modules/http#servers/routes)
+- Command line flags like [`--domain`](/docs/command-line#caddy-file-server) or [`--from`](/docs/command-line#caddy-reverse-proxy)
 - The [automate](/docs/json/apps/tls/certificates/automate/) certificate loader
 
 Any of the following will prevent automatic HTTPS from being activated, either in whole or in part:
@@ -96,11 +97,12 @@ Any of the following will prevent automatic HTTPS from being activated, either i
 
 When automatic HTTPS is activated, the following occurs:
 
-- Certificates are obtained and renewed for [all domain names](#hostname-requirements)
-- The default port (if any) is changed to the [HTTPS port](/docs/modules/http#https_port) `443`
+- Certificates are obtained and renewed for [all qualifying domain names](#hostname-requirements)
 - HTTP is redirected to HTTPS (this uses [HTTP port](/docs/modules/http#http_port) `80`)
 
-Automatic HTTPS never overrides explicit configuration.
+Automatic HTTPS never overrides explicit configuration, it only augments it.
+
+If you already have a [server](/docs/json/apps/http/servers/) listening on the HTTP port, the HTTP->HTTPS redirect routes will be inserted after your routes with a host matcher, but before a user-defined catch-all route.
 
 You can [customize or disable automatic HTTPS](/docs/json/apps/http/servers/automatic_https/) if necessary; for example, you can skip certain domain names or disable redirects (for Caddyfile, do this with [global options](/docs/caddyfile/options)).
 
@@ -115,7 +117,7 @@ All hostnames (domain names) qualify for fully-managed certificates if they:
 
 In addition, hostnames qualify for publicly-trusted certificates if they:
 
-- are not localhost (including `.localhost`, `.local` and `.home.arpa` TLDs)
+- are not localhost (including `.localhost`, `.local`, `.internal` and `.home.arpa` TLDs)
 - are not an IP address
 - have only a single wildcard `*` as the left-most label
 
@@ -136,7 +138,7 @@ The root's private key is uniquely generated using a cryptographically-secure ps
 
 Although Caddy can be configured to sign with the root directly (to support non-compliant clients), this is disabled by default, and the root key is only used to sign intermediates.
 
-The first time a root key is used, Caddy will try to install it into the system's local trust store(s). If it does not have permission to do so, it will prompt for a password. This behavior can be disabled in the configuration if it is not desired. If this fails due to being run as an unprivileged user, you may run [`caddy trust`](/docs/command-line#caddy-trust) to retry installation as a privileged user.
+The first time a root key is used, Caddy will try to install it into the system's local trust store(s). If it does not have permission to do so, it will prompt for a password. This behavior can be disabled with [`skip_install_trust` in a caddyfile](/docs/caddyfile/options#skip-install-trust) or [`"install_trust": false` in a json config](/docs/json/apps/pki/certificate_authorities/install_trust/). If this fails due to being run as an unprivileged user, you may run [`caddy trust`](/docs/command-line#caddy-trust) to retry installation as a privileged user.
 
 <aside class="tip">
 	It is safe to trust Caddy's root certificate on your own machine as long as your computer is not compromised and your unique root key is not leaked.
@@ -195,7 +197,7 @@ The DNS challenge performs an authoritative DNS lookup for the candidate hostnam
 
 This challenge does not require any open ports, and the server requesting a certificate does not need to be externally accessible. However, the DNS challenge requires configuration. Caddy needs to know the credentials to access your domain's DNS provider so it can set (and clear) the special `TXT` records. If the DNS challenge is enabled, other challenges are disabled by default.
 
-Since ACME CAs follow DNS standards when looking up `TXT` records for challenge verification, you can use CNAME records to delegate answering the challenge to other DNS zones. This can be used to delegate the `_acme-challenge` subdomain to another zone. This is particularly useful if your DNS provider doesn't provide an API, or isn't supported by one of the DNS plugins for Caddy.
+Since ACME CAs follow DNS standards when looking up `TXT` records for challenge verification, you can use CNAME records to delegate answering the challenge to other DNS zones. This can be used to delegate the `_acme-challenge` subdomain to [another zone](/docs/caddyfile/directives/tls#dns_challenge_override_domain). This is particularly useful if your DNS provider doesn't provide an API, or isn't supported by one of the DNS plugins for Caddy.
 
 DNS provider support is a community effort. [Learn how to enable the DNS challenge for your provider at our wiki.](https://caddy.community/t/how-to-use-dns-provider-modules-in-caddy-2/8148)
 
@@ -271,10 +273,169 @@ Before attempting any ACME transactions, Caddy will test the configured storage 
 
 ## Wildcard certificates
 
-Caddy can obtain and manage wildcard certificates when it is configured to serve a site with a qualifying wildcard name. A site name qualifies for a wildcard if only its left-most domain label is a wildcard. For example, `*.example.com` qualifies, but these do not: `sub.*.example.com`, `foo*.example.com`, `*bar.example.com`, and `*.*.example.com`.
+Caddy can obtain and manage wildcard certificates when it is configured to serve a site with a qualifying wildcard name. A site name qualifies for a wildcard if only its left-most domain label is a wildcard. For example, `*.example.com` qualifies, but these do not: `sub.*.example.com`, `foo*.example.com`, `*bar.example.com`, and `*.*.example.com`. (This is a restriction of the WebPKI.)
 
 If using the Caddyfile, Caddy takes site names literally with regards to the certificate subject names. In other words, a site defined as `sub.example.com` will cause Caddy to manage a certificate for `sub.example.com`, and a site defined as `*.example.com` will cause Caddy to manage a wildcard certificate for `*.example.com`. You can see this demonstrated on our [Common Caddyfile Patterns](/docs/caddyfile/patterns#wildcard-certificates) page. If you need different behavior, the [JSON config](/docs/json/) gives you more precise control over certificate subjects and site names ("host matchers").
 
-Wildcard certificates represent a wide degree of authority and should only be used when you have so many subdomains that managing individual certificates for them would strain the PKI or cause you to hit CA-enforced rate limits.
+As of Caddy 2.10, when automating a wildcard certificate, Caddy will use the wildcard certificate for individual subdomains in the configuration. It will not get certificates for individual subdomains unless explicitly configured to do so.
+
+Wildcard certificates represent a wide degree of authority and should only be used when you have so many subdomains that managing individual certificates for them would strain the PKI or cause you to hit CA-enforced rate limits, or if the privacy tradeoff is worth the risk of exposing that much of the DNS zone in the case of a key compromise. Note that wildcard certificates alone do not offer privacy of concealing specific subdomains: they are still exposed in TLS ClientHello packets unless Encrypted ClientHello (ECH) is enabled. (See below.)
 
 **Note:** [Let's Encrypt requires <img src="/old/resources/images/external-link.svg" class="external-link">](https://letsencrypt.org/docs/challenge-types/) the [DNS challenge](#dns-challenge) to obtain wildcard certificates.
+
+
+## Encrypted ClientHello (ECH)
+
+Normally, TLS handshakes involve sending the ClientHello, including the Server Name Indicator (SNI; the domain being connected to), in plaintext. That's because it contains the parameters necessary for encrypting the connection that comes after the handshake. This, of course, exposes the domain name, which is the most sensitive part of the ClientHello, to anyone who can eavesdrop connections, even if they are not in your immediate physical vicinity. It reveals which service you are connecting to when the destination IP may serve many different sites, and it's how some governments censor the Internet.
+
+With Encrypted ClientHello, the client can protect the domain name by wrapping the true ClientHello in an "outer" ClientHello that establishes parameters for decrypting the "inner" ClientHello. However, many moving parts need to come together perfectly for this to work and deliver actual privacy benefits.
+
+First, the client needs to know what parameters, or configuration, to use to encrypt the ClientHello. This information includes a public key and "outer" domain (the "public name"), among other things. This configuration has to be published or distributed somehow in a reliable fashion.
+
+You could theoretically write it down on a piece of paper and hand it out to everybody, but most major browsers support looking up HTTPS-type DNS records containing ECH parameters when connecting to a site. Hence, you will need to: (1) generate an ECH configuration (public/private key pair, among other parameters), and then (2) create an HTTPS-type DNS record containing the base64-encoded ECH configuration.
+
+Or... you could let Caddy do that all for you. Caddy is the first and only web server that can automatically generate, publish, and serve ECH configurations.
+
+Once the HTTPS record is published, clients will need to perform a DNS lookup for the HTTPS record when connecting to your site. Normally, DNS lookups are in plaintext, which compromises the security of the resulting ECH handshakes, so browsers will need to use a secure DNS protocol like DNS-over-HTTPS (DoH) or DNS-over-TLS (DoT). Depending on the browser, this may need to be manually enabled.
+
+Once the client has securely downloaded the ECH config, it uses the embedded public key to encrypt the ClientHello, and proceeds to connect to your site. Caddy then decrypts the inner ClientHello and proceeds to serve your site, without the domain name ever appearing in plaintext over the wire.
+
+### Deployment considerations
+
+ECH is a nuanced technology. Even though Caddy completely automates ECH, many things need to be considered in order for maximum privacy benefits. You should also be aware of various trade-offs. 
+
+#### Publication
+
+Caddy will only create an HTTPS record for a domain if there is already a record for that domain. This prevents breaking DNS lookups for a subdomain that may be covered by a wildcard. Ensure that your sites have at least an A/AAAA record pointing to your server. If you only use a wildcard for DNS records, then the wildcard domain will need to appear in your Caddy config as well.
+
+Caddy will not publish an HTTPS record for a domain that has a CNAME record.
+
+#### ECH GREASE
+
+If you open Wireshark and then connect to any site (even one that does not support ECH) in a modern version of a major browser like Firefox or Chrome (even with ECH disabled), you may notice its handshake includes the `encrypted_client_hello` extension:
+
+![ECH GREASE](/resources/images/ech-grease.png)
+
+The purpose of this is to make true ECH handshakes indistinguishable from plaintext ones. If ECH handshakes looked different than normal ones, censors could just block ECH handshakes with minimal fallout/collateral damage. But if they blocked any handshake with a plausible ECH extension, they would essentially turn off most of the Internet. (The goal is to increase the cost of widespread censorship.)
+
+This is mainly important to know when troubleshooting connections.
+
+#### Key rotation
+
+Like certificate keys, it is not good practice (and can be downright insecure) to use the same key for a long time. As such, ECH keys should be rotated on a regular basis. Unlike certificates, ECH configs don't strictly expire. But servers should rotate them nonetheless.
+
+Key rotation is tricky though, because clients need to know about the updated keys. If the server simply replaced old keys with new ones, all ECH handshakes would fail unless clients were immediately notified about the new keys. But simply publishing the updated keys isn't enough. The reality is, DNS records have TTLs, and resolvers cache responses, etc. It can take minutes, hours, or even days for clients to query the updated HTTPS records and start using the new ECH config.
+
+For that reason, servers should keep supporting old ECH configs for a period of time. Not doing so risks exposing server names in plaintext _at scale_. Caddy rotates keys every once in a while, and supports rotated keys for some time, until they are eventually dropped.
+
+However, that may not be enough. Some clients still won't get the updated keys for various reasons, and any time that happens, there is a risk of exposing the server name. So there needs to be another way to give clients the updated config _in band_ with the connection. That's what the _outer name_ (or _public name_) is for.
+
+#### Public name
+
+The "outer" ClientHello is a normal ClientHello with two subtle differences that are only known to the origin server:
+
+1. The SNI extension is fake
+2. The ECH extension is real
+
+That "outer" SNI extension contains the public name that protects your real domains. This name can be anything, but **your server must be authoritative for the public name** because Caddy _will_ obtain a certificate for it.
+
+If a client tries to make an ECH connection but the server can't decrypt the inner ClientHello, it can actually complete the handshake using the _outer_ ClientHello with a certificate for the outer name. This secure connection is strictly _only_ used to send the client the current ECH config; i.e. it is a temporary TLS connection for the sole purposes of completing the initial TLS connection. No application data is transmitted: just the ECH key. Once the client has the updated key, it can establish the TLS connection as intended.
+
+In this manner, the true server name remains protected and out-of-sync clients remain able to connect, which are both vital elements of security.
+
+The outer name may be one of your site's domains, a subdomain, or any other domain name that points to your server. We recommend choosing exactly one generic name. For example, Cloudflare serves millions of sites behind `cloudflare-ech.com`. This is important for increasing the size of your anonymity set.
+
+Public names should not be empty; i.e. a public name must be configured for things to work. Caddy does not currently enforce this (and may later), but the ECH specification requires the public name to be at least 1 byte long. Some software will accept empty names, others won't. This can lead to confusing behaviors such as browsers using ECH but servers rejecting it as invalid; or browsers not using ECH (because it is invalid) even though the config is in the DNS record properly. It is the responsibility of the site owner to ensure proper ECH configuration and publication to ensure privacy.
+
+
+#### Anonymity set
+
+To maximize the privacy benefits of ECH, strive to maximize the size of your _anonymity set_. In essense, this set is comprised of client-facing servers that have identical behavior to observers. The idea is that an observer cannot easily reduce/deduce the possible sites or services clients are connecting to.
+
+In practice, we recommend having only one public name for all your sites. (There is only 1 public name per ECH config, so this implies having only 1 active ECH config at any given time.) If you operate Caddy in a cluster, Caddy automatically shares and coordinates ECH configs with other instances, which takes care of this for you.
+
+Taken to the extreme, this implies that every site on the Internet could or should be behind a single IP address and one public name...
+
+
+#### Centralization
+
+... which brings us to our next topic: centralization. One of the criticisms of ECH is that it tends to motivate centralization. It does this in at least two ways: (1) by clients favoring DoH/DoT for DNS lookups, which sends all DNS lookups through a small handful of providers, and (2) by maximizing the size of the anonymity set at scale.
+
+When DoH or DoT is used, DNS lookups all go through the DoH/DoT provider. Between the client and the provider, the DNS data is encrypted, but between the provider and the DNS server, it is not encrypted. Global DoH/DoT effectively funnels all the juicy plaintext DNS traffic into a few big pipes that are ripe for observation... or failure.
+
+Similarly, if we truly maximize the anonymity set at scale, all sites would be protected behind a single public name, like `cloudflare-ech.com`. This is good for privacy, but then the entire Internet is at the mercy of Cloudflare and that one domain name. Now, maximizing to that extent is not necessary or practical, but the theoretical implications remain valid.
+
+We recommend each organization or individual choose a single name for all their sites and use that, and in most cases that should offer sufficient privacy. However, please consult experts with your individual threat models for your specific case.
+
+
+#### Subdomain privacy
+
+With ECH, it is now theoretically possible to keep subdomains secret/private from side channels if deployed correctly.
+
+Most sites do not need this, as, generally speaking, subdomains are public information. We advise against putting sensitive information in domain names. That said...
+
+To avoid leaking sensitive subdomains to Certificate Transparency (CT) logs, use a wildcard certificate instead. In other words, instead of putting `sub.example.com` in your config, put `*.example.com`. (See [Wildcard certificates](#wildcard-certificates) for important information.)
+
+Another source of leaks is DNSSEC, which most authoritative DNS servers use by default. Through a practice named "zone walking", subdomain enumeration is possible by looking at the NSEC records, which are used to provide authenticated denial of existence. For this, they point to the next available subdomain in alphabetical order, forming a linked list  of all records. Ensure your domain is using at the very least NSEC3 or ideally a wildcard CNAME record to mitigate against this.
+
+Then, enable ECH in Caddy. A wildcard certificate combined with ECH and a wildcard CNAME record should properly hide subdomains, as long as every client that tries to connect to it uses ECH and has a strong implementation. (You are still at the mercy of clients to preserve privacy.)
+
+
+### Enabling ECH
+
+Since functioning ECH requires publishing configs to DNS records, you will need a Caddy build with a [caddy-dns module](https://github.com/caddy-dns) plugged in for your DNS provider.
+
+Then, with a Caddyfile, specify your DNS provider config in the global options, as well as the ECH public name you want to use:
+
+```caddy
+{
+	dns <provider config...>
+	ech example.com
+}
+```
+
+Remember:
+
+- The DNS provider module must be plugged in and you must have the right configuration for your provider/account.
+- The ECH public name should point to your server. Caddy will get a certificate for it. It does not have to be one of your site's domains.
+
+If using JSON, add these properties to the `tls` app:
+
+```json
+"encrypted_client_hello": {
+	"configs": [
+		{
+			"public_name": "example.com"
+		}
+	]
+},
+"dns": {
+	"name": "<provider name>",
+	// provider configuration
+}
+```
+
+These configurations will enable ECH and publish ECH configs for all your sites. The JSON config offers more flexibility if you need to customize the behavior or have an advanced setup.
+
+### Verifying ECH
+
+There is still not much tooling around ECH, so at time of writing, the best and most universal way to verify that it's working is to use Wireshark and look for your public name in the ServerName field.
+
+First, start your server and see that the logs mention something like "published ECH configuration list" for your domains. (If you get any errors with publication, ensure your DNS provider module supports [libdns 1.0](https://github.com/libdns/libdns) and file an issue with your provider's repository if you encounter problems.) Caddy should also get a certificate for the public name.
+
+Next, make sure your browser has ECH enabled; this may require enabling DoH/DoT. It's also a good idea to clear your browser's (or system's) DNS cache, to ensure it will pick up the newly published HTTPS records. We also recommend closing the browser or at least opening a new private tab to ensure it does not reuse existing connections.
+
+Then, open Wireshark and start listening on the appropriate network interface. While Wireshark is collecting packets, load your site in your browser. You can then pause Wireshark. Find your TLS ClientHello, and you should see the _public name_ in the ServerName field, rather than the actual domain name you connected to.
+
+Remember: you may still see an `encrypted_client_hello` extension even if ECH is not used. The key indicator is the SNI value. You should never see the true site name in plaintext with Wireshark if ECH is working properly.
+
+If you encounter deployment issues with ECH, first ask in our [forum](https://caddy.community). If it's a bug, you can [file an issue](https://github.com/caddyserver/caddy/issues) on GitHub.
+
+
+### ECH in storage
+
+ECH configurations are stored in the [data directory](/docs/conventions#data-directory) in the configured storage module (the default being the file system) under the `ech/configs` folder.
+
+The next folder is an ECH config ID, which are randomly generated and relatively unimportant. The randomness is recommended by the spec to help mitigate fingerprinting/tracking.
+
+A metadata sidecar file helps Caddy keep track of when publications last occurred. This prevents hammering your DNS provider at every config reload. If you have to reset this state, you may safely delete the metadata file. However, this may also reset the time when the key will be rotated. You can also go into the file and clear out just the information about publication.

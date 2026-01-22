@@ -55,6 +55,22 @@ $(function() {
 			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
 			$(item).html('<a href="/docs/caddyfile/matchers#syntax" style="color: inherit;" title="Matcher token">' + text + '</a>');
 		});
+	// Add links to [<matcher>] or named matcher tokens in code blocks.
+	// The matcher text includes <> characters which are parsed as HTML,
+	// so we must use text() to change the link text.
+	$('pre.chroma .s:contains("<response_matcher>")')
+		.add('pre.chroma .s:contains("<inline_response_matcher>")')
+		.map(function(k, /** @type { HTMLElement } */ item) {
+			const anchor = document.createElement("a");
+			anchor.href = "/docs/caddyfile/response-matchers#syntax";
+			anchor.style.color = "inherit";
+			anchor.title = "Response matcher token";
+			item.replaceWith(anchor);
+			anchor.appendChild(item);
+		});
+
+	// Wrap all tables in a div so we can apply overflow-x: scroll
+	$('table').wrap('<div class="table-wrapper"></div>');
 });
 
 // addLinkaddLinksToSubdirectivessToAnchors finds all the ID anchors
