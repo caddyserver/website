@@ -350,6 +350,13 @@ function makeSubmoduleList(module, path, value) {
 	}
 	var submodList = '<ul>';
 	if (module.namespaces && module.namespaces[value.module_namespace]) {
+		module.namespaces[value.module_namespace].sort(function(a, b){
+			if(isStandard(a.package) && !isStandard(b.package)) return -1;
+			if(!isStandard(a.package) && isStandard(b.package)) return 1;
+			if(a.name < b.name) return -1;
+			if(a.name > b.name) return 1;
+			return 0;
+		});
 		for (var j = 0; j < module.namespaces[value.module_namespace].length; j++) {
 			var submod = module.namespaces[value.module_namespace][j];
 			var href = canTraverse(module) ? `.${path}/${submod.name}/` : `./${value.module_namespace}.${submod.name}`;
