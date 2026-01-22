@@ -1,6 +1,6 @@
 const jsonDocsPathPrefix = "/docs/json";
 
-var configPath = window.location.pathname.substr(jsonDocsPathPrefix.length-1); // keep trailing slash
+var configPath = window.location.pathname;
 var pathComponents = configPath.split('/');
 
 setPageTitle();
