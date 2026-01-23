@@ -69,7 +69,7 @@ if (window.location.pathname.startsWith(moduleDocsPathPrefix)) {
 								shortDoc = shortDoc.substr(modID.length).trim();
 							}
 
-							let modLink = "./"+modID;
+							let modLink = moduleDocsPathPrefix+"/"+modID;
 							if (infos.length > 1) {
 								modLink += "#"+stripScheme(info.repo);
 							}
@@ -77,11 +77,11 @@ if (window.location.pathname.startsWith(moduleDocsPathPrefix)) {
 							let standard = isStandard(info.package);
 							let $tr = document.createElement('tr');
 							$tr.innerHTML += `<td>${(standard ? standardFlag : nonStandardFlag)}</td>`;
-							let $tdLink = `<td><a href="${modLink}" class="module-link">${modID}</a></td>`;
+							let $tdLink = `<td><a href="${modLink}" class="module-link">${modID}</a>`;
 							if (infos.length > 1) {
 								$tdLink += `<div class="module-repo-differentiator">(${stripScheme(info.repo)})</div>`;
 							}
-							$tr.innerHTML += $tdLink;
+							$tr.innerHTML += $tdLink+"</td>";
 							$tr.innerHTML += `<td>${shortDoc}</td>`;
 							$table.append($tr);
 						});

@@ -179,7 +179,7 @@ function beginRenderingInto($tpl, moduleID, module) {
 			$_('.nonstandard-notice', $tpl).innerHTML = nonStandardFlag + $_('.nonstandard-notice', $tpl).innerHTML;
 		}
 
-		$_('.module-repo-selector', $tpl).innerHTML = `
+		$_('.module-repo-selector', $tpl)?.innerHTML = `
 			<span class="module-repo-selector-arrow">&#9656;</span>
 			<span>${stripScheme(module.repo)}</span>`;
 	}
