@@ -179,9 +179,12 @@ function beginRenderingInto($tpl, moduleID, module) {
 			$_('.nonstandard-notice', $tpl).innerHTML = nonStandardFlag + $_('.nonstandard-notice', $tpl).innerHTML;
 		}
 
-		$_('.module-repo-selector', $tpl)?.innerHTML = `
-			<span class="module-repo-selector-arrow">&#9656;</span>
-			<span>${stripScheme(module.repo)}</span>`;
+		const moduleRepoSelector = $_('.module-repo-selector', $tpl);
+		if (moduleRepoSelector) {
+			moduleRepoSelector.innerHTML = `
+				<span class="module-repo-selector-arrow">&#9656;</span>
+				<span>${stripScheme(module.repo)}</span>`;
+		}
 	}
 
 	// for most types, just render their docs; but for maps or arrays, fall through to underlying type for docs
