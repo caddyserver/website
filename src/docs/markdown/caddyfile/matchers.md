@@ -203,7 +203,7 @@ expression client_ip('<ranges...>')
 
 By the client IP address. Accepts exact IPs or CIDR ranges. IPv6 zones are supported.
 
-This matcher is best used when the [`trusted_proxies`](/docs/caddyfile/options#trusted-proxies) global option is configured, otherwise it acts identically to the [`remote_ip`](#remote-ip) matcher. Only requests from trusted proxies will have their client IP parsed at the start of the request; untrusted requests will use the remote IP address of the immediate peer.
+This matcher is best used when the [`trusted_proxies`](/docs/caddyfile/options#trusted-proxies) global option is configured, otherwise it acts identically to the [`remote_ip`](#remote-ip) matcher. Only requests from trusted proxies will have their client IP parsed at the start of the request; untrusted requests will use the remote IP address of the immediate peer or the address set via [PROXY protocol](/docs/caddyfile/options#proxy-protocol).
 
 As a shortcut, `private_ranges` can be used to match all private IPv4 and IPv6 ranges. It's the same as specifying all of these ranges: `192.168.0.0/16 172.16.0.0/12 10.0.0.0/8 127.0.0.1/8 fd00::/8 ::1`
 
@@ -821,7 +821,7 @@ remote_ip <ranges...>
 expression remote_ip('<ranges...>')
 ```
 
-By remote IP address (i.e. the IP address of the immediate peer). Accepts exact IPs or CIDR ranges. IPv6 zones are supported.
+By remote IP address (i.e. the IP address of the immediate peer or the address set via [PROXY protocol](/docs/caddyfile/options#proxy-protocol)). Accepts exact IPs or CIDR ranges. IPv6 zones are supported.
 
 As a shortcut, `private_ranges` can be used to match all private IPv4 and IPv6 ranges. It's the same as specifying all of these ranges: `192.168.0.0/16 172.16.0.0/12 10.0.0.0/8 127.0.0.1/8 fd00::/8 ::1`
 
