@@ -463,6 +463,11 @@ pre > code.cmd,
 	border-radius: 10px;
 }
 
+/* hide underline for links in code blocks; otherwise can look pretty distracting I guess */
+pre > code a:not(:hover) {
+	text-decoration: none;
+}
+
 code.cmd.bash,
 code.cmd .bash,
 code.cmd.bash-continuation,
