@@ -67,7 +67,7 @@ body {
 }
 
 .wrapper {
-	max-width: 1800px;
+	max-width: 2000px;
 }
 
 header {
@@ -115,12 +115,10 @@ main {
 
 
 
-
-
-
 .docs {
 	display: flex;
 	font-size: 16px;
+	gap: 1em;
 }
 
 .docs nav,
@@ -289,7 +287,7 @@ article {
 	font-size: 20px;
 	word-wrap: break-word;
 
-	max-width: 1100px;
+	max-width: 1200px;
 	min-width: 0;
 	width: 100%;
 }
@@ -300,7 +298,7 @@ server-side from markdown to have a constrained
 width, a few elements should be allowed to
 extend to the borders of the page
 */
-article > :not(.fullwidth, .fullspan),
+article > :not(.fullwidth, .fullspan, #hovercard),
 article > .fullwidth > *,
 .pad {
 	padding-left: 8%;
@@ -839,6 +837,55 @@ img.external-link {
 	background-color: rgb(238, 167, 34);
 }
 
+
+
+#module-docs-container,
+#module-list-container,
+#module-template {
+	display: none;
+}
+
+#module-list-container {
+	overflow-x: auto;
+}
+
+#module-list {
+	margin-top: 50px;
+}
+
+#module-list td:first-child {
+	word-wrap: break-word;
+	max-width: 400px;
+}
+
+#module-list .module-link {
+	font-weight: bold;
+	font-size: 20px;
+}
+
+
+#module-multiple-repos {
+	display: none;
+	margin: 25px;
+}
+
+.module-repo-selector {
+	font-size: 26px;
+	padding: 25px;
+	font-weight: bold;
+	border-bottom: 1px solid #888;
+	cursor: pointer;
+}
+
+.module-repo-selector:hover {
+	color: #009cda;
+	background: var(--table-header-bg);
+}
+
+.module-repo-selector-arrow {
+	margin: 10px;
+}
+
 .module-repo-differentiator {
 	font-size: 11px;
 	font-weight: bold;
@@ -847,9 +894,64 @@ img.external-link {
 }
 
 
+.toggle-obj {
+	padding: 0 .5em;
+	visibility: hidden;
+}
+
+.group:hover > .toggle-obj {
+	visibility: visible;
+}
+
+.collapsed {
+	display: none;
+}
 
 
 
+
+
+
+
+
+.breadcrumbs {
+	margin: 0 !important;
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 1.75em;
+}
+
+#top-breadcrumb {
+	font-weight: bold;
+}
+
+#top-breadcrumb:not(:hover) {
+	/* color: #2861aa; */
+}
+
+.breadcrumbs a {
+	font-weight: normal;
+	text-decoration: none;
+}
+
+.breadcrumb-siblings-title {
+	padding: 10px;
+	font-weight: bold;
+}
+
+.breadcrumb-siblings a {
+	display: block;
+	padding: 0 10px;
+	text-decoration: none;
+}
+
+.breadcrumb-siblings a+a {
+	padding-top: 10px;
+}
+
+.breadcrumb-siblings a:last-child {
+	padding-bottom: 10px;
+}
 
 
 .json {
@@ -860,12 +962,12 @@ img.external-link {
 .json .str { color: #2f8598; }
 .json .num { color: #038a3f; }
 .json .bool { color: #9b5e14; }
-.json .key a:not([href]) { color: #222; }
+.json .key a:not([href]) { color: var(--text-color); }
 article .json a {
 	text-decoration: none;
 	font-weight: bold;
 }
-.json .has-popup { border-bottom: 1px dashed #222; }
+.json .has-popup { border-bottom: 1px dashed var(--text-color); }
 .json a[href].has-popup { border-bottom-color: #1c82dc; }
 .json .has-popup.module { border-bottom: none; }
 
@@ -884,19 +986,19 @@ article .json a {
 
 #hovercard:not(.popup) {
 	opacity: 0;
-	display: none;
+	visibility: hidden;
 	transform: translateY(0);
 }
 
 .popup {
-	display: block;
+	visibility: visible;
 	opacity: 1;
 	transform: translateY(-10px);
 }
 
 .arrow-box {
 	position: relative;
-	background: white;
+	background: var(--body-bg);
 }
 
 .arrow-box:after {
@@ -909,9 +1011,17 @@ article .json a {
 	position: absolute;
 	pointer-events: none;
 	border-color: rgba(255, 255, 255, 0);
-	border-bottom-color: white;
+	border-bottom-color: var(--body-bg);
 	border-width: 10px;
 	margin-left: -10px;
+}
+
+#hovercard p,
+#hovercard ol,
+#hovercard ul,
+#hovercard pre,
+#hovercard table {
+	margin-bottom: 0;
 }
 
 #hovercard p {
@@ -950,7 +1060,7 @@ article .json a {
 }
 
 #hovercard .module-link:hover {
-	background: #f5f5f5;
+	background: var(--table-border-color);
 }
 
 #hovercard .module-link:last-child {
@@ -960,14 +1070,14 @@ article .json a {
 
 #hovercard .module-link-description {
 	font-size: 14px;
-	color: #555;
+	color: var(--text-color-muted);
 	margin-left: .5em;
 	font-weight: normal;
 }
 
 #hovercard-namespace-box,
 #hovercard-inline-link {
-	border: 0px solid #f0f6f7;
+	border: 0px solid var(--table-border-color);
 }
 
 #hovercard-namespace-box {

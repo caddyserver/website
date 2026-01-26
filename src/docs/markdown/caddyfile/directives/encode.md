@@ -3,15 +3,22 @@ title: encode (Caddyfile directive)
 ---
 
 <script>
-window.$(function() {
+ready(function() {
 	// We'll add links to all the subdirectives if a matching anchor tag is found on the page.
 	addLinksToSubdirectives();
 
 	// Response matchers
-	window.$('pre.chroma .k:contains("status")')
-		.html('<a href="/docs/caddyfile/response-matchers#status" style="color: inherit;" title="Response matcher">status</a>')
-	window.$('pre.chroma .k:contains("header")')
-		.html('<a href="/docs/caddyfile/response-matchers#header" style="color: inherit;" title="Response matcher">header</a>')
+	$$_('pre.chroma .k').forEach(item => {
+		if (item.innerText.includes('status')) {
+			item.innerHTML = '<a href="/docs/caddyfile/response-matchers#status" style="color: inherit;" title="Response matcher">status</a>';
+		}
+	});
+	
+	$$_('pre.chroma .k').forEach(item => {
+		if (item.innerText.includes('header')) {
+			item.innerHTML = '<a href="/docs/caddyfile/response-matchers#header" style="color: inherit;" title="Response matcher">header</a>';
+		}
+	});
 });
 </script>
 

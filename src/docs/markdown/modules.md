@@ -14,13 +14,20 @@
 		</tr>
 		<!--Populated by JS-->
 	</table>
-	<div id="module-docs-container">
-		<div class="pad"><h1 class="module-name"><!--Populated by JS--></h1></div>
-		<div id="module-multiple-repos">
-			There is more than one module named <b class="module-name"><!--Populated by JS--></b>. Choose one by its repository.
-		</div>
-		<div id="module-template" class="module-repo-container">
-			<div class="module-repo-selector"></div>
-		</div>
+</div>
+
+<div id="module-docs-container">
+	<div class="pad"><h1 class="module-name"><!--Populated by JS--></h1></div>
+	<div id="module-multiple-repos">
+		There is more than one module named <b class="module-name"><!--Populated by JS--></b>. Choose one by its repository.
+	</div>
+	<div id="module-template" class="module-repo-container">
+		<div class="module-repo-selector"></div>
+		<article>
+			{{include "/includes/docs/renderbox.html"}}
+			{{include "/includes/docs/details.html"}}
+		</article>
 	</div>
 </div>
+
+{{include "/includes/docs/hovercard.html"}}

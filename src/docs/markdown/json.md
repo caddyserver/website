@@ -1,4 +1,4 @@
-<div id="json-docs-container">
+<div id="json-docs-container" class="fullspan">
 	<div class="breadcrumbs">
 		<!--Populated by JS-->
 	</div>
@@ -10,7 +10,7 @@
 
 <style>
 	article {
-	padding-top: 0 !important;
+		padding-top: 0 !important;
 	}
 
 	article h1 {
@@ -23,22 +23,13 @@
 		line-height: 1.6em;
 	}
 
-	.toggle-obj {
-		padding: 0 .5em;
-		visibility: hidden;
-	}
-
-	.group:hover > .toggle-obj {
-		visibility: visible;
-	}
-
-	.collapsed {
-		display: none;
+	pre > code.json {
+		border-radius: 10px;
 	}
 
 	@media (prefers-color-scheme: dark) {
 		pre > code.json {
-			background-color: #07212b;
+			background-color: #30caec0f;
 		}
 	}
 </style>

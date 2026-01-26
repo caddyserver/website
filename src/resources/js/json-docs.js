@@ -1,11 +1,12 @@
-const jsonDocsPathPrefix = "/docs/json";
+const jsonDocsPathPrefix = "/docs/json/";
 
 var configPath = window.location.pathname.slice(jsonDocsPathPrefix.length);
 var pathComponents = configPath.split('/');
 
 setPageTitle();
 
-if (window.location.pathname.startsWith(jsonDocsPathPrefix)) {
+if (window.location.pathname == jsonDocsPathPrefix.slice(0, -1) 
+	|| window.location.pathname.startsWith(jsonDocsPathPrefix)) {
 	// load the docs for this path
 	fetch(`/api/docs/config/${configPath}`)
 		.then(response => response.json())
@@ -16,13 +17,14 @@ if (window.location.pathname.startsWith(jsonDocsPathPrefix)) {
 			
 				// establish the breadcrumb
 				var $bc = $_('.breadcrumbs');
-				$bc.innerHTML += `<a href="${jsonDocsPathPrefix}" id="top-breadcrumb">JSON Config Structure</a> &rsaquo;`;
-				for (var i = 1; i < pathComponents.length-1; i++) {
+				$bc.innerHTML += `<a href="${jsonDocsPathPrefix.slice(0, -1)}" id="top-breadcrumb">JSON Config Structure</a>`;
+				for (var i = 0; i < pathComponents.length; i++) {
+					if (!pathComponents[i]) {
+						continue;
+					}
 					var bcPath = pathComponents.slice(0, i+1).join('/');
-					var bcSiblingPath = pathComponents.slice(1, i).join('/');
-					
-					// enclosing with span is a hack so jQuery treats this as a HTML DOM object
-					$bc.innerHTML += `<span> &rsaquo; <a href="${jsonDocsPathPrefix}/${bcPath.slice(1)}/" class="breadcrumb has-popup" data-sibling-path="${bcSiblingPath}">${pathComponents[i]}</a></span>`;
+					var bcSiblingPath = pathComponents.slice(0, i).join('/');
+					$bc.innerHTML += ` &rsaquo; <a href="${jsonDocsPathPrefix.slice(0, -1)}/${bcPath}/" class="breadcrumb has-popup" data-sibling-path="${bcSiblingPath}">${pathComponents[i]}</a></span>`;
 				}
 			
 				// re-trigger the URL fragment if any, to scroll to the archor

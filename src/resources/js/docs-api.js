@@ -13,38 +13,26 @@ ready(function() {
 		return;
 	}
 
-	var hoverTimeout;
+	let hoverTimeout;
 	$hovercard.addEventListener('mouseover', function() {
 		clearTimeout(hoverTimeout);
 	});
-	$hovercard.addEventListener('mouseout', function() {
+	$hovercard.addEventListener('mouseleave', function() {
 		clearTimeout(hoverTimeout);
 		$hovercard.classList.remove('popup');
-	});
-
-	// toggle an object as expanded or collapsed
-	on('click', '.renderbox .toggle-obj', function(event) {
-		if (event.target.classList.contains('expanded')) {
-			event.target.innerHTML = '&#9656;'; // collapse
-		} else {
-			event.target.innerHTML = '&#9662;'; // expand
-		}
-		let el = event.target.nextElementSibling;
-		while (el && !el.matches('.end-obj')) {
-			el.classList.toggle('collapsed');
-			el = el.nextElementSibling;
-		}
-		// event.target.nextUntil('.end-obj').classList.toggle('collapsed');
-		event.target.classList.toggle('expanded');
 	});
 
 	on('mouseenter', '.has-popup', function(event) {
 		// don't allow hoverbox to close anymore, we're re-opening it
 		clearTimeout(hoverTimeout);
 
-		var pos = event.target.offset();
 		var moduleID = event.target.closest('.module-repo-container')?.dataset.moduleId || '';
 		var moduleData = pageData[moduleID];
+
+		var pos = {
+			top: event.target.getBoundingClientRect().top + window.scrollY,
+			left: event.target.getBoundingClientRect().left + window.scrollX
+		};
 
 		// there is a gap between the hoverbox and the link that originated it;
 		// there may be a different link in this gap; if the hover box is visible,
@@ -53,8 +41,8 @@ ready(function() {
 		// visit the hoverbox while it is over a list of links that are tightly
 		// stacked vertically; if user wants to visit hoverbox for link in this
 		// gap, they can just move the cursor slow enough to fire the timeout
-		if ($hovercard.offsetParent !== null
-			&& hovercard.getBoundingClientRect().top + window.scrollY - 10 < pos.top) {
+		// or move the cursor a roundabout way to get the hovercard to disappear
+		if ($hovercard.classList.contains('popup') && $hovercard.getBoundingClientRect().top + window.scrollY - 10 < pos.top) {
 			return;
 		}
 
@@ -63,7 +51,7 @@ ready(function() {
 		var elemPath = event.target.dataset.path;
 		var modNamespace = event.target.dataset.namespace;
 
-		$_('.hovercard-elem').style.display = 'none';
+		$$_('.hovercard-elem').forEach(elem => elem.style.display = 'none');
 
 		if (event.target.classList.contains('module')) {
 			// module
@@ -71,16 +59,16 @@ ready(function() {
 			if (moduleData.namespaces && moduleData.namespaces[modNamespace]) {
 				for (var i = 0; i < moduleData.namespaces[modNamespace].length; i++) {
 					var modInfo = moduleData.namespaces[modNamespace][i];
-					var href = canTraverse(moduleData) ? '.'+elemPath+'/'+modInfo.name+'/' : './'+modNamespace+'.'+modInfo.name;
-					var content = `<a href=${href}" class="module-link"> ${modInfo.name}`;
+					var href = canTraverse(moduleData) ? `${window.location.pathname}${elemPath}/${modInfo.name}` : `${jsonDocsPathPrefix}/${modNamespace}.${modInfo.name}`;
+					var content = `<a href="${href}" class="module-link"> ${modInfo.name}`;
 					if (!isStandard(modInfo.package)) {
 						content += nonStandardFlag;
 					}
 					content += `<span class="module-link-description">${truncate(modInfo.docs, 115)}</span></a>`;
-					$list.append(content);
+					$list.innerHTML += content;
 				}
 			}
-			$_('#hovercard-module-list').innerHTML = $list;
+			$_('#hovercard-module-list').replaceChildren($list);
 			$_('#hovercard-namespace').innerText = modNamespace;
 			$_('#hovercard-module').style.display = 'block';
 			
@@ -115,22 +103,24 @@ ready(function() {
 				}
 			}
 
-			var $siblings = $_('<div class="breadcrumb-siblings"/>').append('<div class="breadcrumb-siblings-title">Siblings:</div>');
+			var $siblings = document.createElement('div');
+			$siblings.classList.add('breadcrumb-siblings');
+			$siblings.innerHTML = `<div class="breadcrumb-siblings-title">Siblings:</div>`;
 			for (var j = 0; j < bcSiblings.length; j++) {
 				var sib = bcSiblings[j];
 				var sibPath = sib.path;
 				if (sibPath) {
 					sibPath += "/";
 				}
-				sibPath += sib.name+"/";
+				sibPath += sib.name;
 				var aTag = `<a href="${jsonDocsPathPrefix+sibPath}"`;
 				if (!sib.isStandard) {
 					aTag += ' class="nonstandard" title="Non-standard module"';
 				}
 				aTag += `>${sib.name}</a>`;
-				$siblings.innerHTML += (aTag);
+				$siblings.innerHTML += aTag;
 			}
-			$_('#hovercard-breadcrumb-siblings').append($siblings);
+			$_('#hovercard-breadcrumb-siblings').replaceChildren($siblings);
 			$_('#hovercard-breadcrumb-siblings').style.display = 'block';
 
 		} else if (event.target.classList.contains('documented')) {
@@ -143,25 +133,25 @@ ready(function() {
 			$_('#hovercard-docs').innerHTML = markdown(elemDocs);
 			$_('#hovercard-docs').style.display = 'block';
 			$_('#hovercard-inline-link').innerHTML = `<a href="#${elemPath.substr(1)}">View docs below &#8595;</a>`;
+			$_('#hovercard-inline-link').style.display = 'block';
 		}
 
 		// show hoverbox for this link
 		var height = event.target.getBoundingClientRect().height;
 		var linkWidth = event.target.getBoundingClientRect().width;
 		var boxWidth = $hovercard.getBoundingClientRect().width;
-		$hovercard.css({
-			'top': pos.top + height*1.5 + 10, // '+10' counters 'translateY(-10px)'
-			'left': pos.left + (linkWidth/2) - (boxWidth/2)
-		}).classList.add('popup');
-	});
+		$hovercard.style.top = pos.top + height*1.5 + 10 + 'px'; // '+10' counters 'translateY(-10px)' from the CSS
+		$hovercard.style.left = pos.left + linkWidth/2 - boxWidth/2 + 'px';
+		$hovercard.classList.add('popup');
+	}, true);
 
 	on('mouseleave', '.has-popup', function() {
 		// don't hide the hoverbox right away; user might need a
 		// few milliseconds to get the cursor over the hovercard
 		hoverTimeout = setTimeout(function() {
-			$hovercard.removeClass('popup');
+			$hovercard.classList.remove('popup');
 		}, 200);
-	});
+	}, true);
 });
 
 function beginRenderingInto($tpl, moduleID, module) {
@@ -197,8 +187,8 @@ function beginRenderingInto($tpl, moduleID, module) {
 	renderData($tpl, module, module.structure, 0, "", $group);
 	$_('.renderbox', $tpl).append($group);
 
-	if ($_('.field-list-contents', $tpl).text().trim()) {
-		$_('.field-list-header', $tpl).show();
+	if ($_('.field-list-contents', $tpl).innerText.trim()) {
+		$_('.field-list-header', $tpl).style.display = 'block';
 	}
 
 	// TODO: see about fixing this for module and JSON docs pages
@@ -210,6 +200,7 @@ function beginRenderingInto($tpl, moduleID, module) {
 	// 	document.getElementById(window.location.hash.substr(1)).scrollIntoView();
 	// }
 }
+
 
 function renderData($tpl, module, data, nesting, path, $group) {
 	switch (data.type) {
@@ -229,7 +220,7 @@ function renderData($tpl, module, data, nesting, path, $group) {
 			// });
 			for (var i = 0; i < data.struct_fields.length; i++) {
 				var field = data.struct_fields[i];
-				var fieldPath = path+"/"+field.key;
+				var fieldPath = pathJoin(path, field.key);
 				var cleanFieldPath = fieldPath.slice(1); // trim leading slash
 
 				// store the docs for this path
@@ -240,7 +231,7 @@ function renderData($tpl, module, data, nesting, path, $group) {
 				}
 
 				// render the docs to the page
-				var fieldDoc = markdown(field.doc) || '<p class="explain">There are no docs for this property.</p>';
+				var fieldDoc = markdown(field.doc) || `<p class="explain">There are no docs for this property.</p>`;
 				fieldDoc += makeSubmoduleList(module, fieldPath, field.value);
 				appendToFieldDocs($tpl, module, cleanFieldPath, fieldDoc);
 
@@ -249,13 +240,13 @@ function renderData($tpl, module, data, nesting, path, $group) {
 				indent(nesting, $fieldGroup);
 				var keyATag = '<a ';
 				if (canTraverse(module)) {
-					keyATag += 'href=".'+fieldPath+'/" ';
+					keyATag += `href="${pathJoin(window.location.pathname, fieldPath)}" `;
 				}
-				keyATag += 'data-path="'+fieldPath+'" class="'+linkClass+'">'+field.key+'</a>';
-				$fieldGroup.append('<span class="qu">"</span><span class="key">'+keyATag+'</span><span class="qu">"</span>: ');
+				keyATag += `data-path="${fieldPath}" class="${linkClass}">${field.key}</a>`;
+				$fieldGroup.innerHTML += `<span class="qu">"</span><span class="key">${keyATag}</span><span class="qu">"</span>: `;
 				renderData($tpl, module, field.value, nesting, fieldPath, $fieldGroup);
 				if (i < data.struct_fields.length-1) {
-					$fieldGroup.append(',');
+					$fieldGroup.innerHTML += ',';
 				}
 				$group.append($fieldGroup);
 			}
@@ -283,7 +274,7 @@ function renderData($tpl, module, data, nesting, path, $group) {
 	case "array":
 		$group.innerHTML += '[';
 		if (data.elems.type == "module_map") {
-			$group.innerHTML += `{<a href=".${path}/" class="module has-popup" data-namespace="${(data.elems.module_namespace || '')}" data-path="${path}">&bull;&bull;&bull;</a>}`;
+			$group.innerHTML += `{<a href="${pathJoin(jsonDocsPathPrefix, path)}" class="module has-popup" data-namespace="${(data.elems.module_namespace || '')}" data-path="${path}">&bull;&bull;&bull;</a>}`;
 		} else {
 			renderData($tpl, module, data.elems, nesting, path, $group);
 		}
@@ -308,7 +299,7 @@ function renderData($tpl, module, data, nesting, path, $group) {
 	case "module_map":
 		var aTag = '<a';
 		if (canTraverse(module)) {
-			aTag += ` href=".${path}/"`;
+			aTag += ` href="${jsonDocsPathPrefix}${path}"`;
 		}
 		aTag += ` class="module has-popup" data-namespace="${(data.module_namespace || '')}" data-path="${path}">&bull;&bull;&bull;</a>`;
 		$group.innerHTML += `{${aTag}}`;
@@ -334,7 +325,7 @@ function renderModuleInlineKey($tpl, module, data, nesting, $group) {
 function appendToFieldDocs($tpl, module, cleanFieldPath, fieldDoc) {
 	var dt = cleanFieldPath;
 	if (canTraverse(module)) {
-		dt = `<a href="./${cleanFieldPath}/">${dt}</a>`;
+		dt = `<a href="${pathJoin(window.location.pathname, cleanFieldPath)}">${dt}</a>`;
 	}
 	$_('.field-list-contents', $tpl).innerHTML += `<dt class="field-name" id="${cleanFieldPath}"><a href="#${cleanFieldPath}" class="inline-link">&#128279;</a>${dt}</dt> <dd>${fieldDoc}</dd>`;
 }
@@ -364,7 +355,7 @@ function makeSubmoduleList(module, path, value) {
 		});
 		for (var j = 0; j < module.namespaces[value.module_namespace].length; j++) {
 			var submod = module.namespaces[value.module_namespace][j];
-			var href = canTraverse(module) ? `.${path}/${submod.name}/` : `./${value.module_namespace}.${submod.name}`;
+			var href = canTraverse(module) ? pathJoin(window.location.pathname, path+"/"+submod.name) : pathJoin(window.location.pathname, value.module_namespace+"."+submod.name);
 			var submodLink = `<a href="${href}">${submod.name}</a>`;
 			if (!isStandard(submod.package)) {
 				submodLink += ' '+nonStandardFlag;
@@ -385,7 +376,9 @@ function canTraverse(data) {
 }
 
 function newGroup() {
-	return $_('<div class="group"/>');
+	const div = document.createElement('div');
+	div.classList.add("group");
+	return div;
 }
 
 function replaceGoTypeNameWithCaddyModuleName(docs, module, moduleID) {
@@ -405,9 +398,19 @@ function replaceGoTypeNameWithCaddyModuleName(docs, module, moduleID) {
 	return docs;
 }
 
+function pathJoin(p1, p2) {
+	if (p2.startsWith('/')) {
+		p2 = p2.slice(1);
+	}
+	if (p1.endsWith('/')) {
+		p1 = p1.slice(0, -1);
+	}
+	return p1+"/"+p2;	
+}
+
 function markdown(input) {
 	if (!input) {
 		return "";
 	}
-	return marked(input);
+	return marked.parse(input);
 }

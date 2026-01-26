@@ -1,9 +1,14 @@
-{{$pathParts := splitList "/" .OriginalReq.URL.Path}}
-{{$markdownFilename := default "index" (slice $pathParts 2 | join "/")}}
-{{$markdownFilePath := printf "/docs/markdown/%s.md" $markdownFilename}}
-{{if not (fileExists $markdownFilePath)}}{{httpError 404}}{{end}}
-{{$markdownFile := (include $markdownFilePath | splitFrontMatter)}}
-{{$title := default $markdownFilename $markdownFile.Meta.title}}
+{{$pathParts := splitList "/" .OriginalReq.URL.Path -}}
+{{$markdownFilename := default "index" (slice $pathParts 2 | join "/") -}}
+{{$markdownFilePath := printf "/docs/markdown/%s.md" $markdownFilename -}}
+{{if hasPrefix "/docs/json" .OriginalReq.URL.Path -}}
+	{{$markdownFilePath = "/docs/markdown/json.md" -}}
+{{else if hasPrefix "/docs/modules" .OriginalReq.URL.Path -}}
+	{{$markdownFilePath = "/docs/markdown/modules.md" -}}
+{{end -}}
+{{if not (fileExists $markdownFilePath)}}{{httpError 404 }}{{end -}}
+{{$markdownFile := (include $markdownFilePath | splitFrontMatter) -}}
+{{$title := default $markdownFilename $markdownFile.Meta.title -}}
 <!DOCTYPE html>
 <html>
 	<head>
@@ -20,8 +25,14 @@
 		<script src="/resources/js/docs-api.js{{template "cacheBust"}}"></script>
 		<script src="/resources/js/json-docs.js{{template "cacheBust"}}"></script>
 		<script src="/resources/js/module-docs.js{{template "cacheBust"}}"></script>
+
+		{{$directives := list }}
+		{{range $i, $file := (listFiles "/docs/markdown/caddyfile/directives")}}
+			{{$directives = append $directives ($file | trimSuffix ".md")}}
+		{{end}}
+		<script type="text/javascript">window.CaddyfileDirectives = {{$directives | toJson}};</script>
 	</head>
-	<body>
+	<body class="docs-body">
 		{{include "/includes/header.html" ""}}
 
 		<div id="autonav"></div>
@@ -158,11 +169,6 @@
 				</nav>
 
 				<article>
-					<!-- TODO: This should only be on the docs homepage. Also, I can't get it to work. lol -->
-					<div class="fullspan">
-						{{ include "/includes/quick-assist/core.html" }}
-					</div>
-
 					{{markdown $markdownFile.Body}}
 
 					<!-- TODO: Playing with ideas for the new docs homepage -->

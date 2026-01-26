@@ -3,18 +3,18 @@ title: handle_path (Caddyfile directive)
 ---
 
 <script>
-window.$(function() {
+ready(function() {
 	// Add a link to [<path_matcher>] as a special case for this directive.
 	// The matcher text includes <> characters which are parsed as HTML,
 	// so we must use text() to change the link text.
-	window.$('pre.chroma .s:contains("<path_matcher>")')
-		.map(function(k, item) {
+	$$_('pre.chroma .s').forEach(item => {
+		if (item.innerText.includes('<path_matcher>')) {
 			let text = item.innerText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-			window.$(item)
-				.html('<a href="/docs/caddyfile/matchers#path-matchers" style="color: inherit;" title="Matcher token">' + text + '</a>')
-				.removeClass('s')
-				.addClass('nd');
-		});
+			item.innerHTML = `<a href="/docs/caddyfile/matchers#path-matchers" style="color: inherit;" title="Matcher token">${text}</a>`;
+			item.classList.remove('s');
+			item.classList.add('nd');
+		}
+	});
 });
 </script>
 

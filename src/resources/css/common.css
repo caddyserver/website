@@ -9,6 +9,7 @@
 	--text-color-muted: #7087a0;
 	--header-bg: rgba(118, 179, 194, 0.11);
 	--header-border-color: #ebf0f2;
+	--topbar-link-color: #719bcc;
 	--topbar-link-color-hover: black;
 	--topbar-link-bg-hover: rgb(244, 249, 251);
 	--main-nav-link-color: #546c75;
@@ -36,6 +37,7 @@
 	--text-color-muted: #92b2d5;
 	--header-bg: rgba(44, 130, 164, 0.11);
 	--header-border-color: transparent;
+	--topbar-link-color: #719bcc;
 	--topbar-link-color-hover: white;
 	--topbar-link-bg-hover: rgb(255 255 255 / .1);
 	--main-nav-link-color: #86a7b1;
@@ -180,7 +182,7 @@ header nav>ul {
 .topbar a {
 	display: inline-block;
 	padding: 10px 10px 8px;
-	color: #719bcc;
+	color: var(--topbar-link-color);
 	display: flex;
 	align-items: center;
 }
@@ -558,6 +560,50 @@ button.primary .hover-splash,
 	margin-right: auto;
 	color: #e71414; 
 }
+
+
+
+/* Algolia DocSearch */
+#search {
+	display: none;
+}
+.docs-body #search {
+	display: block;
+	--docsearch-text-color: var(--topbar-link-color);
+	--docsearch-muted-color: var(--topbar-link-color);
+	--docsearch-searchbox-focus-background: var(--nav-link-hover-bg);
+}
+#search svg,
+.DocSearch-Modal svg {
+	margin: 0;
+}
+#search button * {
+	pointer-events: none;
+}
+.dark #search {
+	--docsearch-text-color: #bdd6f7;
+	--docsearch-muted-color: #96a9c4;
+	--docsearch-key-gradient: linear-gradient(-26.5deg, #060e17 0%, rgb(47, 62, 72) 100%);
+	--docsearch-key-shadow: inset 0 -2px 0 0 #4c4c56, inset 0 0 1px 1px rgb(70, 70, 70), 0 1px 2px 1px rgba(77, 79, 91, 0.4);
+}
+.DocSearch-Button:active, .DocSearch-Button:focus, .DocSearch-Button:hover {
+	box-shadow: none;
+	border: none;
+}
+.DocSearch-Button {
+	background: transparent;/* var(--nav-link-hover-bg);*/
+}
+.DocSearch-Container {
+	color: initial;
+}
+.DocSearch-Button-Placeholder {
+	font-size: inherit;
+}
+.DocSearch-Footer {
+	margin-top: 0;
+}
+/* End Algolia DocSearch */
+
 
 
 
