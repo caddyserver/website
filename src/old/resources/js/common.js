@@ -8,6 +8,15 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 });
 
+function moduleDocsPreview(mod, maxLen) {
+	if (!mod || !mod.docs) return "";
+	let short = truncate(mod.docs, maxLen);
+	if (short.indexOf(mod.name) === 0) {
+		short = short.substr(mod.name.length).trim();
+	}
+	return short;
+}
+
 function detectPlatform() {
 	// assume 32-bit linux, then change OS and architecture if justified
 	var os = "linux", arch = "amd64";
