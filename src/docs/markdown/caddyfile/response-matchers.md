@@ -3,19 +3,29 @@ title: Response matchers (Caddyfile)
 ---
 
 <script>
-window.$(function() {
+ready(function() {
 	// Response matchers
-	window.$('pre.chroma .nd:contains("@")')
-		.map(function(k, item) {
-			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+	$$_('pre.chroma .nd').forEach(item => {
+		if (item.innerText.includes('@')) {
+			let text = item.innerText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 			let url = '#' + item.innerText.replace(/_/g, "-");
-			window.$(item).addClass('nd').removeClass('k')
-			window.$(item).html(`<a href="#syntax" style="color: inherit;">${text}</a>`);
-		});
-	window.$('pre.chroma .k:contains("status")')
-		.html('<a href="#status" style="color: inherit;">status</a>');
-	window.$('pre.chroma .k:contains("header")')
-		.html('<a href="#header" style="color: inherit;">header</a>');
+			item.classList.add('nd');
+			item.classList.remove('k');
+			item.innerHTML = `<a href="#syntax" style="color: inherit;">${text}</a>`;
+		}
+	});
+	
+	$$_('pre.chroma .k').forEach(item => {
+		if (item.innerText.includes('status')) {
+			item.innerHTML = '<a href="#status" style="color: inherit;">status</a>';
+		}
+	});
+	
+	$$_('pre.chroma .k').forEach(item => {
+		if (item.innerText.includes('header')) {
+			item.innerHTML = '<a href="#header" style="color: inherit;">header</a>';
+		}
+	});
 
 	// We'll add links to all the subdirectives if a matching anchor tag is found on the page.
 	addLinksToSubdirectives();

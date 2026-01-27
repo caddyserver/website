@@ -3,25 +3,26 @@ title: forward_auth (Caddyfile directive)
 ---
 
 <script>
-window.$(function() {
+ready(function() {
 	// Fix > in code blocks
-	window.$('pre.chroma .k:contains(">")')
-		.each(function() {
-			const e = window.$(this);
+	$$_('pre.chroma .k').forEach(item => {
+		if (item.innerText.includes('>')) {
 			// Skip if ends with >
-			if (e.text().trim().endsWith('>')) return;
+			if (item.innerText.trim().endsWith('>')) return;
 			// Replace > with <span class="p">&gt;</span>
-			e.html(e.html().replace(/&gt;/g, '<span class="p">&gt;</span>'));
-		});
+			item.innerHTML = item.innerHTML.replace(/&gt;/g, '<span class="p">&gt;</span>');
+		}
+	});
 
 	// Fix uri subdirective, gets parsed as matcher arg because of "uri" directive
-	window.$('.k:contains("uri") + .nd')
-		.each(function() {
-			window.$(this)
-				.removeClass('nd')
-				.addClass('s')
-				.text(window.$(this).text());
-		});
+	$$_('.k').forEach(item => {
+		if (item.innerText.includes('uri') && item.nextElementSibling && item.nextElementSibling.classList.contains('nd')) {
+			const next = item.nextElementSibling;
+			next.classList.remove('nd');
+			next.classList.add('s');
+			next.textContent = next.textContent;
+		}
+	});
 });
 </script>
 

@@ -8,12 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 });
 
-const caddyImportPath = 'github.com/caddyserver/caddy/v2';
-
-function isStandard(packagePath) {
-	return packagePath.startsWith(caddyImportPath);
-}
-
 function truncate(str, maxLen) {
 	if (!str) return "";
 	str = str.trim();

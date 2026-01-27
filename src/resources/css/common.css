@@ -9,6 +9,7 @@
 	--text-color-muted: #7087a0;
 	--header-bg: rgba(118, 179, 194, 0.11);
 	--header-border-color: #ebf0f2;
+	--topbar-link-color: #719bcc;
 	--topbar-link-color-hover: black;
 	--topbar-link-bg-hover: rgb(244, 249, 251);
 	--main-nav-link-color: #546c75;
@@ -36,6 +37,7 @@
 	--text-color-muted: #92b2d5;
 	--header-bg: rgba(44, 130, 164, 0.11);
 	--header-border-color: transparent;
+	--topbar-link-color: #719bcc;
 	--topbar-link-color-hover: white;
 	--topbar-link-bg-hover: rgb(255 255 255 / .1);
 	--main-nav-link-color: #86a7b1;
@@ -50,7 +52,7 @@
 	--dropdown-link-title-color: #f0f3f5;
 	--dropdown-link-color: #9ebeca;
 	--dropdown-link-hover-color: white;
-	--dropdown-link-hover-bg: rgb(30, 48, 63);
+	--dropdown-link-hover-bg: rgb(127 199 255 / 11%);
 	--dropdown-featured-bg: linear-gradient(to bottom, rgb(46, 58, 66), transparent);
 	--dropdown-featured-hover-bg: rgb(64, 82, 92);
 	--dropdown-shadow-color: black;
@@ -180,7 +182,7 @@ header nav>ul {
 .topbar a {
 	display: inline-block;
 	padding: 10px 10px 8px;
-	color: #719bcc;
+	color: var(--topbar-link-color);
 	display: flex;
 	align-items: center;
 }
@@ -188,6 +190,24 @@ header nav>ul {
 .topbar a:hover {
 	background: var(--topbar-link-bg-hover);
 	color: var(--topbar-link-color-hover);
+}
+
+#zerossl-link {
+	display: block;
+	font-weight: bold;
+}
+
+#zerossl-logo {
+	height: 1.5em;
+	position: relative;
+	top: 4px;
+	margin-top: -4px;
+	padding-right: 2px;
+	box-sizing: initial;
+}
+
+.dark #zerossl-logo {
+	filter: invert(1) hue-rotate(180deg);
 }
 
 .navbar {
@@ -243,10 +263,6 @@ header nav ul {
 .icon {
 	height: 1.4em;
 	vertical-align: middle;
-}
-
-.logo-link {
-	line-height: 0; /* avoid extra space along the bottom for some reason */
 }
 
 .logo {
@@ -316,7 +332,8 @@ button.purple,
 
 button svg,
 .button svg {
-	margin-right: .5em;
+	margin-right: .25em;
+	margin-left: -.5em;
 }
 
 
@@ -397,7 +414,7 @@ button.primary .hover-splash,
 .dropdown .plainbox,
 .dropdown .linkbox {
 	display: flex;
-	gap: 4em;
+	gap: 1.5em;
 	padding: 1.5em;
 }
 
@@ -417,7 +434,6 @@ button.primary .hover-splash,
 
 .dropdown .linkbox {
 	background: var(--dropdown-linkbox);
-	gap: 3em;
 	--link-padding-x: 10px;
 }
 
@@ -431,7 +447,7 @@ button.primary .hover-splash,
 }
 
 .dropdown .col {
-	min-width: 150px;
+	min-width: 200px;
 }
 
 .dropdown .col a {
@@ -439,7 +455,7 @@ button.primary .hover-splash,
 	color: var(--dropdown-link-color);
 	text-decoration: none;
 	padding: 5px var(--link-padding-x);
-	border-radius: 1.5em;
+	border-radius: .5em;
 }
 
 
@@ -451,7 +467,7 @@ button.primary .hover-splash,
 .dropdown .flatlinks a,
 .dropdown .featured a {
 	transition: background-color 150ms;
-	font-size: 12px;
+	font-size: 14px;
 }
 
 .dropdown .flatlinks a {
@@ -544,6 +560,50 @@ button.primary .hover-splash,
 	margin-right: auto;
 	color: #e71414; 
 }
+
+
+
+/* Algolia DocSearch */
+#search {
+	display: none;
+}
+.docs-body #search {
+	display: block;
+	--docsearch-text-color: var(--topbar-link-color);
+	--docsearch-muted-color: var(--topbar-link-color);
+	--docsearch-searchbox-focus-background: var(--nav-link-hover-bg);
+}
+#search svg,
+.DocSearch-Modal svg {
+	margin: 0;
+}
+#search button * {
+	pointer-events: none;
+}
+.dark #search {
+	--docsearch-text-color: #bdd6f7;
+	--docsearch-muted-color: #96a9c4;
+	--docsearch-key-gradient: linear-gradient(-26.5deg, #060e17 0%, rgb(47, 62, 72) 100%);
+	--docsearch-key-shadow: inset 0 -2px 0 0 #4c4c56, inset 0 0 1px 1px rgb(70, 70, 70), 0 1px 2px 1px rgba(77, 79, 91, 0.4);
+}
+.DocSearch-Button:active, .DocSearch-Button:focus, .DocSearch-Button:hover {
+	box-shadow: none;
+	border: none;
+}
+.DocSearch-Button {
+	background: transparent;/* var(--nav-link-hover-bg);*/
+}
+.DocSearch-Container {
+	color: initial;
+}
+.DocSearch-Button-Placeholder {
+	font-size: inherit;
+}
+.DocSearch-Footer {
+	margin-top: 0;
+}
+/* End Algolia DocSearch */
+
 
 
 

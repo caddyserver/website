@@ -7,11 +7,13 @@
 	--nav-current-bg: linear-gradient(to right, #ecf1f3, transparent);
 	--nav-link-hover-shadow-color: rgba(0, 0, 0, 0.15);
 	--nav-link-hover-before-bg: #d2e5e7;
+	--nav-link-hover-bg: #f4f7f9;
 	--autonav-bg: #fff;
-	--pagenav-hover-bg: #f4f7f9;
 	--cmd-bg: #333;
 	--tip-color: #5c50bb;
 	--menu-toggle-bg: #e4f1f2;
+	--table-header-bg: #eaf1f5;
+	--table-border-color: #cad9e2;
 }
 
 .dark {
@@ -21,13 +23,15 @@
 	--button-color-hover: rgb(0, 194, 255);
 	--button-border-color-hover: rgb(0, 194, 255);
 	--nav-current-bg: linear-gradient(to right, #1a3c4d, transparent);
-	--nav-link-hover-shadow-color: rgba(255, 255, 255, 0.15);
+	--nav-link-hover-shadow-color: rgb(0 0 0 / 32%);
 	--nav-link-hover-before-bg: #32494f;
-	--autonav-bg: #34404d;
-	--pagenav-hover-bg: #18262f;
+	--nav-link-hover-bg: #e3fffe0d;
+	--autonav-bg: #1d2b32;
 	--cmd-bg: black;
 	--tip-color: #a6b2f7;
 	--menu-toggle-bg: #274d5c;
+	--table-header-bg: #1d2d38;
+	--table-border-color: #1a373d;
 }
 
 
@@ -37,24 +41,33 @@
 html,
 body {
 	min-height: 100%;
+
 }
 
 body {
+	/* background-image:
+		radial-gradient(circle at 30% top, hsl(137.64deg, 100%, 92.42%) 0px, transparent min(15%, 500px)),
+		radial-gradient(circle at 70% top, hsl(201.2deg, 68%, 90.2%) 0px, transparent min(15%, 500px));  */
 	background-image:
-		radial-gradient(at calc(50% - min(25vw, 800px)) -10%, hsl(137.64deg, 100%, 92.42%) 0px, transparent min(15%, 500px)),
-		radial-gradient(at calc(50% + min(25vw, 800px)) -10%, hsl(201.2deg, 68%, 90.2%) 0px, transparent min(15%, 500px));
+		radial-gradient(circle at 30% top, hsl(137.64deg 100% 75.21% / 19%) 0px, transparent min(15%, 700px)),
+		radial-gradient(circle at 70% top, hsl(201.2deg 100% 69.19% / 24%) 0px, transparent min(15%, 700px));
 	background-repeat: no-repeat;
 }
 
 
 .dark body {
+	/* background-image:
+		radial-gradient(at calc(50% - min(35vw, 700px)) -10%, hsla(130, 100%, 9%, 0.74) 0px, transparent min(25%, 600px)),
+		radial-gradient(at calc(50% + min(35vw, 700px)) -10%, hsla(201, 100%, 12%, 0.646) 0px, transparent min(25%, 600px)) */
 	background-image:
-		radial-gradient(at calc(50% - min(35vw, 700px)) -10%, hsl(129.5deg, 100%, 12.4%) 0px, transparent min(25%, 600px)),
-		radial-gradient(at calc(50% + min(35vw, 700px)) -10%, hsl(201deg, 100%, 19.33%) 0px, transparent min(25%, 600px))
+		radial-gradient(circle at calc(50% - min(35vw, 700px)) -50px, hsl(206.39deg 100% 40.77% / 16%) 0px, transparent min(25%, 800px)),
+		radial-gradient(circle at calc(50% + min(35vw, 700px)) -50px, hsl(142.09deg 100% 32.23% / 17%) 0px, transparent min(25%, 800px));
+
+	scrollbar-color: rgb(255 255 255 / .25) rgb(0 0 0 / .2);
 }
 
 .wrapper {
-	max-width: 1800px;
+	max-width: 2000px;
 }
 
 header {
@@ -77,7 +90,7 @@ button:hover,
 }
 button.primary,
 .button.primary {
-	background: linear-gradient(135deg, #7ece98 25%, rgb(49, 155, 208) 80%);
+	background: linear-gradient(135deg, #3b9c5b 25%, rgb(45 137 183) 80%);
 	color: white;
 	border: none;
 }
@@ -92,11 +105,9 @@ button.primary:hover,
 
 main {
 	margin-top: 50px;
+	margin-bottom: 100px;
 	font-family: Inter, system-ui;
 }
-
-
-
 
 
 
@@ -107,6 +118,7 @@ main {
 .docs {
 	display: flex;
 	font-size: 16px;
+	gap: 1em;
 }
 
 .docs nav,
@@ -123,6 +135,12 @@ main {
 	padding: 1em;
 	cursor: pointer;
 	display: none;
+}
+
+#pagenav {
+	position: sticky;
+	top: 10px;
+	align-self: flex-start; /* so the flex item isn't 100% height and thus doesn't stick */
 }
 
 #pagenav .heading {
@@ -191,6 +209,7 @@ main nav li:hover > a,
 #autonav a:hover,
 #pagenav a:hover {
 	color: var(--main-nav-link-hover-color);
+	background: var(--nav-link-hover-bg);
 }
 
 
@@ -264,11 +283,11 @@ main nav li ul {
 
 
 article {
-	font-family: 'Albert Sans', system-ui; /* considered: Figtree, Assistant, Red Hat Text, Be Vietnam Pro */
+	font-family: 'Albert Sans', Figree, Assistant, 'Red Hat Text', 'Be Vietnam Pro', system-ui;
 	font-size: 20px;
 	word-wrap: break-word;
 
-	max-width: 1100px;
+	max-width: 1200px;
 	min-width: 0;
 	width: 100%;
 }
@@ -279,7 +298,7 @@ server-side from markdown to have a constrained
 width, a few elements should be allowed to
 extend to the borders of the page
 */
-article > :not(.fullwidth, .fullspan),
+article > :not(.fullwidth, .fullspan, #hovercard),
 article > .fullwidth > *,
 .pad {
 	padding-left: 8%;
@@ -322,7 +341,7 @@ article ul ol {
 
 article p,
 article li {
-	line-height: 1.75;
+	line-height: 1.6;
 }
 
 article li p,
@@ -444,6 +463,11 @@ pre > code.cmd,
 	border-radius: 10px;
 }
 
+/* hide underline for links in code blocks; otherwise can look pretty distracting I guess */
+pre > code a:not(:hover) {
+	text-decoration: none;
+}
+
 code.cmd.bash,
 code.cmd .bash,
 code.cmd.bash-continuation,
@@ -563,7 +587,7 @@ article aside.advice::before {
 }
 
 article aside.complete {
-	color: #6b6b6b;
+	color: #65a5b9;
 	border: 2px dotted #88db88;
 	text-align: center;
 	max-width: 500px;
@@ -598,7 +622,7 @@ article table {
 }
 
 th, td {
-	border-bottom: 1px solid #ddd;
+	border-bottom: 1px solid var(--table-border-color);
 	padding: 10px;
 	line-height: 1.4em;
 	vertical-align: top;
@@ -607,7 +631,7 @@ th, td {
 
 th {
 	text-align: left;
-	background: #eee;
+	background: var(--table-header-bg);
 }
 
 td code {
@@ -675,8 +699,7 @@ td code {
 	box-shadow: 0 10px 40px rgb(0 0 0 / .2);
 	border-radius: 10px;
 	border-top-left-radius: 0;
-	min-width: 250px;
-	max-width: 350px;
+	min-width: 300px;
 	z-index: 999;
 	padding-top: .5em;
 	padding-bottom: .5em;
@@ -699,11 +722,6 @@ main nav ul > li:hover #autonav {
 	border-radius: 0;
 }
 
-#autonav a:hover {
-	color: #01324b;
-	background: #f1f7fb;
-}
-
 
 
 
@@ -716,10 +734,6 @@ main nav ul > li:hover #autonav {
 	animation: fadeIn 500ms;
 	padding: .75em;
 	font-size: 90%;
-}
-
-#pagenav a:hover {
-	background: var(--pagenav-hover-bg);
 }
 
 @keyframes fadeIn {
@@ -778,8 +792,319 @@ h3.quick-assist-question {
 	min-height: 3.5em;
 }
 
+main nav li img,
+article li img,
+img.external-link {
+	max-height: .9em;
+}
 
 
+
+
+/* JSON and module */
+
+.nonstandard-notice {
+	font-size: 14px;
+	max-width: 500px;
+	margin: 25px auto;
+	border: 1px solid #ecd200;
+	background: #fffddf;
+	border-radius: 5px;
+	padding: 10px;
+	color: #886c00;
+	line-height: 1.4em;
+	display: none;
+}
+
+.nonstandard {
+	color: rgb(214, 145, 16);
+}
+
+.standard-flag,
+.nonstandard-flag {
+	cursor: help;
+	font-size: 8px;
+	line-height: 1em;
+	padding: 4px 8px;
+	text-transform: uppercase;
+	font-weight: bold;
+	color: white;
+	border-radius: 4px;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+
+.standard-flag {
+	background-color: rgb(34, 163, 23);
+}
+
+.nonstandard-flag {
+	background-color: rgb(238, 167, 34);
+}
+
+
+
+#module-docs-container,
+#module-list-container,
+#module-template {
+	display: none;
+}
+
+#module-list-container {
+	overflow-x: auto;
+}
+
+#module-list {
+	margin-top: 50px;
+}
+
+#module-list td:first-child {
+	word-wrap: break-word;
+	max-width: 400px;
+}
+
+#module-list .module-link {
+	font-weight: bold;
+	font-size: 20px;
+}
+
+
+#module-multiple-repos {
+	display: none;
+	margin: 25px;
+}
+
+.module-repo-selector {
+	font-size: 26px;
+	padding: 25px;
+	font-weight: bold;
+	border-bottom: 1px solid #888;
+	cursor: pointer;
+}
+
+.module-repo-selector:hover {
+	color: #009cda;
+	background: var(--table-header-bg);
+}
+
+.module-repo-selector-arrow {
+	margin: 10px;
+}
+
+.module-repo-differentiator {
+	font-size: 11px;
+	font-weight: bold;
+	color: #555;
+	line-height: 1em;
+}
+
+
+.toggle-obj {
+	padding: 0 .5em;
+	visibility: hidden;
+}
+
+.group:hover > .toggle-obj {
+	visibility: visible;
+}
+
+.collapsed {
+	display: none;
+}
+
+
+
+
+
+
+
+
+.breadcrumbs {
+	margin: 0 !important;
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 1.75em;
+}
+
+#top-breadcrumb {
+	font-weight: bold;
+}
+
+#top-breadcrumb:not(:hover) {
+	/* color: #2861aa; */
+}
+
+.breadcrumbs a {
+	font-weight: normal;
+	text-decoration: none;
+}
+
+.breadcrumb-siblings-title {
+	padding: 10px;
+	font-weight: bold;
+}
+
+.breadcrumb-siblings a {
+	display: block;
+	padding: 0 10px;
+	text-decoration: none;
+}
+
+.breadcrumb-siblings a+a {
+	padding-top: 10px;
+}
+
+.breadcrumb-siblings a:last-child {
+	padding-bottom: 10px;
+}
+
+
+.json {
+	line-height: 1.5em;
+}
+.json .qu { color: #5c91bf; }
+.json .key { color: #1c83dc; font-weight: bold; }
+.json .str { color: #2f8598; }
+.json .num { color: #038a3f; }
+.json .bool { color: #9b5e14; }
+.json .key a:not([href]) { color: var(--text-color); }
+article .json a {
+	text-decoration: none;
+	font-weight: bold;
+}
+.json .has-popup { border-bottom: 1px dashed var(--text-color); }
+.json a[href].has-popup { border-bottom-color: #1c82dc; }
+.json .has-popup.module { border-bottom: none; }
+
+
+#hovercard {
+	max-width: 450px;
+	border-radius: 10px;
+	filter: drop-shadow(0 5px 5px rgba(0, 0, 0, .25));
+	position: absolute;
+	font-size: 16px;
+	transition: transform .25s ease-in-out, opacity .25s ease-in-out;
+	/* TODO: This would be nice, but it breaks the arrow-box... */
+	/* max-height: 50%;
+	overflow-y: auto; */
+}
+
+#hovercard:not(.popup) {
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(0);
+}
+
+.popup {
+	visibility: visible;
+	opacity: 1;
+	transform: translateY(-10px);
+}
+
+.arrow-box {
+	position: relative;
+	background: var(--body-bg);
+}
+
+.arrow-box:after {
+	bottom: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-color: rgba(255, 255, 255, 0);
+	border-bottom-color: var(--body-bg);
+	border-width: 10px;
+	margin-left: -10px;
+}
+
+#hovercard p,
+#hovercard ol,
+#hovercard ul,
+#hovercard pre,
+#hovercard table {
+	margin-bottom: 0;
+}
+
+#hovercard p {
+	padding: 1em;
+	line-height: 1.4em;
+}
+
+#hovercard p+p {
+	padding-top: 0;
+}
+
+#hovercard li {
+	margin: .25em;
+}
+
+#hovercard pre > code {
+	border-radius: 0;
+}
+
+#hovercard li {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+#hovercard .nonstandard-flag {
+	float: right;
+}
+
+#hovercard .module-link {
+	display: block;
+	text-decoration: none;
+	font-size: 18px;
+	line-height: 1em;
+	font-weight: bold;
+	padding: .5em 1em;
+}
+
+#hovercard .module-link:hover {
+	background: var(--table-border-color);
+}
+
+#hovercard .module-link:last-child {
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+#hovercard .module-link-description {
+	font-size: 14px;
+	color: var(--text-color-muted);
+	margin-left: .5em;
+	font-weight: normal;
+}
+
+#hovercard-namespace-box,
+#hovercard-inline-link {
+	border: 0px solid var(--table-border-color);
+}
+
+#hovercard-namespace-box {
+	border-bottom-width: 1px;
+}
+
+#hovercard-inline-link {
+	border-top-width: 1px;
+}
+
+#hovercard-inline-link a {
+	display: block;
+	padding: 8px 10px;
+	text-decoration: none;
+	font-size: 85%;
+	font-weight: bold;
+	text-align: center;
+}
+
+#hovercard-namespace {
+	font-weight: bold;
+}
 
 
 

@@ -3,33 +3,40 @@ title: Global options (Caddyfile)
 ---
 
 <script>
-window.$(function() {
+ready(function() {
 	// We'll add links on the options in the code block at the top
 	// to their associated anchor tags.
-	let headers = $('article h5').map((i, el) => el.id.replace(/-/g, "_")).toArray();
-	window.$('pre.chroma .k')
-		.filter((k, item) => headers.includes(item.innerText))
-		.map(function(k, item) {
-			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+	let headers = Array.from($$_('article h5')).map(el => el.id.replace(/-/g, "_"));
+	
+	$$_('pre.chroma .k').forEach(item => {
+		if (headers.includes(item.innerText)) {
+			let text = item.innerText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 			let url = '#' + item.innerText.replace(/_/g, "-");
-			window.$(item).html(`<a href="${url}" style="color: inherit;" title="${text}">${text}</a>`);
-		});
+			item.innerHTML = `<a href="${url}" style="color: inherit;" title="${text}">${text}</a>`;
+		}
+	});
+	
 	// Add links on comments to their respective sections
-	window.$('pre.chroma .c1')
-		.filter((k, item) => item.innerText.includes('#'))
-		.map(function(k, item) {
+	$$_('pre.chroma .c1').forEach(item => {
+		if (item.innerText.includes('#')) {
 			let text = item.innerText;
 			let before = text.slice(0, text.indexOf('#')); // the leading whitespace
 			text = text.slice(text.indexOf('#')); // only the comment part
 			let url = '#' + text.replace(/#/g, '').trim().toLowerCase().replace(/ /g, "-");
-			window.$(item).html(`${before}<a href="${url}" style="color: inherit;" title="${text}">${text}</a>`);
-		});
+			item.innerHTML = `${before}<a href="${url}" style="color: inherit;" title="${text}">${text}</a>`;
+		}
+	});
+	
 	// Surgically fix a duplicate link; 'name' appears twice as a link
 	// for two different sections, so we change the second to #name-1
-	window.$('pre.chroma .line:contains("ca [<id>]")')
-		.next()
-		.find('a:contains("name")')
-		.attr('href', '#name-1');
+	const lines = Array.from($$_('pre.chroma .line'));
+	const caLine = lines.find(line => line.innerText.includes('ca [<id>]'));
+	if (caLine && caLine.nextElementSibling) {
+		const nameLink = caLine.nextElementSibling.querySelector('a');
+		if (nameLink && nameLink.innerText.includes('name')) {
+			nameLink.href = '#name-1';
+		}
+	}
 });
 </script>
 

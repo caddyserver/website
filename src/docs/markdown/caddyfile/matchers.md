@@ -3,27 +3,27 @@ title: Request matchers (Caddyfile)
 ---
 
 <script>
-window.$(function() {
+ready(function() {
 	// We'll add links on the matchers in the code blocks
 	// to their associated anchor tags.
-	let headers = $('article h3').map((i, el) => el.id.replace(/-/g, "_")).toArray();
-	window.$('pre.chroma .k')
-		.filter((k, item) => headers.includes(item.innerText))
-		.map(function(k, item) {
-			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+	let headers = Array.from($$_('article h3')).map(el => el.id.replace(/-/g, "_"));
+
+	$$_('pre.chroma .k').forEach(item => {
+		if (headers.includes(item.innerText)) {
+			let text = item.innerText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 			let url = '#' + item.innerText.replace(/_/g, "-");
-			window.$(item).html(`<a href="${url}" style="color: inherit;" title="${text}">${text}</a>`);
-		});
+			item.innerHTML = `<a href="${url}" style="color: inherit;" title="${text}">${text}</a>`;
+		}
+	});
 
 	// Link matcher tokens based on their contents to the syntax section
-	window.$('pre.chroma .nd')
-		.map(function(k, item) {
-			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
-			let anchor = "named-matchers"
-			if (text == "*") anchor = "wildcard-matchers"
-			if (text.startsWith('/')) anchor = "path-matchers"
-			window.$(item).html(`<a href="#${anchor}" style="color: inherit;" title="Matcher token">${text}</a>`);
-		});
+	$$_('pre.chroma .nd').forEach(item => {
+		let text = item.innerText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+		let anchor = "named-matchers";
+		if (text == "*") anchor = "wildcard-matchers";
+		if (text.startsWith('/')) anchor = "path-matchers";
+		item.innerHTML = `<a href="#${anchor}" style="color: inherit;" title="Matcher token">${text}</a>`;
+	});
 });
 </script>
 

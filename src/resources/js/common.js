@@ -37,6 +37,13 @@ function on(eventName, elemSelector, handler, capture) {
 	});
 }
 
+function next(el, selector) {
+	const nextEl = el.nextElementSibling;
+	if (!selector || (nextEl && nextEl.matches(selector))) {
+		return nextEl;
+	}
+	return null;
+}
 
 // cloneTemplate does a deep clone of the <template> tag selected by tplSelector.
 function cloneTemplate(tplSelector) {
@@ -161,16 +168,19 @@ function nextTheme() {
 	setTheme(theme);
 }
 
+// immediately set the configured theme to avoid flash
+setTheme(getTheme());
+
 
  
 
 // hoversplash effect!
-on('mouseover', '.button:not(.cool), button:not(.cool)', (e) => {
+on('mouseenter', '.button:not(.cool):not(.button *), button:not(.cool):not(button *)', (e) => {
 	const elem = document.createElement('span');
 	elem.classList.add('hover-splash');
 
 	// get coordinates relative to container
-	const rect = e.target.getBoundingClientRect();
+	const rect = e.target.closest('button, .button').getBoundingClientRect();
 	const x = e.clientX - rect.left;
 	const y = e.clientY - rect.top;
 
@@ -182,7 +192,7 @@ on('mouseover', '.button:not(.cool), button:not(.cool)', (e) => {
 	setTimeout(function() {
 		elem.remove();
 	}, 1000);
-});
+}, true);
 
 
 // mouseover highlights for feature sections that explain config
@@ -196,6 +206,12 @@ on('mouseout', '.rollover', e => {
 });
 
 
-
-// immediately set the configured theme to avoid flash
-setTheme(getTheme());
+// Algolia search
+ready(function() {
+	docsearch({
+		appId: "VZI00J4D3U",
+		apiKey: '1ab8d12c0f99de6c4a04401c9f315c2e',
+		indexName: 'caddyserver',
+		container: '#search',
+	});
+});
