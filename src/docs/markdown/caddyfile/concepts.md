@@ -100,9 +100,10 @@ The Caddyfile's structure can be described visually:
 		display: flex;
 		gap: 18px;
 		align-items: flex-start;
+		flex-wrap: wrap;
 	}
 	.struct-caddyfile-visual-repl .struct-diagram {
-		flex: 1 1 760px;
+		flex: 1;
 		padding: 8px 8px;
 	}
 	.struct-caddyfile-visual-repl .struct-legend {
