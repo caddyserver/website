@@ -1148,4 +1148,33 @@ article .json a {
 	main nav ul .heading {
 		margin-top: 2.5em !important;
 	}
+
+	article {
+		font-size: 18px;
+	}
+
+	article > :not(.fullwidth, .fullspan, #hovercard), article > .fullwidth > *, .pad {
+		padding-left: 4%;
+		padding-right: 4%;
+	}
+
+	article h1 {
+		font-size: 50px;
+	}
+	article h2 {
+		margin: 50px 0 20px;
+		font-size: 40px;
+	}
+	article h3 {
+		font-size: 32px;
+	}
+
+	article p,
+	article li {
+		line-height: 1.5;
+	}
+
+	hr {
+		margin: 2em auto;
+	}
 }
