@@ -85,6 +85,7 @@ Possible options are (click on each option to jump to its documentation):
 	shutdown_delay <duration>
 	metrics {
 		per_host
+		observe_catchall_hosts
 	}
 
 	# TLS Options
@@ -133,8 +134,12 @@ Possible options are (click on each option to jump to its documentation):
 			idle        <duration>
 		}
 		keepalive_interval <duration>
+		keepalive_idle     <duration>
+		keepalive_count	   <number>
+
 		trusted_proxies <module> ...
 		client_ip_headers <headers...>
+
 		trace
 		max_header_size <size>
 		enable_full_duplex
@@ -947,6 +952,31 @@ The interval at which TCP keepalive packets are sent to keep the connection aliv
 ```
 
 
+##### `keepalive_idle`
+
+The duration a connection must be idle before TCP keepalive packets are sent when no other data is being transmitted. Defaults to `15s`.
+
+```caddy
+{
+	servers {
+		keepalive_idle 1m
+	}
+}
+```
+
+
+##### `keepalive_count`
+
+The maximum number of TCP keepalive packets to send before considering the connection dead. Defaults to `9`.
+
+```caddy
+{
+	servers {
+		keepalive_count 5
+	}
+}
+```
+
 
 ##### `trusted_proxies`
 
@@ -1033,6 +1063,17 @@ You can add the `per_host` option to label metrics with the host name of the met
 {
 	metrics {
 		per_host
+	}
+}
+```
+
+Due to the infinite cardinality potential in observing all possible hosts may be sent by clients, Caddy will only record metrics for configured hosts, while all other hosts (e.g., attacker.com) are aggregated under "_other" label. To force observation of all hosts, and where potential infinite cardinality is an acceptable risk, you add `observe_catchall_hosts`. Note that adding `observe_catchall_hosts` will not enable `per_host`. However, this is automatically enabled for HTTPS servers (since certificates provide some protection against unbounded cardinality), but disabled for HTTP servers by default to prevent cardinality attacks from arbitrary Host headers.
+
+```caddy
+{
+	metrics {
+		per_host
+		observe_catchall_hosts
 	}
 }
 ```

@@ -625,11 +625,21 @@ You can use any placeholders in the Caddyfile, but for convenience you can also 
 | `{hostport}`     | `{http.request.hostport}`           |
 | `{labels.*}`     | `{http.request.host.labels.*}`      |
 | `{method}`       | `{http.request.method}`             |
+| `{orig_method}`  | `{http.request.orig_method}`        |
+| `{orig_uri}`     | `{http.request.orig_uri}`           |
+| `{orig_path}`    | `{http.request.orig_uri.path}`      |
+| `{orig_dir}`     | `{http.request.orig_uri.path.dir}`  |
+| `{orig_file}`    | `{http.request.orig_uri.path.file}` |
+| `{orig_query}`   | `{http.request.orig_uri.query}`     |
+| `{orig_?query}`  | `{http.request.orig_uri.prefixed_query}` |
 | `{path.*}`       | `{http.request.uri.path.*}`         |
 | `{path}`         | `{http.request.uri.path}`           |
+| `{%path}`        | `{http.request.uri.path_escaped}`   |
 | `{port}`         | `{http.request.port}`               |
 | `{query.*}`      | `{http.request.uri.query.*}`        |
 | `{query}`        | `{http.request.uri.query}`          |
+| `{%query}`       | `{http.request.uri.query_escaped}`  |
+| `{?query}`       | `{http.request.uri.prefixed_query}` |
 | `{re.*}`         | `{http.regexp.*}`                   |
 | `{remote_host}`  | `{http.request.remote.host}`        |
 | `{remote_port}`  | `{http.request.remote.port}`        |
@@ -647,6 +657,7 @@ You can use any placeholders in the Caddyfile, but for convenience you can also 
 | `{tls_version}`       | `{http.request.tls.version}`             |
 | `{upstream_hostport}` | `{http.reverse_proxy.upstream.hostport}` |
 | `{uri}`               | `{http.request.uri}`                     |
+| `{%uri}`              | `{http.request.uri_escaped}`             |
 | `{vars.*}`            | `{http.vars.*}`                          |
 
 Not all config fields support placeholders, but most do where you would expect it. Support for placeholders needs to have been explicitly added to those fields. Plugin authors can [read this article](/docs/extending-caddy/placeholders) to learn how to add support for placeholders in their own modules.
