@@ -324,17 +324,11 @@ This is mainly important to know when troubleshooting connections.
 
 Like certificate keys, it is not good practice (and can be downright insecure) to use the same key for a long time. As such, ECH keys should be rotated on a regular basis. Unlike certificates, ECH configs don't strictly expire. But servers should rotate them nonetheless.
 
-<aside class="tip">
-
-(NOTE: Caddy 2.10 does not rotate keys because it is not possible to change keys on a running server with Go 1.24. However, it [should be possible by Go 1.25](https://github.com/golang/go/issues/71920), so at that point, Caddy will be updated to rotate keys.)
-
-</aside>
-
 Key rotation is tricky though, because clients need to know about the updated keys. If the server simply replaced old keys with new ones, all ECH handshakes would fail unless clients were immediately notified about the new keys. But simply publishing the updated keys isn't enough. The reality is, DNS records have TTLs, and resolvers cache responses, etc. It can take minutes, hours, or even days for clients to query the updated HTTPS records and start using the new ECH config.
 
-For that reason, servers should keep supporting old ECH configs for a period of time. Not doing so risks exposing server names in plaintext _at scale_.
+For that reason, servers should keep supporting old ECH configs for a period of time. Not doing so risks exposing server names in plaintext _at scale_. Caddy rotates keys every once in a while, and supports rotated keys for some time, until they are eventually dropped.
 
-However, that may not be enough. Some clients still won't get the updated keys for various reasons, and any time that happens, there is a risk of exposing the server name. So there needs to be another way to give clients the updated config _in band_ with the connection. That's what the _outer name_ is for.
+However, that may not be enough. Some clients still won't get the updated keys for various reasons, and any time that happens, there is a risk of exposing the server name. So there needs to be another way to give clients the updated config _in band_ with the connection. That's what the _outer name_ (or _public name_) is for.
 
 #### Public name
 
@@ -371,7 +365,7 @@ When DoH or DoT is used, DNS lookups all go through the DoH/DoT provider. Betwee
 
 Similarly, if we truly maximize the anonymity set at scale, all sites would be protected behind a single public name, like `cloudflare-ech.com`. This is good for privacy, but then the entire Internet is at the mercy of Cloudflare and that one domain name. Now, maximizing to that extent is not necessary or practical, but the theoretical implications remain valid.
 
-We recommend each organization or individual choose a single name for all their sites and use that, and in most cases that should offer sufficient privacy. However, please consult experts with your your individual threat models for your specific case.
+We recommend each organization or individual choose a single name for all their sites and use that, and in most cases that should offer sufficient privacy. However, please consult experts with your individual threat models for your specific case.
 
 
 #### Subdomain privacy
@@ -382,7 +376,9 @@ Most sites do not need this, as, generally speaking, subdomains are public infor
 
 To avoid leaking sensitive subdomains to Certificate Transparency (CT) logs, use a wildcard certificate instead. In other words, instead of putting `sub.example.com` in your config, put `*.example.com`. (See [Wildcard certificates](#wildcard-certificates) for important information.)
 
-Then, enable ECH in Caddy. A wildcard certificate combined with ECH should properly hide subdomains, as long as every client that tries to connect to it uses ECH and has a strong implementation. (You are still at the mercy of clients to preserve privacy.)
+Another source of leaks is DNSSEC, which most authoritative DNS servers use by default. Through a practice named "zone walking", subdomain enumeration is possible by looking at the NSEC records, which are used to provide authenticated denial of existence. For this, they point to the next available subdomain in alphabetical order, forming a linked list  of all records. Ensure your domain is using at the very least NSEC3 or ideally a wildcard CNAME record to mitigate against this.
+
+Then, enable ECH in Caddy. A wildcard certificate combined with ECH and a wildcard CNAME record should properly hide subdomains, as long as every client that tries to connect to it uses ECH and has a strong implementation. (You are still at the mercy of clients to preserve privacy.)
 
 
 ### Enabling ECH

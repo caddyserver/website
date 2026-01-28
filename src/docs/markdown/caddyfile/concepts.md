@@ -25,7 +25,289 @@ This document will help you learn about the HTTP Caddyfile in detail.
 
 The Caddyfile's structure can be described visually:
 
-![Caddyfile structure](/old/resources/images/caddyfile-visual.png)
+<style>
+	:root {
+		--struct-border-global: #e74c3c;
+		--struct-border-snippet: #2ecc71;
+		--struct-border-site: #3498db;
+		--struct-border-matcher: #d453d4;
+		--struct-bg-1: #edf5fd;
+		--struct-bg-2: #f8fbfd;
+		--struct-bg-end: 100%;
+		--struct-fg: #254048;
+		--struct-opt-name-bg: #ffd9dd;
+		--struct-opt-name-fg: #7a2a39;
+		--struct-opt-value-bg: #f4dec6;
+		--struct-opt-value-fg: #5a3723;
+		--struct-comment-bg: #d2d7d8;
+		--struct-comment-fg: #495456;
+		--struct-site-addr-bg: #cbe4f2;
+		--struct-site-addr-fg: #1f6f9a;
+		--struct-directive-bg: #c8f7d6;
+		--struct-directive-fg: #14663a;
+		--struct-matcher-token-bg: #ffd6ff;
+		--struct-matcher-token-fg: #6f2070;
+		--struct-arg-bg: #ded0ff;
+		--struct-arg-fg: #4b2f7a;
+		--struct-subdir-bg: #dbbca2;
+		--struct-subdir-fg: #5b3a25;
+	}
+	html.dark {
+		--struct-border-global: #e74c3c;
+		--struct-border-snippet: #2ecc71;
+		--struct-border-site: #3498db;
+		--struct-border-matcher: #d453d4;
+		--struct-bg-1: #0d313c;
+		--struct-bg-2: transparent;
+		--struct-bg-end: 120%;
+		--struct-fg: #cbd6da;
+		--struct-opt-name-bg: #6b2630;
+		--struct-opt-name-fg: #ffd9dd;
+		--struct-opt-value-bg: #68412b;
+		--struct-opt-value-fg: #f4dec6;
+		--struct-comment-bg: #2f424d;
+		--struct-comment-fg: #e8eef0;
+		--struct-site-addr-bg: #204d59;
+		--struct-site-addr-fg: #d6f0ff;
+		--struct-directive-bg: #1f4e36;
+		--struct-directive-fg: #c8f7d6;
+		--struct-matcher-token-bg: #65305a;
+		--struct-matcher-token-fg: #ffd6ff;
+		--struct-arg-bg: #3b2e46;
+		--struct-arg-fg: #ded0ff;
+		--struct-subdir-bg: #6a4a2e;
+		--struct-subdir-fg: #ebc095;
+	}
+	/* color variables - easy to tweak */
+	.struct-caddyfile-visual-repl {
+		display: block;
+		margin: 0;
+		padding: 0;
+	}
+	/* default (light) visual background */
+	.struct-caddyfile-visual-repl .struct-visual {
+		box-sizing: border-box;
+		margin: 0 0 1.25rem;
+		padding: 14px;
+		border-radius: 14px;
+		background: linear-gradient(to bottom, var(--struct-bg-1) 0%, var(--struct-bg-2) var(--struct-bg-end));
+		color: var(--struct-fg);
+		font-family: Inter, 'Source Sans Pro', Arial, system-ui, sans-serif;
+		line-height: 1.2;
+	}
+	/* layout */
+	.struct-caddyfile-visual-repl .struct-panel {
+		display: flex;
+		gap: 18px;
+		align-items: flex-start;
+		flex-wrap: wrap;
+	}
+	.struct-caddyfile-visual-repl .struct-diagram {
+		flex: 1;
+		padding: 8px 8px;
+	}
+	.struct-caddyfile-visual-repl .struct-legend {
+		width: 310px;
+		padding: 12px 4px;
+	}
+	/* code-like box: use normal whitespace so HTML pretty-printing won't leak source indentation */
+	.struct-caddyfile-visual-repl .struct-code-box {
+		background: transparent;
+		border-radius: 8px;
+		padding: 6px 6px !important;
+		font-family: var(--monospace-fonts);
+		font-size: 90%;
+		white-space: normal;
+	}
+	.struct-block {
+		border-radius: 8px;
+		padding: 10px;
+		margin: 0 0 10px 0;
+	}
+	.struct-block.global {
+		border: 4px solid var(--struct-border-global);
+	}
+	.struct-block.snippet {
+		border: 4px solid var(--struct-border-snippet);
+	}
+	.struct-block.site {
+		border: 4px solid var(--struct-border-site);
+	}
+	.struct-block.matcher {
+		border: 4px solid var(--struct-border-matcher);
+		margin: 8px 8px 10px 10px;
+		padding: 8px;
+		border-radius: 6px;
+	}
+	.struct-token, .struct-opt-name, .struct-opt-value, .struct-comment, .struct-site-addr, .struct-directive, .struct-matcher-token, .struct-arg, .struct-subdir {
+		display: inline !important;
+		padding: .03rem .18rem !important;
+		border-radius: 6px;
+		font-family: var(--monospace-fonts);
+		font-size: 95%;
+		vertical-align: middle;
+	}
+	.struct-opt-name {
+		background: var(--struct-opt-name-bg);
+		color: var(--struct-opt-name-fg);
+	}
+	.struct-opt-value {
+		background: var(--struct-opt-value-bg);
+		color: var(--struct-opt-value-fg);
+	}
+	.struct-comment {
+		background: var(--struct-comment-bg);
+		color: var(--struct-comment-fg);
+	}
+	.struct-site-addr {
+		background: var(--struct-site-addr-bg);
+		color: var(--struct-site-addr-fg);
+	}
+	.struct-directive {
+		background: var(--struct-directive-bg);
+		color: var(--struct-directive-fg);
+	}
+	.struct-matcher-token {
+		background: var(--struct-matcher-token-bg);
+		color: var(--struct-matcher-token-fg);
+	}
+	.struct-arg {
+		background: var(--struct-arg-bg);
+		color: var(--struct-arg-fg);
+	}
+	.struct-subdir {
+		background: var(--struct-subdir-bg);
+		color: var(--struct-subdir-fg);
+	}
+	.struct-legend .struct-legend-title {
+		font-weight: 700;
+		font-size: 1.6rem;
+	}
+	.struct-legend .struct-item {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin: 16px 0;
+	}
+	.struct-legend .struct-item-spacer {
+		height: 8px;
+	}
+	/* swatch for border-based legend items (blocks) */
+	.struct-legend .struct-swatch-border {
+		width: 42px;
+		height: 24px;
+		border-radius: 6px;
+		box-sizing: border-box;
+		border: 4px solid transparent;
+		background: transparent;
+	}
+	/* swatch for filled legend items (text backgrounds) */
+	.struct-legend .struct-swatch-fill {
+		width: 42px;
+		height: 24px;
+		border-radius: 6px;
+		box-sizing: border-box;
+		background: transparent;
+	}
+	.struct-legend .struct-label {
+		font-size: 90%;
+		color: inherit;
+	}
+	.struct-caddyfile-visual-repl .struct-visual, .struct-caddyfile-visual-repl .struct-panel, .struct-caddyfile-visual-repl .struct-diagram, .struct-caddyfile-visual-repl .struct-legend, .struct-caddyfile-visual-repl .struct-code-box {
+		margin: 0;
+	}
+	/* force compact vertical rhythm and explicit indenting so global CSS can't leak in
+		NOTE: use normal whitespace so server-side HTML formatting doesn't create visible gaps */
+	.struct-line {
+		display: block !important;
+		margin: 0 !important;
+		padding: 2px 0 !important;
+		line-height: 1.2 !important;
+		white-space: normal !important;
+	}
+	/* helper to visually indent lines (do not rely on source file whitespace)
+		use an explicit spacer element so HTML formatting won't affect alignment */
+	.struct-line.struct-indent {
+		padding-left: 0 !important;
+	}
+	.struct-indent-spacer {
+		display: inline-block;
+		width: 1.2rem;
+		height: 1px;
+		margin-right: 0.18rem;
+	}
+	/* smaller spacer for sub-directive / nested lines */
+	.struct-subindent-spacer {
+		display: inline-block;
+		width: 0.9rem;
+		height: 1px;
+		margin-right: 0.12rem;
+	}
+</style>
+
+<div class="struct-caddyfile-visual-repl fullwidth">
+	<div class="struct-visual">
+		<div class="struct-panel">
+			<div class="struct-diagram">
+				<div class="struct-code-box">
+					<div class="struct-block global">
+						<div class="struct-line">{</div>
+						<div class="struct-line struct-indent"><span class="struct-indent-spacer"></span><span class="struct-opt-name">email</span> <span class="struct-opt-value">you@yours.com</span></div>
+						<div class="struct-line struct-indent"><span class="struct-indent-spacer"></span><span class="struct-opt-name">servers</span> {</div>
+						<div class="struct-line struct-indent"><span class="struct-indent-spacer"></span><span class="struct-indent-spacer"></span><span class="struct-subdir">trusted_proxies</span> <span class="struct-arg">static</span> <span class="struct-arg">private_ranges</span></div>
+						<div class="struct-line"><span class="struct-indent-spacer"></span>}</div>
+						<div class="struct-line">}</div>
+					</div>
+					<div class="struct-block snippet">
+						<div class="struct-line">(snippet) {</div>
+						<div class="struct-line struct-indent"><span class="struct-indent-spacer"></span><span class="struct-comment"># this is a reusable snippet</span></div>
+						<div class="struct-line struct-indent"><span class="struct-indent-spacer"></span><span class="struct-directive">log</span> {</div>
+						<div class="struct-line"><span class="struct-subindent-spacer"></span><span class="struct-indent-spacer"></span><span class="struct-subdir">output</span> <span class="struct-arg">file</span> <span class="struct-arg">/var/log/access.log</span></div>
+						<div class="struct-line"><span class="struct-indent-spacer"></span>}</div>
+						<div class="struct-line">}</div>
+					</div>
+					<div class="struct-block site">
+						<div class="struct-line"><span class="struct-site-addr">example.com</span> {</div>
+						<div class="struct-block matcher">
+							<div class="struct-line"><span class="struct-matcher-token">@post</span> {</div>
+							<div class="struct-line"><span class="struct-subindent-spacer"></span><span class="struct-matcher-token">method</span> <span class="struct-arg">POST</span></div>
+							<div class="struct-line">}</div>
+						</div>
+						<div class="struct-line struct-indent"><span class="struct-indent-spacer"></span><span class="struct-directive">reverse_proxy</span> <span class="struct-matcher-token">@post</span> <span class="struct-arg">localhost:9001</span> <span class="struct-arg">localhost:9002</span> {</div>
+						<div class="struct-line"><span class="struct-subindent-spacer"></span><span class="struct-indent-spacer"></span><span class="struct-subdir">lb_policy</span> <span class="struct-arg">first</span></div>
+						<div class="struct-line"><span class="struct-indent-spacer"></span>}</div>
+						<div class="struct-line struct-indent"><span class="struct-indent-spacer"></span><span class="struct-directive">file_server</span> <span class="struct-matcher-token">/static</span></div>
+						<div class="struct-line struct-indent"><span class="struct-indent-spacer"></span><span class="struct-directive">import</span> <span class="struct-arg">snippet</span></div>
+						<div class="struct-line">}</div>
+					</div>
+					<div class="struct-block site">
+						<div class="struct-line struct-indent"><span class="struct-site-addr">www.example.com</span> {</div>
+						<div class="struct-line struct-indent"><span class="struct-indent-spacer"></span><span class="struct-directive">redir</span> <span class="struct-arg">https://example.com{uri}</span></div>
+						<div class="struct-line struct-indent"><span class="struct-indent-spacer"></span><span class="struct-directive">import</span> <span class="struct-arg">snippet</span></div>
+						<div class="struct-line">}</div>
+					</div>
+				</div>
+			</div>
+			<div class="struct-legend" aria-hidden="false">
+				<div class="struct-legend-title">Legend</div>
+				<div class="struct-item-spacer"></div>
+				<div class="struct-item"><div class="struct-swatch-border" style="border-color:var(--struct-border-global)"></div><div class="struct-label">Global options block</div></div>
+				<div class="struct-item"><div class="struct-swatch-border" style="border-color:var(--struct-border-snippet)"></div><div class="struct-label">Snippet</div></div>
+				<div class="struct-item"><div class="struct-swatch-border" style="border-color:var(--struct-border-site)"></div><div class="struct-label">Site block</div></div>
+				<div class="struct-item"><div class="struct-swatch-border" style="border-color:var(--struct-border-matcher)"></div><div class="struct-label">Matcher definition</div></div>
+				<div class="struct-item-spacer"></div>
+				<div class="struct-item"><div class="struct-swatch-fill" style="background:var(--struct-opt-name-bg)"></div><div class="struct-label">Option name</div></div>
+				<div class="struct-item"><div class="struct-swatch-fill" style="background:var(--struct-opt-value-bg)"></div><div class="struct-label">Option value</div></div>
+				<div class="struct-item"><div class="struct-swatch-fill" style="background:var(--struct-comment-bg)"></div><div class="struct-label">Comment</div></div>
+				<div class="struct-item"><div class="struct-swatch-fill" style="background:var(--struct-site-addr-bg)"></div><div class="struct-label">Site address</div></div>
+				<div class="struct-item"><div class="struct-swatch-fill" style="background:var(--struct-directive-bg)"></div><div class="struct-label">Directive</div></div>
+				<div class="struct-item"><div class="struct-swatch-fill" style="background:var(--struct-matcher-token-bg)"></div><div class="struct-label">Matcher token</div></div>
+				<div class="struct-item"><div class="struct-swatch-fill" style="background:var(--struct-arg-bg)"></div><div class="struct-label">Argument</div></div>
+				<div class="struct-item"><div class="struct-swatch-fill" style="background:var(--struct-subdir-bg)"></div><div class="struct-label">Subdirective</div></div>
+			</div>
+		</div>
+	</div>
+</div>
 
 Key points:
 

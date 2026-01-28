@@ -33,7 +33,7 @@ While the [built-in order](/docs/caddyfile/directives#directive-order) is compat
 
 To illustrate, consider the case of two terminating handlers: [`redir`](redir) and [`file_server`](file_server). Both write the response to the client and do not call the next handler in the chain, so only one of these will be executed for a certain request. So which comes first? Normally, `redir` is executed before `file_server` because usually you would want to issue a redirect only in specific cases and serve files in the general case.
 
-However, there may be occasions where the second directive (`redir`) has a more specific matcher than the second (`file_server`). In other words, you want to redirect in the general case, and serve only a specific file.
+However, there may be occasions where the first directive (`file_server`) has a more specific matcher than the second (`redir`). In other words, you want to redirect in the general case, and serve only a specific file.
 
 So you might try a Caddyfile like this (but this will not work as expected!):
 

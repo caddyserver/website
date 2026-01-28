@@ -3,16 +3,16 @@ title: log (Caddyfile directive)
 ---
 
 <script>
-window.$(function() {
+ready(function() {
 	// Fix > in code blocks
-	window.$('pre.chroma .k:contains(">")')
-		.each(function() {
-			const e = window.$(this);
+	$$_('pre.chroma .k').forEach(item => {
+		if (item.innerText.includes('>')) {
 			// Skip if ends with >
-			if (e.text().trim().endsWith('>')) return;
+			if (item.textContent.trim().endsWith('>')) return;
 			// Replace > with <span class="p">&gt;</span>
-			e.html(e.html().replace(/&gt;/g, '<span class="p">&gt;</span>'));
-		});
+			item.innerHTML = item.innerHTML.replace(/&gt;/g, '<span class="p">&gt;</span>');
+		}
+	});
 
 	// We'll add links to all the subdirectives if a matching anchor tag is found on the page.
 	addLinksToSubdirectives();

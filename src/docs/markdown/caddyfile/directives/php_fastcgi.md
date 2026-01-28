@@ -3,7 +3,7 @@ title: php_fastcgi (Caddyfile directive)
 ---
 
 <script>
-window.$(function() {
+ready(function() {
 	// We'll add links to all the subdirectives if a matching anchor tag is found on the page.
 	addLinksToSubdirectives();
 });

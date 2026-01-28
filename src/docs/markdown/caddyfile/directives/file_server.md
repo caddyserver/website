@@ -3,11 +3,18 @@ title: file_server (Caddyfile directive)
 ---
 
 <script>
-window.$(function() {
+ready(function() {
 	// Fix inline browse arg
-	window.$('pre.chroma .s:contains("browse")').first()
-		.wrapAll('<span class="k">').parent()
-		.html('<a href="#browse" style="color: inherit;" title="browse">browse</a>')
+	for (let item of $$_('pre.chroma .s')) {
+		if (item.innerText.includes('browse')) {
+			const span = document.createElement('span');
+			span.className = 'k';
+			item.parentNode.insertBefore(span, item);
+			span.appendChild(item);
+			span.innerHTML = '<a href="#browse" style="color: inherit;" title="browse">browse</a>';
+			break;
+		}
+	}
 
 	// We'll add links to all the subdirectives if a matching anchor tag is found on the page.
 	addLinksToSubdirectives();

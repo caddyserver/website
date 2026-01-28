@@ -3,33 +3,40 @@ title: Global options (Caddyfile)
 ---
 
 <script>
-window.$(function() {
+ready(function() {
 	// We'll add links on the options in the code block at the top
 	// to their associated anchor tags.
-	let headers = $('article h5').map((i, el) => el.id.replace(/-/g, "_")).toArray();
-	window.$('pre.chroma .k')
-		.filter((k, item) => headers.includes(item.innerText))
-		.map(function(k, item) {
-			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+	let headers = Array.from($$_('article h5')).map(el => el.id.replace(/-/g, "_"));
+	
+	$$_('pre.chroma .k').forEach(item => {
+		if (headers.includes(item.innerText)) {
+			let text = item.innerText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 			let url = '#' + item.innerText.replace(/_/g, "-");
-			window.$(item).html(`<a href="${url}" style="color: inherit;" title="${text}">${text}</a>`);
-		});
+			item.innerHTML = `<a href="${url}" style="color: inherit;" title="${text}">${text}</a>`;
+		}
+	});
+	
 	// Add links on comments to their respective sections
-	window.$('pre.chroma .c1')
-		.filter((k, item) => item.innerText.includes('#'))
-		.map(function(k, item) {
+	$$_('pre.chroma .c1').forEach(item => {
+		if (item.innerText.includes('#')) {
 			let text = item.innerText;
 			let before = text.slice(0, text.indexOf('#')); // the leading whitespace
 			text = text.slice(text.indexOf('#')); // only the comment part
 			let url = '#' + text.replace(/#/g, '').trim().toLowerCase().replace(/ /g, "-");
-			window.$(item).html(`${before}<a href="${url}" style="color: inherit;" title="${text}">${text}</a>`);
-		});
+			item.innerHTML = `${before}<a href="${url}" style="color: inherit;" title="${text}">${text}</a>`;
+		}
+	});
+	
 	// Surgically fix a duplicate link; 'name' appears twice as a link
 	// for two different sections, so we change the second to #name-1
-	window.$('pre.chroma .line:contains("ca [<id>]")')
-		.next()
-		.find('a:contains("name")')
-		.attr('href', '#name-1');
+	const lines = Array.from($$_('pre.chroma .line'));
+	const caLine = lines.find(line => line.innerText.includes('ca [<id>]'));
+	if (caLine && caLine.nextElementSibling) {
+		const nameLink = caLine.nextElementSibling.querySelector('a');
+		if (nameLink && nameLink.innerText.includes('name')) {
+			nameLink.href = '#name-1';
+		}
+	}
 });
 </script>
 
@@ -864,6 +871,8 @@ The [`http_redirect`](/docs/json/apps/http/servers/listener_wrappers/http_redire
 
 The [`proxy_protocol`](/docs/json/apps/http/servers/listener_wrappers/proxy_protocol/) listener wrapper (prior to v2.7.0 it was only available via a plugin) enables [PROXY protocol](https://github.com/haproxy/haproxy/blob/master/doc/proxy-protocol.txt) parsing (popularized by HAProxy). This must be used _before_ the `tls` listener wrapper since it parses plaintext data at the start of the connection:
 
+Be aware that metadata from the PROXY protocol may be applied to the connection before the evaluation of mathers or [`trusted_proxies`](/docs/caddyfile/options#trusted-proxies). The IP address of the immediate peer will be lost for further evaluation.
+
 ```caddy-d
 proxy_protocol {
 	timeout <duration>
@@ -973,7 +982,7 @@ The maximum number of TCP keepalive packets to send before considering the conne
 
 Allows configuring IP ranges (CIDRs) of proxy servers from which requests should be trusted. By default, no proxies are trusted.
 
-Enabling this causes trusted requests to have the _real_ client IP parsed from HTTP headers (by default, `X-Forwarded-For`; see [`client_ip_headers`](#client-ip-headers) to configure other headers). If trusted, the client IP is added to [access logs](/docs/caddyfile/directives/log), is available as a `{client_ip}` [placeholder](/docs/caddyfile/concepts#placeholders), and allows the use of the [`client_ip` matcher](/docs/caddyfile/matchers#client-ip). If the request is not from a trusted proxy, then the client IP is set to the remote IP address of the direct incoming connection. By default, the IPs in headers are parsed left-to-right. See [`trusted_proxies_strict`](#trusted-proxies-strict) to alter this behaviour.
+Enabling this causes trusted requests to have the _real_ client IP parsed from HTTP headers (by default, `X-Forwarded-For`; see [`client_ip_headers`](#client-ip-headers) to configure other headers). If trusted, the client IP is added to [access logs](/docs/caddyfile/directives/log), is available as a `{client_ip}` [placeholder](/docs/caddyfile/concepts#placeholders), and allows the use of the [`client_ip` matcher](/docs/caddyfile/matchers#client-ip). If the request is not from a trusted proxy, then the client IP is set to the remote IP address of the direct incoming connection or to the address set by [PROXY protocol](/docs/caddyfile/options#proxy-protocol) if used. By default, the IPs in headers are parsed left-to-right. See [`trusted_proxies_strict`](#trusted-proxies-strict) to alter this behaviour.
 
 Some matchers or handlers may use the trust status of the request to make decisions. For example, if trusted, the [`reverse_proxy`](/docs/caddyfile/directives/reverse_proxy#defaults) handler will proxy and augment the sensitive `X-Forwarded-*` request headers.
 

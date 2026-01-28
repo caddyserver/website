@@ -3,26 +3,53 @@ title: reverse_proxy (Caddyfile directive)
 ---
 
 <script>
-window.$(function() {
+ready(function() {
 	// Fix response matchers to render with the right color,
 	// and link to response matchers section
-	window.$('pre.chroma .k:contains("@")')
-		.map(function(k, item) {
-			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+	$$_('pre.chroma .k').forEach(item => {
+		if (item.innerText.includes('@')) {
+			let text = item.innerText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 			let url = '#' + item.innerText.replace(/_/g, "-");
-			window.$(item).addClass('nd').removeClass('k')
-			window.$(item).html(`<a href="/docs/caddyfile/response-matchers" style="color: inherit;" title="Response matcher">${text}</a>`);
-		});
+			item.classList.add('nd');
+			item.classList.remove('k');
+			item.innerHTML = `<a href="/docs/caddyfile/response-matchers" style="color: inherit;" title="Response matcher">${text}</a>`;
+		}
+	});
 
 	// Fix matcher placeholder
-	window.$('pre.chroma .nd:contains("@name")').first()
-		.html('<a href="/docs/caddyfile/response-matchers" style="color: inherit;" title="Response matcher">@name</a>')
-	window.$('pre.chroma .k:contains("replace_status")').first().next().slice(0, 3)
-		.wrapAll('<span class="nd">').parent()
-		.html('<a href="/docs/caddyfile/response-matchers" style="color: inherit;" title="Response matcher">[&lt;matcher&gt;]</a>')
-	window.$('pre.chroma .k:contains("handle_response")').first().next().slice(0, 3)
-		.wrapAll('<span class="nd">').parent()
-		.html('<a href="/docs/caddyfile/response-matchers" style="color: inherit;" title="Response matcher">[&lt;matcher&gt;]</a>')
+	const nameMatchers = $$_('pre.chroma .nd');
+	for (let item of nameMatchers) {
+		if (item.innerText.includes('@name')) {
+			item.innerHTML = '<a href="/docs/caddyfile/response-matchers" style="color: inherit;" title="Response matcher">@name</a>';
+			break;
+		}
+	}
+	
+	const replaceStatusElements = $$_('pre.chroma .k');
+	for (let item of replaceStatusElements) {
+		if (item.innerText.includes('replace_status') && item.nextElementSibling) {
+			const next = item.nextElementSibling;
+			const span = document.createElement('span');
+			span.className = 'nd';
+			next.parentNode.insertBefore(span, next);
+			span.appendChild(next);
+			span.innerHTML = '<a href="/docs/caddyfile/response-matchers" style="color: inherit;" title="Response matcher">[&lt;matcher&gt;]</a>';
+			break;
+		}
+	}
+	
+	const handleResponseElements = $$_('pre.chroma .k');
+	for (let item of handleResponseElements) {
+		if (item.innerText.includes('handle_response') && item.nextElementSibling) {
+			const next = item.nextElementSibling;
+			const span = document.createElement('span');
+			span.className = 'nd';
+			next.parentNode.insertBefore(span, next);
+			span.appendChild(next);
+			span.innerHTML = '<a href="/docs/caddyfile/response-matchers" style="color: inherit;" title="Response matcher">[&lt;matcher&gt;]</a>';
+			break;
+		}
+	}
 
 	// We'll add links to all the subdirectives if a matching anchor tag is found on the page.
 	addLinksToSubdirectives();

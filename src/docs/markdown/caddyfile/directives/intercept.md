@@ -3,26 +3,43 @@ title: intercept (Caddyfile directive)
 ---
 
 <script>
-window.$(function() {
+ready(function() {
 	// Fix response matchers to render with the right color,
 	// and link to response matchers section
-	window.$('pre.chroma .k:contains("@")')
-		.map(function(k, item) {
-			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+	$$_('pre.chroma .k').forEach(item => {
+		if (item.innerText.includes('@')) {
+			let text = item.innerText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 			let url = '#' + item.innerText.replace(/_/g, "-");
-			window.$(item).addClass('nd').removeClass('k')
-			window.$(item).html(`<a href="#response-matcher" style="color: inherit;" title="Response matcher">${text}</a>`);
-		});
+			item.classList.add('nd');
+			item.classList.remove('k');
+			item.innerHTML = `<a href="#response-matcher" style="color: inherit;" title="Response matcher">${text}</a>`;
+		}
+	});
 
 	// Response matchers
-	window.$('pre.chroma .nd:contains("@name")').first().slice(0, 3)
-		.wrapAll('<span class="nd">').parent()
-		.html('<a href="/docs/caddyfile/response-matchers" style="color: inherit;">@name</a>')
-	window.$('pre.chroma .k')
-		.filter((i, el) => el.innerText === 'status')
-		.html('<a href="/docs/caddyfile/response-matchers#status" style="color: inherit;">status</a>')
-	window.$('pre.chroma .k:contains("header")').first()
-		.html('<a href="/docs/caddyfile/response-matchers#header" style="color: inherit;">header</a>')
+	const nameMatchers = Array.from($$_('pre.chroma .nd')).filter(item => item.innerText.includes('@name'));
+	if (nameMatchers.length > 0) {
+		const first = nameMatchers[0];
+		const span = document.createElement('span');
+		span.className = 'nd';
+		first.parentNode.insertBefore(span, first);
+		span.appendChild(first);
+		span.innerHTML = '<a href="/docs/caddyfile/response-matchers" style="color: inherit;">@name</a>';
+	}
+	
+	$$_('pre.chroma .k').forEach(item => {
+		if (item.innerText === 'status') {
+			item.innerHTML = '<a href="/docs/caddyfile/response-matchers#status" style="color: inherit;">status</a>';
+		}
+	});
+	
+	const headerElements = $$_('pre.chroma .k');
+	for (let item of headerElements) {
+		if (item.innerText.includes('header')) {
+			item.innerHTML = '<a href="/docs/caddyfile/response-matchers#header" style="color: inherit;">header</a>';
+			break;
+		}
+	}
 
 	// We'll add links to all the subdirectives if a matching anchor tag is found on the page.
 	addLinksToSubdirectives();

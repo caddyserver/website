@@ -16,11 +16,13 @@ encode zstd gzip
 
 try_files {path}.html {path}
 
-redir /docs/json /docs/json/
-redir /docs/modules /docs/modules/
-rewrite /docs/json/* /docs/json/index.html
-rewrite /docs/modules/* /docs/modules/index.html
-rewrite /docs/* /docs/index.html
+# allow direct access to markdown but otherwise
+# rewrite to docs index page to render it
+@notDirectDocsMarkdown {
+	path /docs/*
+	not path *.md
+}
+rewrite @notDirectDocsMarkdown /docs/index.html
 
 redir /docs/caddyfile/directives/basicauth /docs/caddyfile/directives/basic_auth 308
 redir /docs/caddyfile/directives/skip_log /docs/caddyfile/directives/log_skip 308

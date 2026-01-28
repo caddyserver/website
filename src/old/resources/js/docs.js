@@ -19,7 +19,7 @@ $(function() {
 
 	// add anchor links, inspired by https://github.com/bryanbraun/anchorjs
 	$('article > h1[id], article > h2[id], article > h3[id], article > h4[id], article > h5[id], article > h6[id]').each(function() {
-		var $anchor = $('<a href="#'+this.id+'" class="anchor-link" title="Direct link">🔗</a>');
+		var $anchor = $('<a href="#'+this.id+'" class="anchor-link" title="Contextual link">🔗</a>');
 		$(this).append($anchor);
 	});
 
@@ -72,32 +72,3 @@ $(function() {
 	// Wrap all tables in a div so we can apply overflow-x: scroll
 	$('table').wrap('<div class="table-wrapper"></div>');
 });
-
-// addLinkaddLinksToSubdirectivessToAnchors finds all the ID anchors
-// in the article, and turns any directive or subdirective span into
-// links that have an ID on the page. This is opt-in for each page,
-// because it's not necessary to run everywhere.
-function addLinksToSubdirectives() {
-	let anchors = $('article *[id]').map((i, el) => el.id).toArray();
-	$('pre.chroma .k')
-		.filter((k, item) => anchors.includes(item.innerText))
-		.map(function(k, item) {
-			let text = item.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
-			let url = '#' + item.innerText;
-			$(item).html('<a href="' + url + '" style="color: inherit;" title="' + text + '">' + text + '</a>');
-		});
-}
-
-function stripScheme(url) {
-	return url.substring(url.indexOf("://")+3);
-}
-
-// splitTypeName splits a fully qualified type name into
-// its package path and type name components, for example:
-// "github.com/foo/bar.Type" => "github.com/foo/bar" and "Type".
-function splitTypeName(fqtn) {
-	let lastDotPos = fqtn.lastIndexOf('.');
-	let pkg = fqtn.substr(0, lastDotPos);
-	let typeName = fqtn.substr(lastDotPos+1);
-	return {pkg: pkg, typeName: typeName};
-}
