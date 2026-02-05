@@ -311,7 +311,7 @@ function renderModuleInlineKey($tpl, module, data, nesting, $group) {
 	if (!data.module_inline_key) {
 		return
 	}
-	var moduleName = pathComponents[pathComponents.length-2];
+	var moduleName = pathComponents[pathComponents.length-1];
 	indent(nesting, $group);
 	$group.innerHTML += `<span class="qu">"</span><span class="key module-inline-key has-popup">${data.module_inline_key}</span><span class="qu">"</span>: <span class="qu">"</span><span class="str"><b>${moduleName}</b></span><span class="qu">"</span>`;
 	if (data.struct_fields && data.struct_fields.length > 0) {
