@@ -244,9 +244,9 @@ expression <cel...>
 
 By any [CEL (Common Expression Language)](https://github.com/google/cel-spec) expression that returns `true` or `false`.
 
-Caddy [placeholders](/docs/conventions#placeholders) (or [Caddyfile shorthands](/docs/caddyfile/concepts#placeholders)) may be used in these CEL expressions, as they are preprocessed and converted to regular CEL function calls before being interpreted by the CEL environment.
-
 Most other request matchers can also be used in expressions as functions, which allows for more flexibility for boolean logic than outside expressions. See the documentation for each matcher for the supported syntax within CEL expressions.
+
+Caddy [placeholders](/docs/conventions#placeholders) (or [Caddyfile shorthands](/docs/caddyfile/concepts#placeholders)) may be used in these CEL expressions, as they are preprocessed and converted to regular CEL function calls before being interpreted by the CEL environment. If a placeholder should be passed as a string argument to a matcher function, then the leading `{` should be escaped with a backslash `\` so that it is not preprocessed, for example `file('\{path}.md')`.
 
 For convenience, the matcher name may be omitted if defining a named matcher that consists solely of a CEL expression. The CEL expression must be [quoted](/docs/caddyfile/concepts#tokens-and-quotes) (backticks or heredocs recommended). This reads quite nicely:
 
@@ -861,6 +861,9 @@ In a [CEL expression](#expression), it would look like this:
 
 ```caddy-d
 vars <variable> <values...>
+
+expression vars({'<variable>': '<value>'})
+expression vars({'<variable>': ['<values...>']})
 ```
 
 By the value of a variable in the request context, or the value of a placeholder. Multiple values may be specified to match any of those possible values (OR'ed).
@@ -898,12 +901,21 @@ example.com {
 }
 ```
 
+In a [CEL expression](#expression), it would look like this:
+
+```caddy-d
+@magic `vars({'magic_number': ['3', '5']})`
+```
+
 
 ---
 ### vars_regexp
 
 ```caddy-d
 vars_regexp [<name>] <variable> <regexp>
+
+expression vars_regexp('<name>', '<variable>', '<regexp>')
+expression vars_regexp('<variable>', '<regexp>')
 ```
 
 Like [`vars`](#vars), but supports regular expressions.
@@ -935,4 +947,10 @@ This can be simplified by omitting the name, which will be inferred from the nam
 
 ```caddy-d
 @magic vars_regexp {magic_number} ^(4.*)
+```
+
+In a [CEL expression](#expression), it would look like this:
+
+```caddy-d
+@magic `vars_regexp('magic_number', '^(4.*)')`
 ```
