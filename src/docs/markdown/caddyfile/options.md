@@ -866,7 +866,7 @@ The [`http_redirect`](/docs/json/apps/http/servers/listener_wrappers/http_redire
 
 The [`proxy_protocol`](/docs/json/apps/http/servers/listener_wrappers/proxy_protocol/) listener wrapper (prior to v2.7.0 it was only available via a plugin) enables [PROXY protocol](https://github.com/haproxy/haproxy/blob/master/doc/proxy-protocol.txt) parsing (popularized by HAProxy). This must be used _before_ the `tls` listener wrapper since it parses plaintext data at the start of the connection:
 
-Be aware that metadata from the PROXY protocol may be applied to the connection before the evaluation of mathers or [`trusted_proxies`](/docs/caddyfile/options#trusted-proxies). The IP address of the immediate peer will be lost for further evaluation.
+Be aware that metadata from the PROXY protocol may be applied to the connection before the evaluation of matchers or [`trusted_proxies`](/docs/caddyfile/options#trusted-proxies). The IP address of the immediate peer will be lost for further evaluation.
 
 ```caddy-d
 proxy_protocol {

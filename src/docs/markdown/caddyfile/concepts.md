@@ -514,7 +514,7 @@ These are examples of valid addresses:
 | `:443`               | HTTPS catch-all due to matching the [`https_port`](/docs/caddyfile/options#http-port) default |
 | `:8080`              | HTTP on non-standard port, no `Host` matcher |
 | `localhost:8080`     | HTTPS on non-standard port, due to having a valid domain |
-| `https://example.com:443` | HTTPS, but both `https://` and `:443` are redundant |
+| `https://example.com:443` | HTTPS, but having both `https://` and `:443` is redundant |
 | `127.0.0.1` | HTTPS, with a locally-trusted IP certificate |
 | `http://127.0.0.1` | HTTP, with an IP address `Host` matcher (rejects `localhost`) |
 
