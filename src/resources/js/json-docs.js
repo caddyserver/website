@@ -3,10 +3,10 @@ const jsonDocsPathPrefix = "/docs/json/";
 var configPath = window.location.pathname.slice(jsonDocsPathPrefix.length);
 var pathComponents = configPath.split('/');
 
-setPageTitle();
-
 if (window.location.pathname == jsonDocsPathPrefix.slice(0, -1) 
 	|| window.location.pathname.startsWith(jsonDocsPathPrefix)) {
+	setPageTitle();
+	
 	// load the docs for this path
 	fetch(`/api/docs/config/${configPath}`)
 		.then(response => response.json())
