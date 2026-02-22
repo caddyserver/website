@@ -47,6 +47,7 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 	issuer          <issuer_name>  [<params...>]
 	get_certificate <manager_name> [<params...>]
 	insecure_secrets_log <log_file>
+	renewal_window_ratio <ratio>
 }
 ```
 
@@ -158,6 +159,12 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
 - **get_certificate** <span id="get_certificate"/> enables getting certificates from a [manager module](#certificate-managers) at handshake-time.
 
 - **insecure_secrets_log** <span id="insecure_secrets_log"/> enables logging of TLS secrets to a file. This is also known as `SSLKEYLOGFILE`. Uses NSS key log format, which can then be parsed by Wireshark or other tools. ⚠️ **Security Warning:** This is insecure as it allows other programs or tools to decrypt TLS connections, and therefore completely compromises security. However, this capability can be useful for debugging and troubleshooting.
+
+- **renewal_window_ratio** <span id="renewal_window_ratio"/> is a ratio between 0 and 1 that determines the certificate lifetime that must be remaining before Caddy attempts to renew the certificate. For example, if a certificate has a lifetime of 90 days, and this ratio is `0.3333` (the default value), then Caddy will continually attempt to renew the certificate when it has 30 days or less remaining before expiration. Can also be set globally with the [`renewal_window_ratio` global option](/docs/caddyfile/options#renewal_window_ratio).
+
+  You should rarely need to change this, but it can be useful to renew later in the certificate's lifetime if your CA has a very long issuance time.
+
+  Keep in mind that this is a suggestion, since ACME issuers may implement the [ARI extension](https://datatracker.ietf.org/doc/rfc9773/) which has the issuer dictate a window in which the ACME client (Caddy in this case) should attempt renewal, and that window may not align with this ratio.
 
 ### Trust Pool Providers
 

@@ -116,6 +116,7 @@ Possible options are (click on each option to jump to its documentation):
 	cert_lifetime  <duration>
 	ocsp_interval  <duration>
 	ocsp_stapling off
+	renewal_window_ratio <ratio>
 	preferred_chains [smallest] {
 		root_common_name <common_names...>
 		any_common_name  <common_names...>
@@ -724,6 +725,21 @@ Can be set to `off` to disable OCSP stapling. Useful in environments where respo
 }
 ```
 
+##### `renewal_window_ratio`
+The ratio (between 0 and 1) of the certificate lifetime that must be remaining before Caddy attempts to renew the certificate. For example, if a certificate has a lifetime of 90 days, and this ratio is `0.3333` (the default value), then Caddy will continually attempt to renew the certificate when it has 30 days or less remaining before expiration. Can also be set per site with the [`tls` directive's `renewal_window_ratio` subdirective](/docs/caddyfile/directives/tls#renewal_window_ratio).
+
+You should rarely need to change this, but it can be useful to renew later in the certificate's lifetime if your CA has a very long issuance time.
+
+Keep in mind that this is a suggestion, since ACME issuers may implement the [ARI extension](https://datatracker.ietf.org/doc/rfc9773/) which has the issuer dictate a window in which the ACME client (Caddy in this case) should attempt renewal, and that window may not align with this ratio.
+
+This applies to both TLS automation, and PKI certificate management.
+
+```caddy
+{
+	renewal_window_ratio 0.1
+}
+```
+
 
 ##### `preferred_chains`
 If your CA provides multiple certificate chains, you can use this option to specify which chain Caddy should prefer. Set one of the following options:
@@ -1110,7 +1126,7 @@ The maximum size to parse from a client's HTTP request headers. If the limit is 
 
 ##### `enable_full_duplex`
 
-Enable full-duplex communication for HTTP/1 requests. Only has an effect if Caddy was built with Go 1.21 or later.
+Enable full-duplex communication for HTTP/1 requests.
 
 For HTTP/1 requests, the Go HTTP server by default consumes any unread portion of the request body before beginning to write the response, preventing handlers from concurrently reading from the request and writing the response. Enabling this option disables this behavior and permits handlers to continue to read from the request while concurrently writing the response.
 
