@@ -29,12 +29,22 @@ ready(function() {
 	
 	// Surgically fix a duplicate link; 'name' appears twice as a link
 	// for two different sections, so we change the second to #name-1
-	const lines = Array.from($$_('pre.chroma .line'));
-	const caLine = lines.find(line => line.innerText.includes('ca [<id>]'));
+	const caLine = Array.from($$_('pre.chroma .line'))
+		.find(line => line.innerText.includes('ca [<id>]'));
 	if (caLine && caLine.nextElementSibling) {
 		const nameLink = caLine.nextElementSibling.querySelector('a');
 		if (nameLink && nameLink.innerText.includes('name')) {
 			nameLink.href = '#name-1';
+		}
+	}
+
+	// Surgically fix `renewal_window_ratio` which appears twice as a link for two different sections, so we change the second to #renewal_window_ratio-1
+	const renewalLine = Array.from($$_('pre.chroma .line'))
+		.find(line => line.innerText.includes('renewal_window_ratio'));
+	if (renewalLine && renewalLine.nextElementSibling) {
+		const renewalLink = renewalLine.nextElementSibling.querySelector('a');
+		if (renewalLink && renewalLink.innerText.includes('renewal_window_ratio')) {
+			renewalLink.href = '#renewal_window_ratio-1';
 		}
 	}
 });
@@ -161,6 +171,8 @@ Possible options are (click on each option to jump to its documentation):
 			root_cn               <name>
 			intermediate_cn       <name>
 			intermediate_lifetime <duration>
+			maintenance_interval  <duration>
+			renewal_window_ratio  <ratio>
 			root {
 				format <format>
 				cert   <path>
@@ -731,8 +743,6 @@ The ratio (between 0 and 1) of the certificate lifetime that must be remaining b
 You should rarely need to change this, but it can be useful to renew later in the certificate's lifetime if your CA has a very long issuance time.
 
 Keep in mind that this is a suggestion, since ACME issuers may implement the [ARI extension](https://datatracker.ietf.org/doc/rfc9773/) which has the issuer dictate a window in which the ACME client (Caddy in this case) should attempt renewal, and that window may not align with this ratio.
-
-This applies to both TLS automation, and PKI certificate management.
 
 ```caddy
 {
@@ -1306,6 +1316,35 @@ Default: `7d`. It is _not recommended_ to change this, unless absolutely necessa
 	}
 }
 ```
+
+##### `maintenance_interval`
+The [duration](/docs/conventions#durations) of how often to check if intermediate (and root, when applicable) certificates need renewal.
+
+Default: `10m`. It is _not recommended_ to change this, unless absolutely necessary.
+
+```caddy
+{
+	pki {
+		ca local {
+			maintenance_interval 30m
+		}
+	}
+}
+```
+
+##### `renewal_window_ratio`
+The ratio (between 0 and 1) of the certificate lifetime that must be remaining before Caddy attempts to renew certificates. For example, if a certificate has a lifetime of 1 year, and this ratio is `0.2` (the default value), then Caddy will continually attempt to renew the certificate when it has 73 days or less remaining before expiration.
+
+```caddy
+{
+	pki {
+		ca local {
+			renewal_window_ratio 0.1
+		}
+	}
+}
+```
+
 
 ##### `root`
 A key pair (certificate and private key) to use as the root for the CA. If not specified, one will be generated and managed automatically.
