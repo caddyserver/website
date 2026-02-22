@@ -119,7 +119,7 @@ The `--flags` may have a single-letter shortcut like `-f`.
 
 Adapts a configuration to Caddy's native JSON config structure and writes the output to stdout, along with any warnings to stderr, then exits.
 
-`--config` is the path to the config file. If omitted, assumes `Caddyfile` in current directory if it exists; otherwise, this flag is required.
+`--config` is the path to the config file. If omitted, assumes `Caddyfile` in current directory if it exists; otherwise, this flag is required. If you wish to use stdin instead of a regular file, use - as the path.
 
 `--adapter` specifies the config adapter to use; default is `caddyfile`.
 
@@ -194,6 +194,7 @@ Prints the environment as seen by caddy, then exits. Can be useful when debuggin
 	[-t, --templates]
 	[--access-log]
 	[-v, --debug]
+	[-f, --file-limit &lt;number&gt;]
 	[--no-compress]
 	[-p, --precompressed]</code></pre>
 
@@ -214,6 +215,8 @@ Spins up a simple but production-ready static file server.
 `--access-log` enables the request/access log.
 
 `--debug` enables verbose logging.
+
+`--file-limit` sets a maximum number of files to show in directory listings. Default: `10000`. If the number of files exceeds this limit, only the first N files will be shown, where N is the specified limit.
 
 `--no-compress` disables compression. By default, Zstandard and Gzip compression are enabled.
 
@@ -248,14 +251,44 @@ Formats or prettifies a Caddyfile, then exits. The result is printed to stdout u
 <pre><code class="cmd bash">caddy hash-password
 	[-p, --plaintext &lt;password&gt;]
 	[-a, --algorithm &lt;name&gt;]</code></pre>
+	[--bcrypt-cost &lt;cost&gt;]</code></pre>
 
 Convenient way to hash a plaintext password. The resulting hash is written to stdout as a format usable directly in your Caddy config.
 
-`--plaintext` is the plaintext form of the password. If omitted, interactive mode will be assumed and the user will be shown a prompt to enter the password manually.
+`--plaintext`
+    The password to hash. If omitted, it will be read from stdin.
+    If Caddy is attached to a controlling TTY, the input will not be echoed.
 
-`--algorithm` may be `bcrypt` or any installed hash algorithm. Default is `bcrypt`.
+`--algorithm`
+    Selects the hashing algorithm. Valid options are:
+      * `argon2id` (recommended for modern security)
+      * `bcrypt`  (legacy, slower, configurable cost, default cost is `14`)
 
+bcrypt-specific parameters:
 
+`--bcrypt-cost`
+    Sets the bcrypt hashing difficulty. Higher values increase security by
+    making the hash computation slower and more CPU-intensive.
+    Must be within the valid range [bcrypt.MinCost, bcrypt.MaxCost].
+    If omitted or invalid, the default cost is used.
+
+Argon2id-specific parameters:
+
+`--argon2id-time`
+    Number of iterations to perform. Increasing this makes
+    hashing slower and more resistant to brute-force attacks.
+
+`--argon2id-memory`
+    Amount of memory to use during hashing.
+    Larger values increase resistance to GPU/ASIC attacks.
+
+`--argon2id-threads`
+    Number of CPU threads to use. Increase for faster hashing
+    on multi-core systems.
+
+`--argon2id-keylen`
+    Length of the resulting hash in bytes. Longer keys increase
+    security but slightly increase storage size.
 
 
 ### `caddy help`
@@ -271,11 +304,14 @@ Prints CLI help text, optionally for a specific subcommand, then exits.
 <pre><code class="cmd bash">caddy list-modules
 	[--packages]
 	[--versions]
-	[-s, --skip-standard]</code></pre>
+	[-s, --skip-standard]
+	[--json]</code></pre>
 
 Prints the Caddy modules that are installed, optionally with package and/or version information from their associated Go modules, then exits.
 
 In some scripted situations, it may be redundant to print all of the standard modules as well, so you may use `--skip-standard` to omit those from the output.
+
+`--json` outputs the module information in JSON format, which can be useful for programmatic processing.
 
 NOTE: Due to [a bug in Go](https://github.com/golang/go/issues/29228), version information is only available if Caddy is built as a dependency and not as the main module. Use [xcaddy](/docs/build#xcaddy) to make this easier.
 

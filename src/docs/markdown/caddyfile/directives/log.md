@@ -71,6 +71,11 @@ log [<logger_name>] {
 	output <writer_module> ...
 	format <encoder_module> ...
 	level  <level>
+	sampling {
+		interval   <duration>
+		first      <number>
+		thereafter <number>
+	}
 }
 ```
 
@@ -98,6 +103,15 @@ log [<logger_name>] {
 
   Note that access logs currently only emit `INFO` and `ERROR` level logs.
 
+- **sampling** <span id="sampling"/> configures log sampling to reduce log volume. If sampling is specified, then it is enabled, with the defaults below taking effect. Omitting this disables sampling.
+
+  - **interval** is the [duration window](/docs/conventions#durations) over which to conduct sampling. Default: `1s` (disabled).
+
+  - **first** is how many logs to keep within a given level and message for a each interval. Default: `100`.
+
+  - **thereafter** is how many logs to skip in each interval after the first kept logs. Default: `100`.
+
+  For example, with `interval 1s`, `first 5`, and `thereafter 10`, in each 10-second interval the first 5 log entries will be kept, then it will allow through every 10th log entry with the same level and message within that second.
 
 
 ### Output modules
@@ -603,5 +617,19 @@ This works by overriding the logger name as `foo` in the site block, then includ
 
 foo.example.com {
 	log foo
+}
+```
+
+<span id="sampling-example" /> To reduce log volume with sampling, for example to keep the first 5 requests per second, then 1 out of every 10 requests thereafter:
+
+```caddy
+example.com {
+	log {
+		sampling {
+			interval   1s
+			first      5
+			thereafter 10
+		}
+	}
 }
 ```

@@ -45,9 +45,7 @@ reverse_proxy /service/* {
 }
 
 # Proxy everything else to an HTTPS upstream
-reverse_proxy https://service.example.com {
-	header_up Host {upstream_hostport}
-}
+reverse_proxy https://service.example.com
 ```
 
 </div>

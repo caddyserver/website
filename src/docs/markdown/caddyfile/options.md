@@ -29,12 +29,22 @@ ready(function() {
 	
 	// Surgically fix a duplicate link; 'name' appears twice as a link
 	// for two different sections, so we change the second to #name-1
-	const lines = Array.from($$_('pre.chroma .line'));
-	const caLine = lines.find(line => line.innerText.includes('ca [<id>]'));
+	const caLine = Array.from($$_('pre.chroma .line'))
+		.find(line => line.innerText.includes('ca [<id>]'));
 	if (caLine && caLine.nextElementSibling) {
 		const nameLink = caLine.nextElementSibling.querySelector('a');
 		if (nameLink && nameLink.innerText.includes('name')) {
 			nameLink.href = '#name-1';
+		}
+	}
+
+	// Surgically fix `renewal_window_ratio` which appears twice as a link for two different sections, so we change the second to #renewal_window_ratio-1
+	const renewalLine = Array.from($$_('pre.chroma .line'))
+		.find(line => line.innerText.includes('renewal_window_ratio'));
+	if (renewalLine && renewalLine.nextElementSibling) {
+		const renewalLink = renewalLine.nextElementSibling.querySelector('a');
+		if (renewalLink && renewalLink.innerText.includes('renewal_window_ratio')) {
+			renewalLink.href = '#renewal_window_ratio-1';
 		}
 	}
 });
@@ -85,6 +95,7 @@ Possible options are (click on each option to jump to its documentation):
 	shutdown_delay <duration>
 	metrics {
 		per_host
+		observe_catchall_hosts
 	}
 
 	# TLS Options
@@ -115,6 +126,7 @@ Possible options are (click on each option to jump to its documentation):
 	cert_lifetime  <duration>
 	ocsp_interval  <duration>
 	ocsp_stapling off
+	renewal_window_ratio <ratio>
 	preferred_chains [smallest] {
 		root_common_name <common_names...>
 		any_common_name  <common_names...>
@@ -133,8 +145,13 @@ Possible options are (click on each option to jump to its documentation):
 			idle        <duration>
 		}
 		keepalive_interval <duration>
+		keepalive_idle     <duration>
+		keepalive_count	   <number>
+		0rtt off
+
 		trusted_proxies <module> ...
 		client_ip_headers <headers...>
+
 		trace
 		max_header_size <size>
 		enable_full_duplex
@@ -155,6 +172,8 @@ Possible options are (click on each option to jump to its documentation):
 			root_cn               <name>
 			intermediate_cn       <name>
 			intermediate_lifetime <duration>
+			maintenance_interval  <duration>
+			renewal_window_ratio  <ratio>
 			root {
 				format <format>
 				cert   <path>
@@ -719,6 +738,19 @@ Can be set to `off` to disable OCSP stapling. Useful in environments where respo
 }
 ```
 
+##### `renewal_window_ratio`
+The ratio (between 0 and 1) of the certificate lifetime that must be remaining before Caddy attempts to renew the certificate. For example, if a certificate has a lifetime of 90 days, and this ratio is `0.3333` (the default value), then Caddy will continually attempt to renew the certificate when it has 30 days or less remaining before expiration. Can also be set per site with the [`tls` directive's `renewal_window_ratio` subdirective](/docs/caddyfile/directives/tls#renewal_window_ratio).
+
+You should rarely need to change this, but it can be useful to renew later in the certificate's lifetime if your CA has a very long issuance time.
+
+Keep in mind that this is a suggestion, since ACME issuers may implement the [ARI extension](https://datatracker.ietf.org/doc/rfc9773/) which has the issuer dictate a window in which the ACME client (Caddy in this case) should attempt renewal, and that window may not align with this ratio.
+
+```caddy
+{
+	renewal_window_ratio 0.1
+}
+```
+
 
 ##### `preferred_chains`
 If your CA provides multiple certificate chains, you can use this option to specify which chain Caddy should prefer. Set one of the following options:
@@ -947,6 +979,45 @@ The interval at which TCP keepalive packets are sent to keep the connection aliv
 ```
 
 
+##### `keepalive_idle`
+
+The duration a connection must be idle before TCP keepalive packets are sent when no other data is being transmitted. Defaults to `15s`.
+
+```caddy
+{
+	servers {
+		keepalive_idle 1m
+	}
+}
+```
+
+
+##### `keepalive_count`
+
+The maximum number of TCP keepalive packets to send before considering the connection dead. Defaults to `9`.
+
+```caddy
+{
+	servers {
+		keepalive_count 5
+	}
+}
+```
+
+
+##### `0rtt`
+By default, 0-RTT (early data) is enabled for QUIC listeners (i.e. HTTP/3) to allow clients to send data in the first round trip of the TLS handshake, which can improve performance for repeat connections.
+
+You may set this to `off` to disable 0-RTT for QUIC listeners. One reason to disable 0-RTT is if a [`remote_ip` matcher](/docs/caddyfile/matchers#remote-ip) is used, which introduces a dependency on the remote address being verified if routing happens before the TLS handshake completes. An HTTP 425 response is written in that case, but some clients (browsers) can misbehave and not perform a retry, so disabling 0-RTT can ensure that 425 responses are not seen by users, at the cost of losing the performance benefits of 0-RTT.
+
+```caddy
+{
+	servers {
+		0rtt off
+	}
+}
+```
+
 
 ##### `trusted_proxies`
 
@@ -1037,6 +1108,17 @@ You can add the `per_host` option to label metrics with the host name of the met
 }
 ```
 
+Due to the infinite cardinality potential in observing all possible hosts may be sent by clients, Caddy will only record metrics for configured hosts, while all other hosts (e.g., attacker.com) are aggregated under "_other" label. To force observation of all hosts, and where potential infinite cardinality is an acceptable risk, you add `observe_catchall_hosts`. Note that adding `observe_catchall_hosts` will not enable `per_host`. However, this is automatically enabled for HTTPS servers (since certificates provide some protection against unbounded cardinality), but disabled for HTTP servers by default to prevent cardinality attacks from arbitrary Host headers.
+
+```caddy
+{
+	metrics {
+		per_host
+		observe_catchall_hosts
+	}
+}
+```
+
 ##### `trace`
 
 Log each individual handler that is invoked. Requires that the log emit at `DEBUG` level ( You may do so with the [`debug` global option](#debug)).
@@ -1069,7 +1151,7 @@ The maximum size to parse from a client's HTTP request headers. If the limit is 
 
 ##### `enable_full_duplex`
 
-Enable full-duplex communication for HTTP/1 requests. Only has an effect if Caddy was built with Go 1.21 or later.
+Enable full-duplex communication for HTTP/1 requests.
 
 For HTTP/1 requests, the Go HTTP server by default consumes any unread portion of the request body before beginning to write the response, preventing handlers from concurrently reading from the request and writing the response. Enabling this option disables this behavior and permits handlers to continue to read from the request while concurrently writing the response.
 
@@ -1249,6 +1331,35 @@ Default: `7d`. It is _not recommended_ to change this, unless absolutely necessa
 	}
 }
 ```
+
+##### `maintenance_interval`
+The [duration](/docs/conventions#durations) of how often to check if intermediate (and root, when applicable) certificates need renewal.
+
+Default: `10m`. It is _not recommended_ to change this, unless absolutely necessary.
+
+```caddy
+{
+	pki {
+		ca local {
+			maintenance_interval 30m
+		}
+	}
+}
+```
+
+##### `renewal_window_ratio`
+The ratio (between 0 and 1) of the certificate lifetime that must be remaining before Caddy attempts to renew certificates. For example, if a certificate has a lifetime of 1 year, and this ratio is `0.2` (the default value), then Caddy will continually attempt to renew the certificate when it has 73 days or less remaining before expiration.
+
+```caddy
+{
+	pki {
+		ca local {
+			renewal_window_ratio 0.1
+		}
+	}
+}
+```
+
 
 ##### `root`
 A key pair (certificate and private key) to use as the root for the CA. If not specified, one will be generated and managed automatically.

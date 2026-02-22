@@ -26,7 +26,7 @@ basic_auth [<matcher>] [<hash_algorithm> [<realm>]] {
 }
 ```
 
-- **&lt;hash_algorithm&gt;** is the name of the password hashing algorithm (or KDF) used for the hashes in this configuration. Default: `bcrypt`
+- **&lt;hash_algorithm&gt;** specifies the password hashing algorithm (or key derivation function) used for the hashes in this configuration. Available options include `argon2id`, the default is `bcrypt`.
 
 - **&lt;realm&gt;** is a custom realm name.
 
@@ -64,3 +64,17 @@ example.com {
 }
 ```
 
+`argon2id` example
+
+```caddy
+example.com {
+	root * /srv
+
+	basic_auth /secret/* argon2id {
+		# Username "Bob", password "hiccup"
+		Bob $argon2id$v=19$m=47104,t=1,p=1$zJPvVe48N64JUa9MFlVhiw$b5Tznu0PxnA4TciY6qYe2BFPxncF1ePQaeNukHhH1cU
+	}
+
+	file_server
+}
+```
