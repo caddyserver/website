@@ -147,6 +147,7 @@ Possible options are (click on each option to jump to its documentation):
 		keepalive_interval <duration>
 		keepalive_idle     <duration>
 		keepalive_count	   <number>
+		0rtt off
 
 		trusted_proxies <module> ...
 		client_ip_headers <headers...>
@@ -999,6 +1000,20 @@ The maximum number of TCP keepalive packets to send before considering the conne
 {
 	servers {
 		keepalive_count 5
+	}
+}
+```
+
+
+##### `0rtt`
+By default, 0-RTT (early data) is enabled for QUIC listeners (i.e. HTTP/3) to allow clients to send data in the first round trip of the TLS handshake, which can improve performance for repeat connections.
+
+You may set this to `off` to disable 0-RTT for QUIC listeners. One reason to disable 0-RTT is if a [`remote_ip` matcher](/docs/caddyfile/matchers#remote-ip) is used, which introduces a dependency on the remote address being verified if routing happens before the TLS handshake completes. An HTTP 425 response is written in that case, but some clients (browsers) can misbehave and not perform a retry, so disabling 0-RTT can ensure that 425 responses are not seen by users, at the cost of losing the performance benefits of 0-RTT.
+
+```caddy
+{
+	servers {
+		0rtt off
 	}
 }
 ```
