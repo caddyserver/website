@@ -518,6 +518,14 @@ reverse_proxy https://example.com {
 }
 ```
 
+Since Caddy v2.11.0, this is done automatically, so it is no longer necessary to explicitly override the `Host` header when proxying to HTTPS. If you wish to opt out of this behavior, you can set the `Host` header to its original value (but this rarely makes sense to do):
+
+```caddy-d
+reverse_proxy https://example.com {
+	header_up Host {host}
+}
+```
+
 The `X-Forwarded-Host` header is still passed [by default](#defaults), so the upstream may still use that if it needs to know the original `Host` header value.
 
 The same applies when terminating TLS in caddy and proxying via HTTP, whether to a port or a unix socket. Indeed, caddy itself must receive the correct Host, when it is the target of `reverse_proxy`. In the unix socket case, the `upstream_hostport` will be the socket path, and the Host must be set explicitly.
@@ -784,13 +792,11 @@ example.com {
 ```
 
 
-Reverse proxy to an [HTTPS upstream](#https):
+Reverse proxy to an [HTTPS upstream](#https) (since v2.11.0, Caddy will automatically set the `Host` header to match the upstream's host, so it is no longer necessary to do so manually):
 
 ```caddy
 example.com {
-	reverse_proxy https://example.com {
-		header_up Host {upstream_hostport}
-	}
+	reverse_proxy https://example.com
 }
 ```
 
