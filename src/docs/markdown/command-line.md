@@ -304,11 +304,14 @@ Prints CLI help text, optionally for a specific subcommand, then exits.
 <pre><code class="cmd bash">caddy list-modules
 	[--packages]
 	[--versions]
-	[-s, --skip-standard]</code></pre>
+	[-s, --skip-standard]
+	[--json]</code></pre>
 
 Prints the Caddy modules that are installed, optionally with package and/or version information from their associated Go modules, then exits.
 
 In some scripted situations, it may be redundant to print all of the standard modules as well, so you may use `--skip-standard` to omit those from the output.
+
+`--json` outputs the module information in JSON format, which can be useful for programmatic processing.
 
 NOTE: Due to [a bug in Go](https://github.com/golang/go/issues/29228), version information is only available if Caddy is built as a dependency and not as the main module. Use [xcaddy](/docs/build#xcaddy) to make this easier.
 
