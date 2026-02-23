@@ -303,12 +303,7 @@ You may find the new [`route`](/docs/caddyfile/directives/route) and [`handle`](
 
 ### root
 
-[Unchanged](/docs/caddyfile/directives/root), but if your root path starts with `/`, you'll need to add a `*` matcher token to distinguish it from a [path matcher](/docs/caddyfile/concepts#path-matchers).
-
-- **v1:** `root /var/www`
-- **v2:** `root * /var/www`
-
-Because it accepts a matcher in v2, this means you can also change the site root depending on the request.
+[Unchanged](/docs/caddyfile/directives/root).
 
 Remember to add a [`file_server` directive](/docs/caddyfile/directives/file_server) if serving static files, since Caddy 2 does not assume this by default, whereas in v1 always had it enabled.
 

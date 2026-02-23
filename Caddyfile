@@ -1,6 +1,6 @@
 localhost
 
-root * src
+root src
 
 file_server
 templates {
