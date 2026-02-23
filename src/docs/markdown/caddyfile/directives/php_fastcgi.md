@@ -150,7 +150,7 @@ The [`root` directive](root) is almost always used to specify the directory cont
 
 ```caddy
 example.com {
-	root * /var/www/html/public
+	root /var/www/html/public
 	php_fastcgi 127.0.0.1:9000
 	file_server
 }
@@ -162,7 +162,7 @@ If you're using Docker, often your PHP-FPM containers will have the files mounte
 
 ```caddy
 app1.example.com {
-	root * /srv/app1/public
+	root /srv/app1/public
 	php_fastcgi app1:9000 {
 		root /var/www/html/public
 	}
@@ -170,7 +170,7 @@ app1.example.com {
 }
 
 app2.example.com {
-	root * /srv/app2/public
+	root /srv/app2/public
 	php_fastcgi app2:9000 {
 		root /var/www/html/public
 	}

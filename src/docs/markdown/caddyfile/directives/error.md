@@ -30,7 +30,7 @@ Trigger an error on certain request paths, and use [`handle_errors`](handle_erro
 
 ```caddy
 example.com {
-	root * /srv
+	root /srv
 
 	# Trigger errors for certain paths
     error /private* "Unauthorized" 403
@@ -38,7 +38,7 @@ example.com {
 
     # Handle the error by serving an HTML page 
     handle_errors {
-        rewrite * /{err.status_code}.html
+        rewrite /{err.status_code}.html
 		file_server
     }
 

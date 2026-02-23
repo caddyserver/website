@@ -34,7 +34,7 @@ ready(() => {
 ```caddy
 example.com
 
-root * /var/www
+root /var/www
 
 # Serve precompressed files if present
 file_server /downloads/* {

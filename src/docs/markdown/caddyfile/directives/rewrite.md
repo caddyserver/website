@@ -42,7 +42,7 @@ Rewrite all requests to `index.html`, leaving any query string unchanged:
 
 ```caddy
 example.com {
-	rewrite * /index.html
+	rewrite /index.html
 }
 ```
 
@@ -56,7 +56,7 @@ Prefixing all requests with `/api`, preserving the rest of the URI, then reverse
 
 ```caddy
 api.example.com {
-	rewrite * /api{uri}
+	rewrite /api{uri}
 	reverse_proxy localhost:8080
 }
 ```
@@ -65,7 +65,7 @@ Replace the query string on API requests with `a=b`, leaving the path unchanged:
 
 ```caddy
 example.com {
-	rewrite * ?a=b
+	rewrite ?a=b
 }
 ```
 
@@ -81,6 +81,6 @@ Change both the path and query string, preserving the original query string whil
 
 ```caddy
 example.com {
-	rewrite * /index.php?{query}&p={path}
+	rewrite /index.php?{query}&p={path}
 }
 ```

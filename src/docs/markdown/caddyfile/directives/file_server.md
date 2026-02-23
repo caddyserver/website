@@ -109,7 +109,7 @@ The `file_server` directive is usually paired with the [`root` directive](root) 
 
 ```caddy
 example.com {
-	root * /srv
+	root /srv
 	file_server
 }
 ```

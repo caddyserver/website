@@ -25,7 +25,7 @@ example.com
 
 # Serve PHP sites
 handle /blog/* {
-	root * /var/www/wordpress
+	root /var/www/wordpress
 	php_fastcgi localhost:9000
 	file_server
 }

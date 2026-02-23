@@ -49,7 +49,7 @@ Custom error pages based on the status code (i.e. a page called `404.html` for `
 
 ```caddy-d
 handle_errors {
-	rewrite * /{err.status_code}.html
+	rewrite /{err.status_code}.html
 	file_server
 }
 ```
@@ -58,7 +58,7 @@ A single error page that uses [`templates`](templates) to write a custom error m
 
 ```caddy-d
 handle_errors {
-	rewrite * /error.html
+	rewrite /error.html
 	templates
 	file_server
 }
@@ -70,7 +70,7 @@ If you want to provide custom error pages only for some error codes, you can che
 handle_errors {
 	@custom_err file /err-{err.status_code}.html /err.html
 	handle @custom_err {
-		rewrite * {file_match.relative}
+		rewrite {file_match.relative}
 		file_server
 	}
 	respond "{err.status_code} {err.status_text}"
@@ -81,7 +81,7 @@ Reverse proxy to a professional server that is highly qualified for handling HTT
 
 ```caddy-d
 handle_errors {
-	rewrite * /{err.status_code}
+	rewrite /{err.status_code}
 	reverse_proxy https://http.cat {
 		replace_status {err.status_code}
 	}

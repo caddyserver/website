@@ -113,7 +113,7 @@ And in a full site, compressing static files served by [`file_server`](file_serv
 
 ```caddy
 example.com {
-	root * /srv
+	root /srv
 	encode
 	file_server
 }

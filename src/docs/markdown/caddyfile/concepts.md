@@ -362,7 +362,7 @@ To configure multiple sites with the same Caddyfile, you **must** use curly brac
 
 ```caddy
 example1.com {
-	root * /www/example.com
+	root /www/example.com
 	file_server
 }
 

@@ -3,7 +3,7 @@
 ```caddy
 caddyserver.com
 
-root * src
+root src
 
 file_server
 templates # markdown & syntax highlighting!

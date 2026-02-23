@@ -34,7 +34,7 @@ If you're running Caddy as a systemd service, reading files from `/home` will no
 
 
 ```caddy-d
-root * /home/bob/public_html
+root /home/bob/public_html
 ```
 
 
@@ -61,7 +61,7 @@ The `root` directive is commonly paired with [`file_server`](file_server) to ser
 
 ```caddy
 example.com {
-	root * /srv
+	root /srv
 	file_server
 }
 ```

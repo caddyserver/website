@@ -68,7 +68,7 @@ A field can be added to the logs "early" by prefixing the key with `<`. This all
 example.com {
 	log
 	log_append <original_path {http.request.uri.path}
-	rewrite * /new-base{uri}
+	rewrite /new-base{uri}
 	reverse_proxy localhost:9000
 }
 ```

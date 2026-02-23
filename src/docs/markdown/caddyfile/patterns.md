@@ -22,7 +22,7 @@ These are not drop-in solutions; you will have to customize your domain name, po
 
 ```caddy
 example.com {
-	root * /var/www
+	root /var/www
 	file_server
 }
 ```
@@ -45,7 +45,7 @@ Only proxy requests having a path starting with `/api/` and serve static files f
 
 ```caddy
 example.com {
-	root * /var/www
+	root /var/www
 	reverse_proxy /api/* localhost:5000
 	file_server
 }
@@ -65,7 +65,7 @@ With a PHP FastCGI service running, something like this works for most modern PH
 
 ```caddy
 example.com {
-	root * /srv/public
+	root /srv/public
 	encode
 	php_fastcgi localhost:9000
 	file_server
@@ -94,7 +94,7 @@ Alternatively, you may use [FrankenPHP](https://frankenphp.dev/), which is a dis
 }
 
 example.com {
-	root * /srv/public
+	root /srv/public
     encode zstd br gzip
     php_server
 }
@@ -222,7 +222,7 @@ A typical SPA config usually looks something like this:
 
 ```caddy
 example.com {
-	root * /srv
+	root /srv
 	encode
 	try_files {path} /index.html
 	file_server
@@ -240,7 +240,7 @@ example.com {
 	}
 
 	handle {
-		root * /srv
+		root /srv
 		try_files {path} /index.html
 		file_server
 	}

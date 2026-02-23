@@ -53,7 +53,7 @@ Protect files in `/secret/` so only `Bob` can access them (and anyone can see ot
 
 ```caddy
 example.com {
-	root * /srv
+	root /srv
 
 	basic_auth /secret/* {
 		# Username "Bob", password "hiccup"
@@ -68,7 +68,7 @@ example.com {
 
 ```caddy
 example.com {
-	root * /srv
+	root /srv
 
 	basic_auth /secret/* argon2id {
 		# Username "Bob", password "hiccup"

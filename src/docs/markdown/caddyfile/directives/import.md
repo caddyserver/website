@@ -82,7 +82,7 @@ Import a snippet which creates a proxy with a prefix rewrite rule as the first a
 
 ```caddy
 (proxy-rewrite) {
-	rewrite * {args[0]}{uri}
+	rewrite {args[0]}{uri}
 	reverse_proxy {args[1:]}
 }
 

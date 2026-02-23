@@ -45,7 +45,7 @@ example.com {
 		reverse_proxy localhost:8080 {
 			header_up Content-Type application/json
 			method POST
-			rewrite * /execute-sql
+			rewrite /execute-sql
 		}
 	}
 }

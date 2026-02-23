@@ -165,7 +165,7 @@ errors {
 
 ```
 handle_errors {
-	rewrite * /{err.status_code}.html
+	rewrite /{err.status_code}.html
 	file_server
 }
 ```

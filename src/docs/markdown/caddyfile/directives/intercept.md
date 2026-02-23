@@ -89,12 +89,12 @@ When using [FrankenPHP](https://frankenphp.dev/)'s `php_server`, you can use `in
 
 ```caddy
 localhost {
-	root * /srv
+	root /srv
 
 	intercept {
 		@accel header X-Accel-Redirect *
 		handle_response @accel {
-			root * /path/to/private/files
+			root /path/to/private/files
 			rewrite {resp.header.X-Accel-Redirect}
 			method GET
 			file_server

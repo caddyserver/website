@@ -24,7 +24,7 @@ Skip access logging for static files stored in a subpath:
 
 ```caddy
 example.com {
-	root * /srv
+	root /srv
 
 	log
 	log_skip /static*
@@ -46,7 +46,7 @@ The matcher is not needed if it's found within a route which is already within a
 
 ```caddy-d
 handle_path /static* {
-	root * /srv/static
+	root /srv/static
 	log_skip
 	file_server
 }

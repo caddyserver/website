@@ -315,7 +315,7 @@ What this does:
 
 Then, create a file named `Caddyfile` as the only file in the `conf` directory, and write your [Caddyfile](/docs/caddyfile/concepts) config.
 
-If you have static files to serve, you may place them in a `site/` directory beside the configs, then set the [`root`](/docs/caddyfile/directives/root) using `root * /srv`. If you don't, then you may remove the `/srv` volume mount.
+If you have static files to serve, you may place them in a `site/` directory beside the configs, then set the [`root`](/docs/caddyfile/directives/root) using `root /srv`. If you don't, then you may remove the `/srv` volume mount.
 
 <aside class="tip">
 
@@ -334,6 +334,9 @@ Then, you can start the container:
 
 To reload Caddy after making changes to your Caddyfile:
 <pre><code class="cmd bash">docker compose exec -w /etc/caddy caddy caddy reload</code></pre>
+
+Since v2.11.0, you can reload using `SIGUSR1`, provided that Caddy was started with `caddy run` and a config file:
+<pre><code class="cmd bash">docker compose kill -sUSR1 caddy</code></pre>
 
 To see Caddy's 1000 most recent logs, and `f`ollow to see new ones streaming in:
 <pre><code class="cmd bash">docker compose logs caddy -n=1000 -f</code></pre>

@@ -89,7 +89,7 @@ Since [`try_files`](try_files) has a higher directive order than [`reverse_proxy
 
 ```caddy
 example.com {
-	root * /srv
+	root /srv
 	route {
 		reverse_proxy /api* localhost:9000
 

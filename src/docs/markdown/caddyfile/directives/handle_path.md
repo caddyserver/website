@@ -67,7 +67,7 @@ example.com {
 
 	# Serve your static site
 	handle {
-		root * /srv
+		root /srv
 		file_server
 	}
 }

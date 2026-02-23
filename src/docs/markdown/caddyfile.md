@@ -10,7 +10,7 @@ It looks like this:
 
 ```caddy
 example.com {
-	root * /var/www/wordpress
+	root /var/www/wordpress
 	encode
 	php_fastcgi unix//run/php/php-version-fpm.sock
 	file_server

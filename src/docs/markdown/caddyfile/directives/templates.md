@@ -42,7 +42,7 @@ Enable templates for a static site:
 
 ```caddy
 example.com {
-	root * /srv
+	root /srv
 	templates
 	file_server
 }

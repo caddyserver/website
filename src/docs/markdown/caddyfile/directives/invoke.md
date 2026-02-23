@@ -46,7 +46,7 @@ example.com {
 	}
 
 	handle {
-		root * /srv
+		root /srv
 		file_server
 	}
 }

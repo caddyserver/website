@@ -845,7 +845,7 @@ Replace a path prefix before proxying, using a [`rewrite`](/docs/caddyfile/direc
 ```caddy
 example.com {
 	handle_path /old-prefix/* {
-		rewrite * /new-prefix{path}
+		rewrite /new-prefix{path}
 		reverse_proxy localhost:9000
 	}
 }
@@ -859,9 +859,9 @@ example.com {
 	reverse_proxy localhost:8080 {
 		@accel header X-Accel-Redirect *
 		handle_response @accel {
-			root    * /path/to/private/files
-			rewrite * {rp.header.X-Accel-Redirect}
-			method  * GET
+			root /path/to/private/files
+			rewrite {rp.header.X-Accel-Redirect}
+			method GET
 			file_server
 		}
 	}
@@ -876,8 +876,8 @@ example.com {
 	reverse_proxy localhost:8080 {
 		@error status 500 503
 		handle_response @error {
-			root    * /path/to/error/pages
-			rewrite * /{rp.status_code}.html
+			root /path/to/error/pages
+			rewrite /{rp.status_code}.html
 			file_server
 		}
 	}
