@@ -144,9 +144,9 @@ output discard
 
 #### file
 
-A file. By default, log files are rotated ("rolled") to prevent disk space exhaustion.
+A file. By default, log files are rotated ("rolled") based on size to prevent disk space exhaustion.
 
-Log rolling is provided by [lumberjack <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/natefinch/lumberjack)
+Log rolling is provided by [timberjack <img src="/old/resources/images/external-link.svg" class="external-link">](https://github.com/DeRuina/timberjack)
 
 <aside class="tip">
 
@@ -160,14 +160,22 @@ output file <filename> {
 	mode          <mode>
 	roll_disabled
 	roll_size     <size>
+	roll_interval <duration>
+	roll_minutes  <minutes...>
+	roll_at	      <times...>
 	roll_uncompressed
 	roll_local_time
 	roll_keep     <num>
 	roll_keep_for <days>
+	backup_time_format <format>
 }
 ```
 
 - **&lt;filename&gt;** is the path to the log file.
+
+  When files are rolled, they are renamed using the template `<name>-<timestamp>-<reason>.log`. The timestamp is formatted according to the `backup_time_format` option. The reason is either `size` or `time`, depending on which triggered the rotation. If the file gets compressed, `.gz` is appended to the filename.
+
+   For example, if the filename is `access.log`, a rolled file might be named `access-2026-01-30T22-15-42.123-size.log` if it was rolled due to size, or `access-2025-01-30T00-00-00.000-time.log` if it was rolled due to time.
 
 - **mode** is the Unix file mode/permissions to use for the log file. The mode consists of between 1 and 4 octal digits (same as the numeric format accepted by the Unix [chmod <img src="/old/resources/images/external-link.svg" class="external-link">](https://en.wikipedia.org/wiki/Chmod) command, except that an all-zero mode is interpreted as the default mode `600`). For example: `0600` would set the mode to `rw-,---,---` (read/write access to the log file's owner, and no access to anyone else); `0640` would set the mode to `rw-,r--,---` (read/write access to file's owner, only read access to the group); `644` sets the mode to `rw-,r--,r--` provides read/write access to the log file's owner, but only read access to the group owner and other users.
 
@@ -175,21 +183,52 @@ output file <filename> {
 
 - **roll_size** is the size at which to roll the log file. The current implementation supports megabyte resolution; fractional values are rounded up to the next whole megabyte. For example, `1.1MiB` is rounded up to `2MiB`.
 
+  This is always enabled. If a write to the logs causes the file to exceed the specified size, the log will be immediately rotated. The backup filename will include `size` as the reason.
+
   Default: `100MiB`
+
+- **roll_interval** is the maximum duration between log rotations. The value is a [duration string](/docs/conventions#durations) after which to roll the log file.
+
+  When enabled, the file is rotated on the next write to the logs after this duration has passed since the last rotation. The backup filename will include `time` as the reason.
+
+  Note that if set to `24h`, it does not necessarily roll at midnight, but rather at the 24-hour mark since the last rotation. If rolling happens due to size, then the time of the next rotation would be offset compared to the previous rotation. You may use the `roll_at` or `roll_minutes` options to roll at specific times instead.
+
+  Default: disabled
+
+- **roll_minutes** is a list of minute values (0-59) at which to roll the log file. For example, `10 40` would roll the log file every 30 minutes at `xx:10` and `xx:40` each hour. Rotations are aligned to the clock minute (second 0).
+
+  Enabling this spawns a goroutine timer that triggers a log rotation at the specified minute values (i.e. introduces a small amount of background processing). This operates in addition to `roll_interval` and `roll_size`. The backup filename will include `time` as the reason.
+
+  Default: disabled
+
+- **roll_at** is a list of time values (in 24-hour format) at which to roll the log file. For example, `00:00 12:00` would roll the log file twice daily at midnight and noon. Rotations are aligned to the clock minute (second 0).
+
+  Enabling this spawns a goroutine timer that triggers a log rotation at the specified times (i.e. introduces a small amount of background processing). This operates in addition to `roll_interval` and `roll_size`. The backup filename will include `time` as the reason.
+
+  Default: disabled
 
 - **roll_uncompressed** turns off gzip log compression.
 
-  Default: gzip compression is enabled.
+  Default: `gzip` compression is enabled.
 
 - **roll_local_time** sets the rolling to use local timestamps in filenames. 
 
   Default: uses UTC time.
 
-- **roll_keep** is how many log files to keep before deleting the oldest ones. 
+- **roll_keep** is how many log files to keep before deleting the oldest ones. Triggers when a new log file is created.
 
   Default: `10`
 
-- **roll_keep_for** is how long to keep rolled files as a [duration string](/docs/conventions#durations). The current implementation supports day resolution; fractional values are rounded up to the next whole day. For example, `36h` (1.5 days) is rounded up to `48h` (2 days). Default: `2160h` (90 days)
+- **roll_keep_for** is how long to keep rolled files as a [duration string](/docs/conventions#durations). Triggers when a new log file is created.
+
+  The current implementation supports day resolution; fractional values are rounded up to the next whole day. For example, `36h` (1.5 days) is rounded up to `48h` (2 days).
+  
+  Default: `2160h` (90 days)
+
+- **backup_time_format** is the time format to use in backup filenames. Must be a valid time layout string; see the [Go documentation](https://pkg.go.dev/time#pkg-constants) for full details.
+
+  Default: `2006-01-02T15-04-05`
+
 
 #### net
 
@@ -495,12 +534,13 @@ example.com {
 ```
 
 
-Customize log rolling:
+Customize log rolling, rolling daily at midnight or when the log file reaches 1 GB (whichever comes first), and keeping 5 rolled files or 30 days of logs:
 
 ```caddy
 example.com {
 	log {
 		output file /var/log/access.log {
+			roll_at 00:00
 			roll_size 1gb
 			roll_keep 5
 			roll_keep_for 720h
