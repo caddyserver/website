@@ -173,21 +173,23 @@ output file <filename> {
 
 - **&lt;filename&gt;** is the path to the log file.
 
-  When files are rolled, they are renamed using the template `<name>-<timestamp>-<reason>.log`. The timestamp is formatted according to the `backup_time_format` option. The reason is either `size` or `time`, depending on which triggered the rotation. If the file gets compressed, `.gz` is appended to the filename.
+  When rolled, files are renamed using the template `<name>-<timestamp>-<reason>.log`. The timestamp is formatted according to the [`backup_time_format`](#backup_time_format) option. The reason is either `size` or `time`, depending on which triggered the rotation. If the file gets compressed, `.gz` is appended to the filename.
 
    For example, if the filename is `access.log`, a rolled file might be named `access-2026-01-30T22-15-42.123-size.log` if it was rolled due to size, or `access-2025-01-30T00-00-00.000-time.log` if it was rolled due to time.
 
-- **mode** is the Unix file mode/permissions to use for the log file. The mode consists of between 1 and 4 octal digits (same as the numeric format accepted by the Unix [chmod <img src="/old/resources/images/external-link.svg" class="external-link">](https://en.wikipedia.org/wiki/Chmod) command, except that an all-zero mode is interpreted as the default mode `600`). For example: `0600` would set the mode to `rw-,---,---` (read/write access to the log file's owner, and no access to anyone else); `0640` would set the mode to `rw-,r--,---` (read/write access to file's owner, only read access to the group); `644` sets the mode to `rw-,r--,r--` provides read/write access to the log file's owner, but only read access to the group owner and other users.
+- **mode** <span id="mode"/> is the Unix file mode/permissions to use for the log file. The mode consists of between 1 and 4 octal digits (same as the numeric format accepted by the Unix [chmod <img src="/old/resources/images/external-link.svg" class="external-link">](https://en.wikipedia.org/wiki/Chmod) command, except that an all-zero mode is interpreted as the default mode `600`).
 
-- **roll_disabled** disables log rolling. This can lead to disk space depletion, so only use this if your log files are maintained some other way.
+  For example: `0600` would set the mode to `rw-,---,---` (read/write access to the log file's owner, and no access to anyone else); `0640` would set the mode to `rw-,r--,---` (read/write access to file's owner, only read access to the group); `644` sets the mode to `rw-,r--,r--` provides read/write access to the log file's owner, but only read access to the group owner and other users.
 
-- **roll_size** is the size at which to roll the log file. The current implementation supports megabyte resolution; fractional values are rounded up to the next whole megabyte. For example, `1.1MiB` is rounded up to `2MiB`.
+- **roll_disabled** <span id="roll_disabled"/> disables log rolling. This can lead to disk space depletion, so only use this if your log files are maintained some other way.
+
+- **roll_size** <span id="roll_size"/> is the size at which to roll the log file. The current implementation supports megabyte resolution; fractional values are rounded up to the next whole megabyte. For example, `1.1MiB` is rounded up to `2MiB`.
 
   This is always enabled. If a write to the logs causes the file to exceed the specified size, the log will be immediately rotated. The backup filename will include `size` as the reason.
 
   Default: `100MiB`
 
-- **roll_interval** is the maximum duration between log rotations. The value is a [duration string](/docs/conventions#durations) after which to roll the log file.
+- **roll_interval** <span id="roll_interval"/> is the maximum duration between log rotations. The value is a [duration string](/docs/conventions#durations) after which to roll the log file.
 
   When enabled, the file is rotated on the next write to the logs after this duration has passed since the last rotation. The backup filename will include `time` as the reason.
 
@@ -195,37 +197,35 @@ output file <filename> {
 
   Default: disabled
 
-- **roll_minutes** is a list of minute values (0-59) at which to roll the log file. For example, `10 40` would roll the log file every 30 minutes at `xx:10` and `xx:40` each hour. Rotations are aligned to the clock minute (second 0).
+- **roll_minutes** <span id="roll_minutes"/> is a list of minute values (0-59) at which to roll the log file. For example, `10 40` would roll the log file every 30 minutes at `xx:10` and `xx:40` each hour. Rotations are aligned to the clock minute (second 0).
 
   Enabling this spawns a goroutine timer that triggers a log rotation at the specified minute values (i.e. introduces a small amount of background processing). This operates in addition to `roll_interval` and `roll_size`. The backup filename will include `time` as the reason.
 
   Default: disabled
 
-- **roll_at** is a list of time values (in 24-hour format) at which to roll the log file. For example, `00:00 12:00` would roll the log file twice daily at midnight and noon. Rotations are aligned to the clock minute (second 0).
+- **roll_at** <span id="roll_at"/> is a list of time values (in 24-hour format) at which to roll the log file. For example, `00:00 12:00` would roll the log file twice daily at midnight and noon. Rotations are aligned to the clock minute (second 0).
 
   Enabling this spawns a goroutine timer that triggers a log rotation at the specified times (i.e. introduces a small amount of background processing). This operates in addition to `roll_interval` and `roll_size`. The backup filename will include `time` as the reason.
 
   Default: disabled
 
-- **roll_uncompressed** turns off gzip log compression.
+- **roll_uncompressed** <span id="roll_uncompressed"/> turns off gzip log compression.
 
   Default: `gzip` compression is enabled.
 
-- **roll_local_time** sets the rolling to use local timestamps in filenames. 
-
+- **roll_local_time** <span id="roll_local_time"/> sets the rolling to use local timestamps in filenames. 
   Default: uses UTC time.
 
-- **roll_keep** is how many log files to keep before deleting the oldest ones. Triggers when a new log file is created.
+- **roll_keep** <span id="roll_keep"/> is how many log files to keep before deleting the oldest ones. Triggers when a new log file is created.
 
   Default: `10`
 
-- **roll_keep_for** is how long to keep rolled files as a [duration string](/docs/conventions#durations). Triggers when a new log file is created.
-
+- **roll_keep_for** <span id="roll_keep_for"/> is how long to keep rolled files as a [duration string](/docs/conventions#durations). Triggers when a new log file is created.
   The current implementation supports day resolution; fractional values are rounded up to the next whole day. For example, `36h` (1.5 days) is rounded up to `48h` (2 days).
   
   Default: `2160h` (90 days)
 
-- **backup_time_format** is the time format to use in backup filenames. Must be a valid time layout string; see the [Go documentation](https://pkg.go.dev/time#pkg-constants) for full details.
+- **backup_time_format** <span id="backup_time_format"/> is the time format to use in backup filenames. Must be a valid time layout string; see the [Go documentation](https://pkg.go.dev/time#pkg-constants) for full details.
 
   Default: `2006-01-02T15-04-05`
 
@@ -243,10 +243,9 @@ output net <address> {
 
 - **&lt;address&gt;** is the [address](/docs/conventions#network-addresses) to write logs to.
 
-- **dial_timeout** is how long to wait for a successful connection to the log socket. Log emissions may be blocked for up to this long if the socket goes down.
+- **dial_timeout** <span id="dial_timeout"/> is how long to wait for a successful connection to the log socket. Log emissions may be blocked for up to this long if the socket goes down.
 
-- **soft_start** will ignore errors when connecting to the socket, allowing you to load your config even if the remote log service is down. Logs will be emitted to stderr instead.
-
+- **soft_start** <span id="soft_start"/> will ignore errors when connecting to the socket, allowing you to load your config even if the remote log service is down. Logs will be emitted to stderr instead.
 
 
 ### Format modules
@@ -278,22 +277,20 @@ format <encoder_module> {
 }
 ```
 
-- **message_key** The key for the message field of the log entry. Default: `msg`
+- **message_key** <span id="message_key"/> The key for the message field of the log entry. Default: `msg`
 
-- **level_key** The key for the level field of the log entry. Default: `level`
+- **level_key** <span id="level_key"/> The key for the level field of the log entry. Default: `level`
 
-- **time_key** The key for the time field of the log entry. Default: `ts`
+- **time_key** <span id="time_key"/> The key for the time field of the log entry. Default: `ts`
+- **name_key** <span id="name_key"/> The key for the name field of the log entry. Default: `name`
 
-- **name_key** The key for the name field of the log entry. Default: `name`
+- **caller_key** <span id="caller_key"/> The key for the caller field of the log entry.
 
-- **caller_key** The key for the caller field of the log entry.
+- **stacktrace_key** <span id="stacktrace_key"/> The key for the stacktrace field of the log entry.
 
-- **stacktrace_key** The key for the stacktrace field of the log entry.
+- **line_ending** <span id="line_ending"/> The line endings to use.
 
-- **line_ending** The line endings to use.
-
-- **time_format** The format for timestamps.
-
+- **time_format** <span id="time_format"/> The format for timestamps.
   Default: `wall_milli` if the format defaulted to `console`, `unix_seconds_float` otherwise.
   
   May be one of:
@@ -311,9 +308,9 @@ format <encoder_module> {
   
   Note that the parts of the format string are special constants for the layout; so `2006` is the year, `01` is the month, `Jan` is the month as a string, `02` is the day. Do not use the actual current date numbers in the format string.
 
-- **time_local** Logs with the local system time rather than the default of UTC time.
+- **time_local** <span id="time_local"/> Logs with the local system time rather than the default of UTC time.
 
-- **duration_format** The format for durations.
+- **duration_format** <span id="duration_format"/> The format for durations.
 
   Default: `seconds`.
   
@@ -323,7 +320,7 @@ format <encoder_module> {
   - `ns`, `nano` or `nanos` Integer number of nanoseconds elapsed.
   - `string` Using Go's built-in string format, for example `1m32.05s` or `6.31ms`.
 
-- **level_format** The format for levels.
+- **level_format** <span id="level_format"/> The format for levels.
 
   Default: `color` if the format defaulted to `console`, `lower` otherwise.
   
