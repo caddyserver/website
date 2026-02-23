@@ -505,7 +505,7 @@ Runs Caddy and blocks indefinitely; i.e. "daemon" mode.
 
 <aside class="advice">
 
-Do not stop the server to change configuration while running in production! That will result in downtime. (This should be obvious but you'd be surprised how many complaints we get about it.) Use the [`caddy reload`](#caddy-reload) command instead.
+Do not stop the server to change configuration while running in production! That will result in downtime. (This should be obvious but you'd be surprised how many complaints we get about it.) Use the [`caddy reload`](#caddy-reload) command instead, or send a `SIGUSR1` signal to the process, which has the same effect as `caddy reload` with the currently loaded config.
 
 </aside>
 
@@ -712,11 +712,17 @@ Signal | Behavior
 `SIGINT` | Graceful exit. Send signal again to force exit immediately.
 `SIGQUIT` | Quits Caddy immediately, but still cleans up locks in storage because it is important.
 `SIGTERM` | Graceful exit.
-`SIGUSR1` | Ignored. For config updates, use the `caddy reload` command or [the API](/docs/api).
+`SIGUSR1` | Config reload, only if started with `caddy run` with a config file. Ignored otherwise.
 `SIGUSR2` | Ignored.
 `SIGHUP` | Ignored.
 
 A graceful exit means that new connections are no longer accepted, and existing connections will be drained before the socket is closed. A grace period may apply (and is configurable). Once the grace period is up, connections will be forcefully terminated. Locks in storage and other resources that individual modules need to release are cleaned up during a graceful shutdown.
+
+When a signal to reload config (`SIGUSR1`) is received, it acts like a forced config reload (i.e. reload anyway even if the config text is unchanged) which may reload dependent files like TLS certificates from disk. 
+
+Signal-based config reloads are only enabled if Caddy is started with `caddy run` with a config file. They become disabled (signals ignored, with a log warning) if Caddy is started with `--resume` (since it implies an API workflow), or if any config change is received via the admin API, or if `caddy reload` is run with a _different_ filename or config adapter than originally started with. This is to avoid conflicts between methods of reloading.
+
+
 
 ## Exit codes
 
