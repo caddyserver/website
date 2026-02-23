@@ -150,6 +150,8 @@ Possible options are (click on each option to jump to its documentation):
 		0rtt off
 
 		trusted_proxies <module> ...
+		trusted_proxies_strict
+		trusted_proxies_unix
 		client_ip_headers <headers...>
 
 		trace
@@ -1006,6 +1008,7 @@ The maximum number of TCP keepalive packets to send before considering the conne
 
 
 ##### `0rtt`
+
 By default, 0-RTT (early data) is enabled for QUIC listeners (i.e. HTTP/3) to allow clients to send data in the first round trip of the TLS handshake, which can improve performance for repeat connections.
 
 You may set this to `off` to disable 0-RTT for QUIC listeners. One reason to disable 0-RTT is if a [`remote_ip` matcher](/docs/caddyfile/matchers#remote-ip) is used, which introduces a dependency on the remote address being verified if routing happens before the TLS handshake completes. An HTTP 425 response is written in that case, but some clients (browsers) can misbehave and not perform a retry, so disabling 0-RTT can ensure that 425 responses are not seen by users, at the cost of losing the performance benefits of 0-RTT.
@@ -1073,6 +1076,17 @@ Specifically in the case of AWS ALB, you will certainly want to enable this opti
 
 </aside>
 
+##### `trusted_proxies_unix`
+
+The `trusted_proxies_unix` option allows trusting all connections that come from Unix sockets, which is useful when Caddy is behind a reverse proxy (possily another Caddy instance) that connects to it via a Unix socket (i.e. [`bind` directive](/docs/caddyfile/directives/bind) is a set to a unix socket). This is disabled by default.
+
+```caddy
+{
+	servers {
+		trusted_proxies_unix
+	}
+}
+```
 
 ##### `client_ip_headers`
 
