@@ -21,7 +21,7 @@ Compatibility note: Due to its sensitive nature as a security protocol, delibera
 ## Syntax
 
 ```caddy-d
-tls [internal|<email>] | [<cert_file> <key_file>] {
+tls [internal|force_automate|<email>] | [<cert_file> <key_file>] {
 	protocols <min> [<max>]
 	ciphers   <cipher_suites...>
 	curves    <groups...>
@@ -48,10 +48,13 @@ tls [internal|<email>] | [<cert_file> <key_file>] {
 	get_certificate <manager_name> [<params...>]
 	insecure_secrets_log <log_file>
 	renewal_window_ratio <ratio>
+	force_automate
 }
 ```
 
 - **internal** means to use Caddy's internal, locally-trusted CA to produce certificates for this site. To further configure the [`internal`](#internal) issuer, use the [`issuer`](#issuer) subdirective.
+
+- **force_automate** forces Caddy to automate certificates for the site, even if other managed certificates apply.
 
 - **&lt;email&gt;** is the email address to use for the ACME account managing the site's certificates. You may prefer to use the [`email` global option](/docs/caddyfile/options#email) instead, to configure this for all your sites at once.
 
@@ -164,7 +167,9 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
 
   You should rarely need to change this, but it can be useful to renew later in the certificate's lifetime if your CA has a very long issuance time.
 
-  Keep in mind that this is a suggestion, since ACME issuers may implement the [ARI extension](https://datatracker.ietf.org/doc/rfc9773/) which has the issuer dictate a window in which the ACME client (Caddy in this case) should attempt renewal, and that window may not align with this ratio.
+  Keep in mind that this is a suggestion since ACME issuers may implement the [ARI extension](https://datatracker.ietf.org/doc/rfc9773/). ARI dictates a window in which the ACME client (Caddy in this case) should attempt renewal, and that window may not align with this ratio.
+
+- **force_automate** is the same as specifying inline (see above).
 
 ### Trust Pool Providers
 

@@ -277,7 +277,7 @@ Caddy can obtain and manage wildcard certificates when it is configured to serve
 
 If using the Caddyfile, Caddy takes site names literally with regards to the certificate subject names. In other words, a site defined as `sub.example.com` will cause Caddy to manage a certificate for `sub.example.com`, and a site defined as `*.example.com` will cause Caddy to manage a wildcard certificate for `*.example.com`. You can see this demonstrated on our [Common Caddyfile Patterns](/docs/caddyfile/patterns#wildcard-certificates) page. If you need different behavior, the [JSON config](/docs/json/) gives you more precise control over certificate subjects and site names ("host matchers").
 
-As of Caddy 2.10, when automating a wildcard certificate, Caddy will use the wildcard certificate for individual subdomains in the configuration. It will not get certificates for individual subdomains unless explicitly configured to do so.
+As of Caddy 2.10, when automating a wildcard certificate, Caddy will use the wildcard certificate for individual subdomains in the configuration. It will not get certificates for individual subdomains unless explicitly configured to do so (e.g. with `force_automate`).
 
 Wildcard certificates represent a wide degree of authority and should only be used when you have so many subdomains that managing individual certificates for them would strain the PKI or cause you to hit CA-enforced rate limits, or if the privacy tradeoff is worth the risk of exposing that much of the DNS zone in the case of a key compromise. Note that wildcard certificates alone do not offer privacy of concealing specific subdomains: they are still exposed in TLS ClientHello packets unless Encrypted ClientHello (ECH) is enabled. (See below.)
 

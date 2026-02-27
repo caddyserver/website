@@ -371,7 +371,7 @@ article h3 {
 }
 
 article h1 {
-	font-size: 72px;
+	font-size: clamp(3rem, 4vw, 78px);
 	color: #0e3e5b;
 	letter-spacing: -2px;
 	margin-top: 5%;
@@ -384,7 +384,7 @@ article h1 {
 }
 
 article h2 {
-	font-size: 56px;
+	font-size: clamp(2.25rem, 3vw, 56px);
 	padding-bottom: 15px;
 	margin: 100px 0 40px;
 
@@ -1158,12 +1158,8 @@ article .json a {
 		padding-right: 4%;
 	}
 
-	article h1 {
-		font-size: 50px;
-	}
 	article h2 {
 		margin: 50px 0 20px;
-		font-size: 40px;
 	}
 	article h3 {
 		font-size: 32px;
