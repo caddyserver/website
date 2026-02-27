@@ -522,7 +522,7 @@ Since Caddy v2.11.0, this is done automatically, so it is no longer necessary to
 
 ```caddy-d
 reverse_proxy https://example.com {
-	header_up Host {host}
+	header_up Host {hostport}
 }
 ```
 
