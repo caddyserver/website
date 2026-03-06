@@ -4,7 +4,7 @@ title: "Automatic HTTPS"
 
 # Automatic HTTPS
 
-**Caddy is the first and only web server to use HTTPS automatically _and by default_.**
+**Caddy was the first web server to use HTTPS automatically _and by default_.**
 
 Automatic HTTPS provisions TLS certificates for all your sites and keeps them renewed. It also redirects HTTP to HTTPS for you! Caddy uses safe and modern defaults -- no downtime, extra configuration, or separate tooling is required.
 
