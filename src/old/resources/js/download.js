@@ -1,5 +1,5 @@
 // download package list as soon as possible
-$.get("/api/packages").done(function(json) {
+$.get("/api/packages").done(function (json) {
 	// sort package list by most popular, seems to make sense for convenience
 	var packageList = json.result;
 	packageList.sort((a, b) => {
@@ -7,26 +7,26 @@ $.get("/api/packages").done(function(json) {
 	});
 
 	const preselectedPackage = new URL(window.location.href).searchParams.getAll("package");
-	
+
 	// wait until the DOM has finished loading before rendering the results
-	$(function() {
+	$(function () {
 		const packageTemplate =
-			'<div class="package">\n'+
-			'	<div class="package-icon">&#128230;</div>\n'+
-			'   <div class="package-data">\n'+
-			'		<div class="package-meta">\n'+
-			'			<b>downloads:</b> <span class="package-downloads"></span>\n'+
-			'			<b>version:</b> <input type="text" class="package-version-input" name="version" placeholder="latest" title="Any version string recognized by `go get` can be used">\n'+
-			'		</div>\n'+
-			'		<a target="_blank" title="View package repo" class="package-link"></a>\n'+
-			'		<div class="package-modules"></div>\n'+
-			'	</div>\n'+
+			'<div class="package">\n' +
+			'	<div class="package-icon">&#128230;</div>\n' +
+			'   <div class="package-data">\n' +
+			'		<div class="package-meta">\n' +
+			'			<b>downloads:</b> <span class="package-downloads"></span>\n' +
+			'			<b>version:</b> <input type="text" class="package-version-input" name="version" placeholder="latest" title="Any version string recognized by `go get` can be used">\n' +
+			'		</div>\n' +
+			'		<a target="_blank" title="View package repo" class="package-link"></a>\n' +
+			'		<div class="package-modules"></div>\n' +
+			'	</div>\n' +
 			'</div>\n'
 
 		const moduleTemplate =
-			'<div class="module">\n'+
-			'	&#128268; <a target="_blank" title="View module docs" class="module-link"></a>\n'+
-			'	<span class="module-desc"></span>\n'+
+			'<div class="module">\n' +
+			'	&#128268; <a target="_blank" title="View module docs" class="module-link"></a>\n' +
+			'	<span class="module-desc"></span>\n' +
 			'</div>\n';
 
 
@@ -34,14 +34,14 @@ $.get("/api/packages").done(function(json) {
 			var pkg = packageList[i];
 
 			var $pkg = $(packageTemplate);
-			
+
 			let { provider, path } = splitVCSProvider(pkg.path);
 			if (provider) {
 				var $pkgHost = $('<span class="package-host"/>').text(provider);
 				$('.package-link', $pkg).html($pkgHost).append('<br/>');
 			}
 			$pkgName = $('<span class="package-name"/>').text(path);
-			
+
 			$('.package-link', $pkg).append($pkgName);
 			$('.package-link', $pkg).prop('href', pkg.repo);
 			$('.package-downloads', $pkg).text(pkg.downloads);
@@ -54,7 +54,7 @@ $.get("/api/packages").done(function(json) {
 					var mod = pkg.modules[j];
 					var $mod = $(moduleTemplate);
 					// TODO: if this module name collides with that from another package, add a #hash to the URL to expand the right module's docs automatically
-					$('.module-link', $mod).attr('href', '/docs/modules/'+mod.name).text(mod.name).attr('title', "View module details");
+					$('.module-link', $mod).attr('href', '/docs/modules/' + mod.name).text(mod.name).attr('title', "View module details");
 					$('.module-desc', $mod).text(moduleDocsPreview(mod, 120));
 					$('.package-modules', $pkg).append($mod);
 				}
@@ -67,37 +67,37 @@ $.get("/api/packages").done(function(json) {
 		}
 		updatePage();
 	});
-}).fail(function(jqxhr, status, error) {
+}).fail(function (jqxhr, status, error) {
 	swal({
 		icon: "error",
 		title: "Unavailable",
 		content: $('<div>Sorry, the build server is down for maintenance right now. You can try again later or <a href="https://github.com/caddyserver/caddy/releases/latest">download pre-built Caddy binaries from GitHub</a> any time.</div>')[0]
 	});
-	$(function() {
+	$(function () {
 		disableFields(false);
 	});
 });
 
-$(function() {
+$(function () {
 	autoPlatform();
 
 	downloadButtonHtml = $('#download').html();
 
-	$('#filter').on('search keyup', function(event) {
+	$('#filter').on('search keyup', function (event) {
 		var count = 0;
 		var q = $(this).val().trim().toLowerCase();
 
-		$('.package').each(function() {
+		$('.package').each(function () {
 			if (!q) {
 				// filter is cleared; show all
 				this.style.display = '';
 				return;
 			}
-			
+
 			var corpus = $(this).find('.package-link, .module-link, .module-desc').text().trim().toLowerCase();
 
 			if (corpus.indexOf(q) === -1) {
-				this.style.display = 'none'; 
+				this.style.display = 'none';
 				return;
 			}
 			this.style.display = '';
@@ -116,18 +116,18 @@ $(function() {
 		}
 	});
 
-	$('#platform').change(function() {
+	$('#platform').change(function () {
 		updatePage();
 	});
 
-	$('#optional-packages').on('click', '.package', function() {
+	$('#optional-packages').on('click', '.package', function () {
 		$(this).toggleClass('selected');
 		updatePage();
 
 		let newUrl = new URL(window.location.href);
-		let currentSelected = newUrl.searchParams.getAll("package") ;
+		let currentSelected = newUrl.searchParams.getAll("package");
 		newUrl.searchParams.delete("package");
-		const pkgPath = $('.package-link', $(this)).text().trim(); 
+		const pkgPath = $('.package-link', $(this)).text().trim();
 		if ($(this).hasClass('selected')) {
 			if (!currentSelected.includes(pkgPath)) {
 				currentSelected = [...currentSelected, pkgPath];
@@ -138,16 +138,16 @@ $(function() {
 				currentSelected.splice(position, 1);
 			}
 		}
-		currentSelected.forEach( (selected) => newUrl.searchParams.append("package", selected));
+		currentSelected.forEach((selected) => newUrl.searchParams.append("package", selected));
 		history.replaceState({}, document.title, newUrl.toString());
 	});
 
 	// when a link within a package listing is clicked, only operate the link (don't select the package)
-	$('#optional-packages').on('click', '.package-link, .module-link, .package-version-input', function(event) {
+	$('#optional-packages').on('click', '.package-link, .module-link, .package-version-input', function (event) {
 		event.stopPropagation();
 	});
 
-	$('#download').click(function() {
+	$('#download').click(function () {
 		if ($(this).hasClass('disabled')) {
 			return false;
 		}
@@ -158,15 +158,15 @@ $(function() {
 			fathom.trackGoal('U9K2UTFV', 0);
 		}
 
-		$.ajax($(this).attr('href'), { method: "HEAD" }).done(function(data, status, jqxhr) {
+		$.ajax($(this).attr('href'), { method: "HEAD" }).done(function (data, status, jqxhr) {
 			window.onbeforeunload = null; // disable exit confirmation before "redirecting" to download
 			window.location = jqxhr.getResponseHeader("Location");
-		}).fail(function(jqxhr, status, error) {
+		}).fail(function (jqxhr, status, error) {
 			handleBuildError(jqxhr, status, error);
-		}).always(function() {
+		}).always(function () {
 			enableFields();
 		});
-	
+
 		return false;
 	});
 })
@@ -175,7 +175,7 @@ $(function() {
 // matches the user's browser, if it's available.
 function autoPlatform() {
 	var [os, arch] = detectPlatform();
-	$('#platform').val(os+"-"+arch);
+	$('#platform').val(os + "-" + arch);
 	updatePage();
 }
 
@@ -191,19 +191,19 @@ function getDownloadLink() {
 	var [os, arch, arm = ""] = platformString.split("-");
 
 	var qs = new URLSearchParams();
-	if (os)   qs.set("os", os);
+	if (os) qs.set("os", os);
 	if (arch) qs.set("arch", arch);
-	if (arm)  qs.set("arm", arm);
+	if (arm) qs.set("arm", arm);
 
 	// get plugins and their versions
-	$('#optional-packages .selected').each(function() {
+	$('#optional-packages .selected').each(function () {
 		// get package path
 		var p = $('.package-link', this).text().trim();
 
 		// get package version, if user specified one
 		var ver = $('input[name=version]', this).val().trim();
 		if (ver) {
-			p += "@"+ver;
+			p += "@" + ver;
 		}
 
 		qs.append("p", p);
@@ -212,7 +212,25 @@ function getDownloadLink() {
 	var idempotencyKey = Math.floor(Math.random() * 99999999999999);
 	qs.append("idempotency", idempotencyKey);
 
-	return "/api/download?"+qs.toString();
+	return "/api/download?" + qs.toString();
+}
+
+function buildCaddyRailwayURL() {
+	const parts = [];
+
+	document.querySelectorAll('#optional-packages .selected').forEach(card => {
+		let p = card.querySelector('.package-link').textContent.trim();
+		const ver = card.querySelector('input[name=version]').value.trim();
+		if (ver) p += '@' + ver;
+		parts.push(p);
+	});
+
+	let url = "https://railway.com/new/template/caddy";
+
+	if (parts.length === 0) return url;
+
+	const rawValue = "caddy.variables.CADDY_PLUGINS.defaultValue=" + parts.join(" ");
+	return url + "?config=" + encodeURIComponent(rawValue);
 }
 
 function handleBuildError(jqxhr, status, error) {
@@ -236,6 +254,7 @@ function handleBuildError(jqxhr, status, error) {
 function updatePage() {
 	$('#package-count').text($('.package.selected').length);
 	$('#download').attr('href', getDownloadLink());
+	$('#railway-link').href = buildCaddyRailwayURL();
 }
 
 function disableFields(building) {
@@ -245,11 +264,11 @@ function disableFields(building) {
 		$('#download').html('<div class="loader"></div> Building');
 
 		// prevent accidentally leaving the page during a build
-		window.onbeforeunload = function() {
+		window.onbeforeunload = function () {
 			return "Your custom build is in progress.";
 		};
 	} else {
-		$('#download').html('Builds Unavailable');
+		// $('#download').html('Downloads Unavailable');
 	}
 }
 
@@ -268,11 +287,11 @@ function splitVCSProvider(pkgPath) {
 		if (pkgPath.toLowerCase().indexOf(providers[i]) == 0) {
 			return {
 				provider: providers[i],
-				path:     pkgPath.slice(providers[i].length)
+				path: pkgPath.slice(providers[i].length)
 			};
 		}
 	}
-	return {provider: "", path: pkgPath};
+	return { provider: "", path: pkgPath };
 }
 
 var downloadButtonHtml; // to restore button to its original contents

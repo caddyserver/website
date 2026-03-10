@@ -19,9 +19,9 @@
 				{{include "/old/includes/header-nav.html"}}
 			</header>
 
-			<div class="notice">
+			<!-- <div class="notice">
 				⚠️ <b>Due to <a href="https://github.com/golang/go/issues/56494">multiple</a> outstanding <a href="https://github.com/golang/go/issues/53905">bugs</a> in the <code>go</code> command, we are aware that some downloads may hang or fail.</b> In the meantime, you can download Caddy from <b><a href="https://github.com/caddyserver/caddy/releases">the latest release on GitHub</a></b>, or use <b><a href="https://github.com/caddyserver/xcaddy">xcaddy</a></b> for custom builds. (Remember, this download page comes with no guarantees or SLAs.) Sorry for the inconvenience.
-			</div>
+			</div> -->
 
 			<div class="download-bar">
 				<div>
@@ -69,8 +69,12 @@
 						<b>Extra features:</b> <span id="package-count">0</span>
 					</div>
 				</div>
-				<div>
+				<div class="download-button-container">
 					<a href="/api/download" class="blue button" id="download">Download</a>
+					or
+					<a id="railway-link" href="https://railway.com/deploy/caddy?referralCode=YOPtw9&utm_medium=integration&utm_source=template&utm_campaign=generic" target="_blank">
+						<img src="https://railway.com/button.svg">
+					</a>
 				</div>
 			</div>
 

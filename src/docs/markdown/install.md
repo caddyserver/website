@@ -13,10 +13,11 @@ This page describes various methods for installing Caddy on your system.
 - [Fedora, RedHat, CentOS packages](#fedora-redhat-centos)
 - [Arch Linux, Manjaro, Parabola packages](#arch-linux-manjaro-parabola)
 - [Docker image](#docker)
+- [Railway template](#railway)
 
 <aside class="tip">
 
-Our [official packages](https://github.com/caddyserver/dist) come only with the standard modules. If you need third-party plugins, [build from source with `xcaddy`](/docs/build#xcaddy) or use [our download page](/download).
+Our [official packages](https://github.com/caddyserver/dist) come only with the standard modules. If you need third-party plugins, [build from source with `xcaddy`](/docs/build#xcaddy), use [our download page](/download), or [deploy on Railway](#railway).
 
 </aside>
 
@@ -120,6 +121,12 @@ Those modifications include a custom start/stop behavior and additional sandboxi
 
 See our [recommended Docker Compose configuration](/docs/running#docker-compose) and usage instructions.
 
+
+## Railway
+
+Through a sponsorship from [Railway](https://railway.com), we officially support this template:
+
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/caddy?referralCode=YOPtw9&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 
 ## Gentoo

@@ -38,6 +38,10 @@ body {
 	font-size: 16px;
 }
 
+.download-button-container {
+	gap: 5px;
+}
+
 #download {
 	margin: 0;
 	padding-left: 30px;
