@@ -254,7 +254,7 @@ function handleBuildError(jqxhr, status, error) {
 function updatePage() {
 	$('#package-count').text($('.package.selected').length);
 	$('#download').attr('href', getDownloadLink());
-	$('#railway-link').href = buildCaddyRailwayURL();
+	$('#railway-link').attr('href', buildCaddyRailwayURL());
 }
 
 function disableFields(building) {
