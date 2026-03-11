@@ -411,6 +411,11 @@ article h5 {
 	margin: 2em 0 1em;
 }
 
+details summary {
+	font-weight: bold;
+	cursor: pointer;
+}
+
 .anchor-link {
 	opacity: 0;
 	font-size: .6em;
