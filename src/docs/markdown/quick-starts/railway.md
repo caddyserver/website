@@ -42,7 +42,7 @@ Next, you can customize your deployment to serve your own site or proxy to anoth
 
 ## Customize the deployment
 
-To serve your own website, or to change the config, simply "eject" [our template](https://github.com/caddyserver/caddy-railway) into your own repository:
+To serve your own website, or to change the config, simply "eject" [our template](https://railway.com/deploy/caddy?referralCode=YOPtw9&amp;utm_medium=integration&amp;utm_source=template&amp;utm_campaign=generic) into your own repository:
 
 ![Eject template](/resources/images/railway/eject.png)
 
