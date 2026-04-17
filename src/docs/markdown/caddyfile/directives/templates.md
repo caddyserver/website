@@ -14,10 +14,15 @@ templates [<matcher>] {
 	mime    <types...>
 	between <open_delim> <close_delim>
 	root    <path>
+	extensions {
+		<name> {
+			...
+		}
+	}
 }
 ```
 
-- **mime** are the MIME types the templates middleware will act on; any responses that do not have a qualifying `Content-Type` will not be evaluated as templates. 
+- **mime** are the MIME types the templates middleware will act on; any responses that do not have a qualifying `Content-Type` will not be evaluated as templates.
 
   Default: `text/html text/plain`.
 
@@ -29,6 +34,9 @@ templates [<matcher>] {
 
   Defaults to the site root set by the [`root`](root) directive, or the current working directory if not set.
 
+- **extensions** allows you to register custom template functions provided by modules in the `http.handlers.templates.functions.*` namespace.
+
+  Each subdirective inside the block corresponds to a module name. These modules can add custom functions to the template function map, typically used to implement reusable components. This feature is primarily intended for plugins.
 
 Documentation for the built-in template functions can be found in [templates module](/docs/modules/http.handlers.templates#docs).
 
@@ -55,5 +63,24 @@ example.com {
 	header Content-Type text/plain
 	templates
 	respond `Current year is: {{printf "{{"}}now | date "2006"{{printf "}}"}}`
+}
+```
+
+Using a template extension (plugin):
+
+```caddy
+example.com {
+	root /srv
+	templates {
+		extensions {
+			# Requires the caddy-hitcounter plugin:
+			# https://github.com/mholt/caddy-hitcounter
+			hitCounter {
+				style bright_green
+				pad_digits 6
+			}
+		}
+	}
+	file_server
 }
 ```
