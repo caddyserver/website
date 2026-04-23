@@ -295,7 +295,7 @@ Remember to use the `--address` CLI flag with compatible [commands](/docs/comman
 
 Also supports these sub-options:
 
-- **origins** configures the list of origins that are allowed to connect to the endpoint.
+- **origins** configures the list of [origins](https://developer.mozilla.org/en-US/docs/Glossary/Origin) that are allowed to connect to the endpoint.
 
   A default is intelligently chosen:
   - if the listen address is loopback (e.g. `localhost` or a loopback IP, or a unix socket) then the allowed origins are `localhost`, `::1` and `127.0.0.1`, joined with the listen address port (so `localhost:2019` is a valid origin).
@@ -303,9 +303,7 @@ Also supports these sub-options:
 
   If the listen address host is not a wildcard interface (wildcards include: empty string, or `0.0.0.0`, or `[::]`), then `Host` header enforcement is performed. Effectively, this means that by default, the `Host` header is validated to be in `origins`, since the interface is `localhost`. But for an address like `:2020` which has a wildcard interface, `Host` header validation is not performed.
 
-- **enforce_origin** enables enforcement of the `Origin` request header.
-
-  This is most useful when the listen address is a wildcard interface (since `Host` is not validated), and the admin API is exposed to the public internet. It enables CORS preflight checks and ensures that the `Origin` header is validated against the `origins` list. Only use this if you're running Caddy on your development machine and need to access the admin API from a web browser.
+- **enforce_origin** forces enforcement of the `Origin` request header. This is done implicitly whenever CORS headers are sent by the client or if the client explicitly disables CORS with `Sec-Fetch-Mode: no-cors`. Otherwise, this option is most useful when the listen address is a wildcard interface (since `Host` is not validated), and the admin API is exposed to the public internet. It enables CORS preflight checks and ensures that the `Origin` header is validated against the `origins` list. Only use this if you're running Caddy on your development machine and need to access the admin API from a web browser.
 
 For example, to expose the admin API on a different port, on all interfaces — ⚠️ this port **should not be exposed publicly**, otherwise anyone can control your server; consider enabling origin enforcement if you need it to be public:
 
@@ -336,7 +334,7 @@ To only allow requests having a matching `Origin` header:
 ```caddy
 {
 	admin :2019 {
-		origins localhost
+		origins http://localhost:2019 http://example.com:8080
 		enforce_origin
 	}
 }
