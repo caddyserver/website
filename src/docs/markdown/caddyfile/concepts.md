@@ -610,7 +610,7 @@ Which placeholders are available depends on the context. Not all placeholders ar
 
 You can use any placeholders in the Caddyfile, but for convenience you can also use some of these equivalent shorthands which are expanded when the Caddyfile is parsed:
 
-| Shorthand        | Replaces                            |
+| Caddyfile        | Replaces                            |
 |------------------|-------------------------------------|
 | `{cookie.*}`     | `{http.request.cookie.*}`           |
 | `{client_ip}`    | `{http.vars.client_ip}`             |
