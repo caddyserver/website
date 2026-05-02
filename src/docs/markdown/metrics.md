@@ -1,8 +1,8 @@
 ---
-title: Monitoring Caddy with Prometheus metrics
+title: Monitoring Caddy with metrics
 ---
 
-# Monitoring Caddy with Prometheus metrics
+# Monitoring Caddy with metrics
 
 Whether you're running thousands of Caddy instances in the cloud, or a single
 Caddy server on an embedded device, it's likely that at some point you'll want
@@ -76,6 +76,47 @@ You can then start up Prometheus like this:
 ```console
 $ prometheus --config.file=prometheus.yaml
 ```
+
+## OpenTelemetry
+
+Caddy can also push metrics to an OpenTelemetry Protocol (OTLP) endpoint.
+This is useful for OTLP-native observability stacks, such as an OpenTelemetry
+Collector, Grafana Alloy, Honeycomb, or other systems that receive OTLP metrics
+directly.
+
+Enable OTLP metrics export with the `otlp` option:
+
+```caddy
+{
+	metrics {
+		otlp
+	}
+}
+```
+
+The OTLP exporter is configured with standard
+[OpenTelemetry environment variables](https://opentelemetry.io/docs/specs/otel/configuration/sdk-environment-variables/),
+matching Caddy's [`tracing`](/docs/caddyfile/directives/tracing)
+configuration style. For example:
+
+```console
+$ OTEL_EXPORTER_OTLP_ENDPOINT=http://collector:4318 \
+	OTEL_METRICS_EXPORTER=otlp \
+	caddy run
+```
+
+By default, the exporter uses OTLP over HTTP/protobuf. Set
+`OTEL_EXPORTER_OTLP_PROTOCOL=grpc` to use gRPC instead. Headers, endpoints,
+protocols, exporter selection and collection intervals are controlled by
+environment variables such as `OTEL_EXPORTER_OTLP_METRICS_ENDPOINT`,
+`OTEL_EXPORTER_OTLP_HEADERS` and `OTEL_METRIC_EXPORT_INTERVAL`.
+
+Set `OTEL_METRICS_EXPORTER=none` to disable metric export without changing the
+Caddyfile.
+
+When OTLP export is enabled, Caddy exports the same metrics gathered for the
+Prometheus endpoint. Exported metrics include resource attributes for
+`web_engine.name` and `web_engine.version`.
 
 ## Caddy's metrics
 

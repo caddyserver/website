@@ -14,7 +14,7 @@ This endpoint will return metrics in the [Prometheus exposition format](https://
 or, if negotiated, in the [OpenMetrics exposition format](https://pkg.go.dev/github.com/prometheus/client_golang@v1.9.0/prometheus/promhttp#HandlerOpts)
 (`application/openmetrics-text`).
 
-See also [Monitoring Caddy with Prometheus metrics](/docs/metrics).
+See also [Monitoring Caddy with metrics](/docs/metrics).
 
 ## Syntax
 

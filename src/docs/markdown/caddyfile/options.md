@@ -7,7 +7,7 @@ ready(function() {
 	// We'll add links on the options in the code block at the top
 	// to their associated anchor tags.
 	let headers = Array.from($$_('article h5')).map(el => el.id.replace(/-/g, "_"));
-	
+
 	$$_('pre.chroma .k').forEach(item => {
 		if (headers.includes(item.innerText)) {
 			let text = item.innerText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -15,7 +15,7 @@ ready(function() {
 			item.innerHTML = `<a href="${url}" style="color: inherit;" title="${text}">${text}</a>`;
 		}
 	});
-	
+
 	// Add links on comments to their respective sections
 	$$_('pre.chroma .c1').forEach(item => {
 		if (item.innerText.includes('#')) {
@@ -26,7 +26,7 @@ ready(function() {
 			item.innerHTML = `${before}<a href="${url}" style="color: inherit;" title="${text}">${text}</a>`;
 		}
 	});
-	
+
 	// Surgically fix a duplicate link; 'name' appears twice as a link
 	// for two different sections, so we change the second to #name-1
 	const caLine = Array.from($$_('pre.chroma .line'))
@@ -96,6 +96,7 @@ Possible options are (click on each option to jump to its documentation):
 	metrics {
 		per_host
 		observe_catchall_hosts
+		otlp
 	}
 
 	# TLS Options
@@ -359,7 +360,7 @@ Configures named loggers.
 
 The name can be passed to indicate a specific logger for which to customize the behavior. If no name is specified, the behavior of the `default` logger is modified. You can read more about the `default` logger and an explanation of [how logging works in Caddy](/docs/logging).
 
-Multiple loggers with different names can be configured by using the `log` multiple times. 
+Multiple loggers with different names can be configured by using the `log` multiple times.
 
 This differs from the [`log` directive](/docs/caddyfile/directives/log), which only configures HTTP request logging (also known as access logs). The `log` global option shares its configuration structure with the directive (except for `include` and `exclude`), and complete documentation can be found on the directive's page.
 
@@ -375,7 +376,7 @@ This differs from the [`log` directive](/docs/caddyfile/directives/log), which o
 
   Default: `INFO`.
 
-  Possible values: `DEBUG`, `INFO`, `WARN`, `ERROR`, and very rarely, `PANIC`, `FATAL`. 
+  Possible values: `DEBUG`, `INFO`, `WARN`, `ERROR`, and very rarely, `PANIC`, `FATAL`.
 
 - **include** specifies the log names to be included in this logger.
 
@@ -418,7 +419,7 @@ By default, the grace period is eternal, which means connections are never force
 
 
 ##### `shutdown_delay`
-Defines a [duration](/docs/conventions#durations) 
+Defines a [duration](/docs/conventions#durations)
 _before_ the [grace period](#grace_period) during which a server that is going to be stopped continues to operate normally, except the `{http.shutting_down}` placeholder evaluates to `true` and `{http.time_until_shutdown}` gives the time until the grace period begins.
 
 This causes a delay if any server is being shut down as part of a config change, and effectively schedules the change for a later time. It is useful for announcing to health checkers of this server's impending doom and to give time for a load balancer to move it out of the rotation; for example:
@@ -630,7 +631,7 @@ Configures [On-Demand TLS](/docs/automatic-https#on-demand-tls) where it is enab
 - **ask** will cause Caddy to make an HTTP request to the given URL, asking whether a domain is allowed to have a certificate issued.
 
   The request has a query string of `?domain=` containing the value of the domain name.
-  
+
   If the endpoint returns a `2xx` status code, Caddy will be authorized to obtain a certificate for that name. Any other status code will result in cancelling issuance of the certificate and erroring the TLS handshake.
 
 <aside class="tip">
@@ -702,9 +703,9 @@ Default: `10m`
 
 
 ##### `cert_lifetime`
-The validity period to ask the CA to issue a certificate for. 
+The validity period to ask the CA to issue a certificate for.
 
-This value is used to compute the `notAfter` field of the ACME order; therefore the system must have a reasonably synchronized clock. NOTE: Not all CAs support this. Check with your CA's ACME documentation to see if this is allowed and what values may be used. 
+This value is used to compute the `notAfter` field of the ACME order; therefore the system must have a reasonably synchronized clock. NOTE: Not all CAs support this. Check with your CA's ACME documentation to see if this is allowed and what values may be used.
 
 Default: `0` (CA chooses lifetime, usually 90 days)
 
@@ -821,7 +822,7 @@ If you are using the [`bind` directive](/docs/caddyfile/directives/bind) or the 
 	servers :8080 {
 		name private
 	}
-	
+
 	# This will work because it's an exact match
 	servers 192.168.1.2:8080 {
 		name public
@@ -854,7 +855,7 @@ For example:
 	servers :443 {
 		name https
 	}
-	
+
 	servers :80 {
 		name http
 	}
@@ -1102,7 +1103,7 @@ Pairing with [`trusted_proxies`](#trusted-proxies), allows configuring which hea
 
 ##### `metrics`
 
-Enables Prometheus metrics collection; necessary before scraping metrics. Note that metrics reduce performance on really busy servers. (Our community is working on improving this. Please get involved!)
+Enables metrics collection; necessary before scraping metrics or pushing them with OTLP. Note that metrics reduce performance on really busy servers. (Our community is working on improving this. Please get involved!)
 
 ```caddy
 {
@@ -1130,6 +1131,26 @@ Due to the infinite cardinality potential in observing all possible hosts may be
 	}
 }
 ```
+
+You can add the `otlp` option to push the same metrics to an OpenTelemetry Protocol (OTLP) endpoint. The exporter is configured by standard OpenTelemetry `OTEL_*` environment variables, such as `OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_EXPORTER_OTLP_METRICS_ENDPOINT`, `OTEL_EXPORTER_OTLP_PROTOCOL`, `OTEL_EXPORTER_OTLP_HEADERS`, `OTEL_METRIC_EXPORT_INTERVAL` and `OTEL_METRICS_EXPORTER`.
+
+```caddy
+{
+	metrics {
+		otlp
+	}
+}
+```
+
+For example:
+
+```console
+$ OTEL_EXPORTER_OTLP_ENDPOINT=http://collector:4318 \
+	OTEL_METRICS_EXPORTER=otlp \
+	caddy run
+```
+
+See [Monitoring Caddy with metrics](/docs/metrics) for more details.
 
 ##### `trace`
 
@@ -1315,7 +1336,7 @@ Default: `{pki.ca.name} - {time.now.year} ECC Root`
 ```
 
 ##### `intermediate_cn`
-The name to put in the CommonName field of the intermediate certificates. 
+The name to put in the CommonName field of the intermediate certificates.
 
 Default: `{pki.ca.name} - ECC Intermediate`
 
@@ -1409,7 +1430,7 @@ A key pair (certificate and private key) to use as the intermediate for the CA. 
 
 ## Event Options
 
-Caddy modules emit events when interesting things happen (or are about to happen). 
+Caddy modules emit events when interesting things happen (or are about to happen).
 
 Events typically include a metadata payload. The best way to learn about events and their payloads is from each module's documentation, but you may also see the events and their data payloads by enabling the [`debug` global option](#debug) and reading the logs.
 
