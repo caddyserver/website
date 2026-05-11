@@ -6,6 +6,12 @@ title: templates (Caddyfile directive)
 
 Executes the response body as a [template](/docs/modules/http.handlers.templates) document. Templates provide functional primitives for making simple dynamic pages. Features include HTTP subrequests, HTML file includes, Markdown rendering, JSON parsing, basic data structures, randomness, time, and more.
 
+<aside class="tip">
+
+Templates may be executed on the response body from _any_ origin, whether it's a static file on disk or a proxied web service. It would be wise to only enable template evaluation for content you trust, control, and/or sanitize! A misconfiguration may result in security breaches. For example, if a proxied app allows users to write/post content, and that content contains text that looks like template actions, it would allow arbitrary users to evaluate templates. Do not enable templates on user-generated content (without sanitizing).
+
+</aside>
+
 
 ## Syntax
 
