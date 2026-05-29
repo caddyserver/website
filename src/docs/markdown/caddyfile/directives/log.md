@@ -218,10 +218,14 @@ output file <filename> {
 
 - **roll_keep** <span id="roll_keep"/> is how many log files to keep before deleting the oldest ones. Triggers when a new log file is created.
 
+  ⚠️ Be aware that this option and `roll_keep_for` together determine which log files are kept. For example, if log files are rotated daily, only 10 are kept based on the default `roll_keep` value of `10`, regardless of the `roll_keep_for` setting. To disable `roll_keep`, set the value to `0`. It is not recommended to set both `roll_keep` and `roll_keep_for` to `0` since all log files will be kept and likely cause the storage to fill up.
+
   Default: `10`
 
 - **roll_keep_for** <span id="roll_keep_for"/> is how long to keep rolled files as a [duration string](/docs/conventions#durations). Triggers when a new log file is created.
   The current implementation supports day resolution; fractional values are rounded up to the next whole day. For example, `36h` (1.5 days) is rounded up to `48h` (2 days).
+
+  ⚠️ Be aware that this option and `roll_keep` together determine which log files are kept. For example, if log files are rotated infrequently, only files less than 90 days old (the default value of `roll_keep_for`) will be kept regardless of the `roll_keep` setting. To disable `roll_keep_for`, set the value to `0`. It is not recommended to set both `roll_keep` and `roll_keep_for` to `0` since all log files will be kept and likely cause the storage to fill up.
   
   Default: `2160h` (90 days)
 
