@@ -266,7 +266,8 @@ header nav ul {
 }
 
 .logo {
-	height: 2.25em;
+	height: 1.8em;
+	margin-top: 3px;
 }
 
 .navbar .actions {
