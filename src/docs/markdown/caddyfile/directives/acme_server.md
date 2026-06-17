@@ -36,7 +36,13 @@ acme_server [<matcher>] {
 
 - **ca** specifies the ID of the certificate authority with which to sign certificates. The default is `local`, which is Caddy's default CA, intended for locally-used, self-signed certificates, which is most common in dev environments. For broader use, it is recommended to specify a different CA to avoid confusion. If the CA with the given ID does not already exist, it will be created. See the [PKI app global options](/docs/caddyfile/options#pki-options) to configure alternate CAs.
 
-- **lifetime** (Default: `12h`) is a [duration](/docs/conventions#durations) which specifies the validity period for issued certificates. This value must be less than the lifetime of the [intermediate certificate](/docs/caddyfile/options#intermediate-lifetime) used for signing. It is not recommended to change this unless absolutely necessary.
+- **lifetime** (Default: `12h`) is a [duration](/docs/conventions#durations) which specifies the validity period for issued certificates.
+
+    ⚠️ **This value must be less than `renewal_window_ratio × intermediate_lifetime`**, using the `renewal_window_ratio` of the [intermediate certificate](/docs/caddyfile/options#intermediate-lifetime) used for signing.
+
+    It is not recommended to change this unless absolutely necessary. If you do raise it, raise `intermediate_lifetime` accordingly so the inequality still holds.
+
+    The intermediate is rotated while `renewal_window_ratio × intermediate_lifetime` of its validity remains, and a leaf issued (or renewed) just before that rotation inherits the old intermediate as its signer. If the leaf's `lifetime` exceeds the intermediate's remaining validity at that point, the leaf outlives its signing intermediate: the served chain becomes invalid as soon as that intermediate expires — even though the leaf itself is still valid — until the leaf is renewed.
 
 - **resolvers** are the addresses of DNS resolvers to use when looking up the TXT records for solving ACME DNS challenges. Accepts [network addresses](/docs/conventions#network-addresses) defaulting to UDP and port 53 unless specified. If the host is an IP address, it will be dialed directly to resolve the upstream server. If the host is not an IP address, the addresses are resolved using the [name resolution convention](https://golang.org/pkg/net/#hdr-Name_Resolution) of the Go standard library. If multiple resolvers are specified, then one is chosen at random.
 
