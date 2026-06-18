@@ -821,4 +821,16 @@ For example, if you have the [`caddy-dns/cloudflare` plugin <img src="/old/resou
 }
 ```
 
+Environment variables are convenient, but sensitive values in a process environment can be exposed by process inspection, child process inheritance, logs, crash dumps, or platform diagnostics.
+
+For secrets, prefer your platform's secret management mechanism when available. If the secret is provided as a file, you can use the [global `{file.*}` placeholder](/docs/conventions#placeholders) in config fields which support placeholders:
+
+```caddy
+{
+	acme_dns cloudflare {file./run/secrets/cloudflare_api_token}
+}
+```
+
+This does not make the secret inaccessible to Caddy; the Caddy process still needs permission to read the file. It avoids placing the secret value in the process-wide environment.
+
 If you're running Caddy as a systemd service, see [these instructions](/docs/running#overrides) for setting service overrides to define your environment variables.

@@ -97,7 +97,7 @@ The following placeholders are always available (global):
 Placeholder | Description
 ------------|-------------
 `{env.*}` | Environment variable; example: `{env.HOME}`
-`{file.*}` | Contents from a file; example: `{file./path/to/secret.txt}`
+`{file.*}` | Contents from a file, useful when a secret is supplied as a file; example: `{file./path/to/secret.txt}`
 `{system.hostname}` | The system's local hostname
 `{system.slash}` | The system's filepath separator
 `{system.os}` | The system's OS
