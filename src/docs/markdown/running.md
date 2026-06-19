@@ -336,7 +336,7 @@ To reload Caddy after making changes to your Caddyfile:
 <pre><code class="cmd bash">docker compose exec -w /etc/caddy caddy caddy reload</code></pre>
 
 Since v2.11.0, you can reload using `SIGUSR1`, provided that Caddy was started with `caddy run` and a config file:
-<pre><code class="cmd bash">docker compose kill -sUSR1 caddy</code></pre>
+<pre><code class="cmd bash">docker exec caddy kill -USR1 1</code></pre>
 
 To see Caddy's 1000 most recent logs, and `f`ollow to see new ones streaming in:
 <pre><code class="cmd bash">docker compose logs caddy -n=1000 -f</code></pre>
