@@ -662,6 +662,8 @@ You can use any placeholders in the Caddyfile, but for convenience you can also 
 
 Not all config fields support placeholders, but most do where you would expect it. Support for placeholders needs to have been explicitly added to those fields. Plugin authors can [read this article](/docs/extending-caddy/placeholders) to learn how to add support for placeholders in their own modules.
 
+Placeholders are usually evaluated at runtime by the module that supports them. This means they are not the same as Caddyfile parse-time features such as the [`import`](#snippets) directive or [Caddyfile environment variables](#environment-variables) (`{$ENV}`). Fields that are compiled or validated while the config is loaded, such as regular expression matcher patterns, may not support runtime placeholders as their input values. Use [`import`](#snippets) or [`{$ENV}`](#environment-variables) when you need to provide config text before the Caddyfile is adapted.
+
 
 
 
