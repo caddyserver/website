@@ -177,13 +177,28 @@ Using a redirect, the client will have to re-issue the request, enforcing a sing
 
 ## Wildcard certificates
 
-For most issuers including Let's Encrypt, you must enable the [ACME DNS challenge](/docs/automatic-https#dns-challenge) to have Caddy automate wildcard certificates.
+You must enable the [ACME DNS challenge](/docs/automatic-https#dns-challenge) to have Caddy automatically manage wildcard certificates.
 
-With the DNS challenge enabled, as of Caddy 2.10, Caddy will prefer an applicable wildcard certificate that is already configured or managed before managing a separate certificate for a subdomain.
+To serve multiple subdomains with the same wildcard certificate, there are two configuration methods: implicitly or via route handlers.
+
+Since Caddy 2.10, Caddy will prefer to use an applicable wildcard certificate over requesting a separate certificate for a subdomain. This means that you can list your subdomains as usual, and they will automatically begin using the defined wildcard certificate:
+
+```caddy
+*.example.com {
+	tls {
+		dns <provider_name> [<params...>]
+	}
+	abort
+}
+
+# This will use the above certificate
+foo.example.com {
+	respond "Foo!"
+}
+```
 
 
-
-If you need to serve multiple subdomains with the same wildcard certificate, the best way to handle them is with a Caddyfile like this, making use of the [`handle` directive](/docs/caddyfile/directives/handle) and [`host` matchers](/docs/caddyfile/matchers#host):
+Alternatively, you can make use of the [`handle` directive](/docs/caddyfile/directives/handle) and [`host` matchers](/docs/caddyfile/matchers#host) to handle them explicitly. This may be preferred if a large portion of the configuration would be shared between the hosts.
 
 ```caddy
 *.example.com {
@@ -207,9 +222,6 @@ If you need to serve multiple subdomains with the same wildcard certificate, the
 	}
 }
 ```
-
-You must enable the [ACME DNS challenge](/docs/automatic-https#dns-challenge) to have Caddy automatically manage wildcard certificates.
-
 
 
 ## Single-page apps (SPAs)
