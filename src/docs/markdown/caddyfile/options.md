@@ -1353,7 +1353,7 @@ Default: `{pki.ca.name} - ECC Intermediate`
 ##### `intermediate_lifetime`
 The [duration](/docs/conventions#durations) for which intermediate certificates are valid. This value **must** be less than the lifetime of the root cert (`3600d` or 10 years).
 
-Default: `7d`. It is _not recommended_ to change this, unless absolutely necessary.
+Default: `7d`. It is _not recommended_ to change this unless absolutely necessary. Raising the issued certificates' lifetime is one such case. Check [`lifetime` in the `acme_server` syntax documentation](/docs/caddyfile/directives/acme_server#syntax) for more details.
 
 ```caddy
 {
