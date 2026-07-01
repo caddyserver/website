@@ -236,11 +236,36 @@ function buildCaddyRailwayURL() {
 function handleBuildError(jqxhr, status, error) {
 	var $content = $('<div class="swal-custom-content">');
 
+	// surface the server-provided message when there is one
+	var serverMsg = "";
+	if (jqxhr.responseJSON && jqxhr.responseJSON.error && jqxhr.responseJSON.error.message) {
+		serverMsg = jqxhr.responseJSON.error.message;
+	}
+
 	if (jqxhr.status == 502) {
 		swal({
 			icon: "error",
 			title: "Unavailable",
 			content: $content.html('Sorry, the build server is down for maintenance right now. You can try again later or <a href="https://github.com/caddyserver/caddy/releases/latest">download pre-built Caddy binaries from GitHub</a>.')[0]
+		});
+	} else if (jqxhr.status == 429) {
+		// monthly build quota exceeded
+		swal({
+			icon: "warning",
+			title: "Build limit reached",
+			content: $content.html((serverMsg ? '<p>'+escapeHtml(serverMsg)+'</p>' : '<p>You have reached your monthly build limit.</p>') + '<p><a href="/account/subscription">Upgrade your plan</a> for more builds, or try again next month.</p>')[0]
+		});
+	} else if (jqxhr.status == 401) {
+		// not logged in: builds require an account, send them to log in and
+		// come back to the download page (preserving selected packages)
+		var back = window.location.pathname + window.location.search;
+		window.location = '/account/login?redir=' + encodeURIComponent(back);
+	} else if (jqxhr.status == 403) {
+		// authenticated but not permitted (e.g. API access requires a plan)
+		swal({
+			icon: "warning",
+			title: "Access required",
+			content: $content.html((serverMsg ? '<p>'+escapeHtml(serverMsg)+'</p>' : '') + '<p>Check your <a href="/account/subscription">subscription and API access</a>.</p>')[0]
 		});
 	} else {
 		swal({
@@ -249,6 +274,10 @@ function handleBuildError(jqxhr, status, error) {
 			content: $content.html('The two most common reasons are:<ol><li><b>A plugin is not compiling.</b> The developer must release a new version that compiles.</li><li><b>The build configuration is invalid.</b> If you specified any versions, make sure they are correct and <a href="https://golang.org/cmd/go/#hdr-Module_compatibility_and_semantic_versioning" target="_blank">within the same major version</a> as the path of the associated package.</li></ol>In the meantime, you can <a href="https://github.com/caddyserver/caddy/releases/latest">download Caddy from GitHub</a> without any plugins.')[0]
 		});
 	}
+}
+
+function escapeHtml(str) {
+	return $('<div>').text(str).html();
 }
 
 function updatePage() {

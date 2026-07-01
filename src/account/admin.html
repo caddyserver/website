@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Admin Portal - Caddy</title>
+		{{import "/old/includes/account/head.html"}}
+		{{template "account-head"}}
+		<link rel="stylesheet" href="/old/resources/css/account/dashboard.css{{template "cacheBust"}}">
+		<link rel="stylesheet" href="/old/resources/css/account/admin.css{{template "cacheBust"}}">
+	</head>
+	<body>
+		<div class="container">
+			{{include "/old/includes/account/nav.html"}}
+			<main class="dashboard">
+				<div class="admin-content" style="display: none;">
+					<section class="admin-header-section">
+						<h1>Admin Portal</h1>
+						<p class="admin-subtitle">Manage Stripe products, prices, and subscription plans</p>
+					</section>
+
+					<div class="admin-sections">
+						<!-- Stripe Products Section -->
+						<section class="admin-section">
+							<div class="section-header">
+								<h2>Stripe Products</h2>
+								<button class="btn btn-primary" onclick="showCreateProductModal()">+ New Product</button>
+							</div>
+							<div id="products-list" class="admin-table-container">
+								<div class="loading">Loading products...</div>
+							</div>
+				</section>
+
+						<!-- Stripe Prices Section -->
+						<section class="admin-section">
+							<div class="section-header">
+								<h2>Stripe Prices</h2>
+								<button class="btn btn-primary" onclick="showCreatePriceModal()">+ New Price</button>
+							</div>
+							<div id="prices-list" class="admin-table-container">
+								<div class="loading">Loading prices...</div>
+							</div>
+						</section>
+
+						<!-- Local Subscription Plans Section -->
+						<section class="admin-section">
+							<div class="section-header">
+								<h2>Local Subscription Plans</h2>
+								<button class="btn btn-secondary" onclick="showSyncPlanModal()">Sync Plan from Stripe</button>
+							</div>
+							<div id="plans-list" class="admin-table-container">
+								<div class="loading">Loading plans...</div>
+							</div>
+						</section>
+					</div>
+				</div>
+
+				<div class="access-denied" style="display: none;">
+					<div class="access-denied-content">
+						<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<circle cx="12" cy="12" r="10"/>
+							<line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+						</svg>
+						<h2>Access Denied</h2>
+						<p>You don't have permission to access the admin portal.</p>
+						<a href="/account/" class="btn btn-primary">Return to Dashboard</a>
+					</div>
+				</div>
+			</main>
+		</div>
+
+<!-- Create Product Modal -->
+<div class="modal-overlay" id="create-product-modal" style="display: none;">
+	<div class="modal-content modal-small">
+		<div class="modal-header">
+			<h3>Create New Product</h3>
+			<button class="modal-close" onclick="closeModal('create-product-modal')">&times;</button>
+		</div>
+		<form id="create-product-form" onsubmit="createProduct(event)">
+			<div class="form-group">
+				<label for="product-name">Product Name</label>
+				<input type="text" id="product-name" name="name" required placeholder="e.g., Pro Plan">
+			</div>
+			<div class="form-group">
+				<label for="product-description">Description</label>
+				<textarea id="product-description" name="description" rows="3" placeholder="Product description..."></textarea>
+			</div>
+			<div class="form-actions">
+				<button type="button" class="btn btn-secondary" onclick="closeModal('create-product-modal')">Cancel</button>
+				<button type="submit" class="btn btn-primary">Create Product</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- Create Price Modal -->
+<div class="modal-overlay" id="create-price-modal" style="display: none;">
+	<div class="modal-content modal-small">
+		<div class="modal-header">
+			<h3>Create New Price</h3>
+			<button class="modal-close" onclick="closeModal('create-price-modal')">&times;</button>
+		</div>
+		<form id="create-price-form" onsubmit="createPrice(event)">
+			<div class="form-group">
+				<label for="price-product">Product</label>
+				<select id="price-product" name="product_id" required>
+					<option value="">Select a product...</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="price-amount">Amount (in cents)</label>
+				<input type="number" id="price-amount" name="unit_amount" required min="0" placeholder="e.g., 999 for $9.99">
+			</div>
+			<div class="form-group">
+				<label for="price-currency">Currency</label>
+				<select id="price-currency" name="currency">
+					<option value="usd">USD</option>
+					<option value="eur">EUR</option>
+					<option value="gbp">GBP</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="price-interval">Billing Interval (leave empty for one-time)</label>
+				<select id="price-interval" name="interval">
+					<option value="">One-time</option>
+					<option value="month">Monthly</option>
+					<option value="year">Yearly</option>
+				</select>
+			</div>
+			<div class="form-actions">
+				<button type="button" class="btn btn-secondary" onclick="closeModal('create-price-modal')">Cancel</button>
+				<button type="submit" class="btn btn-primary">Create Price</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- Edit Product Modal -->
+<div class="modal-overlay" id="edit-product-modal" style="display: none;">
+	<div class="modal-content modal-small">
+		<div class="modal-header">
+			<h3>Edit Product</h3>
+			<button class="modal-close" onclick="closeModal('edit-product-modal')">&times;</button>
+		</div>
+		<form id="edit-product-form" onsubmit="updateProduct(event)">
+			<input type="hidden" id="edit-product-id" name="product_id">
+			<div class="form-group">
+				<label for="edit-product-name">Product Name</label>
+				<input type="text" id="edit-product-name" name="name" required>
+			</div>
+			<div class="form-group">
+				<label for="edit-product-description">Description</label>
+				<textarea id="edit-product-description" name="description" rows="3"></textarea>
+			</div>
+			<div class="form-group">
+				<label class="checkbox-label">
+					<input type="checkbox" id="edit-product-active" name="active" value="true">
+					<span>Active</span>
+				</label>
+			</div>
+			<div class="form-actions">
+				<button type="button" class="btn btn-secondary" onclick="closeModal('edit-product-modal')">Cancel</button>
+				<button type="submit" class="btn btn-primary">Update Product</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- Sync Plan Modal -->
+<div class="modal-overlay" id="sync-plan-modal" style="display: none;">
+	<div class="modal-content modal-small">
+		<div class="modal-header">
+			<h3>Sync Plan from Stripe</h3>
+			<button class="modal-close" onclick="closeModal('sync-plan-modal')">&times;</button>
+		</div>
+		<form id="sync-plan-form" onsubmit="syncPlan(event)">
+			<div class="form-group">
+				<label for="sync-price-id">Stripe Price</label>
+				<select id="sync-price-id" name="price_id" required>
+					<option value="">Select a price...</option>
+				</select>
+				<small class="form-hint">Price amount will be fetched from Stripe</small>
+			</div>
+			<div class="form-group">
+				<label for="sync-plan-name">Plan Name</label>
+				<input type="text" id="sync-plan-name" name="name" required placeholder="e.g., Pro">
+			</div>
+			<div class="form-group">
+				<label for="sync-plan-description">Description</label>
+				<textarea id="sync-plan-description" name="description" rows="2" placeholder="Plan description..."></textarea>
+			</div>
+			<div class="form-group">
+				<label for="sync-monthly-builds">Monthly Builds Limit (-1 for unlimited)</label>
+				<input type="number" id="sync-monthly-builds" name="monthly_builds" min="-1" value="100">
+			</div>
+			<div class="form-group">
+				<label for="sync-max-api-keys">Max API Keys (-1 for unlimited)</label>
+				<input type="number" id="sync-max-api-keys" name="max_api_keys" min="-1" value="1">
+			</div>
+			<div class="form-group">
+				<label class="checkbox-label">
+					<input type="checkbox" id="sync-api-access" name="api_access" value="true" checked>
+					<span>API Access Enabled</span>
+				</label>
+			</div>
+			<div class="form-actions">
+				<button type="button" class="btn btn-secondary" onclick="closeModal('sync-plan-modal')">Cancel</button>
+				<button type="submit" class="btn btn-primary">Sync Plan</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="/old/resources/js/account/admin.js{{template "cacheBust"}}"></script>
+
+	</body>
+</html>

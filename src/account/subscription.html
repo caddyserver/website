@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Subscription & API Keys - Caddy</title>
+		{{import "/old/includes/account/head.html"}}
+		{{template "account-head"}}
+		<link rel="stylesheet" href="/old/resources/css/account/dashboard.css{{template "cacheBust"}}">
+		<script src="https://js.stripe.com/v3/"></script>
+		<script src="/old/resources/js/account/subscription.js{{template "cacheBust"}}"></script>
+	</head>
+	<body>
+		<div class="container">
+			{{include "/old/includes/account/nav.html"}}
+			<main class="dashboard">
+				<!-- Subscription & Usage Section -->
+				<section class="subscription-section">
+					<h1 class="pad">Subscription & Usage</h1>
+					<div class="subscription-info">
+						<div class="subscription-card" id="subscription-status">
+							<h3>Current Plan</h3>
+							<div class="plan-info" id="plan-info">
+								<span class="loading">Loading subscription information...</span>
+							</div>
+						</div>
+						
+						<div class="usage-card" id="usage-info">
+							<h3>Monthly Usage</h3>
+							<div class="usage-stats" id="usage-stats">
+								<span class="loading">Loading usage information...</span>
+							</div>
+						</div>
+					</div>
+					
+					<div class="subscription-actions" id="subscription-actions" style="display:none;">
+						<button type="button" class="blue button" id="upgrade-plan">Upgrade Plan</button>
+						<button type="button" class="red button" id="cancel-subscription" style="display:none;">Cancel Subscription</button>
+					</div>
+					
+					<!-- Available Plans Modal -->
+					<div id="plans-modal" class="modal" style="display:none;">
+						<div class="plans-modal-content">
+							<span class="close-modal" id="close-modal">&times;</span>
+							<h2>Choose Your Plan</h2>
+							<div class="plans-container" id="plans-container">
+								<!-- Filled by JS -->
+							</div>
+						</div>
+					</div>
+
+					<!-- Payment Modal -->
+					<div id="payment-modal" class="modal" style="display:none;">
+						<div class="plans-modal-content">
+							<span class="close-modal" id="close-payment-modal">&times;</span>
+							<h2>Complete Your Subscription</h2>
+							<div id="payment-plan-summary" class="payment-summary"></div>
+							<form id="payment-form">
+								<div id="payment-element"><!-- Stripe Elements injects the payment form here --></div>
+								<div id="payment-message" class="payment-message" style="display:none;"></div>
+								<button id="submit-payment" type="submit" class="blue button">
+									<span id="payment-spinner" class="loader" style="display:none;"></span>
+									<span id="payment-button-text">Pay &amp; Subscribe</span>
+								</button>
+							</form>
+						</div>
+					</div>
+				</section>
+
+				<!-- API Keys Section -->
+				<section class="api-keys-section">
+					<h1 class="pad">API Keys</h1>
+					<div id="api-keys-section">
+						<div class="api-info">
+							<p>API keys allow you to programmatically access the Caddy build service.</p>
+							<p><strong>Note:</strong> API access requires a paid subscription.</p>
+						</div>
+						<div class="api-actions" style="margin-bottom: 20px;">
+							<button type="button" class="blue button" id="create-api-key">Create API Key</button>
+							<span id="api-key-allowance" class="api-allowance"></span>
+						</div>
+						<table id="api-keys-table">
+							<tr>
+								<th>Name</th>
+								<th>Created</th>
+								<th>Last Used</th>
+								<th></th>
+							</tr>
+							<!-- Filled by JS -->
+						</table>
+					</div>
+				</section>
+			</main>
+		</div>
+	</body>
+</html>

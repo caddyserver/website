@@ -7,7 +7,517 @@ input[name=path] {
 	max-width: none;
 }
 
+/* Dashboard layout improvements */
+.dashboard {
+	display: grid;
+	grid-template-columns: minmax(0, 420px) minmax(0, 420px) 1fr;
+	gap: 24px;
+	align-items: start;
+}
+
+.subscription-info {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.subscription-card,
+.usage-card,
+.api-keys-section,
+.packages-section {
+	padding: 18px;
+	border: 1px solid #e9eef2;
+	border-radius: 10px;
+	background: #ffffff;
+	box-shadow: 0 1px 2px rgba(16,24,40,0.03);
+}
+
+.subscription-card h3,
+.usage-card h3,
+.api-keys-section h3,
+.packages-section h3 {
+	margin-top: 0;
+	color: #1f2937;
+}
+
+/* Tables used in the page (match HTML ids) */
+#api-keys-table,
+#user-packages {
+	width: 100%;
+	border-collapse: collapse;
+	background: transparent;
+}
+
+#api-keys-table th,
+#api-keys-table td,
+#user-packages th,
+#user-packages td {
+	padding: 12px 10px;
+	border-bottom: 1px solid #f0f3f5;
+	text-align: left;
+	vertical-align: middle;
+}
+
+#user-packages th.text-center,
+#user-packages td.text-center {
+	text-align: center;
+}
+
+.api-actions .button {
+	margin-bottom: 8px;
+}
+
+/* Make modal id behave like the existing .plans-modal rules */
+#plans-modal {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 1000;
+}
+
+/* Responsive: collapse to single column on narrower screens */
+@media (max-width: 1100px) {
+	.dashboard {
+		grid-template-columns: 1fr;
+	}
+}
+
+
 a.disabled {
 	color: #aaa;
 	cursor: not-allowed;
+}
+
+/* Subscription Management Styles */
+.subscription-section {
+	margin-bottom: 30px;
+	padding: 20px;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	background: #f9f9f9;
+}
+
+.subscription-section h3 {
+	margin-top: 0;
+	color: #333;
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 10px;
+}
+
+.plan-details {
+	margin-bottom: 15px;
+}
+
+.plan-name {
+	font-size: 18px;
+	font-weight: bold;
+	color: #1e3a8a;
+	margin-bottom: 5px;
+}
+
+.plan-status {
+	font-size: 14px;
+	padding: 4px 8px;
+	border-radius: 4px;
+	display: inline-block;
+	margin-bottom: 8px;
+}
+
+.status-active {
+	background-color: #d4edda;
+	color: #155724;
+	border: 1px solid #c3e6cb;
+}
+
+.status-inactive {
+	background-color: #f8d7da;
+	color: #721c24;
+	border: 1px solid #f5c6cb;
+}
+
+.plan-period, .plan-limits, .plan-features {
+	font-size: 14px;
+	color: #666;
+	margin-bottom: 3px;
+}
+
+.subscription-actions {
+	margin-top: 15px;
+}
+
+/* Usage Statistics */
+.usage-section {
+	margin-bottom: 30px;
+	padding: 20px;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	background: #f9f9f9;
+}
+
+.usage-bar {
+	width: 100%;
+	height: 20px;
+	background-color: #e9ecef;
+	border-radius: 10px;
+	overflow: hidden;
+	margin-bottom: 10px;
+}
+
+.usage-progress {
+	height: 100%;
+	background: linear-gradient(90deg, #28a745 0%, #ffc107 70%, #dc3545 90%);
+	transition: width 0.3s ease;
+}
+
+.usage-text {
+	font-size: 16px;
+	font-weight: bold;
+	color: #333;
+	margin-bottom: 5px;
+}
+
+.usage-period {
+	font-size: 14px;
+	color: #666;
+}
+
+/* API Keys Section */
+.api-keys-section {
+	margin-bottom: 30px;
+	padding: 20px;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	background: #f9f9f9;
+}
+
+.api-keys-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 15px;
+}
+
+.api-keys-table th,
+.api-keys-table td {
+	padding: 12px;
+	text-align: left;
+	border-bottom: 1px solid #ddd;
+}
+
+.api-keys-table th {
+	background-color: #f1f3f4;
+	font-weight: bold;
+	color: #333;
+}
+
+.api-keys-table tr:hover {
+	background-color: #f5f5f5;
+}
+
+.revoke-api-key {
+	color: #dc3545;
+	text-decoration: none;
+}
+
+.revoke-api-key:hover {
+	text-decoration: underline;
+}
+
+/* Plans Modal */
+#plans-modal {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.6);
+	z-index: 1000;
+	backdrop-filter: blur(4px);
+}
+
+/* Payment Modal */
+#payment-modal {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.6);
+	z-index: 1001;
+	backdrop-filter: blur(4px);
+}
+
+#payment-modal .plans-modal-content {
+	max-width: 480px;
+}
+
+.payment-summary {
+	margin-bottom: 24px;
+	text-align: center;
+	color: #374151;
+}
+
+#payment-element {
+	margin-bottom: 20px;
+}
+
+.payment-message {
+	margin: 0 0 16px 0;
+	padding: 10px 14px;
+	border-radius: 8px;
+	background: #fef2f2;
+	color: #b91c1c;
+	font-size: 14px;
+}
+
+#submit-payment {
+	width: 100%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+}
+
+.plans-modal-content {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: #fff;
+	border-radius: 16px;
+	padding: 40px;
+	width: 90%;
+	max-width: 960px;
+	max-height: 85vh;
+	overflow-y: auto;
+	box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.plans-modal-content h2 {
+	margin: 0 0 32px 0;
+	text-align: center;
+	color: #111827;
+	font-size: 28px;
+	font-weight: 700;
+}
+
+.close-modal {
+	position: absolute;
+	top: 20px;
+	right: 24px;
+	font-size: 28px;
+	cursor: pointer;
+	color: #9ca3af;
+	line-height: 1;
+	transition: color 0.2s;
+}
+
+.close-modal:hover {
+	color: #374151;
+}
+
+.plans-container {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 20px;
+}
+
+.api-allowance {
+	margin-left: 12px;
+	color: #6b7280;
+	font-size: 14px;
+}
+
+#create-api-key:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.plan-card {
+	border: 1px solid #e5e7eb;
+	border-radius: 12px;
+	padding: 24px;
+	text-align: center;
+	background: #fff;
+	transition: all 0.2s ease;
+	display: flex;
+	flex-direction: column;
+}
+
+.plan-card:hover {
+	border-color: #3b82f6;
+	box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.plan-card.popular {
+	border-color: #3b82f6;
+	box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+	position: relative;
+}
+
+.plan-card.popular::before {
+	content: 'Best value';
+	position: absolute;
+	top: -12px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: #3b82f6;
+	color: #fff;
+	font-size: 12px;
+	font-weight: 600;
+	padding: 4px 12px;
+	border-radius: 12px;
+}
+
+.plan-card h3 {
+	margin: 0 0 8px 0;
+	color: #3b82f6;
+	font-size: 20px;
+	font-weight: 600;
+}
+
+.plan-price {
+	font-size: 36px;
+	font-weight: 700;
+	color: #111827;
+	margin: 8px 0 4px 0;
+	line-height: 1;
+}
+
+.plan-price span {
+	font-size: 14px;
+	font-weight: 400;
+	color: #6b7280;
+}
+
+.plan-description {
+	color: #6b7280;
+	margin-bottom: 20px;
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+.plan-features {
+	text-align: left;
+	margin-bottom: 24px;
+	flex-grow: 1;
+}
+
+.plan-features div {
+	padding: 8px 0;
+	color: #374151;
+	font-size: 14px;
+	border-bottom: 1px solid #f3f4f6;
+}
+
+.plan-features div:last-child {
+	border-bottom: none;
+}
+
+.plan-features div::before {
+	content: '✓';
+	color: #10b981;
+	font-weight: bold;
+	margin-right: 8px;
+}
+
+.select-plan {
+	width: 100%;
+	padding: 12px 20px;
+	background-color: #3b82f6;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	font-size: 15px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
+
+.select-plan:hover {
+	background-color: #2563eb;
+}
+
+/* Button Styles */
+.button.blue {
+	background-color: #1e3a8a;
+	color: white;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 6px;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 14px;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+	margin-right: 10px;
+}
+
+.button.blue:hover {
+	background-color: #1e40af;
+	color: white;
+	text-decoration: none;
+}
+
+.button.red {
+	background-color: #dc3545;
+	color: white;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 6px;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 14px;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
+
+.button.red:hover {
+	background-color: #c82333;
+	color: white;
+	text-decoration: none;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+	.plans-container {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (max-width: 768px) {
+	.plans-container {
+		grid-template-columns: 1fr;
+	}
+	
+	.plans-modal-content {
+		padding: 24px;
+		width: calc(100% - 32px);
+		max-height: 90vh;
+	}
+	
+	.plans-modal-content h2 {
+		font-size: 22px;
+		margin-bottom: 24px;
+	}
+	
+	.subscription-section,
+	.usage-section,
+	.api-keys-section {
+		padding: 15px;
+	}
+	
+	.api-keys-table {
+		font-size: 14px;
+	}
+	
+	.api-keys-table th,
+	.api-keys-table td {
+		padding: 8px;
+	}
 }
