@@ -63,6 +63,16 @@ document.addEventListener('DOMContentLoaded', function() {
 		} catch(err) {}
 	});
 
+	evtSource.addEventListener('reset', function(e) {
+		// server is retrying the build on another worker --
+		// clear the UI so we show fresh progress
+		logEl.textContent = '';
+		document.getElementById('current-step').textContent = 'Retrying build...';
+		document.getElementById('progress-fill').style.width = '0%';
+		document.getElementById('build-title').textContent = 'Building Caddy...';
+		document.getElementById('build-subtitle').textContent = 'Build worker was restarted, retrying on another server.';
+	});
+
 	evtSource.addEventListener('result', function(e) {
 		evtSource.close();
 		try {
