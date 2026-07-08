@@ -1,45 +1,5 @@
 /* Download Beta - additions on top of /old/resources/css/download.css */
 
-/* PGO section */
-
-.pgo-section {
-	margin-top: 16px;
-	background: rgba(255, 255, 255, .6);
-	border-radius: 4px;
-	padding: 0 16px;
-}
-
-.pgo-section summary {
-	cursor: pointer;
-	padding: 12px 0;
-	font-size: 16px;
-}
-
-.pgo-badge {
-	font-size: 11px;
-	background: rgb(25, 97, 192);
-	color: #fff;
-	padding: 2px 8px;
-	border-radius: 10px;
-	vertical-align: middle;
-	margin-left: 6px;
-}
-
-.pgo-options {
-	padding-bottom: 16px;
-}
-
-.pgo-controls {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-}
-
-.pgo-controls label {
-	cursor: pointer;
-	font-size: 15px;
-}
-
 /* Build progress page */
 
 #build-page {

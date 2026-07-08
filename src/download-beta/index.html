@@ -69,31 +69,6 @@
 				</div>
 			</div>
 
-			<div class="pgo-section">
-				<details>
-					<summary><b>PGO Optimization</b> <span class="pgo-badge" id="pgo-badge" style="display:none">enabled</span></summary>
-					<div class="pgo-options">
-						<p style="font-size:14px;color:#888;margin-top:0.5em;">
-							Profile-Guided Optimization uses runtime profiling data to produce a faster binary.
-							Select a pre-configured profile or upload your own <code>.pprof</code> file.
-						</p>
-						<div class="pgo-controls">
-							<label>
-								<input type="radio" name="pgo" value="" checked> None
-							</label>
-							<label>
-								<input type="radio" name="pgo" value="default"> Default (general web server workload)
-							</label>
-							<label>
-								<input type="radio" name="pgo" value="upload"> Upload custom profile
-								<input type="file" id="pgo-file" accept=".pprof,.pb.gz" style="display:none">
-							</label>
-						</div>
-						<div id="pgo-file-name" style="display:none;font-size:14px;margin-top:0.5em;"></div>
-					</div>
-				</details>
-			</div>
-
 			<input type="search" id="filter" placeholder="Filter packages and modules...">
 
 			<div class="text-center">

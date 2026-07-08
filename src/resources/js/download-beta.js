@@ -50,9 +50,6 @@ function splitVCSProvider(pkgPath) {
 	return { provider: '', path: pkgPath };
 }
 
-// stored PGO file data (base64) when user uploads a custom profile
-var pgoFileData = null;
-
 function getBuildParams() {
 	var platformStr = document.getElementById('platform').value || 'linux-amd64';
 	var parts = platformStr.split('-');
@@ -71,22 +68,7 @@ function getBuildParams() {
 		qs.append('p', path);
 	});
 
-	// named PGO profile
-	var pgoRadio = document.querySelector('input[name=pgo]:checked');
-	if (pgoRadio && pgoRadio.value && pgoRadio.value !== 'upload') {
-		qs.set('pgo', pgoRadio.value);
-	}
-
 	return qs;
-}
-
-// returns the JSON body for the POST request if PGO upload is selected
-function getBuildBody() {
-	var pgoRadio = document.querySelector('input[name=pgo]:checked');
-	if (pgoRadio && pgoRadio.value === 'upload' && pgoFileData) {
-		return JSON.stringify({ pgo_profile_data: pgoFileData });
-	}
-	return null;
 }
 
 // Load packages
@@ -276,14 +258,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 
 		var qs = getBuildParams();
-		var body = getBuildBody();
-		var fetchOpts = { method: 'POST' };
-		if (body) {
-			fetchOpts.body = body;
-			fetchOpts.headers = { 'Content-Type': 'application/json' };
-		}
 
-		fetch('/api/build?' + qs.toString(), fetchOpts)
+		fetch('/api/build?' + qs.toString(), { method: 'POST' })
 			.then(function(r) { return r.json(); })
 			.then(function(json) {
 				if (json.error) {
@@ -305,45 +281,6 @@ document.addEventListener('DOMContentLoaded', function() {
 				alert('Failed to start build: ' + err.message);
 				enableFields(btn, downloadButtonHtml);
 			});
-	});
-
-	// PGO radio buttons
-	document.querySelectorAll('input[name=pgo]').forEach(function(radio) {
-		radio.addEventListener('change', function() {
-			var badge = document.getElementById('pgo-badge');
-			var fileInput = document.getElementById('pgo-file');
-			var fileName = document.getElementById('pgo-file-name');
-
-			if (this.value === 'upload') {
-				fileInput.style.display = '';
-				fileInput.click();
-			} else {
-				fileInput.style.display = 'none';
-				fileName.style.display = 'none';
-			}
-
-			badge.style.display = this.value ? '' : 'none';
-		});
-	});
-
-	// PGO file upload
-	document.getElementById('pgo-file').addEventListener('change', function() {
-		var file = this.files[0];
-		var fileName = document.getElementById('pgo-file-name');
-		if (!file) {
-			pgoFileData = null;
-			fileName.style.display = 'none';
-			return;
-		}
-		fileName.style.display = '';
-		fileName.textContent = 'Selected: ' + file.name + ' (' + Math.round(file.size / 1024) + ' KB)';
-
-		var reader = new FileReader();
-		reader.onload = function() {
-			// result is a data URL like "data:...;base64,XXXX"
-			pgoFileData = reader.result.split(',')[1];
-		};
-		reader.readAsDataURL(file);
 	});
 
 	function enableFields(btn, originalHtml) {
