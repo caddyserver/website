@@ -218,7 +218,7 @@ output file <filename> {
 
 - **roll_keep** <span id="roll_keep"/> is how many log files to keep before deleting the oldest ones. Triggers when a new log file is created.
 
-  Be aware that this option and `roll_keep_for` together determine which log files are kept. For example, if log files are rotated daily, only 10 are kept based on the default `roll_keep` value of `10`, regardless of the `roll_keep_for` setting. To disable `roll_keep`, set the value to `0`. It is not recommended to set both `roll_keep` and `roll_keep_for` to `0` since all log files will be kept and likely cause the storage to fill up.
+  Be aware that this option and `roll_keep_for` together determine which log files are kept. For example, if log files are rotated daily, only 10 are kept based on the default `roll_keep` value of `10`, regardless of the `roll_keep_for` setting. To disable `roll_keep`, set the value to `-1`; a value of `0` is treated the same as leaving it unset and falls back to the default of `10`. It is not recommended to disable `roll_keep` together with `roll_keep_for` since all log files will be kept and likely cause the storage to fill up.
 
   Default: `10`
 
