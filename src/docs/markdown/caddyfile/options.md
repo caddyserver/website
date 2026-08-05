@@ -1103,7 +1103,7 @@ Pairing with [`trusted_proxies`](#trusted-proxies), allows configuring which hea
 
 ##### `metrics`
 
-Enables metrics collection; necessary before scraping metrics or pushing them with OTLP. Note that metrics reduce performance on really busy servers. (Our community is working on improving this. Please get involved!)
+Enables metrics collection; necessary before scraping metrics or pushing them with OTLP. Note that metrics have some performance overhead on really busy servers, though this was [significantly improved in v2.11](https://github.com/caddyserver/caddy/pull/7492) by collecting metrics once per route instead of per handler.
 
 ```caddy
 {
