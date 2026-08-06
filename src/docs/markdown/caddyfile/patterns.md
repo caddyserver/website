@@ -77,7 +77,7 @@ Customize the site root accordingly; this example assumes that your PHP app's we
 You may sometimes use a unix socket to connect to PHP-FPM:
 
 ```caddy-d
-php_fastcgi unix//run/php/php8.2-fpm.sock
+php_fastcgi unix//run/php/php8.5-fpm.sock
 ```
 
 The [`php_fastcgi` directive](/docs/caddyfile/directives/php_fastcgi) is actually just a shortcut for [several pieces of configuration](/docs/caddyfile/directives/php_fastcgi#expanded-form).
@@ -88,11 +88,6 @@ The [`php_fastcgi` directive](/docs/caddyfile/directives/php_fastcgi) is actuall
 Alternatively, you may use [FrankenPHP](https://frankenphp.dev/), which is a distribution of Caddy which calls PHP directly using CGO (Go to C bindings). This can be up to 4x faster than with PHP-FPM, and even better if you can use the worker mode.
 
 ```caddy
-{
-    frankenphp
-    order php_server before file_server
-}
-
 example.com {
 	root /srv/public
     encode zstd br gzip
