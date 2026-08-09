@@ -83,7 +83,7 @@ Caddy's configuration supports the use of _placeholders_. Using placeholders is 
 
 <aside class="tip">
 
-Placeholders are a similar idea to variables in other software. For example, [nginx has variables <img src="/old/resources/images/external-link.svg" class="external-link">](https://nginx.org/en/docs/varindex.html) like `$uri` and `$document_root`, whereas Caddy's equivalent would be [`{http.request.uri}`](/docs/json/apps/http/#docs) and [`{http.vars.root}`](/docs/caddyfile/directives/root).
+Placeholders are a similar idea to **variables** in other software (search docs for "variables" if that is the term you know). For example, [nginx has variables <img src="/old/resources/images/external-link.svg" class="external-link">](https://nginx.org/en/docs/varindex.html) like `$uri` and `$document_root`, whereas Caddy's equivalent would be [`{http.request.uri}`](/docs/json/apps/http/#docs) and [`{http.vars.root}`](/docs/caddyfile/directives/root). In the Caddyfile, common request fields also have [short names](/docs/caddyfile/concepts#placeholders) such as `{cookie.*}`, `{header.*}`, and `{path}`.
 
 </aside>
 
