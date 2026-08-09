@@ -330,7 +330,7 @@ To use a [unix socket](/docs/conventions#network-addresses) for the admin API, a
 }
 ```
 
-The process user must be able to create (and replace) the socket path. Packaged installs often run as a non-root user such as `caddy`, which typically cannot write under `/run` itself—use a directory that user owns (for example under the service data dir or a unit `RuntimeDirectory`), or adjust permissions. Creating an empty file with `touch` first is not enough; Caddy needs to bind the socket.
+The process user must be able to create (and replace) the socket path. Packaged installs often run as a non-root user such as `caddy`, which typically cannot write under `/run` itself. Instead, use a directory that user owns (for example under the service data dir or a unit `RuntimeDirectory`), or adjust permissions. Creating an empty file with `touch` first is not enough; Caddy needs to bind the socket.
 
 To only allow requests having a matching `Origin` header:
 
