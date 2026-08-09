@@ -602,7 +602,7 @@ Matcher tokens can be omitted entirely to match all requests; for example, `*` d
 
 ## Placeholders
 
-[Placeholders](/docs/conventions#placeholders) (sometimes called **variables** if you are coming from nginx or other servers) are a simple way to inject dynamic values into your static configuration. They can be used as arguments to directives and subdirectives. For request data such as cookies, headers, and path, use the shorthands below (for example `{cookie.session}` expands to `{http.request.cookie.session}`).
+[Placeholders](/docs/conventions#placeholders) are a simple way to inject dynamic values into your static configuration. They can be used as arguments to directives and subdirectives. For request data such as cookies, headers, and path, use the shorthands below (for example `{cookie.session}` expands to `{http.request.cookie.session}`). Other servers may call these **variables**.
 
 Placeholders are bounded on either side by curly braces `{ }` and contain the identifier inside, for example: `{foo.bar}`. The opening placeholder brace can be escaped `\{like.this}` to prevent replacement. Placeholder identifiers are typically namespaced with dots to avoid collisions across modules.
 

@@ -28,7 +28,7 @@ The basic idea is that you first type the address of your site, then the feature
 - #### [Full Caddyfile tutorial](/docs/caddyfile-tutorial)
   Learn to do a variety of common things with the Caddyfile.
 - #### [Caddyfile concepts](/docs/caddyfile/concepts)
-  Required reading! Structure, site addresses, matchers, placeholders (dynamic values / "variables"), and more.
+  Required reading! Structure, site addresses, matchers, placeholders, and more.
 - #### [Directives](/docs/caddyfile/directives)
   Keywords at the beginning of lines that enable features for your sites.
 - #### [Request matchers](/docs/caddyfile/matchers)
