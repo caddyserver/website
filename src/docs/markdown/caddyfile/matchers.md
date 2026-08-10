@@ -399,7 +399,7 @@ Some more examples using [CEL expressions](#expression). Keep in mind that place
 ### header
 
 ```caddy-d
-header <field> [<value> ...]
+header <field> [<value>]
 
 expression header({'<field>': '<value>'})
 ```
@@ -408,13 +408,13 @@ By request header fields.
 
 - `<field>` is the name of the HTTP header field to check.
 	- If prefixed with `!`, the field must not exist to match (omit value arg).
-- `<value>` is the value the field must have to match. One or more may be specified.
+- `<value>` is the value the field must have to match.
 	- If prefixed with `*`, it performs a fast suffix match (appears at the end).
 	- If suffixed with `*`, it performs a fast prefix match (appears at the start).
 	- If enclosed by `*`, it performs a fast substring match (appears anywhere).
 	- Otherwise, it is a fast exact match.
 
-Different header fields within the same set are AND-ed. Multiple values per field are OR'ed.
+Different header fields within the same set are AND-ed. To match multiple values for the same field, specify one `header` matcher per value within the same matcher set; those values are OR'ed.
 
 Note that header fields may be repeated and have different values. Backend applications MUST consider that header field values are arrays, not singular values, and Caddy does not interpret meaning in such quandaries.
 
