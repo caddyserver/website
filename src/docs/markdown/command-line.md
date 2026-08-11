@@ -250,7 +250,7 @@ Formats or prettifies a Caddyfile, then exits. The result is printed to stdout u
 
 <pre><code class="cmd bash">caddy hash-password
 	[-p, --plaintext &lt;password&gt;]
-	[-a, --algorithm &lt;name&gt;]</code></pre>
+	[-a, --algorithm &lt;name&gt;]
 	[--bcrypt-cost &lt;cost&gt;]</code></pre>
 
 Convenient way to hash a plaintext password. The resulting hash is written to stdout as a format usable directly in your Caddy config.
