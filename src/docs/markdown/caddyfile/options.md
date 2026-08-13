@@ -1401,7 +1401,7 @@ A key pair (certificate and private key) to use as the root for the CA. If not s
 
 - **format** is the format in which the certificate and private key are provided. Currently, only `pem_file` is supported, which is the default, so this field is optional.
 - **cert** is the certificate. This should be the path to a PEM file, when using `pem_file` format.
-- **key** is the private key. This should be the path to a PEM file, when using `pem_file` format.
+- **key** is the private key. This should be the path to a PEM file, when using `pem_file` format. If you’re providing a signed intermediate certificate and don’t want to—or can’t—provide the key, for example because it’s stored on a hardware key, you can omit it. This field is therefore optional.
 
 ##### `intermediate`
 A key pair (certificate and private key) to use as the intermediate for the CA. If not specified, one will be generated and managed automatically.
