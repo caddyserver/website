@@ -6,11 +6,11 @@ title: Verifying Asset Signatures
 
 Artifact signing allows you to validate the artifact you have is the same one created by the project's workflow and was not modified by an unauthorized party (e.g. man-in-the-middle). The validation provides common ground, assurance, and knowledge that all parties are referring to the same artifact, collection of bytes, whether it is an executable, SBOM, or text file.
 
-As of Caddy v2.6.0, CI/CD release artifacts are signed using project [Sigstore](https://www.sigstore.dev/) technology, which issues certificates containing details about the subject to whom the certificate is issued. You can start by inspecting the certificate used to sign your artifact of choice. The certificates are base64-encoded, so you first have to base64-decode it to receive the PEM file. In this example, we'll work with the `caddy_2.6.0_checksums.txt` artifact and assume a Linux-like environment.
+As of Caddy v2.6.0, CI/CD release artifacts are signed using project [Sigstore](https://www.sigstore.dev/) technology, which issues certificates containing details about the subject to whom the certificate is issued. Starting with the adoption of Cosign v3 by the release pipeline, each artifact is accompanied by a single **Sigstore bundle** file named `<the artifact>.sigstore.json`, which packages the signature, the signing certificate, and the transparency log entry. You can start by inspecting the certificate used to sign your artifact of choice. In this example, we'll work with the `caddy_2.6.0_checksums.txt` artifact and assume a Linux-like environment.
 
-Start by downloading the the 3 files pertaining to your artifact of choice (i.e. `<the artifact>` which is the actual artifact whose companion signature and certs are to be verified, `<the artifact>.sig` which is the signature of the artifact, and `<the artifact>.pem` is the certificate descending from the root cert by Fulcio by Sigstore). Then base64 decode the downloaded `.pem` file to the armored version:
+Start by downloading the 2 files pertaining to your artifact of choice (i.e. `<the artifact>` which is the actual artifact whose signature is to be verified, and `<the artifact>.sigstore.json` which is the Sigstore bundle containing the signature, the certificate issued by Fulcio, the Sigstore certificate authority, and the transparency log entry). The certificate is embedded in the bundle as base64-encoded DER bytes, so you first have to extract and base64-decode it to receive the PEM file:
 
-<pre><code class="cmd bash">base64 -d < caddy_2.6.0_checksums.txt.pem > cert.pem</code></pre>
+<pre><code class="cmd bash">jq -r '.verificationMaterial.certificate.rawBytes' < caddy_2.6.0_checksums.txt.sigstore.json | base64 -d > cert.pem</code></pre>
 
 You can now inspect the certificate using the `openssl` command. Running `openssl x509 -in cert.pem -text` against the certificate we have just decoded shows this snipped print-out:
 
@@ -101,14 +101,24 @@ Notice the stated intended usage of the certificate, which is `Code Signing`. Th
 
 </aside>
 
-Now that we have the certificate, we can use `cosign` cli to validate the signature. We run the following command (notice it uses the undecoded cert):
+Now that we have the certificate, we can use the `cosign` cli to validate the signature. Keyless signing is the default in Cosign v3, so no experimental flags are needed. The bundle contains the signature, the certificate, and the transparency log entry, so a single command verifies the whole chain of trust:
 
-<pre><code class="cmd"><span class="bash">COSIGN_EXPERIMENTAL=1 cosign verify-blob --certificate ./caddy_2.6.0_checksums.txt.pem --signature ./caddy_2.6.0_checksums.txt.sig ./caddy_2.6.0_checksums.txt</span>
-tlog entry verified with uuid: 04deb84e5a73ba75ea69092c6d700eaeb869c29cae3e0cf98dbfef871361ed09 index: 3618623
+<pre><code class="cmd"><span class="bash">cosign verify-blob \
+  --bundle caddy_2.6.0_checksums.txt.sigstore.json \
+  --certificate-identity "https://github.com/caddyserver/caddy/.github/workflows/release.yml@refs/tags/v2.6.0" \
+  --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+  ./caddy_2.6.0_checksums.txt</span>
 Verified OK
 </code></pre>
 
-Let's switch cli tools now and use `rekor-cli`, which interacts with the pubic Rekor server storing the transparency logs. Let's run:
+This is the tri-leg verification done in one shot. `cosign` uses the public key of the certificate embedded in the bundle to validate the signature (leg 1), checks that the Fulcio certificate was issued for the identity expressed by `--certificate-identity` and `--certificate-oidc-issuer`, i.e. the Caddy release workflow running on GitHub Actions (leg 2), and verifies the bundle's transparency log entry against Rekor to confirm the signing happened inside the certificate's short validity window (leg 3). Replace the `--certificate-identity` value with the GitHub Actions ref of the Caddy version you are verifying, which you saw in the Subject Alternative Name extension of the certificate above.
+
+Note that, unlike older Cosign versions, Cosign v3 only prints `Verified OK`; it no longer prints the Rekor UUID, nor the certificate. That information now lives in the bundle and can also be looked up on the public Rekor transparency log server with `rekor-cli`. Let's switch cli tools and find the transparency log entry for our artifact:
+
+<pre><code class="cmd"><span class="bash">rekor-cli search --artifact ./caddy_2.6.0_checksums.txt --format json | jq -r '.UUIDs[0]'</span>
+04deb84e5a73ba75ea69092c6d700eaeb869c29cae3e0cf98dbfef871361ed09</code></pre>
+
+Having the UUID, we can fetch the full entry:
 
 <pre><code class="cmd bash">rekor-cli get --uuid 04deb84e5a73ba75ea69092c6d700eaeb869c29cae3e0cf98dbfef871361ed09 --format json | jq -r '.'
 </code></pre>
@@ -142,15 +152,14 @@ The use of `jq` is to prettify the output. You should see an output like this:
 }
 ```
 
-Notice how the value of `.Body.HashedRekordObj.signature.content` matches the content of the signature generated in our CI and available in the file `caddy_2.6.0_checksums.txt.sig`. Moreover, the certificate used and downloaded is also stored in the Rekor server and available in the response at `.Body.HashedRekordObj.signature.publicKey.content` and matches the string we have in the file `caddy_2.6.0_checksums.txt.pem`. We can take one step further and check how `.Body.HashedRekordObj.data.hash.value` matches the output of the command `sha256sum ./caddy_2.6.0_checksums.txt`. So by now we have matching certs, matching signatures, and matching checksums (of the file containing the checksums of the archives but not of itself; this checksum is provided and recorded externally via Sigstore ecosystem). All of this is publicly recorded in transparency logs for the general public to validate.
+Notice how the value of `.Body.HashedRekordObj.signature.content` matches the signature recorded in the bundle we downloaded, and `.Body.HashedRekordObj.signature.publicKey.content` matches the certificate embedded in the bundle. We can take one step further and check how `.Body.HashedRekordObj.data.hash.value` matches the output of the command `sha256sum ./caddy_2.6.0_checksums.txt`. So by now we have matching certs, matching signatures, and matching checksums (of the file containing the checksums of the archives but not of itself; this checksum is provided and recorded externally via the Sigstore ecosystem). All of this is publicly recorded in transparency logs for the general public to validate.
 
 ## Verifying Authenticity of an Artifact
 
-What if you are handed an artifact claimed to be the product of the Caddy project but you were not given the signature file or the certificate? You can use `rekor-cli` to query Rekor server for the subject artifact:
+What if you are handed an artifact claimed to be the product of the Caddy project but you were not given its signature bundle? You can use `rekor-cli` to query the Rekor server for the subject artifact:
 
 <pre><code class="cmd"><span class="bash">rekor-cli search --artifact ./caddy_2.6.0_checksums.txt --format json | jq -r '.UUIDs[0]'</span>
-Found matching entries (listed by UUID):
-362f8ecba72f432604deb84e5a73ba75ea69092c6d700eaeb869c29cae3e0cf98dbfef871361ed09</code></pre>
+04deb84e5a73ba75ea69092c6d700eaeb869c29cae3e0cf98dbfef871361ed09</code></pre>
 
 Note how the UUID matches the one encountered in the earlier section for the same file. Like we did in the earlier section, we can query Rekor for the entry details of this UUID:
 
@@ -231,4 +240,4 @@ The [extensions values](#x509-extensions) indicate the authenticity of the artif
 
 ## What If The Signature Is Not Verified?
 
-Signature verification failure indicates the artificate at hand was not produced by the CI/CD workflow of the Caddy project on GitHub. If you have the signature, the certificate, and the artifact, then you are looking for successful verification reported by `cosign`. Alternatively, you can use `rekor-cli` to inspect the Rekor server for the entry, validate the certificate extensions for the correct and expected values, and match the checksums and signatures. Mismatches or absence of Rekor entry means either the artifact was not produced by the CI/CD of the Caddy project, or the artifact was tampered somewhere between the build flow of the CI/CD, the GitHub releases page, and the delivery to you.
+Signature verification failure indicates the artifact at hand was not produced by the CI/CD workflow of the Caddy project on GitHub. If you have the bundle and the artifact, then you are looking for successful verification reported by `cosign`. Alternatively, you can use `rekor-cli` to inspect the Rekor server for the entry, validate the certificate extensions for the correct and expected values, and match the checksums and signatures. Mismatches or absence of Rekor entry means either the artifact was not produced by the CI/CD of the Caddy project, or the artifact was tampered somewhere between the build flow of the CI/CD, the GitHub releases page, and the delivery to you.
