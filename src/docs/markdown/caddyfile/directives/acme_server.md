@@ -8,6 +8,8 @@ An embedded [ACME protocol](https://tools.ietf.org/html/rfc8555) server handler.
 
 When enabled, requests matching the path `/acme/*` will be handled by the ACME server.
 
+The ACME server keeps a database on disk, and only one process can have it open at a time. This means [`caddy validate`](/docs/command-line#caddy-validate) fails with a database timeout if it is run while Caddy is already serving this config, because validating provisions the modules for real. Validate before starting Caddy, or use [`caddy reload`](/docs/command-line#caddy-reload) to check a config against the running instance: reload provisions the new config within the running process, so it does not contend for the database. If provisioning fails, the active config keeps running; if it succeeds, the new config is applied.
+
 
 ## Client configuration
 
