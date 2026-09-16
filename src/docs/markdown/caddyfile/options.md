@@ -101,6 +101,7 @@ Possible options are (click on each option to jump to its documentation):
 
 	# TLS Options
 	auto_https off|disable_redirects|ignore_loaded_certs|disable_certs
+	tls_automate_names <names...>
 	email <yours>
 	default_sni <name>
 	fallback_sni <name>
@@ -470,6 +471,33 @@ This means that if you wish to serve your site over HTTP, you should change your
 ```caddy
 {
 	auto_https disable_redirects
+}
+```
+
+
+##### `tls_automate_names`
+Manages certificates for the given names without serving them. The names get the same certificate management [Automatic HTTPS](/docs/automatic-https) gives the names in your site blocks, but no route is added, so Caddy does not respond for them.
+
+Use this for a name you need a certificate for but do not serve with Caddy's HTTP server: a wildcard that only covers other sites, a mail server, or a name handled by a [layer 4](https://github.com/mholt/caddy-l4) app. A Caddyfile containing only global options is valid when this option is set.
+
+A name that also has its own site block keeps that site's certificate settings. May be repeated; the names accumulate.
+
+(Requires Caddy 2.12 or newer.)
+
+```caddy
+{
+	tls_automate_names *.example.com
+}
+
+foo.example.com {
+	respond "Hello, world!"
+}
+```
+
+Without this option, the same thing requires an empty site block, which also makes Caddy respond for every name that block matches, including names you never configured:
+
+```caddy
+*.example.com {
 }
 ```
 
