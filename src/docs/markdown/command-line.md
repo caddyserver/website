@@ -261,8 +261,9 @@ Convenient way to hash a plaintext password. The resulting hash is written to st
 
 `--algorithm`
     Selects the hashing algorithm. Valid options are:
-      * `argon2id` (recommended for modern security)
-      * `bcrypt`  (legacy, slower, configurable cost, default cost is `14`)
+
+    * `argon2id` (recommended for modern security)
+    * `bcrypt`  (legacy, slower, configurable cost, default cost is `14`)
 
 bcrypt-specific parameters:
 
