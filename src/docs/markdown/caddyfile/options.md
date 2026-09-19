@@ -1429,6 +1429,44 @@ A key pair (certificate and private key) to use as the intermediate for the CA. 
 }
 ```
 
+To sign site certificates with a **custom intermediate** while keeping the root
+private key offline, load the intermediate cert/key as usual and only supply the
+root **certificate** for chain building. The Caddyfile still expects a `key`
+path under `root`; when the root key is not available, point it at any PEM file
+Caddy can read (operators often reuse the intermediate key path as a stand-in).
+Caddy does not use that root key for signing when an intermediate key pair is
+configured.
+
+Prefer a non-default CA id (not `local`) and select it from the site block so
+you do not clash with the auto-managed local CA:
+
+```caddy
+{
+	pki {
+		ca company {
+			root {
+				format pem_file
+				cert /var/certs/root-ca.crt
+				key /var/certs/sub-ca.key
+			}
+			intermediate {
+				format pem_file
+				cert /var/certs/sub-ca.crt
+				key /var/certs/sub-ca.key
+			}
+		}
+	}
+}
+
+my.example {
+	tls {
+		issuer internal {
+			ca company
+		}
+	}
+}
+```
+
 
 ## Event Options
 
