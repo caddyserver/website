@@ -21,14 +21,18 @@ redir [<matcher>] <to> [<code>]
 
 	- A positive integer in the `3xx` range, or `401`
 	
-	- `temporary` for a temporary redirect (`302`, this is the default)
+	- `temporary` for a temporary redirect (`302 Found`, this is the default)
 	
-	- `permanent` for a permanent redirect (`301`)
+	- `permanent` for a permanent redirect (`301 Moved Permanently`)
 	
 	- `html` to use an HTML document to perform the redirect (useful for redirecting browsers but not API clients)
 	
 	- A placeholder with a status code value
 
+
+Note that both `temporary` and `permanent` allow the user agent to change the method (e.g. from `POST` to `GET`).
+The status codes `307 Temporary Redirect` and `308 Permanent Redirect` should be used if the method must be the same in the second request.
+Caddy uses `308` as the status code in its automatic HTTP to HTTPS redirects.
 
 
 ## Examples
