@@ -487,7 +487,7 @@ Use this for a name you need a certificate for but do not serve with Caddy's HTT
 
 A name that also has its own site block keeps that site's certificate settings. May be repeated; the names accumulate.
 
-(Requires Caddy 2.12 or newer.)
+(Requires Caddy 2.11.5 or newer.)
 
 ```caddy
 {
