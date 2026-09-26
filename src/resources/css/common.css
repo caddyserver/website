@@ -139,7 +139,7 @@ strong {
 
 code {
 	font-family: var(--monospace-fonts);
-	font-feature-settings: "liga" 0; /* prevent the merging of chars like "fi", relevant for Chivo Mono especially */
+	font-variant-ligatures: none; /* prevent the merging of chars like "fi" or "-<", relevant for JetBrains Mono especially */
 }
 
 .wrapper {
