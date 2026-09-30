@@ -251,45 +251,29 @@ Formats or prettifies a Caddyfile, then exits. The result is printed to stdout u
 <pre><code class="cmd bash">caddy hash-password
 	[-p, --plaintext &lt;password&gt;]
 	[-a, --algorithm &lt;name&gt;]
-	[--bcrypt-cost &lt;cost&gt;]</code></pre>
+	[--bcrypt-cost &lt;cost&gt;]
+	[--argon2id-time &lt;iterations&gt;]
+	[--argon2id-memory &lt;KiB&gt;]
+	[--argon2id-threads &lt;threads&gt;]
+	[--argon2id-keylen &lt;bytes&gt;]</code></pre>
 
 Convenient way to hash a plaintext password. The resulting hash is written to stdout as a format usable directly in your Caddy config.
 
-`--plaintext`
-    The password to hash. If omitted, it will be read from stdin.
-    If Caddy is attached to a controlling TTY, the input will not be echoed.
+`--plaintext` is the password to hash. If omitted, it will be read from stdin. If Caddy is attached to a controlling TTY, the input will not be echoed.
 
-`--algorithm`
-    Selects the hashing algorithm. Valid options are:
+`--algorithm` selects the hashing algorithm, either `argon2id` (recommended) or `bcrypt`. Default: `bcrypt`.
 
-    * `argon2id` (recommended for modern security)
-    * `bcrypt`  (legacy, slower, configurable cost, default cost is `14`)
+`--bcrypt-cost` sets the bcrypt cost, from `4` to `31`. Higher values make the hash slower to compute, and so more resistant to brute-force attacks. If omitted or out of range, the default of `14` is used. Only used with `bcrypt`.
 
-bcrypt-specific parameters:
+The following flags are only used with `argon2id`:
 
-`--bcrypt-cost`
-    Sets the bcrypt hashing difficulty. Higher values increase security by
-    making the hash computation slower and more CPU-intensive.
-    Must be within the valid range [bcrypt.MinCost, bcrypt.MaxCost].
-    If omitted or invalid, the default cost is used.
+`--argon2id-time` is the number of iterations to perform. Higher values make hashing slower and more resistant to brute-force attacks. Default: `1`.
 
-Argon2id-specific parameters:
+`--argon2id-memory` is the amount of memory to use, in KiB. Higher values increase resistance to GPU/ASIC attacks. Default: `47104` (46 MiB).
 
-`--argon2id-time`
-    Number of iterations to perform. Increasing this makes
-    hashing slower and more resistant to brute-force attacks.
+`--argon2id-threads` is the number of CPU threads to use. Default: `1`.
 
-`--argon2id-memory`
-    Amount of memory to use during hashing.
-    Larger values increase resistance to GPU/ASIC attacks.
-
-`--argon2id-threads`
-    Number of CPU threads to use. Increase for faster hashing
-    on multi-core systems.
-
-`--argon2id-keylen`
-    Length of the resulting hash in bytes. Longer keys increase
-    security but slightly increase storage size.
+`--argon2id-keylen` is the length of the resulting hash, in bytes. Default: `32`.
 
 
 ### `caddy help`
