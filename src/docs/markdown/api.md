@@ -68,6 +68,21 @@ This endpoint supports different config formats using config adapters. The reque
 
 If the new config is the same as the current one, no reload will occur. To force a reload, set `Cache-Control: must-revalidate` in the request headers.
 
+If the config adapter emitted warnings, a successful response has a JSON body with a `warnings` array; otherwise, the response body is empty. If the config could not be adapted or loaded, the response has status `400` and a JSON body with an `error` message, along with any `warnings` from the adapter:
+
+```json
+{
+	"error": "loading config: ...",
+	"warnings": [
+		{
+			"file": "Caddyfile",
+			"line": 2,
+			"message": "..."
+		}
+	]
+}
+```
+
 ### Examples
 
 Set a new active configuration:

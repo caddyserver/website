@@ -60,7 +60,7 @@ forward_auth [<matcher>] [<upstreams...>] {
 
 - **&lt;upstreams...&gt;** is a list of upstreams (backends) to which to send auth requests.
 
-- **uri** is the URI (path and query) to set on the request sent to the upstream. This will usually be the verification endpoint of the authentication gateway.
+- **uri** is the URI (path and query) to set on the request sent to the upstream. This will usually be the verification endpoint of the authentication gateway. It may only be specified once.
 
 - **copy_headers** is a list of HTTP header fields to copy from the response to the original request, when the request has a success status code.
 

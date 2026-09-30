@@ -75,6 +75,7 @@ Directive | Description
 **[root](/docs/caddyfile/directives/root)** | Set the path to the site root
 **[route](/docs/caddyfile/directives/route)** | A group of directives treated literally as single unit
 **[templates](/docs/caddyfile/directives/templates)** | Execute templates on the response
+**[timeouts](/docs/caddyfile/directives/timeouts)** | Set idle read and write timeouts
 **[tls](/docs/caddyfile/directives/tls)** | Customize TLS settings
 **[tracing](/docs/caddyfile/directives/tracing)** | Integration with OpenTelemetry tracing
 **[try_files](/docs/caddyfile/directives/try_files)** | Rewrite that depends on file existence
@@ -133,6 +134,7 @@ log_name
 header
 copy_response_headers # only in reverse_proxy's handle_response block
 request_body
+timeouts
 
 redir
 

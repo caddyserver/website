@@ -37,6 +37,8 @@ handle_path <path_matcher> {
 
 Only a single [path matcher](/docs/caddyfile/matchers#path-matchers) is accepted, and is required; you cannot use named matchers with `handle_path`.
 
+The path left after stripping always starts with `/`. For example, with `handle_path /prefix*`, a request for `/prefix` is handled with the path `/`.
+
 ## Examples
 
 This configuration:

@@ -21,9 +21,11 @@ map [<matcher>] <source> <destinations...> {
 
 - **&lt;source&gt;** is the input value to switch on. Usually a placeholder.
 
-- **&lt;destinations...&gt;** are the placeholders to create that hold the output values.
+- **&lt;destinations...&gt;** are the placeholders to create that hold the output values. Each destination must be a single placeholder and nothing else, such as `{my_placeholder}`.
 
 - **&lt;input&gt;** is the input value to match. If prefixed with `~`, it is treated as a regular expression.
+
+  Each input may only be used once. A literal input and a regular expression input with the same text (such as `/foo` and `~/foo`) count as different inputs.
 
 - **&lt;outputs...&gt;** is one or more output values to store in the associated placeholder. The first output is written to the first destination, the second output to the second destination, etc.
   

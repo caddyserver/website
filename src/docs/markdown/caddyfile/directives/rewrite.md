@@ -23,6 +23,8 @@ rewrite [<matcher>] <to>
 
 - **&lt;to&gt;** is the URI to rewrite the request to. Only the components of the URI (path or query string) that are specified in the rewrite will be operated on. The URI path is any substring that comes before `?`. If `?` is omitted, then the whole token is considered to be the path.
 
+  If a placeholder in the path expands to a value containing `?`, such as `rewrite {rp.header.X-Accel-Redirect}` with a header value of `/file?v=2`, then the part after the `?` replaces the query string, unless a query string was also given after a `?` in `<to>`. Any part of the value starting at `#` is dropped.
+
 Prior to v2.8.0, the `<to>` argument could be confused by the parser for a [matcher token](/docs/caddyfile/matchers#syntax) if it began with `/`, so it was necessary to specify a wildcard matcher token (`*`).
 
 

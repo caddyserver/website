@@ -660,7 +660,7 @@ This command may require elevated privileges if your user does not have permissi
 <pre><code class="cmd bash">caddy add-package &lt;packages...&gt;
 	[-k, --keep-backup]</code></pre>
 
-Similarly to `caddy upgrade`, replaces the current Caddy binary with the latest version with the same modules installed, _plus_ the packages listed as arguments included in the new binary. Find the list of packages you can install from [our download page](/download). Each argument should be the full package name.
+Similarly to `caddy upgrade`, replaces the current Caddy binary with the latest version with the same modules installed, _plus_ the packages listed as arguments included in the new binary. Find the list of packages you can install from [our download page](/download). Each argument should be the full package name, optionally followed by `@` and a version (e.g. `github.com/caddy-dns/cloudflare@v0.2.4`) to install a specific version.
 
 For example:
 

@@ -22,7 +22,9 @@ Unlike [`import`](/docs/caddyfile/directives/import), `invoke` does not support 
 invoke [<matcher>] <route-name>
 ```
 
-- **&lt;route-name&gt;** is the name of the previously defined route that should be invoked. If the route is not found, then an error will be triggered.
+- **&lt;route-name&gt;** is the name of the route that should be invoked. If the route is not found, then an error will be triggered.
+
+`invoke` may also be used within a named route, to invoke another named route.
 
 
 ## Examples

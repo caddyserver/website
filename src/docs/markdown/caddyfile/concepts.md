@@ -450,6 +450,12 @@ directive "first line
 	second line"
 ```
 
+Quoting also works for curly braces: a quoted `"{"` or `"}"` is a regular argument, and does not open or close a [block](#blocks):
+
+```caddy-d
+respond "{"
+```
+
 Heredocs <span id="heredocs"/> are also supported:
 
 ```caddy
@@ -767,6 +773,8 @@ www.example.com {
 ```
 
 This is particularly useful to reduce memory usage if the same route is needed in many different sites, or if multiple different matcher conditions are needed to invoke the same route.
+
+Each named route must have a unique name. A named route may [`import`](/docs/caddyfile/directives/import) snippets or files, and may `invoke` other named routes.
 
 **[Read the `invoke` directive page](/docs/caddyfile/directives/invoke) to learn more.**
 

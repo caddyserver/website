@@ -305,7 +305,7 @@ This is enabled by default, with the `random` policy. Retries are disabled by de
 
 	- `round_robin` iterates each upstream in turn
 
-	- `weighted_round_robin <weights...>` iterates each upstream in turn, respecting the weights provided. The amount of weight arguments should match the amount of upstreams configured. Weights should be non-negative integers. For example with two upstreams and weights `5 1`, the first upstream would be selected 5 times in a row before the second upstream is selected once, then the cycle repeats. If zero is used as a weight, this will disable selecting the upstream for new requests.
+	- `weighted_round_robin <weights...>` iterates each upstream in turn, respecting the weights provided. The amount of weight arguments should match the amount of upstreams configured. Weights must be non-negative integers, and at least one weight must be greater than zero. For example with two upstreams and weights `5 1`, the first upstream would be selected 5 times in a row before the second upstream is selected once, then the cycle repeats. If zero is used as a weight, this will disable selecting the upstream for new requests.
 
 	- `least_conn` choose upstream with fewest number of current requests; if more than one host has the least number of requests, then one of those hosts is chosen at random
 
@@ -354,6 +354,8 @@ This is enabled by default, with the `random` policy. Retries are disabled by de
 
 Active health checks perform health checking in the background on a timer. To enable this, `health_uri` or `health_port` are required.
 
+Each `reverse_proxy` handler tracks the results of its own active health checks, so if multiple handlers proxy to the same upstream with different health check configurations, they do not affect each other's `health_passes` and `health_fails` counts.
+
 - **health_uri** <span id="health_uri"/> is the URI path (and optional query) for active health checks.
 
 - **health_upstream** <span id="health_upstream"/> is the ip:port to use for active health checks, if different from the upstream. This should be used in tandem with `health_header` and `{http.reverse_proxy.active.target_upstream}`.
@@ -372,7 +374,7 @@ Active health checks perform health checking in the background on a timer. To en
 
 - **health_status** <span id="health_status"/> is the HTTP status code to expect from a healthy backend. Can be a 3-digit status code, or a status code class ending in `xx`. For example: `200` (which is the default), or `2xx`.
 
-- **health_request_body** <span id="health_request_body"/> is a string representing the request body to send with the active health check.
+- **health_request_body** <span id="health_request_body"/> is a string representing the request body to send with the active health check. Global placeholders such as `{env.*}` are replaced; any other text in braces (e.g. a JSON object) is sent as-is.
 
 - **health_body** <span id="health_body"/> is a substring or regular expression to match on the response body of an active health check. If the backend does not return a matching body, it will be marked as down.
 
@@ -427,7 +429,7 @@ By default, WebSocket connections are forcibly closed (with a Close control mess
 	- `Content-Length` is unknown
 	- HTTP/2 on both sides of the proxy, `Content-Length` is unknown, and `Accept-Encoding` is either not set or is "identity"
 
-- **request_buffers** <span id="request_buffers"/> will cause the proxy to read up to `<size>` amount of bytes from the request body into a buffer before sending it upstream. This is very inefficient and should only be done if the upstream requires reading request bodies without delay (which is something the upstream application should fix). This accepts all size formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
+- **request_buffers** <span id="request_buffers"/> will cause the proxy to read up to `<size>` amount of bytes from the request body into a buffer before sending it upstream. This is very inefficient and should only be done if the upstream requires reading request bodies without delay (which is something the upstream application should fix). This accepts all size formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). The value `unlimited` buffers the entire request body. If the entire body is buffered, the `Content-Length` header is set on the request to the upstream; this is required for the [`fastcgi` transport](#the-fastcgi-transport) when the request has a body but no `Content-Length`.
 
 - **response_buffers** <span id="response_buffers"/> will cause the proxy to read up to `<size>` amount of bytes from the response body to be read into a buffer before being returned to the client. This should be avoided if at all possible for performance reasons, but could be useful if the backend has tighter memory constraints. This accepts all size formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
 
@@ -684,7 +686,7 @@ transport fastcgi {
 
 - **split** <span id="split"/> is where to split the path to get PATH_INFO at the end of the URI.
 
-- **env** <span id="env"/> sets an extra environment variable to the given value. Can be specified more than once for multiple environment variables.
+- **env** <span id="env"/> sets an extra environment variable to the given value. Can be specified more than once for multiple environment variables. The standard CGI variables (including `SERVER_ADDR`) and the request headers as `HTTP_*` variables are set by default; to mitigate [httpoxy](https://httpoxy.org/), the client's `Proxy` request header is never passed as `HTTP_PROXY`.
 
 - **resolve_root_symlink** <span id="resolve_root_symlink"/> enables resolving the `root` directory to its actual value by evaluating a symbolic link, if one exists.
 

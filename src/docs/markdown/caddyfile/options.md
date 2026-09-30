@@ -140,10 +140,13 @@ Possible options are (click on each option to jump to its documentation):
 			<listener_wrappers...>
 		}
 		timeouts {
-			read_body   <duration>
-			read_header <duration>
-			write       <duration>
-			idle        <duration>
+			read_body       <duration>
+			read_body_idle  <duration> [<min_rate>]
+			read_header     <duration>
+			write           <duration>
+			write_idle      <duration> [<min_rate>]
+			write_max_chunk <size>
+			idle            <duration>
 		}
 		keepalive_interval <duration>
 		keepalive_idle     <duration>
@@ -158,6 +161,8 @@ Possible options are (click on each option to jump to its documentation):
 		trace
 		max_header_size <size>
 		enable_full_duplex
+		expected_underscore_headers <headers...>
+		expected_dot_headers        <headers...>
 		log_credentials
 		protocols [h1|h2|h2c|h3]
 		strict_sni_host [on|insecure_off]
@@ -947,22 +952,36 @@ For example, for an HTTPS server (needing the `tls` listener wrapper) that accep
 
 ##### `timeouts`
 
-- **read_body** is a [duration value](/docs/conventions#durations) that sets how long to allow a read from a client's upload. Setting this to a short, non-zero value can mitigate slowloris attacks, but may also affect legitimately slow clients. Defaults to no timeout.
+- **read_body** is a [duration value](/docs/conventions#durations) that sets how long to allow a read from a client's upload. This is a hard limit on the whole upload, so a short value may affect legitimately slow clients; to mitigate slowloris attacks, prefer `read_body_idle`. When both are set, `read_body` caps how far `read_body_idle` can extend the deadline. Defaults to no timeout.
 
-- **read_header** is a [duration value](/docs/conventions#durations) that sets how long to allow a read from a client's request headers. Defaults to no timeout.
+- **read_body_idle** is a [duration value](/docs/conventions#durations) that sets how long a read from a client's upload may stall before the connection is aborted. The deadline is reset after every successful read, so large uploads from slow clients are not affected as long as they keep sending data. Defaults to `1m`. Set it to a negative value (like `-1s`) to disable it.
 
-- **write** is a [duration value](/docs/conventions#durations) that sets how long to allow a write to a client. Note that setting this to a small value when serving large files may negatively affect legitimately slow clients. Defaults to no timeout.
+  The optional **&lt;min_rate&gt;** is a number of bytes per second that the client must sustain, averaged from the start of reading the request body. With it, the deadline is no longer simply reset after every read; instead, the client is allowed the idle duration plus the time it would take to send the bytes received so far at `min_rate`. This also stops clients that send just enough data to never stall. By default, no minimum rate is enforced.
+
+- **read_header** is a [duration value](/docs/conventions#durations) that sets how long to allow a read from a client's request headers. Defaults to `1m`.
+
+- **write** is a [duration value](/docs/conventions#durations) that sets how long to allow a write to a client. This is a hard limit on the whole response, so setting this to a small value when serving large files may negatively affect legitimately slow clients. When both are set, `write` caps how far `write_idle` can extend the deadline. Defaults to no timeout.
+
+- **write_idle** is a [duration value](/docs/conventions#durations) that sets how long a write to a client may stall before the connection is aborted. The deadline is reset before every write, so large or streamed responses, and responses that pause between writes (like server-sent events), are not affected as long as each write makes progress. Defaults to `1m`. Set it to a negative value (like `-1s`) to disable it.
+
+  The optional **&lt;min_rate&gt;** works like the one for `read_body_idle`, but for writes to the client. Because the rate is averaged from the start of the response, pauses between writes count against it, so avoid it for long-lived streaming responses.
+
+- **write_max_chunk** is the maximum number of bytes that a single underlying write to the client may cover, so that `write_idle` applies between chunks of a large response rather than to one large write as a whole. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). Only has an effect when `write_idle` is enabled. Defaults to `64KiB`.
 
 - **idle** is a [duration value](/docs/conventions#durations) that sets the maximum time to wait for the next request when keep-alives are enabled. Defaults to 5 minutes to help avoid resource exhaustion.
+
+To set idle read or write timeouts for only some requests, see the [`timeouts` directive](/docs/caddyfile/directives/timeouts).
 
 ```caddy
 {
 	servers {
 		timeouts {
-			read_body   10s
-			read_header 5s
-			write       30s
-			idle        10m
+			read_body      5m
+			read_body_idle 30s
+			read_header    5s
+			write          10m
+			write_idle     30s 1024
+			idle           10m
 		}
 	}
 }
@@ -1173,12 +1192,12 @@ NOTE: This may log the configuration of your HTTP handler modules; do not enable
 
 ##### `max_header_size`
 
-The maximum size to parse from a client's HTTP request headers. If the limit is exceeded, the server will respond with HTTP status `431 Request Header Fields Too Large`. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). By default, the limit is `1MB`.
+The maximum size to parse from a client's HTTP request headers. If the limit is exceeded, the server will respond with HTTP status `431 Request Header Fields Too Large`. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). By default, the limit is `16KiB`.
 
 ```caddy
 {
 	servers {
-		max_header_size 5MB
+		max_header_size 64KiB
 	}
 }
 ```
@@ -1200,6 +1219,44 @@ Test thoroughly with your HTTP clients, as some older clients may not support fu
 {
 	servers {
 		enable_full_duplex
+	}
+}
+```
+
+
+##### `expected_underscore_headers`
+
+By default, Caddy drops incoming request headers whose names contain an underscore (`_`). CGI, FastCGI and PHP backends convert hyphens to underscores when they turn headers into variables, so a header like `X_Remote_User` would collide with a legitimate `X-Remote-User` header, for example one set by [`forward_auth`](/docs/caddyfile/directives/forward_auth).
+
+This option is a list of header names containing underscores to keep instead of dropping. Entries are case-insensitive, and a trailing `*` matches any header starting with that prefix (for example, `webhook_*`). Each entry must contain an underscore.
+
+When a header is kept this way, its hyphenated variant (for example, `X-Custom-Header` for `X_Custom_Header`) is dropped instead, so the two can't be confused. If a kept header is sent more than once, all its values are dropped. A header name that contains both an underscore and a dot is only kept if it's listed exactly, not by a prefix.
+
+⚠️ This is an experimental feature. Subject to change or removal.
+
+```caddy
+{
+	servers {
+		expected_underscore_headers X_Custom_Header webhook_*
+	}
+}
+```
+
+
+##### `expected_dot_headers`
+
+By default, Caddy drops incoming request headers whose names contain a dot (`.`), because PHP converts dots to underscores when it registers headers in `$_SERVER`, so a header like `X.Remote.User` would collide with a legitimate `X-Remote-User` header.
+
+This option is a list of header names containing dots to keep instead of dropping, and works the same way as [`expected_underscore_headers`](#expected-underscore-headers). Each entry must contain a dot.
+
+Dotted headers are only ambiguous for PHP, CGI and FastCGI style backends; other backends treat them as ordinary header names. If such a backend is in use, avoid allowing both the dot and underscore spelling of the same header name, since the backend could then see either value.
+
+⚠️ This is an experimental feature. Subject to change or removal.
+
+```caddy
+{
+	servers {
+		expected_dot_headers X.Custom.Header webhook.*
 	}
 }
 ```
