@@ -73,6 +73,8 @@ URI mutations occur on the normalized or unescaped form of the URI. However, esc
 
 The URI path is cleaned of directory traversal dots before modifications. Additionally, multiple slashes (such as `//`) are merged unless the `<target>` contains multiple slashes too.
 
+After stripping a prefix or suffix, the remaining path always starts with `/` and is cleaned of directory traversal dots again. For example, `uri strip_prefix /api` rewrites `/api` to `/`, `/apix` to `/x`, and `/api../secret` to `/secret`.
+
 ## Similar directives
 
 Some other directives can also manipulate the request URI.

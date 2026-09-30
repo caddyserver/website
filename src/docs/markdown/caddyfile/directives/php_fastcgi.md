@@ -55,7 +55,7 @@ php_fastcgi [<matcher>] <php-fpm_gateways...> {
 
 - **try_files** <span id="try_files"/> specifies an override for the default try-files rewrite. See the [`try_files` directive](try_files) for details. Default: `{path} {path}/index.php index.php`.
 
-- **env** <span id="env"/> sets an extra environment variable to the given value. Can be specified more than once for multiple environment variables. By default, all the relevant FastCGI environment variables are already set (including HTTP headers) but you may add or override variables as needed. 
+- **env** <span id="env"/> sets an extra environment variable to the given value. Can be specified more than once for multiple environment variables. By default, all the relevant FastCGI environment variables are already set (including `SERVER_ADDR`, and HTTP headers as `HTTP_*` variables) but you may add or override variables as needed. To mitigate [httpoxy](https://httpoxy.org/), the client's `Proxy` request header is never passed as `HTTP_PROXY`.
 
 - **resolve_root_symlink** <span id="resolve_root_symlink"/> when the [`root`](#root) directory is a symbolic link (symlink), this enables resolving it to its actual value. This is sometimes used as a deployment strategy, by simply swapping the symlink to point to the new version in another directory. Disabled by default to avoid repeated system calls.
 
@@ -69,6 +69,12 @@ php_fastcgi [<matcher>] <php-fpm_gateways...> {
 
 
 Since this directive is an opinionated wrapper over a reverse proxy, you can use any of [`reverse_proxy`](reverse_proxy#syntax)'s subdirectives to customize it.
+
+<aside class="tip">
+
+FastCGI requires the request body's length to be known up front. Requests with a body but no `Content-Length` (e.g. `Transfer-Encoding: chunked`, or HTTP/2 and HTTP/3 requests sent without the header) are rejected with `411 Length Required` unless the whole body fits in the [`request_buffers`](reverse_proxy#request_buffers) buffer, so that its length can be determined. The buffer must be larger than the body; a body exactly the size of the buffer is still rejected. Setting `request_buffers unlimited` buffers bodies of any size, but consider limiting the request size with the [`request_body`](request_body) directive.
+
+</aside>
 
 
 ## Expanded form

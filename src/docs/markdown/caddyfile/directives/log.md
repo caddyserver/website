@@ -54,6 +54,7 @@ To add custom fields to the log entries, use the [`log_append` directive](log_ap
 	- [ip_mask](#ip-mask)
 	- [query](#query)
 	- [cookie](#cookie)
+	- [set_cookie](#set-cookie)
 	- [regexp](#regexp)
 	- [hash](#hash)
   - [append](#append)
@@ -112,6 +113,8 @@ log [<logger_name>] {
   - **thereafter** is how many logs to skip in each interval after the first kept logs. Default: `100`.
 
   For example, with `interval 1s`, `first 5`, and `thereafter 10`, in each 10-second interval the first 5 log entries will be kept, then it will allow through every 10th log entry with the same level and message within that second.
+
+Other than `hostnames`, each subdirective may only be specified once per `log` block (and each `sampling` option once per `sampling` block); repeating one is an error.
 
 
 ### Output modules
@@ -189,7 +192,7 @@ output file <filename> {
 
   Default: `100MiB`
 
-- **roll_interval** <span id="roll_interval"/> is the maximum duration between log rotations. The value is a [duration string](/docs/conventions#durations) after which to roll the log file.
+- **roll_interval** <span id="roll_interval"/> is the maximum duration between log rotations. The value is a [duration string](/docs/conventions#durations) after which to roll the log file, e.g. `12h` or `1d`.
 
   When enabled, the file is rotated on the next write to the logs after this duration has passed since the last rotation. The backup filename will include `time` as the reason.
 
@@ -466,6 +469,29 @@ The available actions are:
 If many actions are defined for the same cookie name, only the first action will be applied.
 
 
+##### set_cookie
+
+Marks a field to have one or more actions performed, to manipulate the values of `Set-Cookie` HTTP response headers. Most commonly, the field to filter would be `resp_headers>Set-Cookie`.
+
+```caddy-d
+<field> set_cookie {
+	delete  <name>
+	replace <name> <replacement>
+	hash    <name>
+}
+```
+
+The available actions are:
+
+- **delete** removes the `Set-Cookie` header value for the given cookie name.
+
+- **replace** replaces the value of the given cookie with **replacement**, keeping the cookie's attributes (e.g. `Path`, `Expires`, `HttpOnly`) unchanged.
+
+- **hash** replaces the value of the given cookie with the first 4 bytes of the SHA-256 hash of the value, lowercase hexadecimal, keeping the cookie's attributes unchanged.
+
+If many actions are defined for the same cookie name, only the first action will be applied. `Set-Cookie` values that cannot be parsed are logged unchanged.
+
+
 ##### regexp
 
 Marks a field to have a regular expression replacement applied at encoding time. If the field is an array of strings (e.g. HTTP headers), each value in the array has replacements applied.
@@ -573,6 +599,21 @@ example.com {
 			request>headers>Cookie cookie {
 				replace session REDACTED
 				delete secret
+			}
+		}
+	}
+}
+```
+
+
+Similarly, hash the value of a session cookie set by the backend, while keeping its attributes (this also requires the [`log_credentials` global option](/docs/caddyfile/options#log-credentials) to log `Set-Cookie` header values):
+
+```caddy
+example.com {
+	log {
+		format filter {
+			resp_headers>Set-Cookie set_cookie {
+				hash session
 			}
 		}
 	}
