@@ -18,7 +18,9 @@ request_body [<matcher>] {
 - **max_size** is the maximum size in bytes allowed for the request body. It accepts all size values supported by [go-humanize](https://pkg.go.dev/github.com/dustin/go-humanize#pkg-constants). Reads of more bytes will return an error with HTTP status `413`.
 
 ⚠️ <i>Experimental</i> <span style='white-space: pre;'> | </span> <span>v2.10.0+</span>
-- **set** allows setting the request body to specific content. The content can include placeholders to dynamically insert data.
+- **set** allows setting the request body to specific content. The content can include placeholders to dynamically insert data. Only known placeholders are replaced; other text in braces, such as JSON, is kept as-is.
+
+The `read_timeout` and `write_timeout` subdirectives have been removed from `request_body`. To set timeouts for matching requests, use the [`timeouts`](timeouts) directive instead.
 
 ## Examples
 

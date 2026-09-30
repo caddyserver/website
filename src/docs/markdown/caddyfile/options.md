@@ -101,6 +101,7 @@ Possible options are (click on each option to jump to its documentation):
 
 	# TLS Options
 	auto_https off|disable_redirects|ignore_loaded_certs|disable_certs
+	tls_automate_names <names...>
 	email <yours>
 	default_sni <name>
 	fallback_sni <name>
@@ -140,10 +141,13 @@ Possible options are (click on each option to jump to its documentation):
 			<listener_wrappers...>
 		}
 		timeouts {
-			read_body   <duration>
-			read_header <duration>
-			write       <duration>
-			idle        <duration>
+			read_body       <duration>
+			read_body_idle  <duration> [<min_rate>]
+			read_header     <duration>
+			write           <duration>
+			write_idle      <duration> [<min_rate>]
+			write_max_chunk <size>
+			idle            <duration>
 		}
 		keepalive_interval <duration>
 		keepalive_idle     <duration>
@@ -158,6 +162,8 @@ Possible options are (click on each option to jump to its documentation):
 		trace
 		max_header_size <size>
 		enable_full_duplex
+		expected_underscore_headers <headers...>
+		expected_dot_headers        <headers...>
 		log_credentials
 		protocols [h1|h2|h2c|h3]
 		strict_sni_host [on|insecure_off]
@@ -470,6 +476,35 @@ This means that if you wish to serve your site over HTTP, you should change your
 ```caddy
 {
 	auto_https disable_redirects
+}
+```
+
+
+##### `tls_automate_names`
+Manages certificates for the given names without serving them. No route is added, so Caddy does not respond for the names; only their certificates are managed.
+
+Listing a name here is an explicit request, so it takes precedence over the general switch: certificates are still managed for it when [`auto_https`](#auto_https) is set to `off` or `disable_certs`. In that it behaves like the [`tls` directive's `force_automate`](/docs/caddyfile/directives/tls), which forces automation for a site even when other managed certificates apply.
+
+Use this for a name you need a certificate for but do not serve with Caddy's HTTP server: a wildcard that only covers other sites, a mail server, or a name handled by a [layer 4](https://github.com/mholt/caddy-l4) app. A Caddyfile containing only global options is valid when this option is set.
+
+A name that also has its own site block keeps that site's certificate settings. May be repeated; the names accumulate.
+
+(Requires Caddy 2.11.6 or newer.)
+
+```caddy
+{
+	tls_automate_names *.example.com
+}
+
+foo.example.com {
+	respond "Hello, world!"
+}
+```
+
+Without this option, the same thing requires an empty site block, which also makes Caddy respond for every name that block matches, including names you never configured:
+
+```caddy
+*.example.com {
 }
 ```
 
@@ -947,22 +982,36 @@ For example, for an HTTPS server (needing the `tls` listener wrapper) that accep
 
 ##### `timeouts`
 
-- **read_body** is a [duration value](/docs/conventions#durations) that sets how long to allow a read from a client's upload. Setting this to a short, non-zero value can mitigate slowloris attacks, but may also affect legitimately slow clients. Defaults to no timeout.
+- **read_body** is a [duration value](/docs/conventions#durations) that sets how long to allow a read from a client's upload. This is a hard limit on the whole upload, so a short value may affect legitimately slow clients; to mitigate slowloris attacks, prefer `read_body_idle`. When both are set, `read_body` caps how far `read_body_idle` can extend the deadline. Defaults to no timeout.
 
-- **read_header** is a [duration value](/docs/conventions#durations) that sets how long to allow a read from a client's request headers. Defaults to no timeout.
+- **read_body_idle** is a [duration value](/docs/conventions#durations) that sets how long a read from a client's upload may stall before the connection is aborted. The deadline is reset after every successful read, so large uploads from slow clients are not affected as long as they keep sending data. Defaults to `1m`. Set it to a negative value (like `-1s`) to disable it.
 
-- **write** is a [duration value](/docs/conventions#durations) that sets how long to allow a write to a client. Note that setting this to a small value when serving large files may negatively affect legitimately slow clients. Defaults to no timeout.
+  The optional **&lt;min_rate&gt;** is a number of bytes per second that the client must sustain, averaged from the start of reading the request body. With it, the deadline is no longer simply reset after every read; instead, the client is allowed the idle duration plus the time it would take to send the bytes received so far at `min_rate`. This also stops clients that send just enough data to never stall. By default, no minimum rate is enforced.
+
+- **read_header** is a [duration value](/docs/conventions#durations) that sets how long to allow a read from a client's request headers. Defaults to `1m`.
+
+- **write** is a [duration value](/docs/conventions#durations) that sets how long to allow a write to a client. This is a hard limit on the whole response, so setting this to a small value when serving large files may negatively affect legitimately slow clients. When both are set, `write` caps how far `write_idle` can extend the deadline. Defaults to no timeout.
+
+- **write_idle** is a [duration value](/docs/conventions#durations) that sets how long a write to a client may stall before the connection is aborted. The deadline is reset before every write, so large or streamed responses, and responses that pause between writes (like server-sent events), are not affected as long as each write makes progress. Defaults to `1m`. Set it to a negative value (like `-1s`) to disable it.
+
+  The optional **&lt;min_rate&gt;** works like the one for `read_body_idle`, but for writes to the client. Because the rate is averaged from the start of the response, pauses between writes count against it, so avoid it for long-lived streaming responses.
+
+- **write_max_chunk** is the maximum number of bytes that a single underlying write to the client may cover, so that `write_idle` applies between chunks of a large response rather than to one large write as a whole. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). Only has an effect when `write_idle` is enabled. Defaults to `64KiB`.
 
 - **idle** is a [duration value](/docs/conventions#durations) that sets the maximum time to wait for the next request when keep-alives are enabled. Defaults to 5 minutes to help avoid resource exhaustion.
+
+To set idle read or write timeouts for only some requests, see the [`timeouts` directive](/docs/caddyfile/directives/timeouts).
 
 ```caddy
 {
 	servers {
 		timeouts {
-			read_body   10s
-			read_header 5s
-			write       30s
-			idle        10m
+			read_body      5m
+			read_body_idle 30s
+			read_header    5s
+			write          10m
+			write_idle     30s 1024
+			idle           10m
 		}
 	}
 }
@@ -1060,7 +1109,7 @@ Here's a complete example, trusting an example IPv4 range and an IPv6 range:
 
 When [`trusted_proxies`](#trusted-proxies) is enabled, the IPs in the headers (configured by [`client_ip_headers`](#client-ip-headers)) are parsed from left-to-right by default. The first untrusted IP address found becomes the real client address. Since v2.8, you can opt-in to right-to-left parsing of these headers with `trusted_proxies_strict`. By default, this option is disabled for backwards compatibility.
 
-Upstream proxies such as HAProxy, CloudFlare, AWS ALB, CloudFront, etc. will append each new connecting remote address to the right of `X-Forwarded-For`. It is recommended to enable `trusted_proxies_strict` when working with these, as the left-most IP address may be spoofed by the client.
+Downstream proxies such as HAProxy, CloudFlare, AWS ALB, CloudFront, etc. will append each new connecting remote address to the right of `X-Forwarded-For`. It is recommended to enable `trusted_proxies_strict` when working with these, as the left-most IP address may be spoofed by the client.
 
 ```caddy
 {
@@ -1105,7 +1154,7 @@ Pairing with [`trusted_proxies`](#trusted-proxies), allows configuring which hea
 
 ##### `metrics`
 
-Enables metrics collection; necessary before scraping metrics or pushing them with OTLP. Note that metrics reduce performance on really busy servers. (Our community is working on improving this. Please get involved!)
+Enables metrics collection; necessary before scraping metrics or pushing them with OTLP. Note that metrics have some performance overhead on really busy servers, though this was [significantly improved in v2.11](https://github.com/caddyserver/caddy/pull/7492) by collecting metrics once per route instead of per handler.
 
 ```caddy
 {
@@ -1173,12 +1222,12 @@ NOTE: This may log the configuration of your HTTP handler modules; do not enable
 
 ##### `max_header_size`
 
-The maximum size to parse from a client's HTTP request headers. If the limit is exceeded, the server will respond with HTTP status `431 Request Header Fields Too Large`. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). By default, the limit is `1MB`.
+The maximum size to parse from a client's HTTP request headers. If the limit is exceeded, the server will respond with HTTP status `431 Request Header Fields Too Large`. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). By default, the limit is `16KiB`.
 
 ```caddy
 {
 	servers {
-		max_header_size 5MB
+		max_header_size 64KiB
 	}
 }
 ```
@@ -1200,6 +1249,44 @@ Test thoroughly with your HTTP clients, as some older clients may not support fu
 {
 	servers {
 		enable_full_duplex
+	}
+}
+```
+
+
+##### `expected_underscore_headers`
+
+By default, Caddy drops incoming request headers whose names contain an underscore (`_`). CGI, FastCGI and PHP backends convert hyphens to underscores when they turn headers into variables, so a header like `X_Remote_User` would collide with a legitimate `X-Remote-User` header, for example one set by [`forward_auth`](/docs/caddyfile/directives/forward_auth).
+
+This option is a list of header names containing underscores to keep instead of dropping. Entries are case-insensitive, and a trailing `*` matches any header starting with that prefix (for example, `webhook_*`). Each entry must contain an underscore.
+
+When a header is kept this way, its hyphenated variant (for example, `X-Custom-Header` for `X_Custom_Header`) is dropped instead, so the two can't be confused. If a kept header is sent more than once, all its values are dropped. A header name that contains both an underscore and a dot is only kept if it's listed exactly, not by a prefix.
+
+⚠️ This is an experimental feature. Subject to change or removal.
+
+```caddy
+{
+	servers {
+		expected_underscore_headers X_Custom_Header webhook_*
+	}
+}
+```
+
+
+##### `expected_dot_headers`
+
+By default, Caddy drops incoming request headers whose names contain a dot (`.`), because PHP converts dots to underscores when it registers headers in `$_SERVER`, so a header like `X.Remote.User` would collide with a legitimate `X-Remote-User` header.
+
+This option is a list of header names containing dots to keep instead of dropping, and works the same way as [`expected_underscore_headers`](#expected-underscore-headers). Each entry must contain a dot.
+
+Dotted headers are only ambiguous for PHP, CGI and FastCGI style backends; other backends treat them as ordinary header names. If such a backend is in use, avoid allowing both the dot and underscore spelling of the same header name, since the backend could then see either value.
+
+⚠️ This is an experimental feature. Subject to change or removal.
+
+```caddy
+{
+	servers {
+		expected_dot_headers X.Custom.Header webhook.*
 	}
 }
 ```
@@ -1401,7 +1488,7 @@ A key pair (certificate and private key) to use as the root for the CA. If not s
 
 - **format** is the format in which the certificate and private key are provided. Currently, only `pem_file` is supported, which is the default, so this field is optional.
 - **cert** is the certificate. This should be the path to a PEM file, when using `pem_file` format.
-- **key** is the private key. This should be the path to a PEM file, when using `pem_file` format.
+- **key** is the private key. This should be the path to a PEM file, when using `pem_file` format. If you’re providing a signed intermediate certificate and don’t want to—or can’t—provide the key, for example because it’s stored on a hardware key, you can omit it. This field is therefore optional.
 
 ##### `intermediate`
 A key pair (certificate and private key) to use as the intermediate for the CA. If not specified, one will be generated and managed automatically.
@@ -1424,6 +1511,44 @@ A key pair (certificate and private key) to use as the intermediate for the CA. 
 				cert /path/to/intermediate.pem
 				key /path/to/intermediate.key
 			}
+		}
+	}
+}
+```
+
+To sign site certificates with a **custom intermediate** while keeping the root
+private key offline, load the intermediate cert/key as usual and only supply the
+root **certificate** for chain building. The Caddyfile still expects a `key`
+path under `root`; when the root key is not available, point it at any PEM file
+Caddy can read (operators often reuse the intermediate key path as a stand-in).
+Caddy does not use that root key for signing when an intermediate key pair is
+configured.
+
+Prefer a non-default CA id (not `local`) and select it from the site block so
+you do not clash with the auto-managed local CA:
+
+```caddy
+{
+	pki {
+		ca company {
+			root {
+				format pem_file
+				cert /var/certs/root-ca.crt
+				key /var/certs/sub-ca.key
+			}
+			intermediate {
+				format pem_file
+				cert /var/certs/sub-ca.crt
+				key /var/certs/sub-ca.key
+			}
+		}
+	}
+}
+
+my.example {
+	tls {
+		issuer internal {
+			ca company
 		}
 	}
 }

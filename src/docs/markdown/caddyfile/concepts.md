@@ -450,6 +450,12 @@ directive "first line
 	second line"
 ```
 
+Quoting also works for curly braces: a quoted `"{"` or `"}"` is a regular argument, and does not open or close a [block](#blocks):
+
+```caddy-d
+respond "{"
+```
+
 Heredocs <span id="heredocs"/> are also supported:
 
 ```caddy
@@ -662,6 +668,8 @@ You can use any placeholders in the Caddyfile, but for convenience you can also 
 
 Not all config fields support placeholders, but most do where you would expect it. Support for placeholders needs to have been explicitly added to those fields. Plugin authors can [read this article](/docs/extending-caddy/placeholders) to learn how to add support for placeholders in their own modules.
 
+Placeholders are usually evaluated at runtime by the module that supports them. This means they are not the same as Caddyfile parse-time features such as the [`import`](#snippets) directive or [Caddyfile environment variables](#environment-variables) (`{$ENV}`). Fields that are compiled or validated while the config is loaded, such as regular expression matcher patterns, may not support runtime placeholders as their input values. Use [`import`](#snippets) or [`{$ENV}`](#environment-variables) when you need to provide config text before the Caddyfile is adapted.
+
 
 
 
@@ -768,6 +776,8 @@ www.example.com {
 
 This is particularly useful to reduce memory usage if the same route is needed in many different sites, or if multiple different matcher conditions are needed to invoke the same route.
 
+Each named route must have a unique name. A named route may [`import`](/docs/caddyfile/directives/import) snippets or files, and may `invoke` other named routes.
+
 **[Read the `invoke` directive page](/docs/caddyfile/directives/invoke) to learn more.**
 
 
@@ -822,3 +832,17 @@ For example, if you have the [`caddy-dns/cloudflare` plugin <img src="/old/resou
 ```
 
 If you're running Caddy as a systemd service, see [these instructions](/docs/running#overrides) for setting service overrides to define your environment variables.
+
+<aside class="tip">
+
+If a secret is provided to Caddy as a file, such as with [Docker secrets <img src="/old/resources/images/external-link.svg" class="external-link">](https://docs.docker.com/engine/swarm/secrets/), you can read it at runtime with the [`{file.*}` placeholder](/docs/conventions#placeholders) wherever `{env.*}` is supported. This keeps the secret out of Caddy's process environment, which is inherited by child processes and visible to some diagnostic tools:
+
+```caddy
+{
+	acme_dns cloudflare {file./run/secrets/cloudflare_api_token}
+}
+```
+
+Use an absolute path, since `{file.<name>}` without a `/` or `.` is the [shorthand](#placeholders) for part of the request path, like `{file.ext}`.
+
+</aside>

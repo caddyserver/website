@@ -11,7 +11,7 @@ There are multiple options for building Caddy, if you need a customized build (e
 
 Requirements:
 
-- [Go](https://golang.org/doc/install) 1.20 or newer
+- [Go](https://golang.org/doc/install) 1.26 or newer
 
 The [Package Support Files](#package-support-files-for-custom-builds-for-debianubunturaspbian) section contains instructions for users who installed Caddy using the APT command on Debian-derivative system yet need the custom build executable for their operations.
 

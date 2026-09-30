@@ -250,7 +250,7 @@ Formats or prettifies a Caddyfile, then exits. The result is printed to stdout u
 
 <pre><code class="cmd bash">caddy hash-password
 	[-p, --plaintext &lt;password&gt;]
-	[-a, --algorithm &lt;name&gt;]</code></pre>
+	[-a, --algorithm &lt;name&gt;]
 	[--bcrypt-cost &lt;cost&gt;]</code></pre>
 
 Convenient way to hash a plaintext password. The resulting hash is written to stdout as a format usable directly in your Caddy config.
@@ -661,7 +661,7 @@ This command may require elevated privileges if your user does not have permissi
 <pre><code class="cmd bash">caddy add-package &lt;packages...&gt;
 	[-k, --keep-backup]</code></pre>
 
-Similarly to `caddy upgrade`, replaces the current Caddy binary with the latest version with the same modules installed, _plus_ the packages listed as arguments included in the new binary. Find the list of packages you can install from [our download page](/download). Each argument should be the full package name.
+Similarly to `caddy upgrade`, replaces the current Caddy binary with the latest version with the same modules installed, _plus_ the packages listed as arguments included in the new binary. Find the list of packages you can install from [our download page](/download). Each argument should be the full package name, optionally followed by `@` and a version (e.g. `github.com/caddy-dns/cloudflare@v0.2.4`) to install a specific version.
 
 For example:
 
@@ -688,6 +688,8 @@ Similarly to `caddy upgrade`, replaces the current Caddy binary with the latest 
 	[--envfile &lt;file&gt;]</code></pre>
 
 Validates a configuration file, then exits. This command deserializes the config, then loads and provisions all of its modules as if to start the config, but the config is not actually started. This exposes errors in a configuration that arise during loading or provisioning phases and is a stronger error check than merely serializing a config as JSON.
+
+Because modules are provisioned for real, this command is best run before starting Caddy. Some modules acquire exclusive resources while being provisioned, and a second Caddy process cannot acquire them while a running instance holds them. For example, the [`acme_server`](/docs/caddyfile/directives/acme_server) directive opens a database that only one process can have open at a time, so validating a config that uses it while Caddy is already running fails with a database timeout, even though the config itself is fine. To check a config against a running instance, use [`caddy reload`](#caddy-reload) instead: it provisions the new config within the running process, so it does not contend with the running instance for those resources. If provisioning fails, the active config keeps running; if it succeeds, the new config is applied.
 
 `--config` is the config file to validate. If `-`, the config is read from stdin. Default is the `Caddyfile` in the current directory, if any.
 

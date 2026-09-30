@@ -451,7 +451,7 @@ Obtains certificates from an internal certificate authority.
 
   By default, the root CA certificate has a `3600d` lifetime (10 years) and the intermediate has a `7d` lifetime (7 days).
 
-  Caddy will attempt to install the root CA certificate to the system trust store, but this may fail when Caddy is running as an unprivileged user, or when running in a Docker container. In that case, the root CA certificate will need to be manually installed, either by using the [`caddy trust`](/docs/command-line#caddy-trust) command, or by [copying out of the container](/docs/running#usage).
+  Caddy will attempt to install the root CA certificate to the system trust store (unless the [`skip_install_trust` global option](/docs/caddyfile/options#skip-install-trust) is set), but this may fail when Caddy is running as an unprivileged user, or when running in a Docker container. In that case, the root CA certificate will need to be manually installed, either by using the [`caddy trust`](/docs/command-line#caddy-trust) command, or by [copying out of the container](/docs/running#usage).
 
 - **lifetime** <span id="lifetime"/> is a [duration value](/docs/conventions#durations) that sets the validity period for internally issued leaf certificates. Default: `12h`. It is NOT recommended to change this, unless absolutely necessary. It must be shorter than the intermediate's lifetime.
 

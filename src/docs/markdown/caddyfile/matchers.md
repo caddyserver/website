@@ -50,6 +50,7 @@ ready(function() {
 	- [protocol](#protocol)
 	- [query](#query)
 	- [remote_ip](#remote-ip)
+	- [url_pattern](#url-pattern)
 	- [vars](#vars)
 	- [vars_regexp](#vars-regexp)
 
@@ -399,7 +400,7 @@ Some more examples using [CEL expressions](#expression). Keep in mind that place
 ### header
 
 ```caddy-d
-header <field> [<value> ...]
+header <field> [<value>]
 
 expression header({'<field>': '<value>'})
 ```
@@ -408,13 +409,13 @@ By request header fields.
 
 - `<field>` is the name of the HTTP header field to check.
 	- If prefixed with `!`, the field must not exist to match (omit value arg).
-- `<value>` is the value the field must have to match. One or more may be specified.
+- `<value>` is the value the field must have to match.
 	- If prefixed with `*`, it performs a fast suffix match (appears at the end).
 	- If suffixed with `*`, it performs a fast prefix match (appears at the start).
 	- If enclosed by `*`, it performs a fast substring match (appears anywhere).
 	- Otherwise, it is a fast exact match.
 
-Different header fields within the same set are AND-ed. Multiple values per field are OR'ed.
+Different header fields within the same set are AND-ed. To match multiple values for the same field, specify one `header` matcher per value within the same matcher set; those values are OR'ed.
 
 Note that header fields may be repeated and have different values. Backend applications MUST consider that header field values are arrays, not singular values, and Caddy does not interpret meaning in such quandaries.
 
@@ -543,7 +544,7 @@ method <verbs...>
 expression method('<verbs...>')
 ```
 
-By the method (verb) of the HTTP request. Verbs should be uppercase, like `POST`. Can match one or many methods.
+By the method (verb) of the HTTP request. Can match one or many methods. Verbs are case-insensitive, since they are converted to uppercase, so `post` is the same as `POST`; but within a [CEL expression](#expression), verbs must be uppercase.
 
 Multiple `method` matchers will be OR'ed together.
 
@@ -852,6 +853,80 @@ In a [CEL expression](#expression), it would look like this:
 
 ```caddy-d
 @my-friends `remote_ip('12.23.34.45', '23.34.45.56')`
+```
+
+
+
+---
+### url_pattern
+
+```caddy-d
+url_pattern <pattern> {
+	base_url <url>
+	ignore_case
+}
+
+expression url_pattern('<pattern>')
+expression url_pattern('<pattern>', '<base_url>')
+```
+
+By a [URL pattern <img src="/old/resources/images/external-link.svg" class="external-link">](https://urlpattern.spec.whatwg.org/), which uses the same syntax as the [`URLPattern` API <img src="/old/resources/images/external-link.svg" class="external-link">](https://developer.mozilla.org/en-US/docs/Web/API/URL_Pattern_API) in web browsers. Compared to the [`path`](#path) matcher, it supports named groups (`:id`), groups limited by a regular expression (`:id([0-9]+)`), optional parts (`{/*}?`), and wildcards (`*`) anywhere in the pattern.
+
+- **&lt;pattern&gt;** is the URL pattern to match. A relative pattern (starting with `/`, e.g. `/books/:id`) matches the request path on any scheme and host. An absolute pattern (e.g. `https://example.com/books/:id`) also matches the scheme and host, which may contain groups too (e.g. `https://:sub.example.com/*`). If the pattern has no query string part, any query string is allowed.
+
+- **base_url** resolves a relative pattern against the given URL, which limits matches to that URL's scheme and host. For example, `/books/:id` with a base URL of `https://example.com` is the same as the pattern `https://example.com/books/:id`.
+
+- **ignore_case** makes the match case-insensitive. Unlike the [`path`](#path) matcher, URL patterns are case-sensitive by default.
+
+The request path is URL-decoded and cleaned of directory traversal dots before matching, like with the [`path`](#path) matcher. Multiple slashes are merged unless the path in the pattern has multiple slashes too.
+
+The request's scheme is `https` if the connection uses TLS, and `http` otherwise. The host includes the port from the `Host` header, if any, so an absolute pattern for a site on a non-standard port should include that port (e.g. `https://example.com:8443/*`).
+
+The values captured by the pattern's groups can be accessed via [placeholder](/docs/caddyfile/concepts#placeholders) in directives after matching:
+- `{http.url_pattern.<component>.<group>}` where:
+  - `<component>` is the part of the URL the group is in: `protocol`, `hostname`, `port`, `pathname`, or `search` (the query string),
+  - `<group>` is the name of a named group, or the number of an unnamed group such as a wildcard `*`, counting from `0` within that part of the URL.
+
+For example, after `/books/:id/*` matches `/books/42/chapters/1`, the placeholder `{http.url_pattern.pathname.id}` holds `42` and `{http.url_pattern.pathname.0}` holds `chapters/1`.
+
+There can only be one `url_pattern` matcher per named matcher; if you need more, consider using an [`expression` matcher](#expression).
+
+#### Examples:
+
+Match requests for a book by its numeric ID, and use the ID in the response:
+
+```caddy
+example.com {
+	@book url_pattern /books/:id([0-9]+)
+	respond @book "Book number {http.url_pattern.pathname.id}"
+}
+```
+
+Match `/docs` and anything below it, using an optional part:
+
+```caddy-d
+@docs url_pattern /docs{/*}?
+```
+
+Match HTTPS requests to any subdomain of `example.com`, capturing the subdomain in `{http.url_pattern.hostname.sub}`:
+
+```caddy-d
+@subdomain url_pattern https://:sub.example.com/*
+```
+
+Match API requests for a specific host, ignoring case:
+
+```caddy-d
+@api url_pattern /api/:version/* {
+	base_url https://example.com
+	ignore_case
+}
+```
+
+With a [CEL expression](#expression), matching two patterns:
+
+```caddy-d
+@content `url_pattern('/books/:id') || url_pattern('/authors/:name')`
 ```
 
 

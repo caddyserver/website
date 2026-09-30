@@ -97,9 +97,6 @@ Set security and privacy headers on all pages: (**WARNING:** only use if you und
 
 ```caddy-d
 header {
-	# disable FLoC tracking
-	Permissions-Policy interest-cohort=()
-
 	# enable HSTS
 	Strict-Transport-Security max-age=31536000;
 
