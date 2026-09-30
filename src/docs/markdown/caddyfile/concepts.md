@@ -831,9 +831,11 @@ For example, if you have the [`caddy-dns/cloudflare` plugin <img src="/old/resou
 }
 ```
 
-Environment variables are convenient, but sensitive values in a process environment can be exposed by process inspection, child process inheritance, logs, crash dumps, or platform diagnostics.
+If you're running Caddy as a systemd service, see [these instructions](/docs/running#overrides) for setting service overrides to define your environment variables.
 
-For secrets, prefer your platform's secret management mechanism when available. If the secret is provided as a file, you can use the [global `{file.*}` placeholder](/docs/conventions#placeholders) in config fields which support placeholders:
+<aside class="tip">
+
+If a secret is provided to Caddy as a file, such as with [Docker secrets <img src="/old/resources/images/external-link.svg" class="external-link">](https://docs.docker.com/engine/swarm/secrets/), you can read it at runtime with the [`{file.*}` placeholder](/docs/conventions#placeholders) wherever `{env.*}` is supported. This keeps the secret out of Caddy's process environment, which is inherited by child processes and visible to some diagnostic tools:
 
 ```caddy
 {
@@ -841,6 +843,6 @@ For secrets, prefer your platform's secret management mechanism when available. 
 }
 ```
 
-This does not make the secret inaccessible to Caddy; the Caddy process still needs permission to read the file. It avoids placing the secret value in the process-wide environment.
+Use an absolute path, since `{file.<name>}` without a `/` or `.` is the [shorthand](#placeholders) for part of the request path, like `{file.ext}`.
 
-If you're running Caddy as a systemd service, see [these instructions](/docs/running#overrides) for setting service overrides to define your environment variables.
+</aside>
