@@ -688,6 +688,8 @@ Similarly to `caddy upgrade`, replaces the current Caddy binary with the latest 
 
 Validates a configuration file, then exits. This command deserializes the config, then loads and provisions all of its modules as if to start the config, but the config is not actually started. This exposes errors in a configuration that arise during loading or provisioning phases and is a stronger error check than merely serializing a config as JSON.
 
+Because modules are provisioned for real, this command is best run before starting Caddy. Some modules acquire exclusive resources while being provisioned, and a second Caddy process cannot acquire them while a running instance holds them. For example, the [`acme_server`](/docs/caddyfile/directives/acme_server) directive opens a database that only one process can have open at a time, so validating a config that uses it while Caddy is already running fails with a database timeout, even though the config itself is fine. To check a config against a running instance, use [`caddy reload`](#caddy-reload) instead: it provisions the new config within the running process, so it does not contend with the running instance for those resources. If provisioning fails, the active config keeps running; if it succeeds, the new config is applied.
+
 `--config` is the config file to validate. If `-`, the config is read from stdin. Default is the `Caddyfile` in the current directory, if any.
 
 `--adapter` is the name of the config adapter to use. This flag is not necessary if the `--config` filename starts with `Caddyfile` or ends with `.caddyfile` which assumes the `caddyfile` adapter. Otherwise, this flag is required if the provided config file is not in Caddy's native JSON format.
