@@ -66,6 +66,8 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
 
 - **&lt;cert_file&gt;** and **&lt;key_file&gt;** are the paths to the certificate and private key PEM files. Specifying just one is invalid.
 
+  Certificates loaded this way are added to Caddy's certificate cache, which is shared by all sites. So a loaded certificate is also used for other sites whose names it covers, even if those sites don't have a `tls` directive, and Caddy won't automatically manage certificates for those names unless the [`auto_https ignore_loaded_certs`](/docs/caddyfile/options#auto-https) global option is set.
+
 - **protocols** <span id="protocols"/> specifies the minimum and maximum protocol versions. DO NOT change these unless you know what you're doing. Configuring this is rarely necessary, because Caddy will always use modern defaults.
   
   Default min: `tls1.2`, Default max: `tls1.3`
