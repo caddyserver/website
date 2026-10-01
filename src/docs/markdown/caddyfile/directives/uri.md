@@ -8,6 +8,8 @@ Manipulates a request's URI. It can strip path prefix/suffix or replace substrin
 
 This directive is distinct from [`rewrite`](rewrite) in that `uri` _differentiably_ changes the URI, rather than resetting it to something completely different as `rewrite` does. While `rewrite` is treated specially as an internal redirect, `uri` is just another middleware.
 
+In the [JSON config](/docs/json/apps/http/servers/routes/handle/rewrite/), both directives produce the same `rewrite` handler: `uri` sets its fields such as `strip_path_prefix`, `strip_path_suffix`, `uri_substring`, `path_regexp` and `query`, whereas `rewrite` sets its `uri` field.
+
 
 ## Syntax
 
