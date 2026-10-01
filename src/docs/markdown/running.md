@@ -319,7 +319,9 @@ If you have static files to serve, you may place them in a `site/` directory bes
 
 <aside class="tip">
 
-If you're using Caddy to [reverse proxy](/docs/caddyfile/directives/reverse_proxy) to another container, remember that in Docker networking, `localhost` means "this container", not "this machine". So for example, do not use `reverse_proxy localhost:8080`, instead use `reverse_proxy other-container:8080` 
+If you're using Caddy to [reverse proxy](/docs/caddyfile/directives/reverse_proxy) to another container, remember that in Docker networking, `localhost` means "this container", not "this machine". So for example, do not use `reverse_proxy localhost:8080`, instead use `reverse_proxy other-container:8080`.
+
+Use the port that the app listens on _inside_ its container, not a port published to the host. For example, if the `app` service has `ports: ["3030:3000"]`, use `reverse_proxy app:3000`. Containers on the same Docker network can reach each other without publishing any ports, so the app usually doesn't need a `ports:` entry at all.
 
 </aside>
 
