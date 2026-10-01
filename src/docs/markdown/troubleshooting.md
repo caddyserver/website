@@ -54,6 +54,20 @@ Many questions and bug reports end up being issues with external system and netw
 Even just assuming that you reloaded a config, but you really didn't, is a common mistake. Strive to be rigorous about your process. Verify at every level.
 
 
+Check common causes
+-------------------
+
+Most problems people have with Caddy turn out to be in the surrounding system or network. Before digging deeper, check these usual suspects:
+
+- **DNS:** Your domain's DNS records (`A` and/or `AAAA`) must point to the public IP address of the machine running Caddy. Remove any stale records, especially an `AAAA` record for an IPv6 address that doesn't reach Caddy.
+- **Split-horizon DNS:** If your local network resolves your domain differently than the rest of the world does, Caddy and the ACME CA may disagree about where it points. [Automatic HTTPS](/docs/automatic-https#acme-challenges) relies on the public DNS.
+- **Ports:** Ports 80 and 443 must be reachable from the internet for the [HTTP and TLS-ALPN challenges](/docs/automatic-https#acme-challenges). Check your router's port forwarding, your firewall, and your cloud provider's security groups. Remember `443/udp` too, for HTTP/3.
+- **Other servers:** Make sure no other program (such as Apache, nginx, or another app server) is already listening on the ports Caddy needs.
+- **Permissions:** The user Caddy runs as needs permission to bind to its ports, and to read your config and site files and write to its [data directory](/docs/conventions#data-directory). Check the ownership and permissions of the files and every directory above them.
+- **SELinux:** On systems with SELinux enabled, it must be [configured to allow Caddy](/docs/running#selinux-considerations) to do what it needs.
+- **The right config:** Make sure Caddy is running the config you think it is. For example, when running as a service, the Caddyfile is usually at `/etc/caddy/Caddyfile`, and changes only take effect after a [reload](/docs/command-line#caddy-reload).
+
+
 Reproduce the behavior
 ----------------------
 
