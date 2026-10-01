@@ -59,7 +59,7 @@ ready(function() {
 			if (moduleData.namespaces && moduleData.namespaces[modNamespace]) {
 				for (var i = 0; i < moduleData.namespaces[modNamespace].length; i++) {
 					var modInfo = moduleData.namespaces[modNamespace][i];
-					var href = canTraverse(moduleData) ? `${window.location.pathname}${elemPath}/${modInfo.name}` : `${jsonDocsPathPrefix}/${modNamespace}.${modInfo.name}`;
+					var href = canTraverse(moduleData) ? pathJoin(window.location.pathname, elemPath+"/"+modInfo.name) : moduleDocsPath(modNamespace, modInfo.name);
 					var content = `<a href="${href}" class="module-link"> ${modInfo.name}`;
 					if (!isStandard(modInfo.package)) {
 						content += nonStandardFlag;
@@ -274,7 +274,12 @@ function renderData($tpl, module, data, nesting, path, $group) {
 	case "array":
 		$group.innerHTML += '[';
 		if (data.elems.type == "module_map") {
-			$group.innerHTML += `{<a href="${pathJoin(jsonDocsPathPrefix, path)}" class="module has-popup" data-namespace="${(data.elems.module_namespace || '')}" data-path="${path}">&bull;&bull;&bull;</a>}`;
+			var aTag = '<a';
+			if (canTraverse(module)) {
+				aTag += ` href="${pathJoin(window.location.pathname, path)}"`;
+			}
+			aTag += ` class="module has-popup" data-namespace="${(data.elems.module_namespace || '')}" data-path="${path}">&bull;&bull;&bull;</a>`;
+			$group.innerHTML += `{${aTag}}`;
 		} else {
 			renderData($tpl, module, data.elems, nesting, path, $group);
 		}
@@ -299,7 +304,7 @@ function renderData($tpl, module, data, nesting, path, $group) {
 	case "module_map":
 		var aTag = '<a';
 		if (canTraverse(module)) {
-			aTag += ` href="${jsonDocsPathPrefix}${path}"`;
+			aTag += ` href="${pathJoin(window.location.pathname, path)}"`;
 		}
 		aTag += ` class="module has-popup" data-namespace="${(data.module_namespace || '')}" data-path="${path}">&bull;&bull;&bull;</a>`;
 		$group.innerHTML += `{${aTag}}`;
@@ -355,7 +360,7 @@ function makeSubmoduleList(module, path, value) {
 		});
 		for (var j = 0; j < module.namespaces[value.module_namespace].length; j++) {
 			var submod = module.namespaces[value.module_namespace][j];
-			var href = canTraverse(module) ? pathJoin(window.location.pathname, path+"/"+submod.name) : pathJoin(window.location.pathname, value.module_namespace+"."+submod.name);
+			var href = canTraverse(module) ? pathJoin(window.location.pathname, path+"/"+submod.name) : moduleDocsPath(value.module_namespace, submod.name);
 			var submodLink = `<a href="${href}">${submod.name}</a>`;
 			if (!isStandard(submod.package)) {
 				submodLink += ' '+nonStandardFlag;
@@ -396,6 +401,12 @@ function replaceGoTypeNameWithCaddyModuleName(docs, module, moduleID) {
 	}
 
 	return docs;
+}
+
+// moduleDocsPath returns the path to the docs page
+// of the module with the given namespace and name.
+function moduleDocsPath(namespace, name) {
+	return moduleDocsPathPrefix + (namespace ? namespace+"." : "") + name;
 }
 
 function pathJoin(p1, p2) {
