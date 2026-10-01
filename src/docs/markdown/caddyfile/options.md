@@ -115,6 +115,7 @@ Possible options are (click on each option to jump to its documentation):
 	}
 	acme_dns <provider> ...
 	dns <provider> ...
+	tls_resolvers <resolvers...>
 	ech <public_names...> {
 		dns <provider> ...
 	}
@@ -633,6 +634,20 @@ Example, using credentials from an environment variable:
 ```
 
 (Requires Caddy 2.10 beta 1 or newer.)
+
+
+##### `tls_resolvers`
+Configures the default DNS resolvers to use for TLS-related DNS lookups, instead of the system resolvers. These are used by the [ACME DNS challenge](/docs/automatic-https#dns-challenge) when it is enabled (with [`acme_dns`](#acme-dns) or a [`tls` directive](/docs/caddyfile/directives/tls#acme) DNS provider), and by the [`acme_server` directive](/docs/caddyfile/directives/acme_server) when validating DNS challenges.
+
+Resolvers configured more specifically, such as with the `tls` directive's [`resolvers`](/docs/caddyfile/directives/tls#resolvers) or `acme_server`'s `resolvers`, take precedence. If a resolver has no port, `53` is used.
+
+```caddy
+{
+	tls_resolvers 1.1.1.1 8.8.8.8
+}
+```
+
+(Requires Caddy 2.11.2 or newer.)
 
 
 ##### `ech`
