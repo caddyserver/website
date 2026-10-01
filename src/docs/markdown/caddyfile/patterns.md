@@ -53,6 +53,40 @@ example.com {
 
 This uses a [request matcher](/docs/caddyfile/matchers#syntax) to match only requests that start with `/api/` and proxy them to the backend. All other requests will be served from the site [`root`](/docs/caddyfile/directives/root) with the [static file server](/docs/caddyfile/directives/file_server). This also depends on the fact that `reverse_proxy` is higher on the [directive order](/docs/caddyfile/directives#directive-order) than `file_server`.
 
+Serve several apps on one domain, each under its own path prefix, using [`handle_path`](/docs/caddyfile/directives/handle_path) to strip the prefix before proxying:
+
+```caddy
+example.com {
+	handle_path /app1/* {
+		reverse_proxy localhost:5001
+	}
+	handle_path /app2/* {
+		reverse_proxy localhost:5002
+	}
+	handle {
+		respond "Not found" 404
+	}
+}
+```
+
+Keep in mind that most apps don't work in a "subfolder" like this unless they are configured for it, because the links, redirects and asset URLs they generate don't include the prefix. If the app has a setting for its base path or public URL, set it to the prefix, and use [`handle`](/docs/caddyfile/directives/handle) instead of `handle_path` if the app expects to receive the prefix in the path. Otherwise, consider giving each app its own subdomain instead.
+
+Show a maintenance page while the backend is down (for example during a deploy), instead of an error:
+
+```caddy
+example.com {
+	reverse_proxy localhost:5000
+
+	handle_errors 502 503 {
+		root * /srv/maintenance
+		rewrite * /index.html
+		file_server
+	}
+}
+```
+
+When `reverse_proxy` can't connect to the backend, it produces a `502` error (or `503` if no upstream is available), which is then handled by [`handle_errors`](/docs/caddyfile/directives/handle_errors). The page is served with the error's status code, so clients and search engines know the outage is temporary.
+
 There are many more [`reverse_proxy` examples here](/docs/caddyfile/directives/reverse_proxy#examples).
 
 
@@ -81,6 +115,22 @@ php_fastcgi unix//run/php/php8.5-fpm.sock
 ```
 
 The [`php_fastcgi` directive](/docs/caddyfile/directives/php_fastcgi) is actually just a shortcut for [several pieces of configuration](/docs/caddyfile/directives/php_fastcgi#expanded-form).
+
+For WordPress, you may also want to block requests to sensitive paths:
+
+```caddy
+example.com {
+	root /var/www/wordpress
+	encode
+	php_fastcgi unix//run/php/php8.5-fpm.sock
+	file_server
+
+	@blocked path /xmlrpc.php *.sql /wp-content/uploads/*.php
+	rewrite @blocked /index.php
+}
+```
+
+This blocks the XML-RPC endpoint (often targeted by brute-force attacks; remove it from the list if you use apps or plugins that need it), database dumps, and PHP scripts in the uploads directory. Blocked requests are rewritten to `index.php`, so WordPress handles them with its normal "not found" page, since it sees the original request URI.
 
 
 ### FrankenPHP
