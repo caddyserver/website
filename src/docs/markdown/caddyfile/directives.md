@@ -181,22 +181,29 @@ For ease of use, the Caddyfile adapter sorts directives according to the followi
 
 - Same-named directives are sorted according to their [matchers](/docs/caddyfile/matchers#syntax).
 
-  - The highest priority is a directive with a single [path matcher](/docs/caddyfile/matchers#path-matchers).
+  - A directive with a single [path matcher](/docs/caddyfile/matchers#path-matchers) value, such as `/foo*`, is sorted by specificity relative to other directives with a single path, from most specific to least specific. This also applies to a [named matcher](/docs/caddyfile/matchers#named-matchers) with a `path` matcher that has only one path.
 
-    Path matchers are sorted by specificity, from most specific to least specific.
-	
-	In general, this is performed by sorting by the length of the path matcher. There is one exception where if the path ends in a `*` and the paths of the two matchers are otherwise the same, the matcher with no `*` is considered more specific and sorted higher.
+    In general, this is performed by sorting by the length of the path, ignoring a trailing `*`. If the paths of the two matchers are otherwise the same, the matcher with no `*` is considered more specific and sorted higher. Paths of the same length are sorted alphabetically.
 
     For example:
     - `/foobar` is more specific than `/foo`
     - `/foo` is more specific than `/foo*`
     - `/foo/*` is more specific than `/foo*`
 
-  - A directive with any other matcher is sorted next, in the order it appears in the Caddyfile.
+  - A directive with any other matcher, such as a named matcher or a path matcher with multiple values, keeps the order it appears in the Caddyfile. Directives with a single path are _not_ sorted past it, so they are only sorted among the other single-path directives next to them.
 
-    This includes path matchers with multiple values, and [named matchers](/docs/caddyfile/matchers#named-matchers).
+    For example, these directives are not reordered at all, because the `@api` named matcher separates them:
+
+    ```caddy-d
+    respond /a*  "1"
+    respond @api "2"
+    respond /a/b "3"
+    respond /a   "4"
+    ```
 
   - A directive with no matcher (i.e. matching all requests) is sorted last.
+
+  If the sorted order is not what you need, use the [`route`](/docs/caddyfile/directives/route) directive to set the order explicitly, or mutually exclusive [`handle`](/docs/caddyfile/directives/handle) blocks.
 
 - The [`vars`](/docs/caddyfile/directives/vars) directive has its ordering by matcher reversed, because it involves setting values which can overwrite each other, so the most specific matcher should be evaluated last.
 
