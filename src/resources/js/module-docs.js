@@ -53,16 +53,26 @@ if (window.location.pathname == moduleDocsPathPrefix.slice(0, -1)
 			});
 		});
 	} else {
+		// show the module list right away with a loading indicator,
+		// since fetching the list can take a while
+		ready(function() {
+			$_('#module-list').insertAdjacentHTML('beforeend', `<tr id="module-list-status"><td colspan="3">Loading modules&hellip;</td></tr>`);
+			$_('#module-list-container').style.display = 'block';
+		});
+
 		// populate the module list
 		fetch(`/api/modules`)
-			.then(response => response.json())
+			.then(function(response) {
+				if (!response.ok) {
+					throw new Error(`HTTP ${response.status}`);
+				}
+				return response.json();
+			})
 			.then(function(json) {
 				const moduleList = json.result;
-				console.log("MODULE LIST:", moduleList);
-			
+
 				// wait until the DOM has finished loading before rendering the results
 				ready(function() {
-					$_('#module-list-container').style.display = 'block';
 					$table = $_('#module-list');
 					for (modID in moduleList) {
 						var infos = moduleList[modID];
@@ -74,7 +84,7 @@ if (window.location.pathname == moduleDocsPathPrefix.slice(0, -1)
 								shortDoc = shortDoc.substr(modID.length).trim();
 							}
 
-							let modLink = window.location.pathname +"/"+modID;
+							let modLink = moduleDocsPathPrefix + modID;
 							if (infos.length > 1) {
 								modLink += "#"+stripScheme(info.repo);
 							}
@@ -91,6 +101,12 @@ if (window.location.pathname == moduleDocsPathPrefix.slice(0, -1)
 							$table.append($tr);
 						});
 					}
+					$_('#module-list-status').remove();
+				});
+			})
+			.catch(function(err) {
+				ready(function() {
+					$_('#module-list-status td').innerText = `Failed to load the module list (${err.message}). Please try again later.`;
 				});
 			});
 	}
