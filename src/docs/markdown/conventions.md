@@ -19,30 +19,29 @@ The Caddy ecosystem adheres to a few conventions to make things consistent and i
 ## Network addresses
 
 When specifying a network address to dial or bind, Caddy accepts a string in the following format:
-
 ```
 network/address
 ```
 
-The network part is optional (defaulting to `tcp`), and is anything that [Go's `net.Dial` function](https://pkg.go.dev/net#Dial) recognizes. If a network is specified, a single forward slash `/` must separate the network and address portions.
+The network part is optional and defaults to `tcp`. Most network names are recognised by [Go's `net` package](https://pkg.go.dev/net); Caddy also supports inherited file descriptors. A single forward slash `/` separates an explicit network from its address.
 
 The network can be any of the following; ones suffixed with `4` or `6` are IPv4 or IPv6 only, respectively:
-
 - TCP: `tcp`, `tcp4`, `tcp6`
 - UDP: `udp`, `udp4`, `udp6`
 - IP: `ip`, `ip4`, `ip6`
 - Unix: `unix`, `unixgram`, `unixpacket`
+- Inherited file descriptors: `fd`, `fdgram`
 
 The address part may be any of these forms:
-
 - `host`
 - `host:port`
 - `:port`
 - `[ipv6%zone]:port`
 - `/path/to/unix/socket`
 - `/path/to/unix/socket|0200`
+- `file-descriptor-number`
 
-The host may be any hostname, resolvable domain name, or IP address.
+The host may be any hostname, resolvable domain name, IP address or file descriptor number.
 
 In the case of IPv6 addresses, the address must be enclosed in square brackets `[]`. The zone identifier (starting with `%`) is optional (often used for link-local addresses).
 
@@ -52,8 +51,27 @@ A unix socket path is only acceptable when using a `unix*` network type. The for
 
 When a unix socket is used as a bind address, you may optionally specify a file permission mode after the path, separated by a pipe `|`. The default is `0200` (octal), i.e. `u=w,g=,o=` (symbolic). The leading `0` is optional.
 
-Valid examples:
+### Inherited file descriptors
 
+The `fd` network uses an inherited stream socket while `fdgram` uses an inherited datagram socket. The address is a non-negative integer literal identifying the file descriptor. Caddy uses the existing socket rather than binding a new one.
+
+When systemd supplies named descriptors through [socket activation](https://www.freedesktop.org/software/systemd/man/latest/systemd.socket.html), the global `{systemd.listen.*}` placeholder resolves a descriptor name to its numeric value:
+```caddy
+fd/{systemd.listen.http}
+fdgram/{systemd.listen.https-udp}
+```
+
+Systemd descriptor names are not required to be unique. Append a zero-based index after a colon to select a later descriptor with the same name:
+```caddy
+fd/{systemd.listen.web:0}
+fd/{systemd.listen.web:1}
+```
+
+Caddy resolves these names only when `LISTEN_PID` identifies the current process and the `LISTEN_FDS` and `LISTEN_FDNAMES` counts agree. A descriptor name containing a literal `}` cannot be represented inside this placeholder syntax.
+
+Set [`FileDescriptorName=`](https://www.freedesktop.org/software/systemd/man/latest/systemd.socket.html#FileDescriptorName=) in each socket unit to choose the names passed to Caddy. Systemd must start the Caddy process which owns the listeners. The official service does this with `caddy run`; wrappers must use `exec` rather than spawn a child.
+
+Valid examples:
 ```
 :8080
 127.0.0.1:8080
@@ -66,6 +84,10 @@ udp/localhost:9005
 tcp6/[fe80::1%eth0]:8080
 unix//path/to/socket
 unix//path/to/socket|0200
+fd/3
+fdgram/4
+fd/{systemd.listen.http}
+fdgram/{systemd.listen.https-udp}
 ```
 
 <aside class="tip">
@@ -92,12 +114,13 @@ Placeholders are bounded on either side by curly braces `{ }` and contain the id
 
 Which placeholders are available depends on the context. Not all placeholders are available in all parts of the config. For example, [the HTTP app sets placeholders](/docs/json/apps/http/#docs) that are only available in areas of the config related to handling HTTP requests. When a request passes through the [`reverse_proxy` handler](/docs/json/apps/http/servers/routes/handle/reverse_proxy/#docs), the handler sets several proxy-specific placeholders. These placeholders may be referenced during proxying as well as afterwards (in `handle_response`), for example when setting response headers or enriching access logs.
 
-The following placeholders are always available (global):
+The following placeholders are available globally. Some require the environment or input described in the table.
 
 Placeholder | Description
 ------------|-------------
 `{env.*}` | Environment variable; example: `{env.HOME}`
 `{file.*}` | Contents from a file; example: `{file./path/to/secret.txt}`
+`{systemd.listen.*}` | Numeric file descriptor inherited through [systemd socket activation](#inherited-file-descriptors); example: `{systemd.listen.http}`
 `{system.hostname}` | The system's local hostname
 `{system.slash}` | The system's filepath separator
 `{system.os}` | The system's OS
