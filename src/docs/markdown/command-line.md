@@ -699,7 +699,7 @@ Signal | Behavior
 `SIGINT` | Graceful exit. Send signal again to force exit immediately.
 `SIGQUIT` | Quits Caddy immediately, but still cleans up locks in storage because it is important.
 `SIGTERM` | Graceful exit.
-`SIGUSR1` | Reloads the config file, but only if started with `caddy run` (without `--resume`) and no changes to the config have been made via [the API](/docs/api) (including [`caddy reload`]#caddy-reload)).
+`SIGUSR1` | Reloads the config file, but only if started with `caddy run` (without `--resume`) and no changes to the config have been made via [the API](/docs/api) (including [`caddy reload`](#caddy-reload)).
 `SIGUSR2` | Ignored.
 `SIGHUP` | Ignored.
 
