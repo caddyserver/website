@@ -70,6 +70,12 @@ After installing, please read the [service usage instructions](/docs/running#usi
 <span class="bash">sudo apt update</span>
 <span class="bash">sudo apt install caddy</span></code></pre>
 
+To automatically install Caddy updates, enable unattended upgrades and allow the Caddy repository:
+
+<pre><code class="cmd"><span class="bash">sudo apt install --yes unattended-upgrades</span>
+<span class="bash">sudo dpkg-reconfigure -plow unattended-upgrades</span>
+<span class="bash">echo 'Unattended-Upgrade::Origins-Pattern { "origin=cloudsmith/caddy/stable"; };' | sudo tee /etc/apt/apt.conf.d/52caddy-unattended-upgrades</span></code></pre>
+
 **Testing releases** (includes betas and release candidates):
 
 <pre><code class="cmd"><span class="bash">sudo apt install --yes debian-keyring debian-archive-keyring apt-transport-https curl</span>
