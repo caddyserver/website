@@ -46,7 +46,7 @@ encode [<matcher>] [<formats...>] {
 
 - **zstd** <span id="zstd"/> enables Zstandard compression, optionally at a specified level (possible values = default, fastest, better, best). The default compression level is roughly equivalent to the default Zstandard mode (level 3). 
 
-- **minimum_length** <span id="minimum_length"/> the minimum number of bytes a response should have to be encoded (default: 512). Server-sent events responses (`Content-Type: text/event-stream`) are not held back to reach this threshold: their headers are sent to the client immediately, and events are streamed as they are written.
+- **minimum_length** <span id="minimum_length"/> the minimum number of bytes a response should have to be encoded (default: 512). Server-sent events responses (`Content-Type: text/event-stream`) and responses with the `Incremental: ?1` header field ([RFC 10036](https://www.rfc-editor.org/rfc/rfc10036.html)) are not held back to reach this threshold: their headers are sent to the client immediately, and the body is streamed as it is written.
 
 - **match** <span id="match"/> is a [response matcher](/docs/caddyfile/response-matchers). Only matching responses are encoded. The default looks like this:
 

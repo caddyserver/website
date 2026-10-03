@@ -128,6 +128,9 @@ reverse_proxy [<matcher>] [<upstreams...>] {
 	stream_timeout     <duration>
 	stream_close_delay <duration>
 
+	# reporting
+	proxy_status_name <name>
+
 	# request/header manipulation
 	trusted_proxies [private_ranges] <ranges...>
 	header_up   [+|-]<field> [<value|regexp> [<replacement>]]
@@ -416,6 +419,8 @@ In both cases, the `host` is included as metadata in the event to identify the u
 
 By default, the proxy partially buffers the response for wire efficiency.
 
+Requests and responses with the `Incremental: ?1` header field ([RFC 10036](https://www.rfc-editor.org/rfc/rfc10036.html)) are forwarded as they arrive instead. If the configured buffering would prevent that, Caddy refuses to forward the message and responds with `501 Not Implemented` (see [`request_buffers`](#request_buffers), [`response_buffers`](#response_buffers) and [`proxy_status_name`](#proxy_status_name)). (Requires Caddy 2.11.7 or newer.)
+
 The proxy also supports WebSocket connections, performing the HTTP upgrade request then transitioning the connection to a bidirectional tunnel.
 
 <aside class="tip">
@@ -426,16 +431,21 @@ By default, WebSocket connections are forcibly closed (with a Close control mess
 
 - **flush_interval** <span id="flush_interval"/> is a [duration value](/docs/conventions#durations) that adjusts how often Caddy should flush the response buffer to the client. By default, no periodic flushing is done. A negative value (typically -1) suggests "low-latency mode" which disables response buffering completely and flushes immediately after each write to the client, and does not cancel the request to the backend even if the client disconnects early. This option is ignored and responses are flushed immediately to the client if one of the following applies from the response:
 	- `Content-Type: text/event-stream`
+	- `Incremental: ?1`
 	- `Content-Length` is unknown
 	- HTTP/2 on both sides of the proxy, `Content-Length` is unknown, and `Accept-Encoding` is either not set or is "identity"
 
 - **request_buffers** <span id="request_buffers"/> will cause the proxy to read up to `<size>` amount of bytes from the request body into a buffer before sending it upstream. This is very inefficient and should only be done if the upstream requires reading request bodies without delay (which is something the upstream application should fix). This accepts all size formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). The value `unlimited` buffers the entire request body. If the entire body is buffered, the `Content-Length` header is set on the request to the upstream; this is required for the [`fastcgi` transport](#the-fastcgi-transport) when the request has a body but no `Content-Length`.
 
-- **response_buffers** <span id="response_buffers"/> will cause the proxy to read up to `<size>` amount of bytes from the response body to be read into a buffer before being returned to the client. This should be avoided if at all possible for performance reasons, but could be useful if the backend has tighter memory constraints. This accepts all size formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go).
+	Requests with a body and the `Incremental: ?1` header field are not buffered. If `request_buffers` is configured, they get a `501 Not Implemented` response instead. The `fastcgi` transport's default buffering is skipped for them when they have a `Content-Length`; without one, they also get a `501` response, since the transport can't forward a body of unknown length.
+
+- **response_buffers** <span id="response_buffers"/> will cause the proxy to read up to `<size>` amount of bytes from the response body to be read into a buffer before being returned to the client. This should be avoided if at all possible for performance reasons, but could be useful if the backend has tighter memory constraints. This accepts all size formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). If an upstream response with a body has the `Incremental: ?1` header field, it is not buffered; the client gets a `501 Not Implemented` response instead.
 
 - **stream_timeout** <span id="stream_timeout"/> is a [duration value](/docs/conventions#durations) after which streaming requests such as WebSockets will be forcibly closed at the end of the timeout. This essentially cancels connections if they stay open too long. A reasonable starting point might be `24h` to cull connections older than a day. Default: no timeout.
 
 - **stream_close_delay** <span id="stream_close_delay"/> is a [duration value](/docs/conventions#durations) which delays streaming requests such as WebSockets from being forcibly closed when the config is unloaded; instead, the stream will remain open until the delay is complete. In other words, enabling this prevents streams from immediately closing when Caddy's config is reloaded. Enabling this may be a good idea to avoid a thundering herd of reconnecting clients which had their connections closed by the previous config closing. A reasonable starting point might be something like `5m` to allow users 5 minutes to leave the page naturally after a config reload. Default: no delay.
+
+- **proxy_status_name** <span id="proxy_status_name"/> is the name identifying this proxy in the [`Proxy-Status`](https://www.rfc-editor.org/rfc/rfc9209.html) response header field, which is added when Caddy refuses to forward a message with `Incremental: ?1` (the error type is `incremental_refused`). It should identify your deployment rather than the software, for example a service name (`ExampleCDN`), a hostname (`proxy-3.example.com`) or an IP address. Any `Proxy-Status` entries already set by the upstream are kept. Default: none, so no `Proxy-Status` field is added. (Requires Caddy 2.11.7 or newer.)
 
 
 
