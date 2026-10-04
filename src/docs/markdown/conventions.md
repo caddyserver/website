@@ -105,6 +105,7 @@ Placeholder | Description
 `{system.wd}` | The current working directory
 `{time.now}` | The current time as a Go Time struct
 `{time.now.http}` | The current time in the format used in [HTTP headers <img src="/old/resources/images/external-link.svg" class="external-link">](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified)
+`{time.now.rfc3339}` | The current time at second precision in [RFC 3339](https://www.rfc-editor.org/rfc/rfc3339.html) format. It uses `Z` for UTC and a signed numeric offset otherwise. The output is a valid [HTML global date and time string](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-global-date-and-time-string) for a `<time>` element's `datetime` attribute
 `{time.now.unix}` | The current time as a unix timestamp in seconds
 `{time.now.unix_ms}` | The current time as a unix timestamp in milliseconds
 `{time.now.common_log}` | The current time in Common Log Format
