@@ -92,7 +92,7 @@ Placeholders are bounded on either side by curly braces `{ }` and contain the id
 
 Which placeholders are available depends on the context. Not all placeholders are available in all parts of the config. For example, [the HTTP app sets placeholders](/docs/json/apps/http/#docs) that are only available in areas of the config related to handling HTTP requests. When a request passes through the [`reverse_proxy` handler](/docs/json/apps/http/servers/routes/handle/reverse_proxy/#docs), the handler sets several proxy-specific placeholders. These placeholders may be referenced during proxying as well as afterwards (in `handle_response`), for example when setting response headers or enriching access logs.
 
-The following placeholders are always available (global):
+The following placeholders are always available (global). When generating HTML, `{time.now.rfc3339}` can be used as the `datetime` value of a [<time> element](https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-time-element):
 
 Placeholder | Description
 ------------|-------------
@@ -105,6 +105,7 @@ Placeholder | Description
 `{system.wd}` | The current working directory
 `{time.now}` | The current time as a Go Time struct
 `{time.now.http}` | The current time in the format used in [HTTP headers <img src="/old/resources/images/external-link.svg" class="external-link">](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified)
+`{time.now.rfc3339}` | The current time in [RFC 3339](https://www.rfc-editor.org/rfc/rfc3339.html) format
 `{time.now.unix}` | The current time as a unix timestamp in seconds
 `{time.now.unix_ms}` | The current time as a unix timestamp in milliseconds
 `{time.now.common_log}` | The current time in Common Log Format
