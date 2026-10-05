@@ -61,13 +61,7 @@ fd/{systemd.listen.http}
 fdgram/{systemd.listen.https-udp}
 ```
 
-Systemd descriptor names are not required to be unique. Append a zero-based index after a colon to select a later descriptor with the same name:
-```caddy
-fd/{systemd.listen.web:0}
-fd/{systemd.listen.web:1}
-```
-
-Caddy resolves these names only when `LISTEN_PID` identifies the current process and the `LISTEN_FDS` and `LISTEN_FDNAMES` counts agree. A descriptor name containing a literal `}` cannot be represented inside this placeholder syntax.
+Caddy resolves the first descriptor with the requested name. Use `fd/N` or `fdgram/N` to select a later descriptor when names are duplicated. Names are resolved only when `LISTEN_PID` identifies the current process and the `LISTEN_FDS` and `LISTEN_FDNAMES` counts agree. A descriptor name containing a literal `}` cannot be represented inside this placeholder syntax.
 
 Set [`FileDescriptorName=`](https://www.freedesktop.org/software/systemd/man/latest/systemd.socket.html#FileDescriptorName=) in each socket unit to choose the names passed to Caddy. Systemd must start the Caddy process which owns the listeners. The official service does this with `caddy run`; wrappers must use `exec` rather than spawn a child.
 
