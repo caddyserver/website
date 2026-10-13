@@ -38,13 +38,13 @@ ready(function() {
 		}
 	}
 
-	// Surgically fix `renewal_window_ratio` which appears twice as a link for two different sections, so we change the second to #renewal_window_ratio-1
+	// Surgically fix `renewal_window_ratio` which appears twice as a link for two different sections, so we change the second to #renewal-window-ratio-1
 	const renewalLine = Array.from($$_('pre.chroma .line'))
 		.find(line => line.innerText.includes('renewal_window_ratio'));
 	if (renewalLine && renewalLine.nextElementSibling) {
 		const renewalLink = renewalLine.nextElementSibling.querySelector('a');
 		if (renewalLink && renewalLink.innerText.includes('renewal_window_ratio')) {
-			renewalLink.href = '#renewal_window_ratio-1';
+			renewalLink.href = '#renewal-window-ratio-1';
 		}
 	}
 });
