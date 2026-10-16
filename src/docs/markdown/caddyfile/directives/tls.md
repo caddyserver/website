@@ -40,7 +40,7 @@ tls [internal|force_automate|<email>] | [<cert_file> <key_file>] {
 	on_demand
 	reuse_private_keys
 	client_auth {
-		mode                   [request|require|verify_if_given|require_and_verify]
+		mode                   [off|request|require|verify_if_given|require_and_verify]
 		trust_pool             <module>
 		verifier 			   <module>
 	}
@@ -136,10 +136,35 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
 - **reuse_private_keys** <span id="reuse_private_keys"/> enables reuse of private keys when renewing certificates. By default, a new key is created for every new certificate to mitigate pinning and reduce the scope of key compromise. Key pinning is against industry best practices. This option is not recommended unless you have a specific reason to use it; this may be subject to removal in a future version.
 
 - **client_auth** <span id="client_auth"/> enables and configures TLS client authentication:
+
+  TLS client authentication is selected from SNI during the handshake, before HTTP site routing. A wildcard site's client authentication therefore applies to matching specific hostnames unless they explicitly set the mode to `off`:
+
+  ```caddy
+  *.example.com {
+    tls {
+      client_auth {
+        mode require_and_verify
+        trust_pool file {
+          pem_file /path/to/ca.pem
+        }
+      }
+    }
+  }
+
+  public.example.com {
+    tls {
+      client_auth {
+        mode off
+      }
+    }
+  }
+  ```
+
   - **mode** <span id="mode"/> is the mode for authenticating the client. Allowed values are:
 
     | Mode | Description |
     | --- | --- |
+    | off | Disable client authentication inherited from a matching wildcard TLS policy |
     | request | Ask clients for a certificate, but allow even if there isn't one; do not verify it |
     | require | Require clients to present a certificate, but do not verify it |
     | verify_if_given | Ask clients for a certificate; allow even if there isn't one, but verify it if there is |
