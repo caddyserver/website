@@ -544,7 +544,7 @@ method <verbs...>
 expression method('<verbs...>')
 ```
 
-By the method (verb) of the HTTP request. Can match one or many methods. Verbs are case-insensitive, since they are converted to uppercase, so `post` is the same as `POST`; but within a [CEL expression](#expression), verbs must be uppercase.
+By the case-sensitive method token of the HTTP request. Can match one or many methods. Standard methods such as `GET` and `POST` are uppercase; extension methods must use their exact casing. Caddyfile and [CEL expression](#expression) matchers use the same case-sensitive comparison.
 
 Multiple `method` matchers will be OR'ed together.
 
