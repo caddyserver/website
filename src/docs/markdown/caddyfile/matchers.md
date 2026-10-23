@@ -858,6 +858,53 @@ In a [CEL expression](#expression), it would look like this:
 
 
 ---
+### tls
+
+```caddy-d
+tls
+tls early_data
+
+expression tls()
+expression tls('any')
+expression tls('complete')
+expression tls('early_data')
+```
+
+By the underlying TLS connection state of the request.
+
+- Bare `tls` matches any request that came in over TLS, regardless of whether the handshake has
+  completed yet.
+- `tls early_data` matches only requests that arrived as QUIC 0-RTT early data, before the TLS
+  handshake completed. Early data can be replayed by an attacker, and the remote IP of early data
+  packets can more easily be spoofed, so it's generally unsafe to process non-idempotent requests
+  in this state -- it's conventional to respond with HTTP 425 Too Early instead.
+
+If this matcher is specified but the request did not come in over TLS, it will never match.
+
+Inside an [`expression`](#expression) matcher, the same two states are available as
+`tls('any')`/`tls()` (equivalent to bare `tls`) and `tls('early_data')` (equivalent to
+`tls early_data`), plus a third, `tls('complete')`, for the otherwise-implicit "handshake
+complete" case -- the inverse of `tls('early_data')` for a request that did come in over TLS.
+`tls()` with no arguments is shorthand for `tls('any')`.
+
+#### Examples:
+
+Respond with 425 Too Early to QUIC 0-RTT early data instead of processing it:
+
+```caddy-d
+@early_data tls early_data
+respond @early_data 425 "Too Early"
+```
+
+In a CEL expression, match only fully-established TLS connections, rejecting early data:
+
+```caddy-d
+@established expression `tls() && !tls('early_data')`
+```
+
+
+
+---
 ### url_pattern
 
 ```caddy-d
