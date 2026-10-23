@@ -70,6 +70,10 @@ After installing, please read the [service usage instructions](/docs/running#usi
 <span class="bash">sudo apt update</span>
 <span class="bash">sudo apt install caddy</span></code></pre>
 
+The Ubuntu and Debian archives also provide a caddy package, which lags upstream by years. To make apt always resolve to this repository instead:
+
+<pre><code class="cmd"><span class="bash">printf 'Package: caddy\nPin: release o=cloudsmith/caddy/stable\nPin-Priority: 1001\n' | sudo tee /etc/apt/preferences.d/caddy-stable.pref</span></code></pre>
+
 To automatically install Caddy updates, enable unattended upgrades and allow the Caddy repository:
 
 <pre><code class="cmd"><span class="bash">sudo apt install --yes unattended-upgrades</span>
