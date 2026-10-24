@@ -156,7 +156,7 @@ Possible options are (click on each option to jump to its documentation):
 		0rtt off
 
 		trusted_proxies <module> ...
-		trusted_proxies_strict
+		trusted_proxies_strict [<count>]
 		trusted_proxies_unix
 		client_ip_headers <headers...>
 
@@ -1138,6 +1138,25 @@ Downstream proxies such as HAProxy, CloudFlare, AWS ALB, CloudFront, etc. will a
 <aside class="tip">
 
 Specifically in the case of AWS ALB, you will certainly want to enable this option. [Per their documentation](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/x-forwarded-headers.html#w227aac13c27b9c15) you can only identify the real client IP by setting XFF mode to `append`. This IP will be appended to the right of `X-Forwarded-For` and can only be safely extracted via `trusted_proxies_strict`.
+
+</aside>
+
+If there are proxies in front of the trusted ones whose addresses you don't know, such as a WAF in front of a load balancer, the right-most untrusted address is that proxy, not the client. Give `trusted_proxies_strict` a count to skip them: with `2`, the second untrusted address from the right becomes the client address. Only untrusted addresses are counted, and the default count is `1`.
+
+```caddy
+{
+	servers {
+		trusted_proxies static private_ranges
+		trusted_proxies_strict 2
+	}
+}
+```
+
+If a header has some untrusted addresses but fewer than the count, the request didn't come through the expected proxies, and the client address is set to the remote IP address of the direct incoming connection instead.
+
+<aside class="tip">
+
+A count above `1` is only safe if clients can't reach your trusted proxies without going through the untrusted ones in front of them, and the outermost of those proxies controls the incoming `X-Forwarded-For` value. Otherwise a client can add addresses of its choosing to the header, and one of them becomes the client address.
 
 </aside>
 
