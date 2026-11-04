@@ -88,6 +88,8 @@ Now compare an equivalent structured log message from Caddy, encoded as JSON and
 }
 ```
 
+An access log entry whose message is `NOP` and whose `status` is `0` means that the request reached the end of the handler chain without a handler writing a response. Go then sends an implicit `200` response to the client. A common cause is a `Host` header that does not match the configured [site address](/docs/caddyfile/concepts#addresses); use a hostless address such as `:80` when the server should accept any host.
+
 You can see how the structured log is much more useful and contains much more information. The abundance of information in this log message is not only useful, but it comes at virtually no performance overhead: Caddy's logs are zero-allocation. Structured logs have no restrictions on data types or context: they can be used in any code path and include any kind of information.
 
 Because the logs are structured and strongly-typed, they can be encoded into any format. So if you don't want to work with JSON, logs can be encoded into any other representation. Caddy supports others through [log encoder modules](/docs/json/logging/logs/encoder/), and even more can be added.
