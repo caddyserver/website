@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Building Caddy</title>
+		{{import "/old/includes/head.html"}}
+		{{template "head"}}
+		<link rel="stylesheet" href="/old/resources/css/download.css{{template "cacheBust"}}">
+		<link rel="stylesheet" href="/resources/css/download-beta.css{{template "cacheBust"}}">
+		<script src="/resources/js/download-beta-build.js{{template "cacheBust"}}"></script>
+	</head>
+	<body>
+		<div class="wrapper">
+			<header>
+				<div id="logo-container">
+					<a href="/"><img src="/old/resources/images/caddy-logo.svg" id="logo" alt="Caddy"></a>
+					<div id="zerossl-project">a <a href="https://zerossl.com"><img src="/old/resources/images/zerossl-logo.svg" id="zerossl-logo"></a> project</div>
+				</div>
+				{{include "/old/includes/header-nav.html"}}
+			</header>
+
+			<div id="build-page">
+				<h1 id="build-title">Building Caddy...</h1>
+				<p id="build-subtitle" style="color:#888;">Your custom build is in progress. This page will update automatically.</p>
+
+				<div id="build-progress">
+					<div id="current-step" class="stage-label">Waiting for build to start...</div>
+					<div class="progress-bar">
+						<div class="progress-bar-fill" id="progress-fill"></div>
+					</div>
+				</div>
+
+				<div id="build-log-container">
+					<div id="build-log"></div>
+				</div>
+
+				<div id="build-result" class="hidden">
+					<div id="result-success" class="hidden">
+						<h2>Build Complete</h2>
+						<p style="font-size:14px;color:#888;"><a id="download-link" href="#">Click here if the download did not start automatically.</a></p>
+						<p style="font-size:14px;color:#888;display:none;" id="darwin-note">
+							Run the following against the downloaded binary:
+							<code>xattr -d com.apple.quarantine caddy</code>
+						</p>
+					</div>
+					<div id="result-error" class="hidden">
+						<h2>Build Failed</h2>
+						<p id="error-message" class="text-error"></p>
+						<a href="/download-beta" class="blue button">Try Again</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{{include "/old/includes/footer.html"}}
+	</body>
+</html>
