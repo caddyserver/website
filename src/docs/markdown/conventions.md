@@ -151,6 +151,8 @@ OS | Data directory path
 
 All other OSes use the Linux/BSD directory path.
 
+If neither `XDG_DATA_HOME` nor the home directory can be determined (e.g. `HOME` is unset, or `AppData` on Windows), the data directory falls back to `./caddy`, relative to the current working directory. In that case, file servers automatically hide this directory, so certificates and private keys can't be served. Still, it's best to set `HOME` or `XDG_DATA_HOME` so that the data directory has a stable, persistent location.
+
 **The data directory must not be treated as a cache.** Its contents are **not** ephemeral or merely for the sake of performance. Caddy stores TLS certificates, private keys, OCSP staples, and other necessary information to the data directory. It should not be purged without understanding the implications.
 
 It is crucial that this directory is persistent and writeable by Caddy.

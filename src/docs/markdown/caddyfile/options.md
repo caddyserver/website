@@ -391,7 +391,7 @@ This differs from the [`log` directive](/docs/caddyfile/directives/log), which o
 
   By default, this list is empty (i.e. all logs are included).
 
-  For example, to include only logs emitted by the admin API, you would include `admin.api`.
+  For example, to include only logs emitted by the admin API, you would include `admin.api`. Including a namespace also includes every logger under it. For example, `include http.handlers` includes the logs of `http.handlers.file_server` and `http.handlers.reverse_proxy`.
 
 - **exclude** specifies the log names to be excluded from this logger.
 
@@ -1011,11 +1011,13 @@ For example, for an HTTPS server (needing the `tls` listener wrapper) that accep
 
   The optional **&lt;min_rate&gt;** works like the one for `read_body_idle`, but for writes to the client. Because the rate is averaged from the start of the response, pauses between writes count against it, so avoid it for long-lived streaming responses.
 
+  Handlers that set their own read or write deadlines, such as some plugins (e.g. FrankenPHP's request body timeout or Mercure's dispatch timeout), can make `read_body_idle` and `write_idle` stricter for a request, but not looser.
+
 - **write_max_chunk** is the maximum number of bytes that a single underlying write to the client may cover, so that `write_idle` applies between chunks of a large response rather than to one large write as a whole. It accepts all formats supported by [go-humanize](https://github.com/dustin/go-humanize/blob/master/bytes.go). Only has an effect when `write_idle` is enabled. Defaults to `64KiB`.
 
 - **idle** is a [duration value](/docs/conventions#durations) that sets the maximum time to wait for the next request when keep-alives are enabled. Defaults to 5 minutes to help avoid resource exhaustion.
 
-To set idle read or write timeouts for only some requests, see the [`timeouts` directive](/docs/caddyfile/directives/timeouts).
+To set idle read or write timeouts for only some requests, see the [`timeouts` directive](/docs/caddyfile/directives/timeouts), which takes precedence over `read_body_idle` and `write_idle` for matching requests.
 
 ```caddy
 {

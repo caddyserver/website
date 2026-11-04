@@ -88,6 +88,12 @@ encode [<matcher>] [<formats...>] {
   }
   ```
 
+Responses that already have a `Content-Encoding`, or whose `Cache-Control` header contains `no-transform`, are not encoded. A `no-transform` directive in the _request_ is ignored, since it is addressed to intermediaries. Prior to v2.11.8, it disabled encoding too. To restore that, use a matcher: `@transformable not header Cache-Control *no-transform*` then `encode @transformable`.
+
+Responses that are eligible for encoding always get `Vary: Accept-Encoding`, even when sent uncompressed because the client doesn't accept any enabled encoding, so that shared caches store the variants separately.
+
+Encoded responses have no `Content-Length` or `Accept-Ranges`, so clients can't make range requests for them. A strong `ETag` gets the encoding appended (e.g. `"abc"` becomes `"abc-gzip"`), so each encoding has a distinct tag; the suffix is stripped from `If-None-Match` before the request is passed on, so conditional requests still work.
+
 
 ## Examples
 

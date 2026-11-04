@@ -34,7 +34,7 @@ basic_auth [<matcher>] [<hash_algorithm> [<realm>]] {
 
 - **&lt;hashed_password&gt;** is the password hash.
 
-The username and hashed password may use [global placeholders](/docs/conventions#placeholders) such as `{env.*}`, which are replaced when the config is loaded. Any other text in braces is kept as-is.
+The username and hashed password may use [global placeholders](/docs/conventions#placeholders) such as `{env.*}`, which are replaced when the config is loaded. Any other text in braces is kept as-is. Each username must be unique within a `basic_auth` block after placeholders are replaced. Duplicates are a configuration error.
 
 
 ## Examples

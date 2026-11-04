@@ -21,11 +21,11 @@ timeouts [<matcher>] {
 }
 ```
 
-- **read_timeout** is a [duration value](/docs/conventions#durations) that sets how long a read from the request body may stall before the connection is aborted. The deadline is reset after every successful read. By default, no idle read timeout is applied by this directive.
+- **read_timeout** is a [duration value](/docs/conventions#durations) that sets how long a read from the request body may stall before the connection is aborted. The deadline is reset after every successful read. If omitted, the server-wide `read_body_idle` timeout applies.
 
   The optional **&lt;min_rate&gt;** is a number of bytes per second that the client must sustain, averaged from the start of reading the request body. With it, the client is allowed the `read_timeout` duration plus the time it would take to send the bytes received so far at `min_rate`, which also stops clients that send just enough data to never stall.
 
-- **write_timeout** is a [duration value](/docs/conventions#durations) that sets how long a write to the client may stall before the connection is aborted. The deadline is reset before every write. By default, no idle write timeout is applied by this directive.
+- **write_timeout** is a [duration value](/docs/conventions#durations) that sets how long a write to the client may stall before the connection is aborted. The deadline is reset before every write. If omitted, the server-wide `write_idle` timeout applies.
 
   The optional **&lt;min_rate&gt;** works like the one for `read_timeout`, but for writes to the client. Because the rate is averaged from the start of the response, pauses between writes count against it, so avoid it for long-lived streaming responses such as server-sent events.
 
@@ -33,7 +33,7 @@ timeouts [<matcher>] {
 
 <aside class="tip">
 
-The server-wide `read_body_idle` and `write_idle` timeouts are enabled by default, and they are currently applied after this directive's timeouts on every read and write, so they take precedence. For this directive's `read_timeout` or `write_timeout` to take effect, disable the matching server-wide timeout in the [`timeouts` global option](/docs/caddyfile/options#timeouts), for example with `read_body_idle -1s`.
+While a request is handled by a matching route, this directive's `read_timeout` and `write_timeout` take precedence over the server-wide `read_body_idle` and `write_idle` timeouts, and over those of any enclosing `timeouts` directive (the innermost one wins). A timeout this directive doesn't set keeps the server-wide setting. The server-wide `read_body` and `write` timeouts in the [`timeouts` global option](/docs/caddyfile/options#timeouts) still cap the whole request body and response. Before v2.11.8, the server-wide idle timeouts took precedence and had to be disabled for this directive to have an effect.
 
 </aside>
 
