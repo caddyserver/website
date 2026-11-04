@@ -50,6 +50,7 @@ ready(function() {
 	- [protocol](#protocol)
 	- [query](#query)
 	- [remote_ip](#remote-ip)
+	- [tls](#tls)
 	- [url_pattern](#url-pattern)
 	- [vars](#vars)
 	- [vars_regexp](#vars-regexp)
