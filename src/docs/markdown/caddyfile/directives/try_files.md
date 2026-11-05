@@ -4,7 +4,7 @@ title: try_files (Caddyfile directive)
 
 # try_files
 
-Rewrites the request URI path to the first of the listed files which exists in the site root. If no files match, no rewrite is performed.
+Rewrites the request URI path to the first of the listed files which exists in the site root. If no files match, no rewrite is performed, unless `policy first_exist_fallback` is used, in which case the request is always rewritten to the last file in the list.
 
 
 ## Syntax

@@ -308,7 +308,7 @@ This is enabled by default, with the `random` policy. Retries are disabled by de
 
 	- `round_robin` iterates each upstream in turn
 
-	- `weighted_round_robin <weights...>` iterates each upstream in turn, respecting the weights provided. The amount of weight arguments should match the amount of upstreams configured. Weights must be non-negative integers, and at least one weight must be greater than zero. For example with two upstreams and weights `5 1`, the first upstream would be selected 5 times in a row before the second upstream is selected once, then the cycle repeats. If zero is used as a weight, this will disable selecting the upstream for new requests.
+	- `weighted_round_robin <weights...>` iterates each upstream in turn, respecting the weights provided. There should be one weight per upstream, in the same order. Upstreams without a weight are treated as having a weight of `0`. Weights must be non-negative integers, and at least one weight must be greater than zero. For example with two upstreams and weights `5 1`, the first upstream would be selected 5 times in a row before the second upstream is selected once, then the cycle repeats. If zero is used as a weight, this will disable selecting the upstream for new requests.
 
 	- `least_conn` choose upstream with fewest number of current requests; if more than one host has the least number of requests, then one of those hosts is chosen at random
 
@@ -350,6 +350,15 @@ This is enabled by default, with the `random` policy. Retries are disabled by de
 - **lb_retry_match** <span id="lb_retry_match"/> restricts with which requests retries are allowed. A request must match this condition in order to be retried if the connection to the upstream succeeded but the subsequent round-trip failed. If the connection to the upstream failed, a retry is always allowed. By default, only `GET` requests are retried.
 
   The syntax for this option is the same as for [named request matchers](/docs/caddyfile/matchers#named-matchers), but without the `@name`. If you only need a single matcher, you may configure it on the same line. For multiple matchers, a block is necessary.
+
+  `lb_retry_match` may be repeated. A request may be retried if any of them match. An [`expression`](/docs/caddyfile/matchers#expression) that references the upstream's response (`{rp.status_code}`, `{rp.status_text}`, `{rp.header.*}`, `{rp.upstream.latency}` or `{rp.upstream.latency_ms}`) is also evaluated against each response. If it matches, the response is discarded and the request is retried with the next upstream, as long as `lb_retries` or `lb_try_duration` allow it. If retries run out, the last upstream's status code is used. Other matchers, including expressions that only use request data, never cause a successful response to be retried. When evaluated after a failed round-trip, `{rp.is_transport_error}` is `true`.
+
+  ```caddy-d
+  reverse_proxy node1:80 node2:80 {
+  	lb_retries 2
+  	lb_retry_match expression `{rp.status_code} in [502, 503, 504]`
+  }
+  ```
 
 
 
@@ -630,7 +639,7 @@ transport http {
 
 - **tls_insecure_skip_verify** <span id="tls_insecure_skip_verify"/> turns off TLS handshake verification, making the connection insecure and vulnerable to man-in-the-middle attacks. _Do not use in production._
 
-- **tls_curves** <span id="tls_curves"/> is a list of elliptic curves to support for the upstream connection. Caddy's defaults are modern and secure, so you should only need to configure this if you have specific requirements.
+- **tls_curves** <span id="tls_curves"/> is a list of elliptic curves to support for the upstream connection. Caddy's defaults are modern and secure, so you should only need to configure this if you have specific requirements. Supported values are `x25519mlkem768`, `x25519`, `secp256r1`, `secp384r1` and `secp521r1`. An unknown name is a configuration error.
 
 - **tls_timeout** <span id="tls_timeout"/> is the maximum [duration](/docs/conventions#durations) to wait for the TLS handshake to complete. Default: No timeout.
 
@@ -694,7 +703,7 @@ transport fastcgi {
 
 - **root** <span id="root"/> is the root of the site. Default: `{http.vars.root}` or current working directory.
 
-- **split** <span id="split"/> is where to split the path to get PATH_INFO at the end of the URI.
+- **split** <span id="split"/> is where to split the path to get PATH_INFO at the end of the URI. The path is normalized before splitting (`.` and `..` segments resolved, repeated slashes merged), so `/index.php//a//b` yields `PATH_INFO=/a/b`.
 
 - **env** <span id="env"/> sets an extra environment variable to the given value. Can be specified more than once for multiple environment variables. The standard CGI variables (including `SERVER_ADDR`) and the request headers as `HTTP_*` variables are set by default; to mitigate [httpoxy](https://httpoxy.org/), the client's `Proxy` request header is never passed as `HTTP_PROXY`.
 
@@ -732,7 +741,7 @@ Additionally, inside `handle_response`, two special handler directives may be us
 
 - **copy_response** <span id="copy_response"/> copies the response body received from the backend back to the client. Optionally allows changing the status code of the response while doing so. This directive is [ordered before `respond`](/docs/caddyfile/directives#directive-order).
 
-- **copy_response_headers** <span id="copy_response_headers"/> copies the response headers from the backend to the client, optionally including _OR_ excluding a list of headers fields (cannot specify both `include` and `exclude`). This directive is [ordered after `header`](/docs/caddyfile/directives#directive-order).
+- **copy_response_headers** <span id="copy_response_headers"/> copies the response headers from the backend to the client, optionally including _OR_ excluding a list of headers fields (cannot specify both `include` and `exclude`). This directive is [ordered after `header`](/docs/caddyfile/directives#directive-order). Hop-by-hop header fields (`Connection`, `Keep-Alive`, `Proxy-Authenticate`, `Proxy-Authorization`, `Proxy-Connection`, `Te`, `Trailer`, `Transfer-Encoding`, `Upgrade`, `Alt-Svc`, and any listed in `Connection`) are never copied, even if listed in `include`.
 
 Three placeholders will be made available within the `handle_response` routes:
 

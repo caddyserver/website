@@ -14,7 +14,7 @@ localhost
 
 <aside class="tip">
 
-If the HTTP and HTTPS ports (80 and 443, respectively) are privileged ports on your OS, you will either need to run with elevated privileges or use higher ports. To gain permission, run as root with `sudo -E` or use `sudo setcap cap_net_bind_service=+ep $(which caddy)`. Alternatively, to use higher ports, just change the address to something like `localhost:2080` and change the HTTP port using the [`http_port`](/docs/caddyfile/options) Caddyfile option.
+If the HTTP and HTTPS ports (80 and 443, respectively) are privileged ports on your OS, you will either need to run with elevated privileges or use higher ports. To gain permission, run as root with `sudo -E` or use `sudo setcap cap_net_bind_service=+p $(which caddy)` (for Caddy versions before v2.11.8, use `=+ep`). Alternatively, to use higher ports, just change the address to something like `localhost:2080` and change the HTTP port using the [`http_port`](/docs/caddyfile/options) Caddyfile option.
 
 </aside>
 

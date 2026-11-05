@@ -137,7 +137,7 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
 
 - **client_auth** <span id="client_auth"/> enables and configures TLS client authentication:
 
-  TLS client authentication is selected from SNI during the handshake, before HTTP site routing. A wildcard site's client authentication therefore applies to matching specific hostnames unless they explicitly set the mode to `off`:
+  TLS client authentication is selected from SNI during the handshake, before HTTP site routing. A specific site without a `tls` directive keeps the matching wildcard policy's client authentication. Use `mode off` to disable that inherited requirement. Sites with their own TLS connection settings use their own policy instead:
 
   ```caddy
   *.example.com {

@@ -49,7 +49,7 @@ php_fastcgi [<matcher>] <php-fpm_gateways...> {
 
 - **root** <span id="root"/> sets the root folder to the site. It's recommended to always use the [`root` directive](root) in conjunction with `php_fastcgi`, but overriding this can be useful when your PHP-FPM upstream is using a different root than Caddy (see [an example](#docker)). Defaults to the value of the [`root` directive](root) if used, otherwise defaults to Caddy's current working directory.
 
-- **split** <span id="split"/> sets the substrings for splitting the URI into two parts. The first matching substring will be used to split the "path info" from the path. The first piece is suffixed with the matching substring and will be assumed as the actual resource (CGI script) name. The second piece will be set to PATH_INFO for the CGI script to use. Default: `.php`
+- **split** <span id="split"/> sets the substrings for splitting the URI into two parts. The first matching substring will be used to split the "path info" from the path. The first piece is suffixed with the matching substring and will be assumed as the actual resource (CGI script) name. The second piece will be set to PATH_INFO for the CGI script to use. The path is normalized before splitting (`.` and `..` segments resolved, repeated slashes merged), so `/index.php//a//b` yields `PATH_INFO=/a/b`. Default: `.php`
 
 - **index** <span id="index"/> specifies the filename to treat as the directory index file. This affects the file matcher in the [expanded form](#expanded-form). Default: `index.php`. Can be set to `off` to disable rewrite fallback to `index.php` when a matching file is not found.
 
@@ -90,7 +90,7 @@ route {
 		file {path}/index.php
 		not path */
 	}
-	redir @canonicalPath {http.request.orig_uri.path}/ 308
+	redir @canonicalPath ./{http.request.orig_uri.path.file_escaped}/{orig_?query} 308
 
 	# If the requested file does not exist, try index files and assume index.php always exists
 	@indexFiles file {
@@ -116,7 +116,7 @@ route {
 
   This canonicalization occurs only if the `try_files` subdirective contains `{path}/index.php` (the default).
 
-  This is performed by using a request matcher that matches only requests that _don't_ end in a slash, and which map to a directory on disk which contains an `index.php` file, and if it matches, performs an HTTP 308 redirect with the trailing slash appended. So for example, it would redirect a request with path `/foo` to `/foo/` (appending a `/`, to canonicalize the path to the directory), if `/foo/index.php` exists on disk.
+  This is performed by using a request matcher that matches only requests that _don't_ end in a slash, and which map to a directory on disk which contains an `index.php` file, and if it matches, performs an HTTP 308 redirect with the trailing slash appended. So for example, it would redirect a request with path `/foo` to `/foo/` (appending a `/`, to canonicalize the path to the directory), if `/foo/index.php` exists on disk. The redirect uses a relative `Location` (e.g. `./foo/`) and keeps the query string.
 
 - The next section deals with performing path rewrites based on whether a matching file exists on disk. This also has the side-effect of remembering the part of the path after `.php` (if the request path had `.php` in it). This is important for Caddy to correctly set the FastCGI environment variables.
 
@@ -125,6 +125,8 @@ route {
   - Second, it checks if `{path}/index.php` is a file that exists on disk. If so, it rewrites to that path. For requests to a directory like `/foo/` it'll then look for `/foo//index.php` (which gets normalized to `/foo/index.php`), and rewrite the request to that path if it exists. This behaviour is sometimes useful if you're running another PHP app in a subdirectory of your webroot.
 
   - Lastly, it'll always rewrite to `index.php` (it almost always exists for modern PHP apps). This allows your PHP app to handle any request for paths that _don't_ map to files on disk, by using the `index.php` script as its entrypoint.
+
+    This happens even if `index.php` doesn't exist, so requests for missing files go to PHP-FPM rather than `file_server`. For sites without a front controller, use [`index off`](#index), or end [`try_files`](#try_files) with `=404`.
 
 - And finally, the last section is what actually proxies the request to your PHP FastCGI (or PHP-FPM) service to actually run your PHP code. The request matcher will only match requests which end in `.php`, so, any file that _isn't_ a PHP script and that _does_ exist on disk, will _not_ be handled by this directive, and will fall through.
 

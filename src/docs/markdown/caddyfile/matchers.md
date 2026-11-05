@@ -50,6 +50,7 @@ ready(function() {
 	- [protocol](#protocol)
 	- [query](#query)
 	- [remote_ip](#remote-ip)
+	- [tls](#tls)
 	- [url_pattern](#url-pattern)
 	- [vars](#vars)
 	- [vars_regexp](#vars-regexp)
@@ -249,6 +250,8 @@ Most other request matchers can also be used in expressions as functions, which 
 
 Caddy [placeholders](/docs/conventions#placeholders) (or [Caddyfile shorthands](/docs/caddyfile/concepts#placeholders)) may be used in these CEL expressions, as they are preprocessed and converted to regular CEL function calls before being interpreted by the CEL environment. If a placeholder should be passed as a string argument to a matcher function, then the leading `{` should be escaped with a backslash `\` so that it is not preprocessed, for example `file('\{path}.md')`.
 
+Write regular expressions as CEL raw strings (prefixed with `r`), so that backslashes reach the regexp unchanged, e.g. `path_regexp(r'^/bar\b')`.
+
 For convenience, the matcher name may be omitted if defining a named matcher that consists solely of a CEL expression. The CEL expression must be [quoted](/docs/caddyfile/concepts#tokens-and-quotes) (backticks or heredocs recommended). This reads quite nicely:
 
 ```caddy-d
@@ -256,6 +259,8 @@ For convenience, the matcher name may be omitted if defining a named matcher tha
 ```
 
 In this case the CEL matcher is assumed.
+
+A matcher set may contain only one `expression`; combine conditions with `&&` or `||`.
 
 #### Examples:
 
@@ -274,13 +279,13 @@ Match requests where handler returned error status code `404`, would be used in 
 Match requests where the path matches one of two different regular expressions; this is only possible to write using an expression, because the [`path_regexp`](#path-regexp) matcher can normally only exist once per named matcher:
 
 ```caddy-d
-@user expression path_regexp('^/user/(\w*)') || path_regexp('^/(\w*)')
+@user expression path_regexp(r'^/user/(\w*)') || path_regexp(r'^/(\w*)')
 ```
 
 Or the same, omitting the matcher name, and wrapping in [backticks](/docs/caddyfile/concepts#tokens-and-quotes) so it's parsed as a single token:
 
 ```caddy-d
-@user `path_regexp('^/user/(\w*)') || path_regexp('^/(\w*)')`
+@user `path_regexp(r'^/user/(\w*)') || path_regexp(r'^/(\w*)')`
 ```
 
 You may use [heredoc syntax](/docs/caddyfile/concepts#heredocs) to write multi-line CEL expressions:
@@ -331,7 +336,7 @@ By files.
 
 	- `first_exist` checks for file existence. The first file that exists is selected.
 
-	- `first_exist_fallback` is similar to `first_exist`, but assumes that the last element in the list always exists to prevent a disk access.
+	- `first_exist_fallback` is similar to `first_exist`, but always matches: if none of the earlier files exist, the last element is selected without checking it.
 
 	- `smallest_size` chooses the file with the smallest size.
 
@@ -738,7 +743,7 @@ This can be simplified by omitting the name, which will be inferred from the nam
 Or the same, using a [CEL expression](#expression), also validating that the [`file`](#file) exists on disk:
 
 ```caddy-d
-@static `path_regexp('\.([a-f0-9]{6})\.(css|js)$') && file()`
+@static `path_regexp(r'\.([a-f0-9]{6})\.(css|js)$') && file()`
 ```
 
 
@@ -853,6 +858,53 @@ In a [CEL expression](#expression), it would look like this:
 
 ```caddy-d
 @my-friends `remote_ip('12.23.34.45', '23.34.45.56')`
+```
+
+
+
+---
+### tls
+
+```caddy-d
+tls
+tls early_data
+
+expression tls()
+expression tls('any')
+expression tls('complete')
+expression tls('early_data')
+```
+
+By the underlying TLS connection state of the request.
+
+- Bare `tls` matches any request that came in over TLS, regardless of whether the handshake has
+  completed yet.
+- `tls early_data` matches only requests that arrived as QUIC 0-RTT early data, before the TLS
+  handshake completed. Early data can be replayed by an attacker, and the remote IP of early data
+  packets can more easily be spoofed, so it's generally unsafe to process non-idempotent requests
+  in this state -- it's conventional to respond with HTTP 425 Too Early instead.
+
+If this matcher is specified but the request did not come in over TLS, it will never match.
+
+Inside an [`expression`](#expression) matcher, the same two states are available as
+`tls('any')`/`tls()` (equivalent to bare `tls`) and `tls('early_data')` (equivalent to
+`tls early_data`), plus a third, `tls('complete')`, for the otherwise-implicit "handshake
+complete" case -- the inverse of `tls('early_data')` for a request that did come in over TLS.
+`tls()` with no arguments is shorthand for `tls('any')`.
+
+#### Examples:
+
+Respond with 425 Too Early to QUIC 0-RTT early data instead of processing it:
+
+```caddy-d
+@early_data tls early_data
+respond @early_data 425 "Too Early"
+```
+
+In a CEL expression, match only fully-established TLS connections, rejecting early data:
+
+```caddy-d
+@established expression `tls() && !tls('early_data')`
 ```
 
 
