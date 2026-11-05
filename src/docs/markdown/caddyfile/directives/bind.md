@@ -84,7 +84,7 @@ https://example.com {
 }
 ```
 
-See [inherited file descriptors](/docs/conventions#inherited-file-descriptors) for descriptor naming and duplicate-name indexing.
+See [inherited file descriptors](/docs/conventions#inherited-file-descriptors) for descriptor naming and duplicate names.
 
 To bind one domain to two different interfaces, with different responses:
 

@@ -8,7 +8,7 @@ Sets up error handlers.
 
 When the normal HTTP request handlers return an error, normal processing stops and the error handlers are invoked. Error handlers form a route which is just like normal routes, and they can do anything that normal routes can do. This enables great control and flexibility when handling errors during HTTP requests. For example, you can serve static error pages, templated error pages, or reverse proxy to another backend to handle errors.
 
-The directive may be repeated with different status codes to handle different errors differently. If no status codes are specified, then it will match any error, acting as a fallback if any other error handlers does not match.
+The directive may be repeated with different status codes to handle different errors differently. If no status codes are specified, then it will match any error, acting as a fallback if any other error handlers does not match. If the status codes of more than one `handle_errors` overlap (e.g. `404` and `4xx`), the first one in the Caddyfile that matches handles the error, so list more specific codes first. Blocks without status codes are always tried last.
 
 A request's context is carried into error routes, so any values set on the request context such as [site root](root) or [vars](vars) will be preserved in error handlers, too. Additionally, [new placeholders](#placeholders) are available when handling errors.
 

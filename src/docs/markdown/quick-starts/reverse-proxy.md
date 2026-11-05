@@ -64,7 +64,7 @@ Caddy will serve your proxy over [HTTPS automatically and by default](/docs/auto
 If you don't specify a port, Caddy defaults to 443 for HTTPS. In that case you will also need permission to bind to low ports. A couple ways to do this on Linux:
 
 - Run as root (e.g. `sudo -E`).
-- Or run `sudo setcap cap_net_bind_service=+ep $(which caddy)` to give Caddy this specific capability.
+- Or run `sudo setcap cap_net_bind_service=+p $(which caddy)` to give Caddy this specific capability (before v2.11.8, use `=+ep`). Caddy raises it only when binding a privileged port, so the binary still starts in environments that drop all capabilities.
 
 Here's the most basic `caddy reverse-proxy` command that gives you HTTPS:
 

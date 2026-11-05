@@ -36,6 +36,8 @@ When configured, by default all requests to the site will be logged. To conditio
 
 To add custom fields to the log entries, use the [`log_append` directive](log_append).
 
+To change the level of the log entries for some requests, use the [`log_level` directive](log_level).
+
 
 - [Syntax](#syntax)
 - [Output modules](#output-modules)
@@ -102,7 +104,7 @@ log [<logger_name>] {
 
 - **level** <span id="level"/> is the minimum entry level to log. Default: `INFO`.
 
-  Note that access logs currently only emit `INFO` and `ERROR` level logs.
+  By default, access logs emit `INFO` level entries, or `ERROR` for responses with a `5xx` status. The [`log_level` directive](log_level) can change the level of the entries for matching requests.
 
 - **sampling** <span id="sampling"/> configures log sampling to reduce log volume. If sampling is specified, then it is enabled, with the defaults below taking effect. Omitting this disables sampling.
 
@@ -423,6 +425,8 @@ Most commonly, the fields to filter would be:
 	ipv6 <cidr>
 }
 ```
+
+The IPv4 mask must be between `0` and `32`, and the IPv6 mask between `0` and `128`. Other values are a configuration error.
 
 
 ##### query

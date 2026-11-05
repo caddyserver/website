@@ -61,6 +61,7 @@ Directive | Description
 **[log_append](/docs/caddyfile/directives/log_append)** | Append a field to the access log
 **[log_skip](/docs/caddyfile/directives/log_skip)** | Skip access logging for matched requests
 **[log_name](/docs/caddyfile/directives/log_name)** | Override the logger name(s) to write to
+**[log_level](/docs/caddyfile/directives/log_level)** | Override the access log level for matched requests
 **[map](/docs/caddyfile/directives/map)** | Maps an input value to one or more outputs
 **[method](/docs/caddyfile/directives/method)** | Change the HTTP method internally
 **[metrics](/docs/caddyfile/directives/metrics)** | Configures the Prometheus metrics exposition endpoint
@@ -130,6 +131,7 @@ root
 log_append
 log_skip
 log_name
+log_level
 
 header
 copy_response_headers # only in reverse_proxy's handle_response block
@@ -205,6 +207,6 @@ For ease of use, the Caddyfile adapter sorts directives according to the followi
 
   If the sorted order is not what you need, use the [`route`](/docs/caddyfile/directives/route) directive to set the order explicitly, or mutually exclusive [`handle`](/docs/caddyfile/directives/handle) blocks.
 
-- The [`vars`](/docs/caddyfile/directives/vars) directive has its ordering by matcher reversed, because it involves setting values which can overwrite each other, so the most specific matcher should be evaluated last.
+- The [`vars`](/docs/caddyfile/directives/vars) and [`log_level`](/docs/caddyfile/directives/log_level) directives have their ordering by matcher reversed, because they set values which can overwrite each other, so the most specific matcher should be evaluated last. That is, single-path directives are sorted from least to most specific, and a directive with no matcher is sorted first. Directives with any other matcher (e.g. a named matcher) still keep the order they appear in the Caddyfile, so if they set the same value, the later one wins.
 
 - The contents of the [`route`](/docs/caddyfile/directives/route) directive ignores all the above rules, and preserves the order the directives appear within.

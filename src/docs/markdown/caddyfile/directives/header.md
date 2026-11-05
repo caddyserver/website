@@ -70,7 +70,7 @@ header [<matcher>] [[+|-|?|>]<field> [<value>|<find>] [<replace>]] {
 
 For multiple header manipulations, you can open a block and specify one manipulation per line in the same way.
 
-When using the `?` prefix to set a default header value, it is automatically separated into its own `header` handler, if it was in a `header` block with multiple header operations. [Under the hood](/docs/modules/http.handlers.headers#response/require), using `?` configures a [response matcher](/docs/caddyfile/response-matchers) which applies to the directive's entire handler, which only applies the header operations (like `defer`), but only if the field is not yet set.
+A `?` default is set only if that field is absent from the response, independently of the other fields in the block, and respects any `match` in the same block. [Under the hood](/docs/modules/http.handlers.headers#response/require), each default becomes its own `header` handler with a [response matcher](/docs/caddyfile/response-matchers).
 
 
 ## Examples
