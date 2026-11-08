@@ -703,7 +703,7 @@ transport fastcgi {
 
 - **root** <span id="root"/> is the root of the site. Default: `{http.vars.root}` or current working directory.
 
-- **split** <span id="split"/> is where to split the path to get PATH_INFO at the end of the URI. The path is normalized before splitting (`.` and `..` segments resolved, repeated slashes merged), so `/index.php//a//b` yields `PATH_INFO=/a/b`.
+- **split** <span id="split"/> is where to split the path to get PATH_INFO at the end of the URI. A split value matches only at the end of the path or immediately before `/`; for example, `.php` splits `/index.php/foo` while `/index.php.bak` remains unsplit. The path is normalized before splitting (`.` and `..` segments resolved, repeated slashes merged), so `/index.php//a//b` yields `PATH_INFO=/a/b`.
 
 - **env** <span id="env"/> sets an extra environment variable to the given value. Can be specified more than once for multiple environment variables. The standard CGI variables (including `SERVER_ADDR`) and the request headers as `HTTP_*` variables are set by default; to mitigate [httpoxy](https://httpoxy.org/), the client's `Proxy` request header is never passed as `HTTP_PROXY`.
 
