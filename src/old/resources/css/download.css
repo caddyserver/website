@@ -190,7 +190,29 @@ select:disabled,
 	background: #fff;
 }
 
-.package:focus {
+.package:focus-within {
+	outline: 2px solid rgb(25, 97, 192);
+	outline-offset: 2px;
+}
+
+/* the package's own switch: the only control carrying the selected state */
+.package-toggle {
+	display: flex;
+	align-items: flex-start;
+	padding-top: 12px;
+	margin-right: 16px;
+	cursor: pointer;
+}
+
+.package-checkbox {
+	width: 24px;
+	height: 24px;
+	margin: 0;
+	cursor: pointer;
+	accent-color: rgb(25, 97, 192);
+}
+
+.package-checkbox:focus-visible {
 	outline: 3px solid rgb(25, 97, 192);
 	outline-offset: 2px;
 }
