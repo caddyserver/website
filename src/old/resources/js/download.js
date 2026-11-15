@@ -12,7 +12,7 @@ $.get("/api/packages").done(function (json) {
 	$(function () {
 		const packageTemplate =
 			'<div class="package">\n' +
-			'	<div class="package-icon">&#128230;</div>\n' +
+			'	<div class="package-icon" aria-hidden="true">&#128230;</div>\n' +
 			'   <div class="package-data">\n' +
 			'		<div class="package-meta">\n' +
 			'			<b>downloads:</b> <span class="package-downloads"></span>\n' +
@@ -25,7 +25,7 @@ $.get("/api/packages").done(function (json) {
 
 		const moduleTemplate =
 			'<div class="module">\n' +
-			'	&#128268; <a target="_blank" title="View module docs" class="module-link"></a>\n' +
+			'	<span aria-hidden="true">&#128268;</span> <a target="_blank" title="View module docs" class="module-link"></a>\n' +
 			'	<span class="module-desc"></span>\n' +
 			'</div>\n';
 
@@ -48,6 +48,7 @@ $.get("/api/packages").done(function (json) {
 			if (preselectedPackage.includes(pkg.path)) {
 				$($pkg).addClass("selected");
 			}
+			updatePackageA11y($pkg, i);
 
 			if (pkg.modules && pkg.modules.length > 0) {
 				for (var j = 0; j < pkg.modules.length; j++) {
@@ -65,6 +66,8 @@ $.get("/api/packages").done(function (json) {
 			}
 			$('#optional-packages').append($pkg);
 		}
+		$('#package-count').attr('aria-live', 'polite');
+		$('#optional-packages').attr('role', 'group').attr('aria-label', 'Optional packages');
 		updatePage();
 	});
 }).fail(function (jqxhr, status, error) {
@@ -121,25 +124,19 @@ $(function () {
 	});
 
 	$('#optional-packages').on('click', '.package', function () {
-		$(this).toggleClass('selected');
-		updatePage();
+		togglePackage($(this));
+	});
 
-		let newUrl = new URL(window.location.href);
-		let currentSelected = newUrl.searchParams.getAll("package");
-		newUrl.searchParams.delete("package");
-		const pkgPath = $('.package-link', $(this)).text().trim();
-		if ($(this).hasClass('selected')) {
-			if (!currentSelected.includes(pkgPath)) {
-				currentSelected = [...currentSelected, pkgPath];
-			}
-		} else {
-			const position = currentSelected.indexOf(pkgPath);
-			if (position >= 0) {
-				currentSelected.splice(position, 1);
-			}
+	// make packages operable with the keyboard as well
+	$('#optional-packages').on('keydown', '.package', function (event) {
+		if (event.target !== this) {
+			return; // let nested controls (links, inputs) handle their own keys
 		}
-		currentSelected.forEach((selected) => newUrl.searchParams.append("package", selected));
-		history.replaceState({}, document.title, newUrl.toString());
+		if (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') {
+			// keep the page from scrolling when Space is used
+			event.preventDefault();
+			togglePackage($(this));
+		}
 	});
 
 	// when a link within a package listing is clicked, only operate the link (don't select the package)
@@ -255,6 +252,67 @@ function updatePage() {
 	$('#package-count').text($('.package.selected').length);
 	$('#download').attr('href', getDownloadLink());
 	$('#railway-link').attr('href', buildCaddyRailwayURL());
+}
+
+// togglePackage selects or deselects a package, keeping the URL
+// and the accessibility state of the package in sync.
+function togglePackage($pkg) {
+	$pkg.toggleClass('selected');
+	updatePackageA11y($pkg);
+	updatePage();
+
+	let newUrl = new URL(window.location.href);
+	let currentSelected = newUrl.searchParams.getAll("package");
+	newUrl.searchParams.delete("package");
+	const pkgPath = $('.package-link', $pkg).text().trim();
+	if ($pkg.hasClass('selected')) {
+		if (!currentSelected.includes(pkgPath)) {
+			currentSelected = [...currentSelected, pkgPath];
+		}
+	} else {
+		const position = currentSelected.indexOf(pkgPath);
+		if (position >= 0) {
+			currentSelected.splice(position, 1);
+		}
+	}
+	currentSelected.forEach((selected) => newUrl.searchParams.append("package", selected));
+	history.replaceState({}, document.title, newUrl.toString());
+}
+
+// updatePackageA11y exposes whether a package is selected to assistive
+// technologies: a checkbox role with aria-checked for screen readers,
+// plus a visually hidden "Add to build"/"Remove from build" label.
+function updatePackageA11y($pkg, index) {
+	var selected = $pkg.hasClass('selected');
+	var pkgName = $pkg.find('.package-name').text().trim() || 'Package';
+	var $versionInput = $pkg.find('.package-version-input');
+
+	$pkg.attr({
+		'role': 'checkbox',
+		'aria-checked': selected ? 'true' : 'false',
+		'tabindex': '0',
+		'aria-label': pkgName
+	});
+
+	// the visual "selected" outline means nothing to a screen reader, so the
+	// state is also spelled out in text and announced when it changes
+	var $state = $pkg.children('.package-state');
+	var stateText = selected ? 'Remove from build' : 'Add to build';
+	if (!$state.length) {
+		$state = $('<span class="package-state visually-hidden" aria-live="polite"/>').prependTo($pkg);
+	}
+	$state.text(stateText);
+
+	// renaming the native role of the container hides the version input from
+	// the accessibility tree, so it gets an explicit role and a name that
+	// includes the package it belongs to
+	if (index !== undefined) {
+		$versionInput.attr('id', 'package-version-' + index);
+	}
+	$versionInput.attr({
+		'role': 'textbox',
+		'aria-label': 'Version of ' + pkgName
+	});
 }
 
 function disableFields(building) {
