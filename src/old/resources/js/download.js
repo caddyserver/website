@@ -12,7 +12,11 @@ $.get("/api/packages").done(function (json) {
 	$(function () {
 		const packageTemplate =
 			'<div class="package">\n' +
-			'	<div class="package-icon">&#128230;</div>\n' +
+			'	<div class="package-icon" aria-hidden="true">&#128230;</div>\n' +
+			'	<label class="package-toggle">\n' +
+			'		<input type="checkbox" class="package-checkbox">\n' +
+			'		<span class="visually-hidden package-toggle-label"></span>\n' +
+			'	</label>\n' +
 			'   <div class="package-data">\n' +
 			'		<div class="package-meta">\n' +
 			'			<b>downloads:</b> <span class="package-downloads"></span>\n' +
@@ -25,7 +29,7 @@ $.get("/api/packages").done(function (json) {
 
 		const moduleTemplate =
 			'<div class="module">\n' +
-			'	&#128268; <a target="_blank" title="View module docs" class="module-link"></a>\n' +
+			'	<span aria-hidden="true">&#128268;</span> <a target="_blank" title="View module docs" class="module-link"></a>\n' +
 			'	<span class="module-desc"></span>\n' +
 			'</div>\n';
 
@@ -42,12 +46,19 @@ $.get("/api/packages").done(function (json) {
 			}
 			$pkgName = $('<span class="package-name"/>').text(path);
 
+			// the card is described by its name, so a screen reader announces
+			// which package it is when focus enters the links and inputs inside
+			$pkg.attr('aria-labelledby', 'package-title-' + i);
+			$pkgName.attr('id', 'package-title-' + i);
+			$('.package-toggle-label', $pkg).text('Include ' + path + ' in the custom build');
+
 			$('.package-link', $pkg).append($pkgName);
 			$('.package-link', $pkg).prop('href', pkg.repo);
 			$('.package-downloads', $pkg).text(pkg.downloads);
 			if (preselectedPackage.includes(pkg.path)) {
 				$($pkg).addClass("selected");
 			}
+			updatePackageA11y($pkg, i);
 
 			if (pkg.modules && pkg.modules.length > 0) {
 				for (var j = 0; j < pkg.modules.length; j++) {
@@ -65,6 +76,7 @@ $.get("/api/packages").done(function (json) {
 			}
 			$('#optional-packages').append($pkg);
 		}
+		$('#package-count').attr('aria-live', 'polite');
 		updatePage();
 	});
 }).fail(function (jqxhr, status, error) {
@@ -120,26 +132,19 @@ $(function () {
 		updatePage();
 	});
 
-	$('#optional-packages').on('click', '.package', function () {
-		$(this).toggleClass('selected');
-		updatePage();
+	// the checkbox in each package card is the accessible switch for it;
+	// clicking anywhere else on the card does the same thing
+	$('#optional-packages').on('change', '.package-checkbox', function () {
+		setPackageSelected($(this).closest('.package'), this.checked);
+	});
 
-		let newUrl = new URL(window.location.href);
-		let currentSelected = newUrl.searchParams.getAll("package");
-		newUrl.searchParams.delete("package");
-		const pkgPath = $('.package-link', $(this)).text().trim();
-		if ($(this).hasClass('selected')) {
-			if (!currentSelected.includes(pkgPath)) {
-				currentSelected = [...currentSelected, pkgPath];
-			}
-		} else {
-			const position = currentSelected.indexOf(pkgPath);
-			if (position >= 0) {
-				currentSelected.splice(position, 1);
-			}
+	$('#optional-packages').on('click', '.package', function (event) {
+		// clicks on the switch itself (the label or the checkbox) are handled
+		// by the change handler above; toggling here as well would undo them
+		if ($(event.target).closest('.package-toggle').length) {
+			return;
 		}
-		currentSelected.forEach((selected) => newUrl.searchParams.append("package", selected));
-		history.replaceState({}, document.title, newUrl.toString());
+		togglePackage($(this));
 	});
 
 	// when a link within a package listing is clicked, only operate the link (don't select the package)
@@ -255,6 +260,57 @@ function updatePage() {
 	$('#package-count').text($('.package.selected').length);
 	$('#download').attr('href', getDownloadLink());
 	$('#railway-link').attr('href', buildCaddyRailwayURL());
+}
+
+// togglePackage flips the selection state of a package.
+function togglePackage($pkg) {
+	setPackageSelected($pkg, !$pkg.hasClass('selected'));
+}
+
+// setPackageSelected selects or deselects a package, keeping the checkbox,
+// the URL and the accessibility state of the package in sync.
+function setPackageSelected($pkg, selected) {
+	$pkg.toggleClass('selected', selected);
+	updatePackageA11y($pkg);
+	updatePage();
+
+	let newUrl = new URL(window.location.href);
+	let currentSelected = newUrl.searchParams.getAll("package");
+	newUrl.searchParams.delete("package");
+	const pkgPath = $('.package-link', $pkg).text().trim();
+	if (selected) {
+		if (!currentSelected.includes(pkgPath)) {
+			currentSelected = [...currentSelected, pkgPath];
+		}
+	} else {
+		const position = currentSelected.indexOf(pkgPath);
+		if (position >= 0) {
+			currentSelected.splice(position, 1);
+		}
+	}
+	currentSelected.forEach((sel) => newUrl.searchParams.append("package", sel));
+	history.replaceState({}, document.title, newUrl.toString());
+}
+
+// updatePackageA11y syncs the package's checkbox with its selected state.
+// The card itself keeps its normal semantics: its links, module docs and
+// version input are all reachable and readable on their own, and the card is
+// announced as the "region" of a named package (aria-labelledby), not as a
+// single control.
+function updatePackageA11y($pkg, index) {
+	var selected = $pkg.hasClass('selected');
+	var pkgName = $pkg.find('.package-name').text().trim() || 'Package';
+	var $checkbox = $pkg.find('.package-checkbox');
+	var $versionInput = $pkg.find('.package-version-input');
+
+	$checkbox.prop('checked', selected)
+		.attr('aria-label', (selected ? 'Remove ' : 'Add ') + pkgName + (selected ? ' from the build' : ' to the build'));
+
+	// the version input belongs to the package it sits in
+	if (index !== undefined) {
+		$versionInput.attr('id', 'package-version-' + index);
+	}
+	$versionInput.attr('aria-label', 'Version of ' + pkgName);
 }
 
 function disableFields(building) {
