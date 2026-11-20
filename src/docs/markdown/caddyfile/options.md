@@ -87,6 +87,7 @@ Possible options are (click on each option to jump to its documentation):
 	log [name] {
 		output  <writer_module> ...
 		format  <encoder_module> ...
+		otlp
 		level   <level>
 		include <namespaces...>
 		exclude <namespaces...>
@@ -380,6 +381,10 @@ This differs from the [`log` directive](/docs/caddyfile/directives/log), which o
 - **format** describes how to encode, or format, the logs.
 
   See the [`log` directive](/docs/caddyfile/directives/log#format-modules) for complete documentation.
+
+- **otlp** also exports the logs to an OpenTelemetry collector. The `level`, `include` and `exclude` settings apply to exported entries.
+
+  See the [`log` directive](/docs/caddyfile/directives/log#opentelemetry-export) for complete documentation.
 
 - **level** is the minimum entry level to log.
 

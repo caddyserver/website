@@ -60,6 +60,7 @@ To change the level of the log entries for some requests, use the [`log_level` d
 	- [regexp](#regexp)
 	- [hash](#hash)
   - [append](#append)
+  - [OpenTelemetry export](#opentelemetry-export)
 - [Examples](#examples)
 
 By default, headers with potentially sensitive information (`Cookie`, `Set-Cookie`, `Authorization` and `Proxy-Authorization`) will be logged as `REDACTED` in access logs. This behaviour can be disabled with the [`log_credentials`](/docs/caddyfile/options#log-credentials) global server option.
@@ -73,6 +74,7 @@ log [<logger_name>] {
 	no_hostname
 	output <writer_module> ...
 	format <encoder_module> ...
+	otlp
 	level  <level>
 	sampling {
 		interval   <duration>
@@ -101,6 +103,8 @@ log [<logger_name>] {
 - **format** <span id="format"/> describes how to encode, or format, the logs. See [`format` modules](#format-modules) below.
 
   Default: `console` if `stderr` is detected to be a terminal, `json` otherwise.
+
+- **otlp** <span id="otlp"/> also exports the logs to an OpenTelemetry collector. See [OpenTelemetry export](#opentelemetry-export) below.
 
 - **level** <span id="level"/> is the minimum entry level to log. Default: `INFO`.
 
@@ -378,6 +382,8 @@ Specifying `wrap` is optional; if omitted, a default is chosen depending on whet
 
 As a shortcut, the `fields` block can be omitted and the filters can be specified directly within the `filter` block.
 
+The filters also apply to the entries exported with [`otlp`](#opentelemetry-export), so redacted fields stay redacted.
+
 
 These are the available filters:
 
@@ -538,6 +544,50 @@ It is most useful for adding information about the Caddy instance that is produc
 Specifying `wrap` is optional; if omitted, a default is chosen depending on whether the current output module is [`stderr`](#stderr) or [`stdout`](#stdout), and is an interactive terminal, in which case [`console`](#console) is chosen, otherwise [`json`](#json) is chosen.
 
 The `fields` block can be omitted and the fields can be specified directly within the `append` block.
+
+Appended fields are not exported with [`otlp`](#opentelemetry-export). Set them as OpenTelemetry resource attributes instead.
+
+
+### OpenTelemetry export
+
+The **otlp** subdirective exports log entries as [OpenTelemetry log records](https://opentelemetry.io/docs/concepts/signals/logs/) using the OpenTelemetry Protocol (OTLP), in addition to writing them to the log's output. To only export them, discard the output:
+
+```caddy-d
+log {
+	output discard
+	otlp
+}
+```
+
+The log's `level` and `sampling` apply to exported entries. When `otlp` is set in the [`log` global option](/docs/caddyfile/options#log), `include` and `exclude` apply too.
+
+Each record carries the entry's level, message and fields as attributes. The logger name, such as `http.log.access`, is the instrumentation scope. When the [`tracing` directive](tracing) handles the request, the access log record is linked to its span, so your observability backend can correlate logs and traces.
+
+The format only shapes the output, with two exceptions:
+
+- The field filters of the [`filter`](#filter) format apply to exported records too.
+- Fields added by the [`append`](#append) format are not exported. To attach information about the Caddy instance, set resource attributes instead, for example `OTEL_RESOURCE_ATTRIBUTES=host.name=web-1,deployment.environment=prod`.
+
+The exporter is configured with the standard [OpenTelemetry environment variables](https://opentelemetry.io/docs/specs/otel/configuration/sdk-environment-variables/):
+
+- `OTEL_LOGS_EXPORTER`: `otlp` (default), `console` or `none`
+- `OTEL_EXPORTER_OTLP_PROTOCOL`: `http/protobuf` (default) or `grpc`
+- `OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_EXPORTER_OTLP_HEADERS`, `OTEL_EXPORTER_OTLP_TIMEOUT`, `OTEL_EXPORTER_OTLP_COMPRESSION`, `OTEL_EXPORTER_OTLP_INSECURE`, `OTEL_EXPORTER_OTLP_CERTIFICATE`, `OTEL_EXPORTER_OTLP_CLIENT_CERTIFICATE` and `OTEL_EXPORTER_OTLP_CLIENT_KEY`
+- the `OTEL_EXPORTER_OTLP_LOGS_*` variant of each variable above, which takes precedence
+- `OTEL_SERVICE_NAME` and `OTEL_RESOURCE_ATTRIBUTES`
+- `OTEL_BLRP_SCHEDULE_DELAY`, `OTEL_BLRP_EXPORT_TIMEOUT`, `OTEL_BLRP_MAX_QUEUE_SIZE` and `OTEL_BLRP_MAX_EXPORT_BATCH_SIZE`
+- `OTEL_LOGRECORD_ATTRIBUTE_COUNT_LIMIT` and `OTEL_LOGRECORD_ATTRIBUTE_VALUE_LENGTH_LIMIT`
+
+All logs share one exporter, which survives config reloads. Pending records are flushed, for up to 5 seconds, when the last log using it is unloaded.
+
+`otlp` is a shortcut for the [`otlp` log core module](/docs/json/logging/logs/core/otlp/), so it cannot be combined with the `core` subdirective. In JSON, set the log's `core` field:
+
+```json
+{
+	"writer": {"output": "discard"},
+	"core": {"module": "otlp"}
+}
+```
 
 
 
@@ -718,4 +768,23 @@ example.com {
 		}
 	}
 }
+```
+
+<span id="otlp-example" /> To export access logs to an OpenTelemetry collector instead of writing them, linked to the traces of the requests:
+
+```caddy
+example.com {
+	tracing
+	log {
+		output discard
+		otlp
+	}
+	reverse_proxy localhost:8080
+}
+```
+
+```console
+$ OTEL_EXPORTER_OTLP_ENDPOINT=http://collector:4318 \
+	OTEL_SERVICE_NAME=caddy \
+	caddy run
 ```
