@@ -146,6 +146,8 @@ Keep in mind that Let's Encrypt may send you emails about your certificate neari
     | require_and_verify | Require clients to present a valid certificate that is verified |
 
     Default: `require_and_verify` if `trust_pool` module is provided; otherwise, `require`.
+
+    The `verify_if_given` and `require_and_verify` modes need a [`trust_pool`](#trust_pool), because Caddy needs to know which CAs to verify the client certificate against. If you use one of these modes without a `trust_pool`, Caddy will refuse to load the config. If you really want to verify client certificates against your system's root CAs, say so explicitly with [`trust_pool system`](#system).
 	
   - **trust_pool** <span id="trust_pool"/> configures the source of certificate authorities (CA) providing certificates against which to validate client certificates.
 	
@@ -200,6 +202,16 @@ The `file` module reads the trusted root certificates from PEM files from disk. 
 ```
 
 - **pem_file** <span id="pem_file"/> is a path to a PEM CA certificate file against which to validate client certificates.
+
+#### system
+
+The `system` module trusts the root certificates of the host system (the same ones your OS and browsers trust). It takes no options.
+
+```caddy-d
+trust_pool system
+```
+
+This is rarely what you want for client authentication, since any client with a certificate from a public CA would be accepted. Only use it if you're sure that's what you need.
 
 #### pki_root
 
@@ -283,6 +295,8 @@ The `http` module obtains the trusted certificates from HTTP endpoints. The `end
 ### Verifiers
 
 Client certificate verifier modules are executed after validating they are issued from a trusted certificate authority, if the `trust_pool` is configured. The one verifier, currently, shipped in standard Caddy is `leaf`.
+
+If you configure a verifier without a `trust_pool` and without a `mode`, the mode defaults to `require`. In that case, only the verifier checks the client certificate; it is not also checked against any CA.
 
 #### Leaf
 
@@ -570,6 +584,19 @@ example.com {
 	tls {
 		client_auth {
 			trust_pool file ../caddy.ca.cer ../root.ca.cer
+		}
+	}
+}
+```
+
+Require clients to present a certificate that is verified against the system's root CAs. Since this trusts every public CA, the `system` trust pool must be set explicitly:
+
+```caddy
+example.com {
+	tls {
+		client_auth {
+			mode require_and_verify
+			trust_pool system
 		}
 	}
 }
