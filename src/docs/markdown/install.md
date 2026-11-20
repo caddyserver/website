@@ -70,6 +70,20 @@ After installing, please read the [service usage instructions](/docs/running#usi
 <span class="bash">sudo apt update</span>
 <span class="bash">sudo apt install caddy</span></code></pre>
 
+The Ubuntu and Debian archives also provide a caddy package. To make apt always resolve to this repository instead:
+
+<pre><code class="cmd"><span class="bash">printf 'Package: caddy\nPin: release o=cloudsmith/caddy/stable\nPin-Priority: 1001\n' | sudo tee /etc/apt/preferences.d/caddy-stable.pref</span></code></pre>
+
+To automatically install Caddy updates, enable unattended upgrades and allow the Caddy repository:
+
+<pre><code class="cmd"><span class="bash">sudo apt install --yes unattended-upgrades</span>
+<span class="bash">sudo dpkg-reconfigure -plow unattended-upgrades</span>
+<span class="bash">echo 'Unattended-Upgrade::Origins-Pattern { "origin=cloudsmith/caddy/stable"; };' | sudo tee /etc/apt/apt.conf.d/52caddy-unattended-upgrades</span></code></pre>
+
+This adds the Caddy repository to the origins that are already trusted, so updates from the distribution's own security repositories remain enabled. To verify:
+
+<pre><code class="cmd"><span class="bash">sudo unattended-upgrade --dry-run --debug | grep 'Allowed origins'</span></code></pre>
+
 **Testing releases** (includes betas and release candidates):
 
 <pre><code class="cmd"><span class="bash">sudo apt install --yes debian-keyring debian-archive-keyring apt-transport-https curl</span>
