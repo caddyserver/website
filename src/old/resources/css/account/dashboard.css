@@ -133,6 +133,12 @@ a.disabled {
 	border: 1px solid #c3e6cb;
 }
 
+.status-warning {
+	background-color: #fff3cd;
+	color: #856404;
+	border: 1px solid #ffeeba;
+}
+
 .status-inactive {
 	background-color: #f8d7da;
 	color: #721c24;
@@ -218,6 +224,12 @@ a.disabled {
 }
 
 .revoke-api-key {
+	appearance: none;
+	border: 0;
+	padding: 0;
+	background: none;
+	font: inherit;
+	cursor: pointer;
 	color: #dc3545;
 	text-decoration: none;
 }

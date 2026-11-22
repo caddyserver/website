@@ -118,12 +118,11 @@
 				</select>
 			</div>
 			<div class="form-group">
-				<label for="price-interval">Billing Interval (leave empty for one-time)</label>
+				<label for="price-interval">Billing Interval</label>
 				<select id="price-interval" name="interval">
-					<option value="">One-time</option>
 					<option value="month">Monthly</option>
-					<option value="year">Yearly</option>
 				</select>
+				<small class="form-hint">Builder subscription plans require an active monthly price.</small>
 			</div>
 			<div class="form-actions">
 				<button type="button" class="btn btn-secondary" onclick="closeModal('create-price-modal')">Cancel</button>
@@ -199,6 +198,12 @@
 				<label class="checkbox-label">
 					<input type="checkbox" id="sync-api-access" name="api_access" value="true" checked>
 					<span>API Access Enabled</span>
+				</label>
+			</div>
+			<div class="form-group">
+				<label class="checkbox-label">
+					<input type="checkbox" id="sync-plan-active" name="active" value="true" checked>
+					<span>Plan available for new subscriptions</span>
 				</label>
 			</div>
 			<div class="form-actions">

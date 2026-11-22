@@ -24,19 +24,11 @@ $.get("/api/user-api-keys").done(function(json) {
 	renderApiKeys();
 });
 
-// Resolve the current plan's API-key allowance (access + limit)
-$.when($.get("/api/user-subscription"), $.get("/api/subscription-plans")).done(function(subRes, plansRes) {
-	const sub = subRes[0] && subRes[0].subscription;
-	const plans = (plansRes[0] && plansRes[0].plans) || [];
-	const plan = sub ? plans.find(p => p.id === sub.plan_id) : null;
-	if (plan) {
-		apiKeyState.hasAPIAccess = !!plan.api_access;
-		apiKeyState.limit = plan.max_api_keys; // -1 means unlimited
-	} else {
-		// no active paid subscription -> Free plan, no API access
-		apiKeyState.hasAPIAccess = false;
-		apiKeyState.limit = 0;
-	}
+// Entitlements remain available for subscriptions whose plans are no longer listed.
+$.get("/api/user-subscription").done(function(json) {
+	const sub = json && json.subscription;
+	apiKeyState.hasAPIAccess = !!(sub && sub.api_access);
+	apiKeyState.limit = sub ? sub.max_api_keys : 0; // -1 means unlimited
 	renderApiKeys();
 }).fail(function() {
 	renderApiKeys();
@@ -59,22 +51,26 @@ function updateSubscriptionInfo(subscription) {
 		cancelButton.hide();
 	} else {
 		const isActive = subscription.status === 'active' || subscription.status === 'trialing';
-		const statusClass = isActive ? 'status-active' : 'status-inactive';
+		const isPastDue = subscription.status === 'past_due';
+		const statusClass = isPastDue ? 'status-warning' : (isActive ? 'status-active' : 'status-inactive');
 		const cancelText = subscription.cancel_at_period_end ? ' (Will cancel at period end)' : '';
 		
 		planInfo.html(`
 			<div class="plan-details">
-				<div class="plan-name">${subscription.plan_name}</div>
-				<div class="plan-status ${statusClass}">${subscription.status}${cancelText}</div>
+				<div class="plan-name"></div>
+				<div class="plan-status ${statusClass}"></div>
 				<div class="plan-period">
-					Period: ${new Date(subscription.current_period_start).toLocaleDateString()} - 
-					${new Date(subscription.current_period_end).toLocaleDateString()}
+					Period: <span class="period-start"></span> - <span class="period-end"></span>
 				</div>
 			</div>
 		`);
+		planInfo.find('.plan-name').text(subscription.plan_name);
+		planInfo.find('.plan-status').text(`${subscription.status}${cancelText}`);
+		planInfo.find('.period-start').text(new Date(subscription.current_period_start).toLocaleDateString());
+		planInfo.find('.period-end').text(new Date(subscription.current_period_end).toLocaleDateString());
 		
 		subscriptionActions.show();
-		if (isActive && !subscription.cancel_at_period_end) {
+		if ((isActive || isPastDue) && !subscription.cancel_at_period_end) {
 			cancelButton.show();
 		} else {
 			cancelButton.hide();
@@ -120,15 +116,11 @@ function updateAPIKeys(apiKeys) {
 	apiKeys.forEach(key => {
 		const lastUsed = key.last_used ? new Date(key.last_used).toLocaleDateString() : 'Never';
 		const created = new Date(key.created).toLocaleDateString();
-		
-		const row = $(`
-			<tr data-key-id="${key.id}">
-				<td>${key.name}</td>
-				<td>${created}</td>
-				<td>${lastUsed}</td>
-				<td><a href="javascript:" class="revoke-api-key">Revoke</a></td>
-			</tr>
-		`);
+		const row = $('<tr>').attr('data-key-id', key.id);
+		row.append($('<td>').text(key.name));
+		row.append($('<td>').text(created));
+		row.append($('<td>').text(lastUsed));
+		row.append($('<td>').append($('<button type="button" class="revoke-api-key">').text('Revoke')));
 		table.append(row);
 	});
 }
@@ -178,7 +170,7 @@ function showPlansModal(plans) {
 	const container = $('#plans-container');
 	container.empty();
 	
-	plans.forEach((plan, index) => {
+	plans.forEach(plan => {
 		let priceHtml;
 		if (plan.price_cents === 0) {
 			priceHtml = 'Free';
@@ -198,19 +190,16 @@ function showPlansModal(plans) {
 		}
 		const isPopular = plan.name === 'Enterprise';
 
-		const planCard = $(`
-			<div class="plan-card${isPopular ? ' popular' : ''}" data-plan-id="${plan.id}">
-				<h3>${plan.name}</h3>
-				<div class="plan-price">${priceHtml}</div>
-				<div class="plan-description">${plan.description}</div>
-				<div class="plan-features">
-					<div>${buildsText}</div>
-					<div>${apiText}</div>
-					${keysText ? `<div>${keysText}</div>` : ''}
-				</div>
-				<button type="button" class="select-plan">Select Plan</button>
-			</div>
-		`);
+		const planCard = $('<div>').addClass(`plan-card${isPopular ? ' popular' : ''}`).attr('data-plan-id', plan.id);
+		planCard.append($('<h3>').text(plan.name));
+		planCard.append($('<div class="plan-price">').html(priceHtml));
+		planCard.append($('<div class="plan-description">').text(plan.description));
+		const features = $('<div class="plan-features">');
+		features.append($('<div>').text(buildsText));
+		features.append($('<div>').text(apiText));
+		if (keysText) features.append($('<div>').text(keysText));
+		planCard.append(features);
+		planCard.append($('<button type="button" class="select-plan">').text('Select Plan'));
 		container.append(planCard);
 	});
 	
@@ -275,14 +264,12 @@ function createSubscription(planId) {
 		plan_id: planId
 	}).done(function(json) {
 		if (json.client_secret) {
-			// This is a paid subscription; collect payment to finalize it
-			handleStripePayment(json.client_secret, json.subscription_id);
+			handleStripePayment(json.client_secret, json.message);
 		} else {
-			// This is a free subscription
 			swal({
 				icon: "success",
-				title: "Subscription Created",
-				text: json.message || "Your subscription has been activated successfully!"
+				title: "Plan Updated",
+				text: json.message || "Your plan has been updated."
 			}).then(function() {
 				location.reload();
 			});
@@ -313,9 +300,9 @@ function getStripe() {
 
 let stripeElements = null;
 
-function handleStripePayment(clientSecret, subscriptionId) {
+function handleStripePayment(clientSecret, message) {
 	setPaymentMessage("");
-	$('#payment-plan-summary').text("Enter your payment details below to activate your subscription.");
+	$('#payment-plan-summary').text(message || "Confirm your payment to complete this plan change.");
 	getStripe().then(function(stripe) {
 		const elements = stripe.elements({ clientSecret: clientSecret });
 		stripeElements = elements;

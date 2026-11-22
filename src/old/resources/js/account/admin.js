@@ -216,6 +216,7 @@ function renderPlansTable(plans) {
 					<th>API Access</th>
 					<th>API Keys</th>
 					<th>Price</th>
+					<th>Status</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -226,7 +227,7 @@ function renderPlansTable(plans) {
 			<tr>
 				<td><strong>${escapeHtml(plan.name)}</strong></td>
 				<td>${escapeHtml(plan.description || '-')}</td>
-				<td class="id-cell" title="${plan.stripe_price_id || '-'}">${plan.stripe_price_id || '-'}</td>
+				<td class="id-cell" title="${escapeHtml(plan.stripe_price_id || '-')}">${escapeHtml(plan.stripe_price_id || '-')}</td>
 				<td>${plan.monthly_builds === -1 ? 'Unlimited' : plan.monthly_builds}</td>
 				<td>
 					<span class="status-badge ${plan.api_access ? 'active' : 'inactive'}">
@@ -235,6 +236,7 @@ function renderPlansTable(plans) {
 				</td>
 				<td>${plan.max_api_keys === -1 ? 'Unlimited' : plan.max_api_keys}</td>
 				<td class="price-display">${formatCurrency(plan.price_cents, 'usd')}/mo</td>
+				<td><span class="status-badge ${plan.active ? 'active' : 'inactive'}">${plan.active ? 'Active' : 'Inactive'}</span></td>
 			</tr>
 		`;
 	}
@@ -261,14 +263,16 @@ function updatePriceSelects() {
 	const select = document.getElementById('sync-price-id');
 	if (!select) return;
 	
-	select.innerHTML = '<option value="">Select a price...</option>';
+	select.innerHTML = '<option value="">Select a monthly price...</option>';
 	for (const price of pricesData) {
-		if (price.active) {
+		if (price.active && price.recurring?.interval === 'month' && price.recurring.interval_count === 1) {
 			const amount = formatCurrency(price.unit_amount, price.currency);
-			const productName = price.product?.name || 'Unknown';
-			const interval = price.recurring ? `/${price.recurring.interval}` : '';
-			select.innerHTML += `<option value="${price.id}">${productName} - ${amount}${interval}</option>`;
+			const productName = escapeHtml(price.product?.name || 'Unknown');
+			select.innerHTML += `<option value="${escapeHtml(price.id)}">${productName} - ${amount}/month</option>`;
 		}
+	}
+	if (select.options.length === 1) {
+		select.options[0].textContent = 'No active monthly prices available';
 	}
 }
 
@@ -423,6 +427,9 @@ async function syncPlan(e) {
 	// Handle checkbox
 	if (!document.getElementById('sync-api-access').checked) {
 		formData.set('api_access', 'false');
+	}
+	if (!document.getElementById('sync-plan-active').checked) {
+		formData.set('active', 'false');
 	}
 	
 	try {
